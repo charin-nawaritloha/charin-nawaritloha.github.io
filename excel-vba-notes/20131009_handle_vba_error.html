@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>เพิ่มความทนทานต่อความผิดพลาดในมาโคร</title>
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.php">รับเขียน VBA</a>
+		<a href="p/macros.php">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.php" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.php">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>เพิ่มความทนทานต่อความผิดพลาดในมาโคร</h1>
+</div></div>
+
+
+<div class="row">
+<div class="twelve columns">
+
+<p>ตั้งแต่ทำงานผมก็จับแต่ PHP ซึ่งเป็นภาษาโปรแกรมสมัยใหม่ มีการจัดการความผิดพลาดที่ยืดหยุ่นและมีประสิทธิภาพแต่พอกลับมาใช้งาน VBA ที่ใช้เขียนมาโครถึงกับต้องมารำลึกความหลังว่าตัว VBA นั้นมีวิธีการจัดการเรื่องความผิดพลาดอย่างไรบ้าง เพราะยิ่งทำงานโดยเฉพาะงานที่ให้แผนกอื่นใช้พบว่า เราไม่สามารถคาดเดาอะไรได้เลยว่าผู้ใช้จะใส่อะไรเข้ามาในโปรแกรม ที่ผ่านเจอมาหลากหลายรูปแบบมาก</p>
+
+<ul>
+<li>ป้อนค่าผิด เช่น ให้ใส่ตัวเลข ดันใส่ตัวอักษรแทน</li>
+<li>ระบุไฟล์ที่ใช้งานเป็นข้อมูลดิบผิด</li>
+<li>นำข้อมูลมาคำนวณ แล้วสูตรคำนวณเกิดความผิดพลาดเนื่องจากข้อมูลอยู่นอกเหนือเงื่อนไขของโปรแกรม</li>
+<li>ใช้โปรแกรมผิดวิธี หรือเรียงลำดับการทำงานผิด</li>
+</ul>
+
+<p>ยังมีอีกเยอะแยะตาแป๊ะมาก ๆ แต่หลัก ๆ ก็เจอประมาณนี้ การป้องกันความผิดพลาดหรือจัดการความผิดพลาดนั้นเป็นเรื่องที่สำคัญมาก ๆ เพราะช่วยให้ผู้ใช้งานไม่มึนตรึ๊บกับกล่องข้อความที่อ่านแล้วไม่เข้าใจเลย ยิ่งถ้าผู้ใช้ไม่ได้อยู่ที่ไซต์งานแล้วแล้วยิ่งปวดหัวไปกันใหญ่เพราะเราก็มึนว่ามัน Error ตรงไหน</p>
+
+	<div class="image"><img src="images/20131009_01_runtime_error.png" class="u-max-full-width" />
+	<div>ผู้ใช้งานเจอแบบนี้ขึ้นมาถึงกับไปต่อไม่ถูกเลย</div>
+	</div>
+
+	<div class="image"><img src="images/20131009_02_excel_help.png" class="u-max-full-width" />
+	<div>มีปุ่ม Help ลองกดดูเผื่อช่วยอะไรได้บ้าง .... ง่ะ (;ﾉﾟДﾟ)ﾉ</div>
+	</div>
+	
+<p>ดังนั้นนอกจากโปรแกรมที่เขียนต้องทำงานถูกต้องแล้ว การจัดการความผิดพลาดที่อาจเกิดขึ้นนับว่าเป็นอีกปัจจัยที่สำคัญกับการใช้งานเป็นอย่างมาก ถ้าแยกออกเป็นประเด็นหลัก ๆ ได้แก่</p>
+<ol>
+<li>การคาดเดาเหตุการณ์ความผิดพลาดที่อาจเกิดขึ้น</li>
+<li>ในกรณีที่เกิดความผิดพลาดที่เกินจะคาดเดา</li>
+</ol>
+<p>คราวนี้ลองมาดูในรายละเอียดกันว่าแต่ละประเด็นมีอะไรน่าสนใจกันบ้าง</p>
+
+
+<h2>คาดเดาเหตุการณ์ความผิดพลาดที่อาจเกิดขึ้น</h2>
+
+<p>วิธีนี้ต้องใช้ประสบการณ์อันยาวนานและความสามารถเฉพาะตัวในการ "เดา" อย่างมีหลักการตลอดการทำงานของโปรแกรม เช่น</p>
+
+<ul>
+<li><b>การคำนวณตัวเลข</b> เช่น การ "หาร" สิ่งที่ต้องระวังคือ ตัวหารเป็น 0 หรือการนำข้อมูลที่เป็นตัวหนังสือมาคำนวณแบบคณิตศาสตร์ แต่ทำไม่ได้ เช่น "abc" * 1</li>
+<li>ถ้ามีการ<b>เปิดไฟล์เพื่ออ่านข้อมูล</b> ไฟล์ที่ต้องการอาจไม่เจอ ไฟล์ที่ระบุไม่ใช่ไฟล์ที่ต้องการ รูปแบบไฟล์ผิดพลาด</li>
+<li><b>รับค่าข้อมูลจากผู้ใช้งาน</b> อาจได้ข้อมูลผิดประเภท ช่วงข้อมูลเกินกว่าที่ต้องการ</li>
+<li>ในการ<b>ทำงานข้ามรุ่นโปรแกรม เก่า-ใหม่</b> รูปแบบการบันทึกและคำสั่งที่อาจก่อให้เกิดผิดพลาดในการทำงาน เช่น เขียนไฟล์ที่โปรแกรมรุ่นเก่าไม่รองรับ</li>
+<li><b>การเชื่อมต่อฐานข้อมูล</b> ต้องเตรียมใจ...เพียบเลย เช่น&nbsp;</li>
+<ul>
+<li>ต่อไม่ติด จากความผิดพลาดของไดร์เวอร์หรือตัวโปรแกรม</li>
+<li>เน็ตเวิร์คไม่มี&nbsp;</li>
+<li>ชื่อและรหัสผ่านไม่ถูกต้อง&nbsp;</li>
+<li>หรือฐานข้อมูลพังอ่านไม่ได้ table ที่ต้องการไม่มี</li>
+</ul>
+</ul>
+
+<p>การจัดการโดยการ "ดัก" เหตุการณ์ที่อาจเกิดขึ้นได้ และแจ้งให้ผู้ใช้งานทราบถึงความผิดพลาดดังกล่าวก่อนที่โปรแกรมจะเดี้ยง ยิ่งรองรับมาก ผู้ใช้งานใช้ง่าย ภาระก็จะตกของคนเขียนโปรแกรมเต็ม ๆ
+</p>
+<p>ข้อดีที่โปรแกรมสามารถ "ดัก" ความผิดพลาดเหล่านี้ได้นั้นคือ โปรแกรมจะสามารถทำงานต่อหรือหยุดทำงานในแบบที่หาสาเหตุของปัญหา เพื่อหาทางลงแบบนิ่ม ๆ ได้ และทำให้คนเขียนโปรแกรมสามารถแนะนำวิธีการแก้ไขปัญหากับผู้ใช้งานได้อย่างถูกต้องตรงจุด แต่ก็แลกด้วยการใช้พลังมหาศาลในการเขียนในส่วนนี้ขึ้นมาแต่...ในชีวิตจริงไม่มีใครที่จะเขียนหรือคิดได้ครอบคลุมทุกเงื่อนไขเพราะทรัพยากรมีจำกัด (เวลา พลังชีวิต และ "ค่าจ้าง")
+</p>
+<p>ลองมาดูกันสักตัวอย่างเพื่อให้เห็นภาพว่าถ้าจะทำโปรแกรมให้มันเมพ ๆ สักโปรแกรม ผู้ใช้งานแสนสบาย จะใส่ข้อมูล จะปู้ยี่ปูยำยังไงโปรแกรมก็สามารถรับมือ
+โดยลองทำเป็นตารางให้ผู้ใช้งานกรอกเพื่อคำนวณราคาสินค้าขายยกลัง ผลลัพธ์ที่ต้องการคือสินค้าที่ราคาต่อหน่วยถูกที่สุด
+</p>
+
+	<div class="image"><img src="images/20131009_03_new_name.png" class="u-max-full-width" />
+	<div>ทำตาราง 3 คอลัมน์ให้กรอกข้อมูลสินค้า จำนวน และราคา<br/>กำหนดชื่อว่า table_product เพื่อใช้อ้างอิงในมาโคร</div>
+	</div>
+
+
+
+<p>ลำดับการทำงานของมาโครก็ง่าย ๆ ดังนี้</p>
+<ol>
+<li>ทำการอ่านค่าสินค้าใน table_product ไปที่ละแถว จนครบทุกแถว</li>
+<li>คำนวณราคาต่อหน่วย ราคา / จำนวน</li>
+<li>แสดงชื่อสินค้าที่ราคาต่อหน่วยถูกที่สุด</li>
+</ol>
+<p>ลองเขียนเป็น VBA ตามขั้นตอนที่ต้องการ โดยตั้งชื่อว่า Sub Demo1()</p>
+
+<pre class="brush:vb">
+Sub Demo1()
+  Dim rTable As Range
+  Set rTable = Names("table_product").RefersToRange
+  
+  'หาจำนวนแถวที่ใช้งาน
+  Dim maxRow As Long
+  maxRow = rTable.Parent.UsedRange.Rows.Count
+  
+  Dim nRow As Long, nRowResult As Long
+  Dim nLowPrice As Long, nPrice As Long
+  
+  nLowPrice = 2147483647 'กำหนดค่าเริ่มต้นของราคาที่ใช้เปรียบเทียบไว้สูงที่สุด
+  
+  'อ่านข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้าย
+  For nRow = 2 To maxRow
+    With rTable.Rows(nRow)
+      'คำนวณเฉพาะแถวที่มีชื่อสินค้า
+      If .Cells(1).Value <> "" Then
+        nPrice = .Cells(3).Value / .Cells(2).Value 'คำนวนราคาต่อหน่วยจากคอลัมน์ที่ #3 หาร #2
+        If nPrice &lt; nLowPrice Then
+          nLowPrice = nPrice
+          nRowResult = nRow
+        End If
+      End If
+    End With
+  Next
+
+  'แสดงข้อความผลที่ได้
+  MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " & rTable.Cells(nRowResult, 1).Value
+
+End Sub
+</pre>
+
+
+<p>ลองมาปู้ยี่ปู้ยำโปรแกรมกันโดยลอง<span style="color:red">ใส่ข้อมูลไม่ครบ</span> แถวที่ 4 ไม่ใส่จำนวนชิ้น เมื่อ Run มาโคร ก็จะเจอ</p>
+
+	<div class="image"><img src="images/20131009_04_runtime_error.png" class="u-max-full-width" />
+	<div>ผ่าง!!! Division by zero</div>
+	</div>
+
+
+<p>หรือป้อน<span style="color:red;">ข้อมูลที่ไม่ใช่ตัวเลข</span> ซึ่งอาจจะเกิดจากความผิดพลาดที่ไม่ตั้งใจของผู้ใช้ เมื่อ Run มาโคร ก็จะเจอ</p>	
+
+	<div class="image"><img src="images/20131009_05_runtime_error.png" class="u-max-full-width" />
+	<div>Type mismatch อะไร mismatch จะรู้ไหม （　ﾟ Дﾟ）</div>
+	</div>	
+	
+<p>หรือถ้าผู้ใช้งานดันทะลึ่งไป<span style="color:red;">ลบ Name ที่ตั้งเอาไว้</span> ไม่ว่าจะตั้งใจหรือเพราะรู้เท่าไม่ถึงการณ์ก็แล้วแต่ พอ Run มาโครก็จะ Error อีกแล้ว</p>	
+	
+	<div class="image"><img src="images/20131009_06_delete_name.png" class="u-max-full-width" />
+	<div>อ๊ากกก...ลบ Name ทิ้งทำม๊ายยยย (+_+)</div>
+	</div>	
+	
+<p>เป็นไงบ้างครับ อ่านถึงตรงนี้แล้วแทบลมจับ ขนาดโปรแกรมไม่กี่บรรทัด หากไม่มีการเขียนในส่วนของการตรวจสอบความผิดพลาดที่อาจเกิดขึ้น (ทั้งที่ไม่น่าจะเกิดขึ้น) พอเกิดปัญหาขึ้นมา สุดท้ายเราก็ต้องมาเหนื่อยตามแก้ไขกันอีกหลายตลบเลยทีเดียว</p>
+
+<p>การแก้ไขปัญหาดังกล่าว สามารถใช้วิธีเขียนคำสั่ง If เพื่อตรวจสอบค่าก่อนนำไปใช้งาน เพื่อให้แน่ใจว่าจะไม่เกิด Run-time error มาดูคำสั่งที่เขียนเพิ่มเติมเพื่อดักปัญหาต่าง ๆ ที่ลองยกตัวอย่างมา	</p>
+
+
+<!--ads-->
+
+<!--/ads-->
+	
+<pre class="brush:vb">	
+Sub Demo2()
+	Dim rTable As Range
+	
+	On Error Resume Next
+		Set rTable = Names("table_product").RefersToRange
+	On Error GoTo 0
+	
+	If rTable Is Nothing Then
+		MsgBox "ไม่พบ Name 'table_product' ในแผ่นงาน โปรดตรวจสอบ Name Manager", vbCritical
+		Exit Sub
+	End If
+
+
+	'หาจำนวนแถวที่ใช้งาน
+	Dim maxRow As Long
+	maxRow = rTable.Parent.UsedRange.Rows.Count
+
+	Dim nRow As Long, nRowResult As Long
+	Dim nLowPrice As Long, nPrice As Long
+
+	nLowPrice = 2147483647 'กำหนดค่าเริ่มต้นของราคาที่ใช้เปรียบเทียบไว้สูงที่สุด
+
+	'อ่านข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้าย
+	For nRow = 2 To maxRow
+		With rTable.Rows(nRow)
+			'คำนวณเฉพาะแถวที่มีชื่อสินค้า
+			If .Cells(1).Value &lt;&gt; "" Then
+
+				If TypeName(.Cells(2).Value) &lt;&gt; "Double" Or TypeName(.Cells(3).Value) &lt;&gt; "Double" Then
+				  MsgBox "โปรดระบุค่าเป็นตัวเลขเท่านั้น โปรดตรวจสอบแถวที่ " & nRow, vbCritical
+				  Exit Sub
+				End If
+
+				If .Cells(2).Value &lt;= 0 Then
+				  MsgBox "จำนวนชิ้นมีค่าน้อยกว่าหรือเท่ากับ 0 ในแถวที่ " & nRow, vbCritical
+				  Exit Sub
+				End If
+
+				nPrice = .Cells(3).Value / .Cells(2).Value 'คำนวนราคาต่อหน่วยจากคอลัมน์ที่ #3 หาร #2
+				If nPrice < nLowPrice Then
+					nLowPrice = nPrice
+					nRowResult = nRow
+				End If
+
+			End If
+		End With
+	Next
+
+	'แสดงข้อความผลที่ได้
+	MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " & rTable.Cells(nRowResult, 1).Value
+End Sub	
+</pre>	
+	
+<p>จาก Sub Demo2() มีการปรับปรุงโดยการเพิ่มส่วนในการตรวจสอบค่าต่าง ๆ ก่อนนำไปใช้งาน หรือข้อมูลที่ได้อาจมีปัญหาจะทำการขึ้นข้อความเตือนและหยุดการทำงาน เพื่อให้ผู้ใช้กลับไปแก้ไขให้ถูกต้องก่อน จะเห็นว่าจำนวนบรรทัดของเดิม 30 เพิ่มเป็น 50 ก็กะคร่าว ๆ ว่าในส่วนของตรวจสอบความผิดพลาดเกือบ 30-50% ของงานที่ทำเลยก็ได้ ความจำเป็นในการเพิ่มและความถี่ในการตรวจสอบก็อยู่ที่ว่าต้องการให้โปรแกรมมันทนทานต่อความผิดพลาดได้แค่ไหน ถ้าขณะที่ใช้งานโปรแกรมอยู่ใกล้ ๆ สามารถเดินไปดูได้ ก็ไม่จำเป็นต้องลงทุนอะไรมาก แต่ถ้าหากเกิดปัญหาจะแก้ไขหรือตามดูแลลำบากก็ต้องจัดกันเต็ม ๆ</p>	
+	
+	<div class="image"><img src="images/20131009_07_check_error.png" class="u-max-full-width" />
+	<div>คราวนี้ไม่มึนล่ะ เพราะบอกเป็นภาษามนุษย์</div>
+	</div>	
+	
+<p>แม้ว่าจะเขียนคำสั่งเพิ่มเข้าไปกันโน้นกันนี่แล้วแต่ก็ใช่ว่าจะกันได้ทุกเงื่อนไข อาจมีเงื่อนไขที่คาดไม่ถึงเกิดขึ้นได้อีกใครจะไปรู้ ดังนั้นจึงต้องมีการรับมือกับปัญหาที่เกินที่จะคาดเดาเอาไว้ด้วย มิฉะนั้นก็จะต้องเจอ Run-time error ที่ผู้ใช้งานอ่านแล้วไม่รู้เรื่องอยู่ดี</p>	
+	
+	
+<h2>ในกรณีที่เกิดความผิดพลาดที่เกินจะคาดเดา</h2>
+	
+<p>ใน VBA จะมีคำสั่ง On Error เพื่อช่วยในการจัดการกับ Error ต่าง ๆ ที่อาจเกิดขึ้น โดยหากเกิด Error ขึ้นแทนที่มันแสดง Run-time error ที่อ่านแล้วไม่เข้าใจ มันจะส่งต่อปัญหาดังกล่าวไปในส่วนที่เขียนขึ้นเพื่อจัดการปัญหาดังกล่าวเอง โครงสร้างโค้ดสำหรับจัดการ Error จะดังนี้</p>	
+	
+<pre class="brush: vb">
+Sub Demo3()
+	On Error GoTo handle_error
+
+	'your code here
+	'your code here
+line_x:
+	'your code here
+  
+	Exit Sub
+
+handle_error:
+	'handle error here
+	'.................
+
+	'go back to continue work
+	Resume Next
+	'or
+	Resume line_x
+
+	'if don't to continue then
+	Exit Sub
+
+End Sub
+</pre>	
+	
+<p>จากตัวอย่างใน Demo3 หากโปรแกรมเกิด Run-time error ขึ้น มันจะวิ่งไปที่บรรทัดที่ 11 ตามคำสั่ง On Error GoTo handle_error ผู้เขียนโค้ดจำเป็นต้องจัดการกับ Error ที่เกิดขึ้นซึ่งจะระบุไว้ใน object Err เช่น</p>	
+
+<ul>
+<li>ถ้าเกิด Division by zero จะได้ Err.Number เท่ากับ 11</li>
+<li>ถ้าเกิด Type mismatch&nbsp;จะได้ Err.Number เท่ากับ 13</li>
+</ul>	
+	
+<p>ก็เขียนจัดการกันไปว่า Err.Number เป็นค่าอะไร แล้วจะทำอย่างไรกับมันดี จะแจ้งปัญหาให้ผู้ใช้ทราบว่าเกิดอะไร และหลังจากนั้นจะให้ทำอะไรต่อ ซึ่งตัวเลือกตรงนี้มี 3 ตัวเลือกคือ</p>	
+<ul>
+<li><b>Resume Next</b> กลับไปทำงานต่อที่คำสั่งที่อยู่ต่อไปจากที่ Error</li>
+<li><b>Resume <i>[line]</i></b> กลับไปทำงานต่อที่ตำแหน่งบรรทัด [line] ที่ระบุ</li>
+<li><b>Exit Sub</b> จบการทำงาน ไม่สามารถทำงานต่อได้ (ถ้าอยู่ใน Function หรือ Property ก็ใช้ <b>Exit Function&nbsp;</b>หรือ&nbsp;<b>Exit Property</b> ให้ถูกต้อง)</li>
+</ul>	
+	
+<p>สำหรับวิธีการใช้ On Error ในมาโคร สามารถดูรายละเอียดเพิ่มเติมที่เว็บไซต์ <a href="http://support.microsoft.com/kb/141571/EN-US" target="ext_link">http://support.microsoft.com/kb/141571/EN-US</a> ครับ ส่วนข้อมูลอ้างอิงอื่น ๆ เกี่ยวกับ Error Code</p>	
+<ul>
+<li>ตารางแสดง Error code ที่ใช้ใน VBA <a href="http://support.microsoft.com/kb/146864" target="ext_link">http://support.microsoft.com/kb/146864</a></li>
+<li>รายละเอียดแบบเจาะลึกแต่ละ Error code <a href="http://support.microsoft.com/kb/142138/EN-US" target="ext_link">http://support.microsoft.com/kb/142138/EN-US</a></li>
+</ul>	
+
+<p>สำหรับเทคนิคที่ผมแนะนำคือ ควรมีตัวแปรแบบ Global สำหรับ module นั้น ๆ เพื่อช่วยบันทึกชื่อ Sub หรือ Function ที่ทำงานอยู่แล้วเกิด Error ขึ้น เพราะว่าใน VBA ค่า Err.Source จะระบุไว้หยาบมากคือบอกที่ระดับ Project ไหนที่เกิด Error</p>
+
+<p>หากผู้ใช้งานเป็นระดับธรรมดา จับภาพหน้าจอไม่เป็น เจอภาษาอังกฤษแล้วรีบปิดหนี เจอแบบนี้แนะนำว่าให้เขียน log file เอาไว้ว่าเกิด Error อะไร แล้วให้ผู้ใช้ส่งไฟล์ดังกล่าวกลับมาให้ดูเพื่อวิเคราะห์ปัญหาที่เกิดขึ้น ตัวอย่างโปรแกรมแสดงใน Sub Demo4()</p>	
+
+<pre class="brush: vb">
+Sub Demo4()
+	Dim currentModule As String
+	currentModule = "Demo4()"
+	On Error GoTo handle_error
+
+	Debug.Print 1 / 0 'make some error
+
+	Exit Sub
+
+handle_error:
+	Dim fileNumber As Long
+	fileNumber = FreeFile
+	Open ThisWorkbook.Path & "\error_log.txt" For Append As #fileNumber
+
+	Print #fileNumber, "Date: ", Now()
+	Print #fileNumber, "Module: ", currentModule
+	Print #fileNumber, "Err.Source: ", Err.Source
+	Print #fileNumber, "Err.Number: ", Err.Number
+	Print #fileNumber, "Err.Description: ", Err.Description
+	Print #fileNumber, ""
+
+	Close #fileNumber
+
+	MsgBox "พบความผิดพลาดในโปรแกรม " & _ 
+		"โปรดส่งข้อมูลในไฟล์ error_log.txt ให้กับผู้พัฒนาโปรแกรม", vbCritical
+	Shell "notepad.exe """ & ThisWorkbook.Path & "\error_log.txt" & """"
+
+	Exit Sub
+
+End Sub
+</pre>
+
+	<div class="image"><img src="images/20131009_08_error_log.png" class="u-max-full-width" />
+	<div>เมื่อ Run โปรแกรม จะเกิด Error โปรแกรมจะแจ้งปัญหาและเปิดไฟล์ error_log.txt</div>
+	</div>	
+
+<p>อีกเทคนิคคือ ในกรณีที่โปรแกรมมีการเรียก Sub หลัก แล้ว Sub หลักไปเรียก Sub ย่อย ๆ ก็ให้วางคำสั่ง On Error ไว้ที่ Sub หลักเท่านั้น เมื่อเกิด Error ที่ Sub ย่อย ๆ ก็จะเด้งกลับมาที่ Sub หลักเพื่อจัดการ Error ทั้งหมดก็ได้ แต่วิธีนี้มีข้อจำกัดคือ พอกลับมาที่ Sub หลักแล้วจะไม่กลับไปทำที่ Sub ย่อยต่อ ดั้งนั้นไม่มีวิธีการตายตัวอยู่ที่การออกแบบ แล้วแต่ทรัพยากรจะอำนวยครับ</p>
+
+	<div class="image"><img src="images/20131009_09_on_error.png" class="u-max-full-width" />
+	<div>เฉพาะ Sub Main เท่านั้นที่มี On Error เมื่อเกิด Error ที่ Sub X จะไม่กลับไปที่ Sub X ต่อ</div>
+	</div>
+
+
+<p>สุดท้ายก่อนจบประเด็นนี้ หากใช้ <span style="color:red">On Error Resume Next</span> อย่าลืมยกเลิกด้วย <span style="color:red">On Error Goto 0</span> ด้วยเสมอ มิฉะนั้นหากโปรแกรมผิดพลาดขึ้นก็จะเงียบ และหาสาเหตุของปัญหาไม่เจอ อันตรายมากครับ</p>
+
+<p>ปล.ตอนแรกตั้งใจจะเขียนให้สั้น ๆ แต่คงลดได้สุด ๆ แค่นี้ นี่ก็ยาวมาเกินที่คิดไว้เยอะเลย</p>
+<!--ads-->
+
+<!--/ads-->
+
+
+</div>
+</div>
+
+<!--comments-->
+<div class="">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
