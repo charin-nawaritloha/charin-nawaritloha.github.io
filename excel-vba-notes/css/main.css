@@ -1,0 +1,225 @@
+/* left menu */
+@media (min-width: 320px) {
+  .mobileHide {
+    display:none;
+  }
+}
+
+@media (min-width: 400px) {
+  .mobileHide {
+    display:none;
+  }
+}
+
+@media (min-width: 550px) {
+  .mobileHide {
+    display:block;
+  }
+}
+
+
+
+
+/* footer */
+#footer a {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-right: 2rem;
+  text-decoration: none;
+  color: #FFF; }
+
+#footer a:hover {
+  color: yellow;
+text-decoration: underline;
+  }
+
+
+
+/* navbar */
+#navbar {
+      display: block;
+      text-align: center;
+      width: 100%;
+      background: #fff;
+      z-index: 99;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+      line-height: 2rem;
+      box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 320px) {
+  #navbar a{
+	font-family: Quark;
+	font-weight: 600;
+	font-size: 1.7rem;
+	margin-right: 2rem;
+	text-decoration: none;
+	color: #222;
+	display: inline-block;
+  }
+
+  #navbar a:hover{
+    color: #0fa0ce;
+    text-decoration: underline;
+	display: inline-block;
+  }
+}
+
+@media (min-width: 400px) {
+  #navbar a{
+    font-family: Quark;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-right: 2rem;
+    text-decoration: none;
+    color: #222;
+  }
+
+  #navbar a:hover{
+    color: #0fa0ce;
+    text-decoration: underline;
+  }
+}
+
+
+
+
+
+
+/* navbar_space */
+@media (min-width: 320px) {
+  #navbar_space {
+    padding-top: 14rem;
+  }
+}
+
+@media (min-width: 400px) {
+  #navbar_space {
+    padding-top: 12rem;
+  }
+}
+
+@media (min-width: 550px) {
+  #navbar_space {
+    padding-top: 11rem;
+  }
+}
+
+@media (min-width: 750px) {
+  #navbar_space {
+    padding-top: 10rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  #navbar_space {
+    padding-top: 9.5rem;
+  }
+}
+
+
+/* Other css */
+.disabled {
+  color: #DDD;
+}
+
+#footer .disabled {
+  color: #8a8a8a;
+}
+
+.errorBox {
+  display: block;
+  background-color: #ffc88e;
+  padding: 2rem;
+  color: #f00;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  /*width: 80%;*/
+  margin: 1.5rem 0;
+}
+
+
+.infoBox {
+  display: block;
+  background-color: green;
+  padding: 2rem;
+  color: #fff;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  /*width: 80%;*/
+  margin: 1.5rem 0;
+}
+
+
+.profiles *{
+  vertical-align: top;
+}
+
+.number {
+   text-align: right;
+   word-break: keep-all;
+}
+
+.nomargin {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+label.radiogroup {
+    border: 1px solid white;
+    background-color: #f6f8f5;
+    margin: 0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.radiogroup * {
+    margin: 0;
+}
+
+.product_icon {
+    display: block;
+    padding: 0.5rem 0;
+}
+
+.product_icon > img {
+    height: 8rem;
+    padding-right: 0.25rem;
+}
+
+.image {
+	display:block;
+	background-color: #fff;
+	text-align: center;
+}
+
+/*
+Overwrite css from skeleton.css
+*/
+
+ul {
+  list-style: circle outside; }
+ol {
+  list-style: decimal outside; }
+ol, ul {
+  padding-left: 2rem;
+  margin-top: 0; }
+
+label > .label-body {
+  display: inline;
+}
+
+h6 {
+    font-size: 2.2rem;
+}
+

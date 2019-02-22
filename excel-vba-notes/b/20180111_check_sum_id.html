@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ตรวจสอบความถูกต้องของเลขประจำตัวประชาชน และผู้เสียภาษี</title>
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href='/excel-vba-notes/css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='/excel-vba-notes/css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='/excel-vba-notes/css/main.css' rel='stylesheet' type='text/css'>
+	<link href='/excel-vba-notes/css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="/excel-vba-notes/favicon.png">
+	
+	<link href='/excel-vba-notes/SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='/excel-vba-notes/SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='/excel-vba-notes/SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='/excel-vba-notes/SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='/excel-vba-notes/SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="/excel-vba-notes/index.html">หน้าหลัก</a>
+		<a href="/excel-vba-notes/p/vba.php">รับเขียน VBA</a>
+		<a href="/excel-vba-notes/p/macros.php">วิธีเปิด/ปิด แมโคร</a>
+		<a href="/excel-vba-notes/p/km.php" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="/excel-vba-notes/p/profiles.php">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+
+
+
+<div class="row">
+<div class="one column">
+
+<p>การสร้างเลขประจำตัวประชาชน และผู้เสียภาษี จำนวน 13 หลัก (Thai ID Format Validation) จะใช้ข้อมูลจริง ๆ 12 หลัก ส่วนหลักที่ 13 จะเป็นหลักไว้สำหรับตรวจสอบความถูกต้อง โดยใช้วิธีการตรวจสอบแบบ <a href="https://www.google.com/search?q=MODULUS+11" target="ext_link">modulus 11</a></p>
+
+	<div class="image"><img src="images/20180111_check_digit.png" class="u-max-full-width" />
+	<div>ที่มา: <a href="http://www.dbd.go.th/ewt_news.php?nid=1174&filename=law" target="ext_link">http://www.dbd.go.th/ewt_news.php?nid=1174&filename=law</a></div>
+	</div>
+
+
+<p>ตัวอย่างการคำนวณอย่างละเอียดสามารถดูได้จากที่มา blog ของคุณ <a href="https://choopong.wordpress.com/2007/03/22/thai-id-format-validation/" target="ext_link">@earguay</a></p>
+
+<!--ads-->
+
+<!--/ads-->
+
+
+<p>หากใครต้องการเป็นรูปแบบสูตร Excel ผมได้ทำไว้ใน Google Drive ให้แล้ว <a href="https://docs.google.com/spreadsheets/d/1BlUDgv5NZYLUVDH9B4nVxmLIadB_tBZN65Nawoi1pJQ/edit?usp=sharing" target="ext_link">สามารถเข้าไปลองดูและดาวน์โหลดได้ที่นี่ครับ</a></p>
+
+
+	<div class="image"><img src="images/20180111_sample.png" class="u-max-full-width" />
+	<div>ตัวอย่างสูตรและการใช้งาน</div>
+	</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
