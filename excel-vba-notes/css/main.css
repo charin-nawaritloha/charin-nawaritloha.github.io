@@ -201,6 +201,7 @@ label.radiogroup {
 	display:block;
 	background-color: #fff;
 	text-align: center;
+	margin-bottom: 1rem;
 }
 
 /*
@@ -219,7 +220,11 @@ label > .label-body {
   display: inline;
 }
 
-h6 {
-    font-size: 2.2rem;
-}
 
+
+h1 { font-size: 3.5rem; }
+h2 { font-size: 3.0rem; }
+h3 { font-size: 2.5rem; }
+h4 { font-size: 2.0rem; }
+h5 { font-size: 1.5rem; }
+h6 { font-size: 1.25rem; }
