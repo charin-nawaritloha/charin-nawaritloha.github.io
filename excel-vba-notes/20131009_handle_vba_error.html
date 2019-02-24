@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>เพิ่มความทนทานต่อความผิดพลาดในมาโคร</title>
+	<title>เพิ่มความทนทานต่อความผิดพลาดในแมโคร</title>
+	<meta name="tags" contents="VBA">
 
 	<!--header-->
 	<meta charset="utf-8">
@@ -51,14 +52,14 @@
 
 <div class="row">
 <div class="twelve columns">
-<h1>เพิ่มความทนทานต่อความผิดพลาดในมาโคร</h1>
+<h1>เพิ่มความทนทานต่อความผิดพลาดในแมโคร</h1>
 </div></div>
 
 
 <div class="row">
 <div class="twelve columns">
 
-<p>ตั้งแต่ทำงานผมก็จับแต่ PHP ซึ่งเป็นภาษาโปรแกรมสมัยใหม่ มีการจัดการความผิดพลาดที่ยืดหยุ่นและมีประสิทธิภาพแต่พอกลับมาใช้งาน VBA ที่ใช้เขียนมาโครถึงกับต้องมารำลึกความหลังว่าตัว VBA นั้นมีวิธีการจัดการเรื่องความผิดพลาดอย่างไรบ้าง เพราะยิ่งทำงานโดยเฉพาะงานที่ให้แผนกอื่นใช้พบว่า เราไม่สามารถคาดเดาอะไรได้เลยว่าผู้ใช้จะใส่อะไรเข้ามาในโปรแกรม ที่ผ่านเจอมาหลากหลายรูปแบบมาก</p>
+<p>ตั้งแต่ทำงานผมก็จับแต่ PHP ซึ่งเป็นภาษาโปรแกรมสมัยใหม่ มีการจัดการความผิดพลาดที่ยืดหยุ่นและมีประสิทธิภาพแต่พอกลับมาใช้งาน VBA ที่ใช้เขียนแมโครถึงกับต้องมารำลึกความหลังว่าตัว VBA นั้นมีวิธีการจัดการเรื่องความผิดพลาดอย่างไรบ้าง เพราะยิ่งทำงานโดยเฉพาะงานที่ให้แผนกอื่นใช้พบว่า เราไม่สามารถคาดเดาอะไรได้เลยว่าผู้ใช้จะใส่อะไรเข้ามาในโปรแกรม ที่ผ่านเจอมาหลากหลายรูปแบบมาก</p>
 
 <ul>
 <li>ป้อนค่าผิด เช่น ให้ใส่ตัวเลข ดันใส่ตัวอักษรแทน</li>
@@ -112,12 +113,12 @@
 </p>
 
 	<div class="image"><img src="images/20131009_03_new_name.png" class="u-max-full-width" />
-	<div>ทำตาราง 3 คอลัมน์ให้กรอกข้อมูลสินค้า จำนวน และราคา<br/>กำหนดชื่อว่า table_product เพื่อใช้อ้างอิงในมาโคร</div>
+	<div>ทำตาราง 3 คอลัมน์ให้กรอกข้อมูลสินค้า จำนวน และราคา<br/>กำหนดชื่อว่า table_product เพื่อใช้อ้างอิงในแมโคร</div>
 	</div>
 
 
 
-<p>ลำดับการทำงานของมาโครก็ง่าย ๆ ดังนี้</p>
+<p>ลำดับการทำงานของแมโครก็ง่าย ๆ ดังนี้</p>
 <ol>
 <li>ทำการอ่านค่าสินค้าใน table_product ไปที่ละแถว จนครบทุกแถว</li>
 <li>คำนวณราคาต่อหน่วย ราคา / จำนวน</li>
@@ -127,53 +128,53 @@
 
 <pre class="brush:vb">
 Sub Demo1()
-  Dim rTable As Range
-  Set rTable = Names("table_product").RefersToRange
-  
-  'หาจำนวนแถวที่ใช้งาน
-  Dim maxRow As Long
-  maxRow = rTable.Parent.UsedRange.Rows.Count
-  
-  Dim nRow As Long, nRowResult As Long
-  Dim nLowPrice As Long, nPrice As Long
-  
-  nLowPrice = 2147483647 'กำหนดค่าเริ่มต้นของราคาที่ใช้เปรียบเทียบไว้สูงที่สุด
-  
-  'อ่านข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้าย
-  For nRow = 2 To maxRow
-    With rTable.Rows(nRow)
-      'คำนวณเฉพาะแถวที่มีชื่อสินค้า
-      If .Cells(1).Value <> "" Then
-        nPrice = .Cells(3).Value / .Cells(2).Value 'คำนวนราคาต่อหน่วยจากคอลัมน์ที่ #3 หาร #2
-        If nPrice &lt; nLowPrice Then
-          nLowPrice = nPrice
-          nRowResult = nRow
-        End If
-      End If
-    End With
-  Next
+	Dim rTable As Range
+	Set rTable = Names("table_product").RefersToRange
 
-  'แสดงข้อความผลที่ได้
-  MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " & rTable.Cells(nRowResult, 1).Value
+	'หาจำนวนแถวที่ใช้งาน
+	Dim maxRow As Long
+	maxRow = rTable.Parent.UsedRange.Rows.Count
+
+	Dim nRow As Long, nRowResult As Long
+	Dim nLowPrice As Long, nPrice As Long
+
+	nLowPrice = 2147483647 'กำหนดค่าเริ่มต้นของราคาที่ใช้เปรียบเทียบไว้สูงที่สุด
+
+	'อ่านข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้าย
+	For nRow = 2 To maxRow
+		With rTable.Rows(nRow)
+			'คำนวณเฉพาะแถวที่มีชื่อสินค้า
+			If .Cells(1).Value &lt;&gt; "" Then
+				nPrice = .Cells(3).Value / .Cells(2).Value 'คำนวนราคาต่อหน่วยจากคอลัมน์ที่ #3 หาร #2
+				If nPrice &lt; nLowPrice Then
+					nLowPrice = nPrice
+					nRowResult = nRow
+				End If
+			End If
+		End With
+	Next
+
+	'แสดงข้อความผลที่ได้
+	MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " &amp; rTable.Cells(nRowResult, 1).Value
 
 End Sub
 </pre>
 
 
-<p>ลองมาปู้ยี่ปู้ยำโปรแกรมกันโดยลอง<span style="color:red">ใส่ข้อมูลไม่ครบ</span> แถวที่ 4 ไม่ใส่จำนวนชิ้น เมื่อ Run มาโคร ก็จะเจอ</p>
+<p>ลองมาปู้ยี่ปู้ยำโปรแกรมกันโดยลอง<span style="color:red">ใส่ข้อมูลไม่ครบ</span> แถวที่ 4 ไม่ใส่จำนวนชิ้น เมื่อ Run แมโคร ก็จะเจอ</p>
 
 	<div class="image"><img src="images/20131009_04_runtime_error.png" class="u-max-full-width" />
 	<div>ผ่าง!!! Division by zero</div>
 	</div>
 
 
-<p>หรือป้อน<span style="color:red;">ข้อมูลที่ไม่ใช่ตัวเลข</span> ซึ่งอาจจะเกิดจากความผิดพลาดที่ไม่ตั้งใจของผู้ใช้ เมื่อ Run มาโคร ก็จะเจอ</p>	
+<p>หรือป้อน<span style="color:red;">ข้อมูลที่ไม่ใช่ตัวเลข</span> ซึ่งอาจจะเกิดจากความผิดพลาดที่ไม่ตั้งใจของผู้ใช้ เมื่อ Run แมโคร ก็จะเจอ</p>	
 
 	<div class="image"><img src="images/20131009_05_runtime_error.png" class="u-max-full-width" />
 	<div>Type mismatch อะไร mismatch จะรู้ไหม （　ﾟ Дﾟ）</div>
 	</div>	
 	
-<p>หรือถ้าผู้ใช้งานดันทะลึ่งไป<span style="color:red;">ลบ Name ที่ตั้งเอาไว้</span> ไม่ว่าจะตั้งใจหรือเพราะรู้เท่าไม่ถึงการณ์ก็แล้วแต่ พอ Run มาโครก็จะ Error อีกแล้ว</p>	
+<p>หรือถ้าผู้ใช้งานดันทะลึ่งไป<span style="color:red;">ลบ Name ที่ตั้งเอาไว้</span> ไม่ว่าจะตั้งใจหรือเพราะรู้เท่าไม่ถึงการณ์ก็แล้วแต่ พอ Run แมโครก็จะ Error อีกแล้ว</p>	
 	
 	<div class="image"><img src="images/20131009_06_delete_name.png" class="u-max-full-width" />
 	<div>อ๊ากกก...ลบ Name ทิ้งทำม๊ายยยย (+_+)</div>
@@ -184,9 +185,9 @@ End Sub
 <p>การแก้ไขปัญหาดังกล่าว สามารถใช้วิธีเขียนคำสั่ง If เพื่อตรวจสอบค่าก่อนนำไปใช้งาน เพื่อให้แน่ใจว่าจะไม่เกิด Run-time error มาดูคำสั่งที่เขียนเพิ่มเติมเพื่อดักปัญหาต่าง ๆ ที่ลองยกตัวอย่างมา	</p>
 
 
-<!--ads-->
-
-<!--/ads-->
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
 	
 <pre class="brush:vb">	
 Sub Demo2()
@@ -228,7 +229,7 @@ Sub Demo2()
 				End If
 
 				nPrice = .Cells(3).Value / .Cells(2).Value 'คำนวนราคาต่อหน่วยจากคอลัมน์ที่ #3 หาร #2
-				If nPrice < nLowPrice Then
+				If nPrice &lt; nLowPrice Then
 					nLowPrice = nPrice
 					nRowResult = nRow
 				End If
@@ -238,7 +239,7 @@ Sub Demo2()
 	Next
 
 	'แสดงข้อความผลที่ได้
-	MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " & rTable.Cells(nRowResult, 1).Value
+	MsgBox "ราคาสินค้าต่อหน่วยต่ำที่สุดคือ " &amp; rTable.Cells(nRowResult, 1).Value
 End Sub	
 </pre>	
 	
@@ -295,7 +296,7 @@ End Sub
 <li><b>Exit Sub</b> จบการทำงาน ไม่สามารถทำงานต่อได้ (ถ้าอยู่ใน Function หรือ Property ก็ใช้ <b>Exit Function&nbsp;</b>หรือ&nbsp;<b>Exit Property</b> ให้ถูกต้อง)</li>
 </ul>	
 	
-<p>สำหรับวิธีการใช้ On Error ในมาโคร สามารถดูรายละเอียดเพิ่มเติมที่เว็บไซต์ <a href="http://support.microsoft.com/kb/141571/EN-US" target="ext_link">http://support.microsoft.com/kb/141571/EN-US</a> ครับ ส่วนข้อมูลอ้างอิงอื่น ๆ เกี่ยวกับ Error Code</p>	
+<p>สำหรับวิธีการใช้ On Error ในแมโคร สามารถดูรายละเอียดเพิ่มเติมที่เว็บไซต์ <a href="http://support.microsoft.com/kb/141571/EN-US" target="ext_link">http://support.microsoft.com/kb/141571/EN-US</a> ครับ ส่วนข้อมูลอ้างอิงอื่น ๆ เกี่ยวกับ Error Code</p>	
 <ul>
 <li>ตารางแสดง Error code ที่ใช้ใน VBA <a href="http://support.microsoft.com/kb/146864" target="ext_link">http://support.microsoft.com/kb/146864</a></li>
 <li>รายละเอียดแบบเจาะลึกแต่ละ Error code <a href="http://support.microsoft.com/kb/142138/EN-US" target="ext_link">http://support.microsoft.com/kb/142138/EN-US</a></li>
@@ -318,7 +319,7 @@ Sub Demo4()
 handle_error:
 	Dim fileNumber As Long
 	fileNumber = FreeFile
-	Open ThisWorkbook.Path & "\error_log.txt" For Append As #fileNumber
+	Open ThisWorkbook.Path &amp; "\error_log.txt" For Append As #fileNumber
 
 	Print #fileNumber, "Date: ", Now()
 	Print #fileNumber, "Module: ", currentModule
@@ -329,9 +330,9 @@ handle_error:
 
 	Close #fileNumber
 
-	MsgBox "พบความผิดพลาดในโปรแกรม " & _ 
+	MsgBox "พบความผิดพลาดในโปรแกรม " &amp; _ 
 		"โปรดส่งข้อมูลในไฟล์ error_log.txt ให้กับผู้พัฒนาโปรแกรม", vbCritical
-	Shell "notepad.exe """ & ThisWorkbook.Path & "\error_log.txt" & """"
+	Shell "notepad.exe """ &amp; ThisWorkbook.Path &amp; "\error_log.txt" &amp; """"
 
 	Exit Sub
 
@@ -352,16 +353,23 @@ End Sub
 <p>สุดท้ายก่อนจบประเด็นนี้ หากใช้ <span style="color:red">On Error Resume Next</span> อย่าลืมยกเลิกด้วย <span style="color:red">On Error Goto 0</span> ด้วยเสมอ มิฉะนั้นหากโปรแกรมผิดพลาดขึ้นก็จะเงียบ และหาสาเหตุของปัญหาไม่เจอ อันตรายมากครับ</p>
 
 <p>ปล.ตอนแรกตั้งใจจะเขียนให้สั้น ๆ แต่คงลดได้สุด ๆ แค่นี้ นี่ก็ยาวมาเกินที่คิดไว้เยอะเลย</p>
-<!--ads-->
-
-<!--/ads-->
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
 
 
 </div>
 </div>
+
+
+
+
+
+
+
 
 <!--comments-->
-<div class="">
+<div class="container">
 <div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
 </div>
 <!--/comments-->
@@ -370,7 +378,21 @@ End Sub
 
 
 
-
+<!--counter-->
+<div id="histats_counter"></div>
+<!-- Histats.com  START -->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+<!-- Histats.com  END -->
+<!--/counter-->
 
 
 

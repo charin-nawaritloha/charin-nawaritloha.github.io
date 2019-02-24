@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>เราได้อะไรจาก "ค่าเบี่ยงเบนมาตรฐาน" (standard deviation)</title>
+	<meta name="tags" contents="Statistic">
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.php">รับเขียน VBA</a>
+		<a href="p/macros.php">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.php" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.php">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>เราได้อะไรจาก "ค่าเบี่ยงเบนมาตรฐาน" (standard deviation)</h1>
+
+<p>ใครที่เคยเรียนวิชาสถิติมาจะพบว่าในหลักสูตรจะสอนเน้นให้จำสูตรแล้วเอาไปสอบ โดยคำถามในข้อสอบส่วนใหญ่คือเลือกสูตรที่จำมาให้ถูกต้องแล้วคำนวณให้ถูก ที่สำคัญคือไม่ได้เน้นการนำเอามาใช้งานจริง ทำให้คืนครูไปหมดเกลี้ยง ผมเองก็เป็นหนึ่งในนั้นที่คืนไปหมดแล้ว แต่ทุกวันนี้ทำงานกับ Excel ในเรื่องการวิเคราะห์ข้อมูล ซึ่ง Excel มีฟังก์ชั่นทางสถิติรองรับครบถ้วน แต่ปัญหาคือ ถ้าเราไม่เข้าใจความหมายและจุดประสงค์ของสูตรทางสถิติก็คงไม่มีวันที่จะเอามาใช้งานได้ตรงตามความต้องการ</p>
+
+<h2>ค่าเฉลี่ย (average)</h2>
+
+<p>เริ่มต้นด้วยการคำนวณสถิติที่น่าจะคุ้นเคยกันดี คือ "ค่าเฉลี่ย" เรื่องนี้น่าจะเข้าใจง่ายสุด (เลยยังไม่ได้คืนครู) มันคือการคำนวณโดยเอาตัวเลขของข้อมูลมาบวกกันทุกตัวแล้วหารด้วยจำนวนข้อมูล ขอแนบสมการให้ดูเท่ๆ กันหน่อย</p>
+	<div class="image"><img src="images/20130703_01_AVERAGE.png" class="u-max-full-width" />
+	<div>สมการสำหรับหาค่าเฉลี่ย</div>
+	</div>
+	
+<p>ตัวอย่าง: อุณหภูมิวันจันทร์ - ศุกร์ คือ 30.0 31.5 30.5 29.0 29.5 30.0 และ 30.5 ตามลำดับ ถ้านำมาคิดเป็นอุณหภูมิเฉลี่ยของสัปดาห์นี้ = (30.0+31.5+30.5+29.0+29.5+30.0+30.5) / 7 = 30.14 มาลองทำทำใน Excel กันดู</p>	
+	<div class="image"><img src="images/20130703_02_AVERAGE_excel.png" class="u-max-full-width" />
+	<div>หาค่าเฉลี่ยของกลุ่มข้อมูลที่สนใจด้วยฟังก์ชั่น AVERAGE</div>
+	</div>
+
+<p>ค่าเฉลี่ยที่คำนวณได้ จะเป็น<b>ค่ากลางหรือค่าที่เรานำมาใช้แทนกลุ่มข้อมูล</b> เป็นตัวแทนของข้อมูลที่น่าจะดีที่สุด แต่ในชีวิตจริงข้อมูลไม่ได้มีแค่หลักหน่วย แต่อาจมีเป็นร้อยจนหลักแสนหลักล้าน การใช้ค่าเฉลี่ยเมื่อข้อมูลมีจำนวนมาก ๆ อาจไม่ใช่ทางออกที่ดีที่สุด เพราะข้อมูลยิ่งมาก การกระจายตัวของข้อมูลก็จะสูงขึ้นตาม</p>
+
+
+<h2>การกระจายตัวของข้อมูล</h2>
+<p>ในชีวิตจริงเราจะพบข้อมูลที่ได้มักจะมีการกระจายตัวที่ไม่เท่ากันหรือไม่ใกล้เคียงกันเสมอไป จากตัวอย่างที่แล้ว ถ้าเกิดพายุเข้าอากาศแปรปวน จะเกิดอะไรขึ้นมาลองดูกราฟกัน</p>
+	<div class="image"><img src="images/20130703_03_graph.png" class="u-max-full-width" />
+	<div>เปรียบเทียบอากาศปกติ และ แปรปรวน</div>
+	</div>
+
+<p>จากข้อมูลจะเห็นว่าแม้ข้อมูลได้ค่าเฉลี่ยเท่ากัน <b>แต่แค่มองด้วยตาเปล่าก็จะเห็นว่าข้อมูลด้านล่างมีความแปรปรวนมากและค่าเฉลี่ยที่ได้มาไม่น่าจะนำมาแทนชุดข้อมูลดังกล่าวได้</b> คราวนี้ปัญหาคือถ้าข้อมูลมีจำนวนมาก ๆ การดูด้วยสายตาคงไม่เพียงพอจะตัดสินได้ว่าข้อมูลมันปกติหรือไม่ปกติ</p>
+	<div class="image"><img src="images/20130703_04_real_life.png" class="u-max-full-width" />
+	<div>ข้อมูลในชิวิตจริงแค่นี้มันจิบ ๆ แบบนี้ดูไม่ออกแน่ว่ามันแปรปรวนหรือเปล่า</div>
+	</div>
+
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+<h2>ค่าเบี่ยงเบนมาตรฐาน  (standard deviation หรือ SD)</h2>
+<p>ค่าเบี่ยงเบนมาตรฐาน หรือ SD คิดค้นโดย ฟรานซิส กาลตัน (<a href="http://en.wikipedia.org/wiki/Francis_Galton" target="ext_link">Francis Galton</a>) ในช่วงปลายคริสต์ทศวรรษ 1860 จุดประสงค์ของการคำนวณค่าเบียงเบนมาตรฐานก็คือหาค่าการกระจายตัวของข้อมูลที่ออกหากจากค่าเฉลี่ยกลางของข้อมูล ค่ายิ่งมากแสดงว่ามีการแปรปรวนหรือการกระจายของข้อมูลสูง เพื่อให้เข้าใจยิ่งขึ้นเรามาลองดูภาพกัน</p>
+	<div class="image"><img src="images/20130703_05_SD1.png" class="u-max-full-width" />
+	<div>ค่าเบี่ยงเบนมาตรฐาน (SD) คือ คือเอาระยะเส้นสีเหลืองมารวมกันหาค่าเฉลี่ย</div>
+	</div>
+<p>จากภาพกราฟจะเห็นว่ายิ่งผลรวมความยาวของเส้นสีเหลืองยิ่งมาก ค่า SD ก็จะยิ่งสูงขึ้น ในทางสถิติหากมีการเก็บข้อมูลมาแล้วค่า SD เกินค่าที่รับได้จะถือว่าข้อมูลกระจายตัวเกินไป (อันนี้แล้วแต่งานและเงื่อนไข) ซึ่งก็ต้องหาเหตุผลต่อว่าทำไมถึงเป็นอย่างนั้น จากตัวอย่างที่ยกมาเกิดจากอากาศแปรปรวนเลยทำให้ค่า SD กระฉูดนั้นเอง เกือบลืมแปะสูตรซะหน่อย</p>
+	<div class="image"><img src="images/20130703_06_SD2.png" class="u-max-full-width" />
+	<div>สมการสำหรับหาค่า SD</div>
+	</div>
+
+<h2>ตัวอย่างการวิเคราะห์ แม่ไก่ออกไข่วันละฟอง</h2>
+<p>ในฟาร์มไก่ไข่ มีไก่อยู่ 1,000 ตัว โดยแบ่งอยู่ในโรงเลี้ยงจำนวน 4 โรง โดยค่าเฉลี่ยที่ควรจะเป็นไก่จะออกไข่ประมาณ 80% (มีพัก 20%) ฟาร์มไก่มีแรงงานคนจำกัดไม่สามารถนับไข่ที่ออกจากแม่ไก่แบบตัวต่อตัวได้</p>
+
+<p>เมื่อเลี้ยงไก่เพื่อขายไข่ หากไก่กินอาหารแต่ออกไข่น้อยกว่าที่ควรจะเป็นก็จะขาดทุน ดังนั้นเราต้องหาให้ได้ว่ามีไก่ตัวไหนอู้ กินแล้วไม่ไข่บ้างหรือเปล่า</p>
+	<div class="image"><img src="images/20130703_07_ex1.png" class="u-max-full-width" />
+	<div>รายงานไข่ที่เก็บได้ใน 1 เดือน จำนวน 30 วัน</div>
+	</div>
+
+<p>จากตารางนี้สามารถบอกอะไรได้บ้าง</p>
+<ul>
+<li>ค่าเฉลี่ย (AVERAGE) โรงที่ 1 2 และ 4 ออกไข่เฉลี่ยต่ำกว่า 80%&nbsp;</li>
+<li>โรง 2 มีปัญหาเยอะสุด ค่าเฉลี่ยต่ำ แถมมีไก่อู้เยอะสุด</li>
+<li>ค่าเฉลี่ยโรง 1 และ 4 แม้จะมีค่าเฉลี่ยใกล้เคียงกัน แต่ค่า SD ต่างกันมาก <br>แสดงว่าในโรง 1 ไก่ออกไข่สม่ำเสมอกว่าโรง 4 (โรง 4 น่าจะมีไก่อู้มากกว่า)</li>
+</ul>
+
+<p>เพื่อให้เห็นภาพลองมาดูกราฟของโรง 1 และ 4 กัน</p>
+	<div class="image"><img src="images/20130703_08_ex2.png" class="u-max-full-width" />
+	<div>เปรียบเทียบจำนวนไข่ที่เก็บได้ในแต่ละวันของโรง 1 และ 4</div>
+	</div>
+
+<p>การแก้ไขปัญหาของโรง 4 คือ ต้องแยกไก่ขยันกับไก่อู้ออกจากกัน ซึ่งวิธีการอาจต้องให้คนงานเก็บข้อมูลไข่แยกเป็นโซน แล้วนำแต่ละโซนมาหาดูว่าโซนไหนตกค่าเฉลี่ยหรือค่า SD เยอะ จึงค่อยดูเป็นรายตัวในโซนนั้น ๆ</p>
+
+
+
+<h2>ตัวอย่างการวิเคราะห์ ผลการทำข้อสอบ</h2>
+<p>อาจารย์วิชาภาษาอังกฤษได้ทดสอบเด็ก 2 ห้อง เพื่อวัดผล ปรากฎว่าค่าเฉลี่ยที่ได้ 2 ห้องใกล้เคียงกัน แต่ค่า SD ต่างกัน</p>
+	<div class="image"><img src="images/20130703_09_ex3.png" class="u-max-full-width" />
+	<div>ผลการทดสอบของเด็กทั้ง 10 คน</div>
+	</div>
+
+<p>จากข้อมูลจะเห็นได้ว่าแม้คะแนนเฉลี่ยจะใกล้เคียงกัน แต่ค่า SD ต่างกันมาก แสดงให้เห็นว่าห้อง B มีเด็กเก่งและไม่เก่ง ส่วนห้อง A จะเก่งใกล้เคียงกันมากกว่า เมื่อวิเคราะห์ผลที่ได้ จะทำให้เห็นว่าถ้าจะสอนห้อง B จะใช้วิธีสอนเหมือนห้อง A ไม่ได้ ต้องแบ่งกลุ่มเด็กอ่อนในห้อง B ออกมาสอนเพิ่มเติมเป็นต้น</p>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+<!--counter-->
+<div id="histats_counter"></div>
+<!-- Histats.com  START -->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+<!-- Histats.com  END -->
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>

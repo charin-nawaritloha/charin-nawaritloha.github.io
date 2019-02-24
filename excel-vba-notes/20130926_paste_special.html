@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>สลับค่าบวกลบของตัวเลขครั้งละมาก ๆ ด้วย Paste Special...</title>
+	<meta name="tags" contents="Excel">
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.php">รับเขียน VBA</a>
+		<a href="p/macros.php">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.php" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.php">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>สลับค่าบวกลบของตัวเลขครั้งละมาก ๆ ด้วย Paste Special...</h1>
+<p>จริง ๆ มันก็ไม่ใช่วิธีใหม่อะไร แต่มาขอจดไว้กันลืม คือพอดีว่าทางบัญชีได้นำรายงาน G/L มาใช้งานบน Excel แต่ประเด็นค่าที่ได้เป็นค่าติดลบ แต่ในรายงานที่ต้องการต้องการให้เป็นบวก คราวนี้ปัญหาคือจำนวนตัวเลขมันเยอะ และไม่อยากมาเขียนสูตรแปลงให้ยุ่งยาก อยากได้เร็ว ๆ ทีเดียวจบในไม่กี่คลิก ก็เลยจัดด้วย Paste Special... ซะเลย
+</p>
+
+<h2>วิธีการไม่มีอะไรมาก ง่าย ๆ ดังนี้</h2>
+<ol>
+<li>เลือกข้อมูลที่ต้องการจะแปลง (เลือกทั้งหมดในครั้งเดียวได้เลย)</li>
+<li>ทำการ Copy ข้อมูล</li>
+<li>นำข้อมูลไปวางในแผ่นงานอื่นชั่วคราว</li>
+<li>Paste Special... โดยเลือก&nbsp;</li>
+<ul>
+<li>Paste: <b>Values</b></li>
+<li>Operation: <b>Subtract</b></li>
+</ul>
+<li>ผลที่ได้จะกลับค่าจากลบเป็นบวกให้เรียบร้อย</li>
+<li>ทำการ Copy ผลที่ได้กลับไป Paste Values ทับต้นฉบับในข้อ 1<br>
+(*´・ェ・)っ.゜+。★</li>
+</ol>
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+
+	<div class="image"><img src="images/20130926_revert_sign_number01.png" class="u-max-full-width" />
+	<div>ข้อมูลในรายงานสมมติเป็นค่าติดลบทั้งหมด ต้องแปลงให้เป็นค่าบวก</div>
+	</div>
+
+	<div class="image"><img src="images/20130926_revert_sign_number02.png" class="u-max-full-width" />
+	<div>เลือกข้อมูล → Copy → เลือกเซลล์ว่างในแผ่นงานอื่น (ใช้ชั่วคราว) → Paste Special... </div>
+	</div>
+
+	<div class="image"><img src="images/20130926_revert_sign_number03.png" class="u-max-full-width" />
+	<div>ค่าที่จากการ Paste Special... จะกลับค่าจากลบเป็นบวกเรียบร้อย</div>
+	</div>
+
+	
+	
+	
+	
+<h2>เกิดอะไรขึ้น ทำไมถึงเป็นอย่างนั้น</h2>	
+	
+	
+	
+<p>โดยปกติเวลาใช้คำสั่ง Paste จะวางข้อมูลไปทับข้อมูลปลายทาง (Operation: None) แต่เมื่อเราเลือก Operation: Subtract ข้อมูลที่จะนำไปวางที่จะเอา [ข้อมูลในพื้นที่เดิม] - [ข้อมูลที่จะวาง] ซึ่งในที่นี่ปลายทางเป็นพื้นที่ว่าง ๆ ซึ่งมีค่าเท่ากับ 0 ดังนั้นเมื่อเอาค่าติดลบไปวาง ก็จะได้ค่ากลับมาเป็นบวก ตัวอย่างเซลล์แรก</p>
+<p style="text-align:center;">0 - (-338767) = 338767</p>
+<p>เราสามารถประยุกต์ใช้ Operation อื่น ๆ ได้ตามสถานะการณ์และข้อมูลที่ต้องการคำนวณครับ ลองหัดใช้บ่อย ๆ เดี๋ยวพอเจอปัญหาจะได้นำมาเอามาใช้คล่อง ๆ ไม่ต้องเสียเวลาทำอะไรอ้อมโลก</p>
+
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+
+</div></div>
+
+
+
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+<!--counter-->
+<div id="histats_counter"></div>
+<!-- Histats.com  START -->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+<!-- Histats.com  END -->
+<!--/counter-->
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>

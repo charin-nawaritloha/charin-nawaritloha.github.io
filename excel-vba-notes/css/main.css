@@ -211,6 +211,21 @@ label.radiogroup {
     padding-top: 1.5rem;
 }
 
+
+.ads {
+	display: block;
+	width: 100%;
+	border: 1px solid gray;
+	margin: 5rem 0;
+	height: 10rem;
+	background-color: #3F51B5;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+
 /*
 Overwrite css from skeleton.css
 */
@@ -225,6 +240,10 @@ ol, ul {
 
 label > .label-body {
   display: inline;
+}
+
+p {
+	line-height: 2.75rem;
 }
 
 
