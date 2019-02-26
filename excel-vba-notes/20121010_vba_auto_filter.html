@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>การอ่านค่าจาก AutoFilter ด้วย VBA</title>
+	<meta name="tags" contents="VBA">
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.html">รับเขียน VBA</a>
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+
+
+
+<img src="images/20121010_0_AutoFilter_menu.png" class="u-max-full-width" />
+
+<h1>การอ่านค่าจาก AutoFilter ด้วย VBA</h1>
+
+<p>ส่วนตัวเวลาเขียน VBA เพื่อดึงข้อมูลที่ผ่านการ filter มาใช้งานจะใช้ Advance Filter โดยให้ Copy มาไว้ทีตำแหน่งที่ต้องการ แล้วจึงนำเอาไปใช้งานจริงอีกที ซึ่งมันก็สะดวกกับงานที่ทำแบบไม่ต้องยุ่งกับผู้ใช้งาน แต่ถ้าเกิดเราอยากจะไปยุ่งกับข้อมูลที่ถูก AutoFilter โดยผู้ใช้งานล่ะ ต้องทำอย่างไรบ้าง</p>
+
+
+<h2>AutoFilter Object</h2>
+<p>ในทุก Worksheet จะอนุญาติให้มี AutoFilter ได้ 1 ชุด และต้องเป็นพื้นที่ติดกันเป็นสีเหลี่ยม ไม่สามารถแยกออกเป็นคอลัมน์ที่ไม่ติดกันได้ โดยแถวแรกจะเป็น Header เสมอ ตัวอย่างที่ใช้ จะเลือกใช้ C4:E14 เพื่อทดสอบผลการทำงานของคำสั่งกัน</p>
+
+	<div class="image"><img src="images/20121010_1_AutoFilter01.png" class="u-max-full-width" />
+	<div>กำหนด AutoFilter ครอบคลุม C4:E14 AutoFilter.FilterMode มีค่า False</div>
+	</div>
+
+	<div class="image"><img src="images/20121010_2_AutoFilter02.png" class="u-max-full-width" />
+	<div>เลือก filter เฉพาะค่า 1 2 4 5 9 และ 10</div>
+	</div>
+	
+	<div class="image"><img src="images/20121010_3_AutoFilter03.png" class="u-max-full-width" />
+	<div>Excel แสดงข้อมูลที่ต้องกับ filter และซ่อนแถวที่ไม่ต้องการ AutoFilter.FilterMode มีค่า True</div>
+	</div>
+	
+<p>ก่อนที่จะไปกันต่อ มาดูกันว่าใน VBA เราจะอ้างอิงตัว AutoFilter ใน Worksheet กันอย่างไร ใน Worksheet object จะมี .AutoFilter เพื่อใช้อ้างถึง AutoFilter Object ดังตัวอย่าง</p>
+	
+<pre class="brush: vb">
+Dim ws as Worksheet
+Set ws = Worksheets("Sheet1")
+
+Dim oAutoFilter As AutoFilter
+Set oAutoFilter = ws.AutoFilter
+
+If oAutoFilter Is Nothing Then
+	Debug.Print "ขออภัย! AutoFilter ไม่ได้ถูกเปิดให้ทำงาน ไม่สามารถทำงานต่อได้"
+	End
+End If
+</pre>	
+	
+<p>
+<span style="color: yellow;"><span style="background-color: red;">ข้อควรระวัง ในกรณี Worksheet ไม่ได้มีการเปิดใช้งาน AutoFilter จะทำให้</span><span style="background-color: red;"><span style="font-family: 'Courier New', Courier, monospace;"> ws.AutoFilter </span></span><span style="background-color: red;">คืนค่าเป็น<span style="font-family: 'Courier New', Courier, monospace;"> Nothing </span>อย่าลืมตรวจสอบก่อนใช้งานเสมอ</span></span>	
+</p>
+
+
+<h2>AutoFilter Member</h2>
+
+<p>สมาชิกใน AutoFilter object ที่น่าสนใจได้แก่</p>
+<ul>
+<li><span style="font-family: monospace;">.FilterMode</span> คืนค่าเป็น True หากมีการเลือก filter</li>
+<li><span style="font-family: monospace;">.Range</span> คืนค่าเป็น Range object ของพื้นที่ที่ถูกใช้งานเป็น AutoFilter ในตัวอย่างคือ Range("C4:E14")</li>
+</ul>
+
+<p>จุดประสงค์ในคราวนี้คือการเข้าไปประมวลผลกับข้อมูลที่ถูก filter เท่านั้น <b>ส่วนที่ซ่อนจะไม่เข้าไปยุ่ง</b> ดังนั้นเราต้องเลือกมาเฉพาะข้อมูลที่แสดงเท่านั้นดังนี้</p>
+
+<pre class="brush: vb">
+Dim rVisible As Range
+Set rVisible = ws.AutoFilter.SpecialCells(xlCellTypeVisible)
+</pre>	
+
+<p>จากที่เราทราบมาว่า ในกรณีที่ Range เกิดจากข้อมูลที่ไม่ได้อยู่ติดกัน จะทำให้เกิดการแบ่งพื้น ๆ ที่ไม่ติดกันออกเป็นส่วน ๆ เก็บใน Areas collection ของ Range object นั้น ๆ ทำให้ไม่สามารถเรียกใช้  rVisible.Rows ได้ถูกต้อง เพราะค่าที่คืนมา คือแถวที่เป็นแถวแรกในแต่ละ Area แทน</p>
+
+<pre class="brush: vb">
+rVisible.Rows.Count 'it return 3
+</pre>	
+
+	<div class="image"><img src="images/20121010_4_AutoFilter04.png" class="u-max-full-width" />
+	<div>ข้อมูลที่แสดงจะถูกแบ่งออกเป็น 3 Areas คือแถว 4-6 8-9 และ 13-14</div>
+	</div>
+
+<p>เพื่อให้สะดวกในการทำงานกับข้อมูลที่แสดงเป็นรายแถว มีหลายวิธีในการที่จะตรวจสอบว่ามีแถวไหนที่แสดงผลบ้าง เช่น การใช้คำสั่ง Intersect กับคอลัมน์ทั้งหมด แล้วจึงค่อยมาไล่ทีละ Cell ว่ามีค่า .Row เท่าไหร่ และหากจะเข้าไปอ่านข้อมูลในคอลัมน์อื่น ๆ ก็ต้องมาอ้างอิงกับข้อมูลใน AutoFilter.Range อีกที</p>
+
+<pre class="brush: vb">
+Sub TestIntersect()
+  Dim ws As Worksheet
+  Set ws = ActiveSheet
+
+  If ws.AutoFilter Is Nothing Then
+    Exit Sub
+  End If
+  
+  Dim rAutoFilter As Range
+  Set rAutoFilter = ws.AutoFilter.Range
+
+  Dim rVisible As Range
+  Set rVisible = rAutoFilter.SpecialCells(xlCellTypeVisible)
+  
+  Dim rRows As Range
+  Set rRows = rAutoFilter.Columns(1)
+  
+  Dim rVisibleRows As Range
+  Set rVisibleRows = Application.Intersect(rVisible, rRows)
+
+  Debug.Print "rVisibleRows.Address", rVisibleRows.Address
+  
+  Dim i As Long, v As Variant
+  
+  For i = 1 To rVisibleRows.Cells.Count
+    Debug.Print "Visible Row: ", rVisibleRows.Cells(i).Row
+    'access 2nd column
+    v = Cells(rVisibleRows.Cells(i).Row, rAutoFilter.Columns(2).Column).Value
+  Next i
+
+End Sub
+</pre>
+
+<p>ผลที่ได้จากการทำงาน<p>
+
+<pre>
+rVisibleRows.Address        $C$4:$C$6,$C$8:$C$9,$C$13:$C$14
+Visible Row:   4 
+Visible Row:   5 
+Visible Row:   6 
+Visible Row:   7 
+Visible Row:   8 
+Visible Row:   9 
+Visible Row:   10 
+</pre>
+
+
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+
+<p>ในตัวอย่างจะเป็นว่า กว่าจะได้ค่า v ที่เป็นคอลัมน์ที่ 2 การเข้าถึงส่วนของข้อมูลอ้างกันหลายทอด นอกจากอ่านยากแล้วยังทำให้มีปัญหาตอนกลับมาแก้ไขโปรแกรมอีกด้วย ในเมื่อเวลาทำงานทำทีละแถวอยู่แล้ว เลยคิดว่านำเอา Row ในแต่ละ Area มาเก็บไว้ใน Collection แล้วจึงนำมาใช้น่าจะง่ายกว่า</p>
+
+<pre class="brush: vb">
+Sub TestAutoFilter()
+ Dim ws As Worksheet
+ Set ws = ActiveSheet
+
+ If ws.AutoFilter Is Nothing Then
+   Exit Sub
+ End If
+  
+ Dim rAutoFilter As Range
+ Set rAutoFilter = ws.AutoFilter.Range
+  
+ Debug.Print "*** Display AutoFilter in current Worksheet ***"
+ Debug.Print "rAutoFilter.Address", rAutoFilter.Address(False, False)
+ Debug.Print "rAutoFilter.Cells.Count", rAutoFilter.Cells.Count
+ Debug.Print "rAutoFilter.Rows.Count", rAutoFilter.Rows.Count
+ Debug.Print "rAutoFilter.Areas.Count", rAutoFilter.Areas.Count
+ 
+ 
+ Dim rVisible As Range
+ Set rVisible = rAutoFilter.SpecialCells(xlCellTypeVisible)
+
+ Debug.Print
+ Debug.Print "*** Display only visible cells in AutoFilter ***"
+ Debug.Print "rVisible.Address", rVisible.Address(False, False)
+ Debug.Print "rVisible.Cells.Count", rVisible.Cells.Count
+ Debug.Print "rVisible.Rows.Count", rVisible.Rows.Count
+ Debug.Print "rVisible.Areas.Count", rVisible.Areas.Count
+
+ 'Convert from Areas to Rows Collection
+ Debug.Print
+ Debug.Print "*** Convert from Areas to Rows Collection ***"
+ Dim rArea As Range, rRow As Range
+ Dim cRows As New Collection
+ 
+ For Each rArea In rVisible.Areas
+  For Each rRow In rArea.Rows
+   cRows.Add rRow
+   Debug.Print "rRow.Address", rRow.Address(False, False)
+  Next rRow
+ Next rArea
+
+ Dim v As Variant
+ For Each rRow In cRows
+  'access 2nd column
+  v = rRow.Cells(2)
+ Next
+
+End Sub
+</pre>
+
+<p>ผลที่ได้จากการทำงาน </p>
+
+<pre>
+*** Display AutoFilter in current Worksheet ***
+rAutoFilter.Address         C4:E14
+rAutoFilter.Cells.Count      33 
+rAutoFilter.Rows.Count       11 
+rAutoFilter.Areas.Count      1 
+
+*** Display only visible cells in AutoFilter ***
+rVisible.Address            C4:E6,C8:E9,C13:E14
+rVisible.Cells.Count         21 
+rVisible.Rows.Count          3 
+rVisible.Areas.Count         3 
+
+*** Convert from Areas to Rows Collection ***
+rRow.Address  C4:E4
+rRow.Address  C5:E5
+rRow.Address  C6:E6
+rRow.Address  C8:E8
+rRow.Address  C9:E9
+rRow.Address  C13:E13
+rRow.Address  C14:E14
+</pre>
+
+<p>จะเห็นว่าเราไล่เก็บข้อมูลแต่ละแถวในแต่ละ Area ในตัวแปรแบบ Collection ตอนเอามาใช้งานก็ง่าย เพราะ 1 item ใน Collection เก็บแค่ 1 แถว ดังนั้นจะดึงขึ้นมูลในคอลัมน์ที่ 2 ก็อ้างอิง .Cells(2) ได้ทันที </p>
+
+<p>สุดท้ายใครมีวิธีเด็ด ๆ เจ๋ง ๆ ก็เม้นมาเลย ครับ ผมเองก็เขียนแบบที่คิดได้ ไม่ได้ดีที่สุดครับ</p>
+
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
