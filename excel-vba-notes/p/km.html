@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>แหล่งอ้างอิงใช้งาน Excel และ VBA</title>
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='../css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='../css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='../css/main.css' rel='stylesheet' type='text/css'>
+	<link href='../css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="../favicon.png">
+	
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="../index.html">หน้าหลัก</a>
+		<a href="vba.html">รับเขียน VBA</a>
+		<a href="macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>แหล่งอ้างอิงใช้งาน Excel และ VBA</h1>
+
+<h2>Excel FileFormat xlFileFormat รูปแบบที่ใช้งานบ่อย ๆ</h2>
+
+<table><tbody>
+<tr style="background-color: #face00;"><th>Extension</th><th>xlFileFormat</th><th>รูปแบบไฟล์</th></tr>
+<tr><th>xlsx</th><td><span style="font-family: monospace;">xlOpenXMLWorkbook</span></td><td>ไฟล์มาตราฐานของ Excel 2007</td></tr>
+<tr><th>xls</th><td><span style="font-family: monospace;">xlExcel8</span></td><td>Excel 97-2003</td></tr>
+<tr><th>xlsm</th><td><span style="font-family: monospace;">xlOpenXMLWorkbookMacroEnabled&nbsp;</span></td><td>ไฟล์มาตราฐานของ Excel 2007 รองรับ Macro</td></tr>
+<tr><th>xlsb</th><td><span style="font-family: monospace;">xlExcel12</span></td><td>ไฟล์ Excel 2007 แบบ Binary</td></tr>
+<tr><th>csv</th><td><span style="font-family: monospace;">xlCSV</span></td><td>ไฟล์ CSV (comma)</td></tr>
+<tr><th>txt</th><td><span style="font-family: monospace;">xlText</span></td><td>ไฟล์ Text (tab)</td></tr>
+<tr><th>xml</th><td><span style="font-family: monospace;">xlXMLSpreadsheet</span></td><td>ไฟล์ Excel 2003 XML</td></tr>
+</tbody></table>
+
+<p>
+ดู&nbsp;<a href="http://msdn.microsoft.com/en-us/library/bb214129(v=office.12).aspx" target="ext_link">Workbook.SaveAs Method</a>&nbsp;(Excel 2007) ประกอบ</p>
+
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+<h2>ข้อมูลจาก Microsoft</h2>
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/library/office/aa272254(v=office.11)" target="_blank">Microsoft Excel 2003 Visual Basic Reference</a><br>คู่มืออ้างอิงสำหรับการพัฒนา VBA บน Excel 2003&nbsp;</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/office/bb149067(v=office.12)" target="_blank">Microsoft Excel 2007 Developer Reference</a><br>คู่มืออ้างอิงสำหรับการพัฒนา VBA บน Excel 2007&nbsp;</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/office/aa188202(v=office.10).aspx" target="_blank">Introducing Visual Basic For Applications</a><br>เริ่มต้นเขียน VBA อย่างไร ยังไง ทำไม ฯลฯ</li>
+<li><a href="http://support.microsoft.com/kb/42964" target="_blank">Converting a Number with Minus Sign on Right to Minus on Left</a><br>การแก้ไขปัญหาตัวเลขที่เครื่องหมายลบอยู่ด้านขวา (ด้านหลังตัวเลข) ทำให้นำมาคำนวณไม่ได้&nbsp;</li>
+<li><a href="http://office.microsoft.com/en-001/excel-help/using-structured-references-with-excel-tables-HA010155686.aspx" target="_blank">Using structured references with Excel tables</a><br>วิธีการใช้งาน Table ใน Excel</li>
+<li><a href="http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx" target="_blank">Create a custom number format</a><br>ใครอยากเขียน Custom format สำหรับตัวเลข ข้อความ วันที่ ฯลฯ แบบเมพ ๆ ต้องอ่าน</li>
+<li><a href="http://support.microsoft.com/kb/194983" target="_blank">PRB: Round Function different in VBA 6 and Excel Spreadsheet</a><br>Round() ใน VBA กับใน Excel formula ทำงานไม่เหมือนกัน ยังไง ลองอ่านเลย</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/ee691831(loband).aspx#odc_office2010_Compatibility32bit64bit_IntroducingVBA7CodeBase" target="_blank">Compatibility Between the 32-bit and 64-bit Versions of Office 2010</a><br>ความแตกต่างระหว่าง Office 32 กับ 64 bit</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/office/aa139976(v=office.10).aspx" target="_blank">Chapter 5: Using Ranges</a><br>การเขียน VBA เพื่อใช้งาน Ranges อย่างที่ควรจะเป็น</li>
+<li><a href="http://office.microsoft.com/en-us/excel-help/introducing-array-formulas-in-excel-HA001087290.aspx" target="_blank">Introducing array formulas in Excel</a><br>ถ้าเคยเจอ ={A1:A10+B1:B10} ต้องลองอ่าน ถ้าเข้าใจหลักการและวิธีใช้ มันทำให้ชีวิตง่ายขึ้นเยอะเลย</li>
+</ul>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>

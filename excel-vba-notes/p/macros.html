@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>วิธีเปิดใช้งานแมโคร (How to enable Excel Macros)</title>
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='../css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='../css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='../css/main.css' rel='stylesheet' type='text/css'>
+	<link href='../css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="../favicon.png">
+	
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="../index.html">หน้าหลัก</a>
+		<a href="vba.html">รับเขียน VBA</a>
+		<a href="macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>วิธีเปิดใช้งานแมโคร (How to enable Excel Macros)</h1>
+
+<p>หลายคนสงสัยว่าทำไมบันทึก Macros แล้ว เมื่อเปิดไฟล์มาใช้งานอีกครั้งกลับไม่สามารถใช้งาน Macros ได้ สาเหตุส่วนใหญ่เกิดมากจากค่าที่ตั้งไว้ในโปรแกรม Excel นั้นตั้งค่าไว้ไม่เหมือนกัน</p>
+
+	<div class="image"><img src="images/20130904_01_macro_disable.png" class="u-max-full-width" />
+	<div>เมื่อคลิกปุ่ม หรือ สั่งให้ Macros ทำงานแล้วพบว่ามีข้อความเตือน <br /><span style="color:red">Cannot run the macro 'xxxxx'. <br />
+The macro may not be available in this workbook or all macros may be disabled.</span></div>
+	</div>
+
+<p>จากข้อความเตือนดังกล่าว เกิดจาก</p>
+<ol>
+<li><b>ไม่มีโปรแกรม Macros ที่ระบุไว้ </b>ซึ่งอาจเกิดจาก copy ข้อมูลไปบางส่วนแต่ไม่ได้ copy โปรแกรม VBA Macros ไปด้วย เป็นต้น</li>
+<li><b>โปรแกรม Excel ที่ใช้งานอยู่ ไม่ได้ตั้งค่าเปิดการทำงานของ Macros </b><br>ซึ่งส่วนใหญ่ผู้ใช้งานจะเจอปัญหาข้อ 2 มากกว่า</li>
+</ol>
+
+<p>ถ้าเป็นค่ามาตรฐาน จะขึ้นข้อความเตือน ผู้ใช้จำเป็นต้องคลิกอนุญาติให้โปรแกรม Excel ทำสั่ง Macros ในไฟล์ได้ (ต้องทำทุกครั้งที่เปิดไฟล์)</p>
+
+	<div class="image"><img src="images/20130904_02_macro_disable.png" class="u-max-full-width" />
+	<div>ตัวอย่างข้อความเตือน หากต้องการใช้ Macro ในไฟล์ที่เปิด <br />ต้องคลิก Options เพื่อเปิดใช้งาน Macro</div>
+	</div>
+
+	
+<p>ดั้งนั้นหากจำเป็นต้องใช้ Macros บ่อย ๆ เป็นงานประจำ การที่จะมานั่งคลิกกดปุ่ม Options... ทุก ๆ ครั้งคงไม่ใช่เรื่องสนุกนัก พาลจะหงุดหงิดอารมณ์เสียไปซะก่อน ว่าแล้วมาดูกันเลยว่า Excel 2007 (รวมถึงรุ่นที่ใหม่กว่า) มีวิธีจัดการ Macros กันอย่างไรบ้าง</p>
+
+
+<h2>วิธีการเปิด/ปิด Macro บน Excel 2010</h2>
+<h3>ค่าปริยายของ Excel 2010 หรือใหม่กว่า</h3>
+<p>บน Excel 2010 และรุ่นใหม่ ๆ ได้แก้ไขความยุ่งยากในการใช้งานแมโคร คือ เมื่อผู้ใช้งานอนุญาติให้ใช้แมโครกับไฟล์ใดแล้ว โปรแกรมจะจำค่าดังกล่าวตลอดไป โดยรูปแบบการเปิดใช้งานแมโครจะมี 2 แบบดังนี้</p>
+
+	<div class="image"><img src="images/20130904_A1_security_warning.png" class="u-max-full-width" />
+	<div>1. ขึ้นเป็นแถบ Security Warning ให้คลิกที่ปุ่ม <span style="border: 1px solid gray;"> Enable Content </span> เพื่อเปิดใช้แมโคร</div>
+	</div>
+
+
+	<div class="image"><img src="images/20130904_A2_security_notice.png" class="u-max-full-width" />
+	<div>2. เปิดหน้าต่าง Security Notice ให้คลิกที่ปุ่ม <span style="border: 1px solid gray;"> Enable Macros </span> เพื่อเปิดใช้แมโคร</div>
+	</div>
+<p>โปรแกรม Excel จะถามใหม่อีกครั้งในกรณีที่เปลี่ยนชื่อไฟล์ หรือย้ายไฟล์ไปอยู่ที่โฟลเดอร์ใหม่</p>
+<h3>ไม่พบแถบหรือหน้าต่าง Security</h3>
+<p>ในกรณีที่ไม่พบแถบหรือหน้าต่างข้างต้น แสดงว่าไฟล์ดังกล่าว อาจไม่มีแมโคร หรือเคยเปิดใช้เรียบร้อยแล้ว แต่หากไม่เคยเปิดใช้มาก่อนและไม่สามารถใช้งานแมโครได้ ให้ลองตรวจสอบในส่วนของ Options ดูว่าตั้งค่าไว้อย่างไร ซึ่งแนะนำให้ตั้งค่าดังนี้</p>
+
+	<div class="image"><img src="images/20130904_A3_options.png" class="u-max-full-width" />
+	<div>เลือกเมนู Options</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_A4_options.png" class="u-max-full-width" />
+	<div>คลิกเลือก Trust Center ในแถบด้านซ้ายมือ<br /> จากนั้นให้คลิกที่ปุ่ม <span style="border: 1px solid gray;"> Trust Center Settings... </span></div>
+	</div>
+	
+	<div class="image"><img src="images/20130904_A5_options.png" class="u-max-full-width" />
+	<div>ในหน้าต่าง Trust Center ให้คลิกเลือก Macro Settings ในแถบด้านซ้ายมือ<br />จากนั้นคลิกเลือก Disable all macros with notification คลิกปุ่ม <span style="border: 1px solid gray;"> OK </span> เพื่อยืนยันและบันทึกค่า</div>
+	</div>
+
+	
+	
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+
+
+	
+<h2>วิธีการเปิด/ปิด Macro บน Excel 2007</h2>
+<h3>แบบแรก "ทุกไฟล์นโยบายเดียวกัน"</h3>
+<p>การตั้งค่าแบบนี้จะเป็นการกำหนดค่าให้ใช้การตรวจสอบกับไฟล์ Excel ที่มี Macros ทุกไฟล์ เป็นวิธีที่ใช้กันมาตั้งแต่รุ่นโบราณ (รุ่นก่อน 2007)</p>
+
+	<div class="image"><img src="images/20130904_03_options.png" class="u-max-full-width" />
+	<div>คลิกที่ปุ่มโลโก้ Office แล้วคลิกปุ่ม Excel Options</div>
+	</div>
+	
+	<div class="image"><img src="images/20130904_04_options.png" class="u-max-full-width" />
+	<div>คลิก Trust Center จากนั้นคลิกปุ่ม Trust Center Settings... เพื่อเปิดหน้าต่าง Trust Center</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_05_options.png" class="u-max-full-width" />
+	<div>คลิกที่ Macro Settings ในช่องด้านขวาจะมีให้เลือกเงื่อนไขการเปิดใช้งาน Macros</div>
+	</div>	
+
+<p><b>แล้วเลือกข้อไหนดี?</b> ก่อนที่ตัดสินใจว่าจะเลือกใช้ค่าไหน อยากให้อ่านรายละเอียดก่อนว่าแต่ละรายการมีคุณสมบัติและวิธีการทำงานอย่างไรบ้าง	</p>
+<ul>
+<li><b>Disable all macros without notification </b><br>เลือกข้อนี้จะ<span style="background-color: #e06666;">ปิดการใช้งาน Macros ถาวร</span> ไม่มีการข้อความเตือนเมื่อเปิดไฟล์<br>&nbsp;</li>
+<li><b>Disable all macros with notification&nbsp;←&nbsp;</b><span style="background-color: #d9ead3;">สำหรับผู้ใช้งานทั่วไปแนะนำข้อนี้ครับ</span><br>เมื่อเปิดไฟล์ Macros จะถูกปิดไม่ให้ทำงาน และจะ<span style="background-color: #ffe599;">ขึ้นข้อความเตือน</span> ผู้ใช้สามารถคลิกปุ่ม Options... เพื่ออนุญาติให้ Macros ทำงานได้<br><br>
+<img src="images/20130904_06_options.png" class="u-max-full-width" /><br />
+<img src="images/20130904_07_options.png" class="u-max-full-width" />
+
+</li>
+<li><b>Disable all macros except digitally signed macros</b><br>สำหรับข้อนี้เหมาะกับองค์กรที่มีการใช้ Macros จากบริษัทที่มีการลงลายเซ็นอิเล็กทรอนิกส์รับรองจากบริษัทผู้สร้าง Macros เป็นเรื่องเป็นราว ผู้ใช้งานทั่วไปคงไม่ได้ใช้กันครับ <br>เพราะถ้าไฟล์ไหนไม่มีลายเซ็นฯ ก็จะปิดการใช้งาน Macros โดยไม่ขึ้นคำเตือน<br>&nbsp;&nbsp;</li>
+<li><b>Enable all macros <span style="color: red;">(not recommended; potentially dangerous code can run)</span></b><br>ใครที่คิดว่าแน่ก็เลือกข้อนี้เลย เพราะโปรแกรม Excel <span style="background-color: #b6d7a8;">จะอนุญาติให้ Macros ทำงานได้ทันทีเมื่อเปิดไฟล์ ไม่มีการเตือนให้รำคาญใจ</span> <br><span style="color: red;">แต่!!!<span style="background-color: yellow;"> </span></span><span style="background-color: yellow;"><span style="color: red;">ไม่แนะนำ สำหรับผู้ใช้งานทั่วไป&nbsp;</span></span>เพราะหากคุณเผลอไปเปิดไฟล์ที่มีคำสั่งที่อันตรายเข้า (เช่นมีคำสั่ง ลบไฟล์ เขียนข้อมูลทับ) โดยตั้งใจหรือไม่ตั้งใจก็ตาม อาจทำให้เกิดความเสียหายกับเครื่องและข้อมูลที่มีอยู่ได้<br><span style="background-color: #f4cccc;">ดังนั้นจะเลือกข้อนี้ต้องระวังและแน่ใจว่าตัวเองรอบคอบ ไม่เปิดไฟล์ Excel ที่ไม่น่าไว้ใจหรือไม่น่าเชื่อถือ</span></li>
+</ul>	
+	
+
+<h3>แบบที่สอง "เฉพาะโฟลเดอร์ที่ใช้งานเท่านั้น"</h2>
+<p>การตั้งค่าแบบแรกนั้นถ้าคนใช้งานบ่อย ๆ และไม่อยากจะต้องมาเปิด Macros โดยคลิก Options ทุกครั้ง จะเลือก Enable all macros ให้เปิดตลอดก็กลัวจะไปเจอปัญหาที่ไม่คาดฝัน ดังนั้นตั้งแต่ Excel 2007 เป็นต้นมาได้แก้ไขปัญหานี้ โดยให้ผู้ใช้สามารถเพิ่มตำแหน่งโฟลเดอร์ที่เก็บไฟล์ที่มี Macros เฉพาะได้ โดยหากเปิดไฟล์ในโฟลเดอร์ที่กำหนด โปรแกรม Excel จะอนุญาติให้เรียกใช้ Macros ได้ทันที</p>
+
+
+	<div class="image"><img src="images/20130904_08_folder.png" class="u-max-full-width" />
+	<div>สมมติว่ามีสร้างโฟลเดอร์ชื่อ <b>R:\สำหรับเก็บไฟล์ VBA</b> ที่สำหรับเอาไว้ทำงานกับ Macros แน่ ๆ</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_09_options.png" class="u-max-full-width" />
+	<div>ทำการเพิ่มโฟลเดอร์โดยการเลือก Trusted Locations คลิก Add new location...</div>
+	</div>	
+	
+	<div class="image"><img src="images/20130904_10_options.png" class="u-max-full-width" />
+	<div>คลิกที่ปุ่ม Browse... เพื่อเลือกโฟลเดอร์ที่จะเพิ่ม</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_10a_options.png" class="u-max-full-width" />
+	<div>เลือกโฟลเดอร์ <b>R:\สำหรับเก็บไฟล์ VBA</b> จากนั้นกดปุ่ม OK</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_11_options.png" class="u-max-full-width" />
+	<div>หากต้องการให้เปิด Macros ในโฟลเดอร์ย่อย ๆ ด้วยให้ทำเครื่องหมายถูก <br />✔ Subfolders of this location are also trusted</div>
+	</div>
+
+	<div class="image"><img src="images/20130904_12_options.png" class="u-max-full-width" />
+	<div>รายการโฟลเดอร์ที่จะเพิ่มจะไปอยู่ในตารางเรียบร้อย<br />สามารถลบหรือแก้ไขโฟลเดอร์ โดยกดปุ่ม Remove และ Modify... ตามลำดับ</div>
+	</div>
+
+<p>ในการเพิ่มโฟลเดอร์ที่ใช้ทำงานกับ Macros และกำหนดให้ Excel รับรองว่าปลอดภัย สามารถเพิ่มได้หลาย ๆ โฟลเดอร์ตามการใช้งานจริง ต่อไปเมื่อเปิดไฟล์ใน <b>R:\สำหรับเก็บไฟล์ VBA</b> ก็ไม่ต้องมาคอย Enable Macros ให้ยุ่งยากแล้ว</p>
+
+<h3>เดินทางสายกลาง</h3>
+<p>สำหรับผู้ใช้ทั่ว ๆ ไปที่ไม่รู้จะเลือกอะไรดี ขอแนะนำการเลือกแบบกลาง ๆ ที่น่าจะใช้งาน Macros โดยไม่ต้องรำคาญกับข้อความเตือน และ สามารถใช้งานได้อย่างปลอดภัย</p>
+<ol>
+<li>Macro Settings ให้เลือก <b>Disable all macros with notification</b></li>
+<li>ถ้าเก็บไฟล์ที่ใช้งานใน <b>My Documents</b> อยู่เป็นประจำอยู่แล้ว แนะนำให้เพิ่มโฟลเดอร์ <b>My Documents</b> เข้าไปใน Trusted Locations<br>สำหรับไฟล์ที่ดาวน์โหลดมาจากอินเทอร์เน็ตหรืออีเมลล์ แนะนำให้บันทึกไว้ที่โฟลเดอร์อื่นก่อน ถ้าลองเปิดแล้วแน่ใจ จึงค่อยคัดลอกไฟล์ไปไว้ใน My Documents อีกที</li>
+</ol>
+
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
