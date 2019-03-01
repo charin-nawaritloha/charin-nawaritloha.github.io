@@ -1,45 +1,6 @@
-/*@font-face {
-  font-family: 'Quark';
-  font-style: normal;
-  font-weight: 400;
-  src: url(fonts/Quark-Light.otf) format('otf');
-  unicode-range: U+0020-007F,U+0E00-0E7F;
-}
-@font-face {
-  font-family: 'Quark';
-  font-style: normal;
-  font-weight: 700;
-  src: url(fonts/Quark-Bold.otf) format('otf');
-  unicode-range: U+0020-007F,U+0E00-0E7F;
-}*/
-
-/*
 @font-face {
 	font-family: 'Quark';
-	src: url('/fonts/Quark-Light.ttf') format('truetype');
-	src: url('/fonts/Quark-Light.eot');
-	src: url('/fonts/Quark-Light.eot?#iefix') format('embedded-opentype');
-	src: url('/fonts/Quark-Light.woff') format('woff');
-  src: url('/fonts/Quark-Light.otf') format('otf');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Quark';
-	src: url('/fonts/Quark-Bold.eot');
-	src: url('/fonts/Quark-Bold.ttf') format('truetype');
-	src: url('/fonts/Quark-Bold.eot?#iefix') format('embedded-opentype');
-	src: url('/fonts/Quark-Bold.woff') format('woff');
-  src: url('/fonts/Quark-Bold.otf') format('otf');
-	font-weight: 700;
-	font-style: normal;
-}
-*/
-
-@font-face {
-	font-family: 'Quark';
-	src: url('/fonts/Quark-Light.ttf');
+	src: url('../fonts/Quark-Light.ttf');
 	/*src: url('/fonts/Quark-Light.eot');
 	src: url('/fonts/Quark-Light.woff');*/
 	font-weight: 400;
@@ -48,7 +9,7 @@
 
 @font-face {
 	font-family: 'Quark';
-	src: url('/fonts/Quark-Bold.ttf');
+	src: url('../fonts/Quark-Bold.ttf');
 	/*src: url('/fonts/Quark-Bold.eot');
 	src: url('/fonts/Quark-Bold.woff');*/
 	font-weight: 700;
