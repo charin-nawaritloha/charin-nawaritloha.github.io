@@ -225,6 +225,10 @@ label.radiogroup {
 	white-space: nowrap;
 }
 
+.break { 
+	padding-bottom: 4rem;
+}
+
 
 /*
 Overwrite css from skeleton.css
