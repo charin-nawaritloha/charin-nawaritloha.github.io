@@ -26,6 +26,33 @@
 <script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
 <!--/facebook-->
 
+<!-- Load Facebook SDK for JavaScript -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v3.2'
+    });
+  };
+
+  (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Your customer chat code -->
+<div class="fb-customerchat"
+  attribution=setup_tool
+  page_id="212011649344147"
+  logged_in_greeting="สวัสดีครับ หลังจากได้ข้อความ ผมจะรีบตอบกลับให้เร็วที่สุดครับ"
+  logged_out_greeting="สวัสดีครับ หลังจากได้ข้อความ ผมจะรีบตอบกลับให้เร็วที่สุดครับ">
+</div>
+
+
+
 
 <div class="container">
 <!--navbar-->
