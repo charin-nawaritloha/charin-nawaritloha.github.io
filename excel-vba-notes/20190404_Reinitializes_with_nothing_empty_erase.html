@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>การเริ่มต้นค่าตัวแปรใหม่อีกครั้งใน VBA (Reinitializes) ด้วย Nothing, Empty และ Erase</title>
+	<meta name="tags" contents="VBA">
+
+	<!--header-->
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.html">รับเขียน VBA</a>
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>การเริ่มต้นค่าตัวแปรใหม่อีกครั้งใน VBA (Reinitializes) ด้วย Nothing, Empty และ Erase</h1>
+
+<p>ในการกำหนดค่าเริ่มต้นตัวแปรใหม่สำหรับการเขียนโปรแกรม อาจทำไม่บ่อย แต่ถ้าจำเป็นต้องทำขึ้นมา เรามีวิธีล้างค่าเดิมที่เก็บอยู่ให้เป็นค่าเริ่มต้นได้อย่างไรบ้าง</p>
+
+
+<h2>ตัวแปรแบบ Object ใช้ Nothing</h2>
+
+<p>สำหรับตัวแปรแบบ Object หากไม่ต้องการใช้งาน Object ดังกล่าวต่อแล้ว และต้องการคืนหน่วยความจำที่ถูกใช้งาน ให้กำหนดค่าด้วย Nothing</p>
+<pre class="brush: vb">
+Dim testObject As New Collection
+
+testObject.Add "Data 1"
+testObject.Add "Data 2"
+'process object ...
+
+Set testObject = Nothing 'Release object and free space	
+</pre>
+
+<p>ยกเว้นว่า หากมีตัวแปรที่อ้างถึง Object เดียวกันอยู่เกิน 1 ตัว ตัว VBA จะยังไม่คืนหน่วยความจำที่ถูกใช้งาน จนกว่าตัวแปรที่อ้างอิง Object นั้นถูกกำหนดเป็น Nothing ทั้งหมด </p>
+<p>จากตัวอย่างด้านล่าง severalObject ได้อ้างอิงตำแหน่ง Object เดียวกับ testObject ดังนั้นแม้จะกำหนด Nothing ให้กับ testObject ไปแล้ว แต่ตัว VBA จะยังไม่คืนหน่วยความจำจนกว่าจะกำหนด Nothing ให้กับ severalObject ด้วย</p>
+<pre class="brush: vb">
+Dim testObject As New Collection
+Dim severalObject As Collection
+
+testObject.Add "Data 1"
+testObject.Add "Data 2"
+'process object ...
+
+Set severalObject = testObject
+Set testObject = Nothing  	'ยังมี severalObject อีกตัวที่ยังอ้างถึง Collection อยู่
+Set severalObject = Nothing 	'ลบ Collection ที่จองไว้ออกจากหน่วยความจำ
+</pre>
+
+<p>สำหรับ Object ที่เราใช้อ้างอิงถึงวัตถุใน Excel อื่น ๆ เช่น Workbook WorkSheet และอื่น ๆ การใช้ Nothing ไม่ได้เป็นการยกเลิกการใช้งาน เพื่อคืนหน่วยความจำ เนื่องจากวัตถุพวกนี้ถูกสร้างจากโปรแกรม Excel ดังนั้นหากต้องการจะยกเลิก ต้องใช้ Method โดยเฉพาะเท่านั้น เช่น</p>
+<pre class="brush: vb">
+Dim wbReport As Workbook
+
+Set wbReport = Workbooks.Open("C:\My Documents\Demo.xlsx") 'สร้าง Object จาก Excel
+
+wbReport.Close 'เมื่อเลิกใช้แล้ว ให้ปิด Workbook 
+
+Set wbReport = Nothing 'กำหนดให้เป็น Nothing เพื่อป้องกันการใช้งาน Workbook ที่ถูกปิดไปแล้ว	
+</pre>
+
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+<h2>การใช้ Empty เพื่อเริ่มต้นค่าในตัวแปรอีกครั้ง</h2>
+
+หากอ่านคู่มือ VBA จะพบว่า Empty ใช้กำหนดกับตัวแปรชนิด Variant ที่ยังไม่ได้กำหนดค่าใด ๆ ซึ่งจะเป็นค่าเริ่มต้นของตัวแปร Variant แต่ในการใช้งานจริง การใช้ Empty กับตัวแปรอื่น ๆ ก็ได้ผลไม่ต่างจากตัวแปร Variant คือ เป็นการกำหนดค่าเริ่มต้นใหม่กับตัวแปรนั้น ๆ 
+ปกติ หากเรามีตัวแปรแบบ ตัวเลข และ ข้อความ เราจะล้างค่าเป็นค่าเริ่มต้นดังนี้</p>
+<pre class="brush: vb">
+Dim myNumber As Integer
+Dim myText As String
+
+'ใช้งานตัวแปรในโปรแกรม
+'...
+'...
+
+'กำหนดค่าเริ่มต้นให้ตัวแปรแบบที่เรียนกันมา
+myNumber = 0
+myText = ""
+</pre>
+
+<p>หากเขียน VBA มาพอสมควรจะทราบว่า ตัว VBA นั้นมีกระบวนการช่วยแปลงชนิดข้อมูลให้อัตโนมัติ เช่น</p>
+<pre class="brush: vb">
+Dim myNumber As Integer
+Dim myText As String
+
+myNumber = "100" 'แปลงข้อความ "100" เป็นตัวเลข 100
+myText = 100 'แปลงตัวเลข 100 เป็นข้อความ "100"
+</pre>
+
+<p>โปรแกรมข้างบนหาก Run แล้วจะไม่เกิด Runtime Error เพราะ VBA ช่วยแปลงค่าให้ แล้ว Empty ล่ะตัว VBA แปลงค่าให้เป็นอะไรได้บ้าง</p>
+<pre class="brush: vb">
+Dim myNumber As Integer
+Dim myText As String
+
+myNumber = 100
+myText = "my text"
+
+myNumber = Empty 'ค่าใน myNumber = 0
+myText = Empty		'ค่าใน myText = ""
+</pre>
+
+<p>โปรแกรมด้านบน เมื่อกำหนดค่า Empty ให้ตัวแปรประเภทตัวเลข (Interger) และตัวแปรข้อความ (String) แล้วจะกลายเป็นการเริ่มต้นค่าตัวแปรใหม่อีกครั้ง</p>
+
+<p>ทำไมถึงเป็นอย่างนั้น หากเราใช้คำสั่งในการแปลงประเภทข้อความ เช่น CInt() และ CStr() กับ Empty แล้วจะพบว่ามันคืนค่าเป็นค่าเริ่มต้นของข้อความประเภทนั้น ๆ อัตโนมัติ</p>
+<pre class="brush: vb">
+myNumber = CInt(Empty) 'CInt(Empty) คืนค่า 0
+myText = CStr(Empty)		'CStr(Empty) คืนค่า ""
+</pre>
+
+<p>จะเห็นว่าคราวนี้เราจะกำหนดค่าเริ่มต้นของตัวแปรประเภทต่าง ๆ ไม่ว่าจะเป็น Variant Integer Long Single Double String Boolean สามารถใช้ Empty ได้ทันที ซึ่งสะดวกมากสำหรับการทำการตัวแปรครั้งละหลาย ๆ ตัว หลาย ๆ ประเภทปนกัน เช่น ผมมี Class ที่ใช้เก็บค่าที่ได้จากฐานข้อมูล ที่มีหลายสิบฟิวส์ (fields) ดังนี้	</p>
+<pre class="brush: vb">
+Public RecordNo As Long
+Public cancel As String
+Public PONo As Long
+Public PODate As Date
+Public DistributorTName As String
+Public SellerCode As Long
+Public SellerName As String
+Public Region As String
+Public CustomerName As String
+Public PaymentMethod As String
+Public ItemCode As Variant
+Public Description As String
+Public Brand As String
+Public Cost_PC As Double
+Public Qty As Long
+Public Price_PC As Double
+Public Discount1 As Double
+Public Discount2 As Double
+</pre>
+<p>หากจำเป็นต้องล้างค่าใน Class ทุกฟิวส์ หากไม่ใช่ Empty เราจำเป็นต้องกำหนดค่าตามประเภทของมูลเอง ซึ่งทำให้เสียเวลาในการเขียนโปรแกรมมากและอาจกำหนดค่าผิดประเภทได้</p>
+<pre class="brush: vb">
+RecordNo = 0
+cancel = ""
+PONo = 0
+PODate = 0
+DistributorTName = ""
+</pre>
+<p>ดังนั้นการใช้ Empty ไปเลยนอกจากจะทำให้ได้ค่าเริ่มต้นแล้ว ยังสะดวกมาก ๆ เพราะสามารถใช้กับ Primitive datatype หรือประเภทข้อมูลพื้นฐานได้ทั้งหมด</p>
+<pre class="brush: vb">
+RecordNo = Empty
+cancel = Empty
+PONo = Empty
+PODate = Empty
+DistributorTName = Empty
+</pre>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+<h2>การกำหนดค่าเริ่มต้น และคืนหน่วยความจำของ Array ด้วย Erase</h2>
+<p>ตัวแปรประเภท Array หากเราต้องการจะทำการล้างข้อมูลภายใน Array ให้เป็นค่าเริ่มต้น สามารถใช้คำสั่ง Erase ได้ทันที ตัวอย่างการใช้งานจาก Help ของ VBA</p>
+
+<pre class="brush: vb">
+Dim NumArray(10) As Integer    ' Integer array.
+Erase NumArray    ' NumArray(0) ถึง NumArray(9) ถูกกำหนดค่าเป็น 0
+
+Dim StrVarArray(10) As String    ' Variable-string array.
+Erase StrVarArray    ' StrVarArray(0) ถึง NumArray(9) ถูกกำหนดค่าเป็น ""
+
+Dim StrFixArray(10) As String * 10    ' Fixed-string array.
+Erase StrFixArray    ' StrFixArray(0) ถึง StrFixArray(9) ถูกกำหนดค่าเป็น Char(0) * 10 ตัว
+
+Dim VarArray(10) As Variant    ' Variant array.
+Erase VarArray    ' Each element set to Empty.
+
+Dim DynamicArray() As Integer    ' Dynamic array.
+ReDim DynamicArray(10)    ' จองพื้นที่เก็บข้อมูลตัวเลข จำนวน 10 ตัว
+Erase DynamicArray    ' คืนพื้นที่เก็บตัวเลข จำนวน 10 ตัว หากจะใช้งาน ต้อง ReDim ใหม่อีกครั้ง
+</pre>
+
+</div></div>
+
+
+
+
+
+
+
+
+
+
+<!--comments-->
+<div class="container">
+<div class="fb-comments" data-href="https://charin-nawaritloha.github.io/excel-vba-notes/" data-numposts="5"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
