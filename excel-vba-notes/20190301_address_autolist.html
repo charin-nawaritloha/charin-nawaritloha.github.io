@@ -5,6 +5,7 @@
 	<meta name="tags" contents="Cookbook">
 
 	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
 	<meta charset="utf-8">
 	<meta name="author" content="Charin Nawaritloha">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,8 +30,24 @@
 
 <body>
 <!--facebook-->
-<div id="fb-root"></div>
-<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '306783623357456',
+      xfbml      : true,
+      version    : 'v3.2'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/th_TH/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 <!--/facebook-->
 
 
@@ -120,10 +137,10 @@
 
 
 <!--comments-->
-<div style="padding-top:10rem;">
-
 <div class="container">
-<div class="fb-comments"></div>
+	<div class="fb-like" data-share="true" data-show-faces="true" />
+	<div style="padding-top:10rem;">&nbsp;</div>
+	<div class="fb-comments" data-numposts="10" data-width="100%"></div>
 </div>
 <!--/comments-->
 
