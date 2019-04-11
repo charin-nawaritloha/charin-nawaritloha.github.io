@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>การเรียกใช้งานฐานข้อมูล SQLite ผ่าน ODBC บน Excel</title>
+	<meta name="tags" contents="VBA,Cookbook">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '306783623357456',
+      xfbml      : true,
+      version    : 'v3.2'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/th_TH/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.html">รับเขียน VBA</a>
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>การเรียกใช้งานฐานข้อมูล SQLite ผ่าน ODBC บน Excel</h1>
+<p>เมื่อวานเกิดนึกสนุก นั่งรื้อตัวเชื่อมต่อฐานข้อมูลบน VBA ที่เขียนไว้นานแล้วใหม่ ของเดิมใช้ต่อกับ Access Database อย่างเดียว ก็เลยอยากทดลองต่อกับฐานข้อมูลอื่นดูบ้าง เลยลองจับเอา SQLite มาลองดู เนื่องจากเป็นฐานข้อมูลที่เรียบง่าย และเหมาะกับการใช้บันทึกข้อมูลทั่วไปที่ใช้งานทีละคน (หรือไม่กี่คนพร้อมกัน) </p>
+
+
+<h2>ดาวน์โหลด ODBC Driver</h2>
+<p>การเชื่อมต่อที่จะใช้ทดสอบในครั้งนี้ จะใช้ ODBC ซึ่งเป็นวิธีการเชื่อมต่อที่ Excel และ VBA รองรับอยู่แล้ว แค่หาตัวโปรแกรม driver ที่จะใช้เป็นตัวกลางคุยกันเท่านั้น เท่าที่หาได้ในอินเทอร์เน็ตจะมี 2 แบบคือ Open source ใช้งานฟรี แต่เสี่ยงมี bugs บ้าง กับตัวเสียเงิน</p>
+<p>แน่นอนเนื่องจากเป็นการทดสอบ เลยเลือกตัวฟรีมาใช้ดู โดยการไปดาวน์โหลดที่เว็บไซต์ <a href="http://www.ch-werner.de/sqliteodbc/" target="ext_link">http://www.ch-werner.de/sqliteodbc/</a> ถ้าใครใช้ Windows รุ่น 64-bit และตัว Excel เป็น 64-bit ด้วย ให้ลงรุ่น 64-bit (x64) ผู้เขียนใช้ 32-bit เลยลงรุ่น x86 ธรรมดา</p>
+
+	<div class="image"><img src="images/20190411_01_ODBC_Driver.png" class="u-max-full-width" />
+	<div>ดาวน์โหลด ODBC Driver สำหรับ SQLite Database</div>
+	</div>
+
+<p>จากนั้นให้ทำการติดตั้งลงในเครื่องให้เรียบร้อย </p>
+
+
+
+<h2>สร้างข้อมูลสำหรับทดสอบ</h2>
+
+<p>ขั้นต่อไป ให้ลองสร้างฐานข้อมูลสำหรับทดสอบ ผู้เขียนใช้โปรแกรม <a href="https://sqlitebrowser.org/" target="ext_link">SQLite Database Browser</a> สร้างตัวอย่างสำหรับข้อมูล ชื่อ R:\demo.db3 และตารางชื่อ demo ดังนี้</p>
+
+	<div class="image"><img src="images/20190411_02_Table_demo.png" class="u-max-full-width" />
+	<div>ตัวอย่างฐานข้อมูลที่สร้างเพื่อใช้ทดสอบ</div>
+	</div>
+
+<p>หากใครไม่สะดวกสร้างข้อมูลทดสอบเอง สามารถ<a href="https://drive.google.com/file/d/1XUramy4PKcV3zcYehEIeK6GMYRkj7H0Z/view?usp=sharing" target="ext_link">ดาวน์โหลดไฟล์ demo.db3 ได้ที่นี่</a></p>	
+	
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+	
+<h2>นำเข้าข้อมูลด้วย Microsoft Query</h2>
+<p>เมื่อมีข้อมูลสำหรับทดสอบเรียบร้อยแล้ว ขั้นตอนต่อไป ให้สร้างไฟล์ Excel ใหม่ขึ้นมา จากนั้นให้คลิกที่แท็บ Data → From Other Sources → From Microsoft Query เพื่อเปิดหน้าต่างสำหรับเชื่อมต่อฐานข้อมูล และเลือก Driver สำหรับเชื่อมต่อตามภาพด้านล่าง</p>
+
+	<div class="image"><img src="images/20190411_03_insert_database.png" class="u-max-full-width" />
+	<div>แทรกข้อมูลจากภายนอกด้วย Microsoft Query</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_04_choose_data_source.png" class="u-max-full-width" />
+	<div>เลือก Data source เป็น SQLite3 Datasource</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_05_select_file.png" class="u-max-full-width" />
+	<div>ในหน้าต่างตั้งค่าการเชื่อมต่อ ให้เลือกไฟล์ R:\demo.db3 ที่เตรียมไว้ กด OK เพื่อบันทึก</div>
+	</div>
+
+<p>ในบางกรณี จะเกิดปัญหา ตัวเชื่อมต่อมองไม่เห็นตารางในฐานข้อมูล ให้ลองคลิกที่ System Tables โดยลองคลิกเลือก หรือไม่คลิกเลือก ทำสลับกันไปมา แล้วกด OK จนมีตารางขึ้นมาให้เลือก </p>
+
+	<div class="image"><img src="images/20190411_06_no_visible_tables.png" class="u-max-full-width" />
+	<div>อาจเกิดปัญหาตัวเชื่อมต่อไม่พบตารางในฐานข้อมูล</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_07_system_tables.png" class="u-max-full-width" />
+	<div>ลองคลิกเลือก Options → System Tables เพื่อให้เจอตาราง</div>
+	</div>
+
+<p>เมื่อเห็นตาราง demo แล้ว ให้คลิกที่ปุ่ม &gt; เพื่อนำค่าฟิลด์ (Field) ในตารางไปแสดง (ในที่นี้คือ id fullname และ age)</p>
+
+	<div class="image"><img src="images/20190411_09_select_demo.png" class="u-max-full-width" />
+	<div>คลิก &gt; เพื่อเลือกฟิลด์ไปแสดงผล</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_10_next.png" class="u-max-full-width" />
+	<div>คลิก Next เพื่อไปหน้าถัดไป</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_11_next.png" class="u-max-full-width" />
+	<div>คลิก Next เพื่อไปหน้าถัดไป</div>
+	</div>
+
+	<div class="image"><img src="images/20190411_12_finish.png" class="u-max-full-width" />
+	<div>คลิก Finish เพื่อจบการนำเข้าข้อมูล และกลับไปยัง Excel</div>
+	</div>
+	
+<p>จากขั้นตอนที่กล่าวมา ตอนนี้โปรแกรม Excel รู้แหล่งข้อมูลที่จะให้นำเข้าแล้ว สิ่งสุดท้ายที่จะทำคือ กำหนดตำแหน่งที่จะให้แสดงข้อมูลจากตาราง ให้เลือกเซลล์ที่ต้องการ และคลิก OK</p>
+
+	<div class="image"><img src="images/20190411_13_import_data.png" class="u-max-full-width" />
+	<div>เลือกตำแหน่งที่จะให้แสดงตารางข้อมูล และกด OK เพื่อยืนยัน</div>
+	</div>	
+	
+	<div class="image"><img src="images/20190411_14_import_completed.png" class="u-max-full-width" />
+	<div>Excel จะทำการสร้าง table เพื่อใช้แสดงข้อมูลจาก SQLite ชื่อ demo ที่เรานำเข้า</div>
+	</div>		
+
+<h2>การนำเข้าข้อมูลล่าสุดเมื่อข้อมูลเปลี่ยนแปลง</h2>	
+<p>สิ่งที่น่าสนใจอีกอย่างสำหรับการนำเข้าข้อมูลด้วยวิธีการข้างต้นคือ เมื่อตารางในฐานข้อมูลมีการเปลี่ยนแปลง ผู้ใช้งานสามารถ Refresh เพื่อสั่งให้ Excel ทำการดึงข้อมูลล่าสุดมาแสดงได้ ในตัวอย่างจะลองเพิ่มข้อมูลเข้าไปอีก 1 แถว ดังนี้</p>
+
+	<div class="image"><img src="images/20190411_15_test_add_row.png" class="u-max-full-width" />
+	<div>ลองเพิ่มข้อมูลใหม่เข้าไปอีก 1 แถว</div>
+	</div>
+	
+<p>วิธีการ Refresh ข้อมูล สามารถทำได้โดย ให้คลิกเลือก table ที่ใช้แสดงข้อมูลจาก demo.db3 จากนั้นให้เลือกแท็บ Data → Refresh All → Refresh เพื่อดึงข้อมูลล่าสุดมาแสดง</p>
+
+	<div class="image"><img src="images/20190411_16_refresh.png" class="u-max-full-width" />
+	<div>วิธีการ Refresh ข้อมูล</div>
+	</div>	
+	
+	<div class="image"><img src="images/20190411_17_table_updated.png" class="u-max-full-width" />
+	<div>ข้อมูลใหม่ในแถวที่ 3 แสดงใน table แล้ว</div>
+	</div>	
+	
+<h2>Microsoft Query</h2>
+<p>สำหรับเครื่องมือ Microsoft Query ที่แถมมากับ Excel จะคล้าย ๆ กับโปรแกรม Access ที่สามารถช่วยจัดการตารางในฐานข้อมูล เช่น filter sort  เรียกว่าเป็น Access ตัวเล็ก ซึ่งใครเคยใช้โปรแกรม Access มาแล้ว จะสามารถใช้ Microsoft Query ได้อย่างคล่องแคล่วเลย เพราะใช้หลักการทำงานแบบเดียวกัน ซึ่งผู้เขียนไม่ได้ลงรายละเอียดในส่วนนี้ หากผู้อ่านสนในสามารถศึกษาหาอ่านใน<a href="https://www.google.com/search?q=excel+microsoft+query&oq=excel+microsoft+query" target="ext_link">อินเทอร์เน็ต</a>เพิ่มเติมได้</p>
+
+<h2>การนำเข้าข้อมูลด้วย VBA ผ่าน ADODB Object</h2>
+<p>ในส่วนของ VBA สามารถเชื่อมต่อกับ ODBC ได้เหมือนกันโดยผ่าน ADODB วิธีการไม่ยาก สามารถหาได้จากอินเทอร์เน็ต ทางผู้เขียนเลยลองดูพบว่า <span style="color:red">ไม่ค่อยเสถียรเท่าไหร่</span> ยังมี Error อยู่บ้างในบางครั้ง ตัวอย่างโปรแกรมที่ใช้เชื่อมต่อผ่าน ODBC ด้านล่าง จะเป็นการนำเอาข้อมูลตาราง demo ทั้งหมด ไปแสดงในเซลล์ A1 ผ่านคำสั่ง CopyFromRecordset</p>
+
+<pre class="brush: vb">
+Sub SQLiteDemo()
+    Dim dbConnect As New ADODB.Connection
+    Dim rsRecords As New ADODB.Recordset
+
+    dbConnect.Open "DRIVER=SQLite3 ODBC Driver;Database=R:\demo.db3;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+    rsRecords.Open "Select * from demo", dbConnect
+
+    Range("A1").Select
+    ActiveCell.CopyFromRecordset Data:=rsRecords
+
+    rsRecords.Close
+    dbConnect.Close
+End Sub	
+</pre>	
+	
+
+<p>ที่มาของการเชื่อมต่อให้ดูได้จากชื่อใน ODBC Data source หากระบุไม่ตรง หรือชื่อผิดจะทำให้โปรแกรม Error</p>
+
+
+	<div class="image"><img src="images/20190411_18_vba_odbc.png" class="u-max-full-width" />
+	<div>ตัวอย่างการเชื่อมต่อ ODBC ผ่าน ADODB</div>
+	</div>
+	
+	<div class="image"><img src="images/20190411_19_vba_odbc_result.png" class="u-max-full-width" />
+	<div>ผลที่ได้ มาแต่ id ข้อมูลอื่น ๆ ไม่มาด้วย</div>
+	</div>	
+	
+<p>เมื่อ Run โปรแกรมพบปัญหา ข้อความที่เป็นชื่อไม่มา บางครั้งเกิดปัญหา <span style="color:red">multiple-step ole db operation generated errors</span> ซึ่งทางผู้เขียนลองพยายามหาสาเหตุ และวิธีการแก้ไขแล้ว แต่ไม่เจอ เลยลองเขียนอีกแบบโดยให้เขียนข้อมูลผ่านการอ่านค่าฟิลด์ของ RecordSet โดยตรง พบว่า ได้บ้าง ไม่ได้บ้าง</p>
+
+<pre class="brush: vb">
+Sub SQLiteDemo2()
+    Dim dbConnect As New ADODB.Connection
+    Dim rsRecords As New ADODB.Recordset
+    Dim rCell As Range
+
+    dbConnect.Open "DRIVER=SQLite3 ODBC Driver;Database=R:\demo.db3;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+    rsRecords.Open "Select * from demo", dbConnect
+
+    Set rCell = ActiveCell 	'กำหนดจุดที่จะแสดงข้อมูลคือตำแหน่งที่เลือกปัจจุบัน
+    Do Until rsRecords.EOF		'วนลูปจนข้อมูลแถวสุดท้าย
+      rCell.Cells(1, 1).Value = rsRecords.Fields(0).Value
+      rCell.Cells(1, 2).Value = rsRecords.Fields(1).Value
+      rCell.Cells(1, 3).Value = rsRecords.Fields(2).Value
+      rsRecords.MoveNext		'เลื่อนตำแหน่งไปแถวถัดไป
+      Set rCell = rCell.Cells(2, 1) 	'กำหนดให้แสดงในแถวถัดไป
+    Loop
+
+    rsRecords.Close
+    dbConnect.Close
+End Sub
+</pre>
+
+	<div class="image"><img src="images/20190411_20_vba_odbc_result2.png" class="u-max-full-width" />
+	<div>ผลที่ได้จากโปรแกรม SQLiteDemo2()</div>
+	</div>
+<h2>ส่งท้าย</h2>
+<p>ในการใช้งาน ADODB อย่าลืมเลือก <b>Microsoft ActiveX Data Objects 2.x Library</b> (x คือเลข version) ใน References หากไม่ได้เลือกจะ Compile ไม่ผ่านและเกิด Error (ใน Microsoft Visual Basic for Applications Editor ให้เลือกเมนู Tools → References...) ซึ่งจากผลการทดลอง VBA ที่กล่าวมาข้างต้น จะเห็นว่าไม่เหมาะกับงาน production มากเพราะยังมีปัญหาอยู่ ควรใช้วิธีเชื่อมต่อแบบอื่น ในการใช้งานจริงผู้เขียนคิดว่าใช้งานผ่าน Microsoft Query น่าจะดีกว่า</p>
+
+<p>ปัญหาที่ผู้เขียนเจอกับ SQLite อีกอย่างคือ <span style="color:red">หากโฟลเดอร์ที่เก็บไฟล์ฐานข้อมูล มีชื่อเป็นภาษาอื่นนอกเหนือจากภาษาอังกฤษ จะเกิดปัญหา ODBC ไม่สามารถเปิดฐานข้อมูลได้</span> ดังนั้นโปรดระวังเรื่องนี้ด้วย</p>
+
+<p>สำหรับการเชื่อมต่อแบบอื่นมีอีกไหม ตอบได้เลยว่ามี แต่ยังไม่มีเวลาทดสอบเนื่องจากในงานจริง ๆ ยังไม่มี project ที่ใช้งาน SQLite ครับ หากใครมีวิธีอื่น ๆ สามารถบอกใน comment เพื่อเป็นประโยชน์กับผู้หลงเข้ามาอ่านคนอื่น ๆ ได้ครับ</p>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+
+
+<!--comments-->
+<div class="container">
+	<div class="fb-like" data-share="true" data-show-faces="true" />
+	<div style="padding-top:10rem;">&nbsp;</div>
+	<div class="fb-comments" data-numposts="10" data-width="100%"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
