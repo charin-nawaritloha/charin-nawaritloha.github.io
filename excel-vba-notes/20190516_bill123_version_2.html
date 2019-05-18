@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>โปรแกรม "บิล123" Version 2 โปรแกรมขายหน้าร้าน โดยใช้ Excel</title>
+	<meta name="tags" contents="Excel,VBA,Cookbook,Statistic">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/vba.html">รับเขียน VBA</a>
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/profiles.html">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>โปรแกรม "บิล123" Version 2 โปรแกรมขายหน้าร้าน โดยใช้ Excel</h1>
+<p>โปรแกรมหน้าร้าน "บิล123" เป็นโปรแกรมที่เขียนด้วย VBA บน Excel ครับ ใช้ Excel sheet เป็นหน้าจอในการรับข้อมูลการขายสินค้าเลย ไม่ได้สร้าง Form พิเศษแต่อย่างใด สิ่งที่หวังไว้คือ เป็นโปรแกรมที่ใช้งานง่าย ถึง ง่ายที่สุด โดยเหมาะสำหรับคนที่คุ้นเคยโปรแกรม Excel อยู่แล้วครับ โดยตัวนี้เป็นรุ่นที่ 2 มีการปรับปรุงเพิ่มเติม หลัก ๆ เลยคือ เปลี่ยนมาใช้ฐานข้อมูล Access แทนไฟล์ CSV ซึ่งตัวโปรแกรม Excel สามารถทำงานได้ดีกับไฟล์ฐานข้อมูล Access อยู่แล้ว หากใครสนใจอยากลองนำเอาไปใช้งาน ลองค่อย ๆ อ่านรายละเอียดดูว่าเหมาะกับงานที่จะนำไปใช้หรือไม่</p>
+<p>อีกประเด็นที่สร้างโปรแกรมนี้คือมา เพื่อพิสูจน์แนวคิด (Proof of concept):</p>
+<ol>
+<li>การนำ Excel มาใช้เป็น Runtime Environment เพื่อพัฒนา Application เต็มรูปแบบ พัฒนาด้วยภาษาโปรแกรม VBA</li>
+<li>การใช้งานไฟล์ฐานข้อมูล Access สามารถทำได้ง่ายบน Excel ทั้งแบบเรียกผ่าน VBA และตัวเครื่องมือที่มีอยู่บน Excel อยู่แล้ว</li>
+<li>การแก้ไขรูปแบบเอกสารเพื่อพิมพ์เอกสาร สามารถทำได้ง่ายและรวดเร็ว</li>
+</ol>
+
+
+	<div class="image"><img src="images/20190516_01_bill123.png" class="u-max-full-width" />
+	<div>หน้าตาโปรแกรม บิล123 ในส่วนของการทำรายการขายสินค้า</div>
+	</div>
+
+<h2>ส่วนที่ปรับปรุงเพิ่มจาก Version 1</h2>
+<ul>
+<li>สามารถใส่จำนวนเงินที่ได้รับจากลูกค้า และคำนวณเงินทอน</li>
+<li>เพิ่มชีทสำหรับพิมพ์ออกกระดาษ สามารถปรับแต่งให้เข้ากับเครื่องพิมพ์ได้ตามต้องการ</li>
+<li>ใช้ฐานข้อมูล Access (bill123.mdb) แทนไฟล์ CSV เดิม</li>
+<li>เพิ่มไฟล์ bill123_Products.xlsm เพื่อจัดการรายการสินค้าที่ขาย</li>
+<li>เพิ่มไฟล์ bill123_Stock.xlsm สำหรับดูความเคลื่อนไหวของการและรับเข้าสินค้า</li>
+<li>เพิ่มไฟล์ bill123_Report.xlsm เป็นตัวอย่างรายงานการขายจากฐานข้อมูล</li>
+<li>เพิ่มไฟล์ bill123_Database.xlsm สำหรับจัดการฐานข้อมูล เช่น ล้างข้อมูล ซ่อมแซมฐานข้อมูลเมื่อเกิดความเสียหาย</li>
+</ul>
+
+<h2>วิธีเพิ่มรายการสินค้าในระบบ</h2>
+<p>เมื่อเริ่มต้นใช้งาน สิ่งแรกสุดที่ต้องทำคือ เพิ่มรายการสินค้าเข้าไปในฐานข้อมูลก่อน ซึ่งทำไม่ยาก เปิดไฟล์ bill123_Products.xlsm ขึ้นมา</p>
+
+	<div class="image"><img src="images/20190516_02_products.png" class="u-max-full-width" />
+	<div>แก้ไขรายการสินค้า</div>
+	</div>
+	
+<p>ให้เลือกชีท product</p>	
+<ul>
+<li>หากต้องการเริ่มต้นเพิ่มสินค้าใหม่ ให้คลิกที่ปุ่ม <b>[ล้างข้อมูล]</b> จากนั้นให้พิมพ์ข้อมูลสินค้าลงไปในตาราง</li>
+<li>หากต้องการเรียกข้อมูลสินค้าที่มีอยู่ในฐานข้อมูล ขึ้นมาทับข้อมูลที่แสดงอยู่ ให้คลิกปุ่ม <b>[เรียกข้อมูลเดิม]</b> ข้อมูลในตารางจะถูกล้าง และแทนที่ด้วยข้อมูลจากฐานข้อมูล</li>
+<li>เมื่อปรับปรุงรายการสินค้าเรียบร้อยแล้ว ให้บันทึกลงฐานข้อมูลโดยคลิกที่ปุ่ม <b>[บันทึก]</b></li>
+</ul>
+
+<h2>ตั้งค่าโปรแกรมก่อนจะเริ่มขาย</h2>
+<p>เมื่อเรามีข้อมูลสินค้าแล้ว ก่อนที่เราจะขายสินค้า จะมีจุดที่ต้องตั้งค่าเริ่มต้นก่อนใช้งานนิดหน่อย ให้เปิดไฟล์ bill123.xlsm ขึ้นมา ไปที่ชีท config จากนั้นกำหนดค่าเริ่มต้นที่ต้องการ</p>
+
+	<div class="image"><img src="images/20190516_03_bill123_config.png" class="u-max-full-width" />
+	<div>แก้ไขค่าเริ่มต้นในชีท config</div>
+	</div>
+
+<ul>
+<li>ในกรณีที่อยากเก็บข้อมูลอายุของลูกค้า ให้ตั้งค่าในตาราง <b>อายุ</b> ให้มีตัวเลือกใดได้บ้าง แต่หากไม่ได้เก็บให้ข้ามส่วนนี้ไปได้เลย</li>
+<li>ระบุอัตราภาษีมูลค่าเพิ่มที่ใช้งาน ในช่อง <b>ภาษีมูลค่าเพิ่ม</b> ให้ระบุเป็น %</li>
+<li>ระบุวิธีคิดภาษีมูลค่าเพิ่มว่า คิดรวมอยู่ในสินค้าแล้ว หรือว่าต้องคิดเพิ่มเติม ในช่อง <b>วิธีคิดภาษี</b></li>
+<li>กำหนดรูปแบบวันที่ สำหรับพิมพ์ออกใบเสร็จ ในช่อง <b>รูปแบบวันที่ในใบเสร็จ</b> สามารถดูรูปแบบที่รองรับทั้งหมดได้จาก <a href="https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/format-function-visual-basic-for-applications" target="ext_link">Format Function</a> ใน VBA เพิ่มเติม</li>
+<li>สุดท้ายคือ ตั้งค่าว่าให้มีเสียงเตือนเวลาทำรายการเสร็จหรือไม่</li>
+<li>เมื่อตั้งค่าเรียบร้อย ให้ทำการบันทึกข้อมูล (Ctrl+S) เพื่อใช้งานในครั้งต่อไป</li>
+</ul>
+
+<h2>เริ่มขายสินค้า</h2>
+<p>เมื่อรายการสินค้าที่จะขายพร้อมแล้ว ตั้งค่าโปรแกรมเรียบร้อยแล้ว ให้คลิกเลือกที่ชีท สร้างรายการ เพื่อเริ่มขายสินค้า</p>
+
+<h3>ใส่ข้อมูลลูกค้า</h3>
+
+<p>หากต้องการเก็บข้อมูลลูกค้าเพิ่มเติม (จะใส่หรือไม่ใส่ก็ได้) สามารถทำได้โดยใช้เมาส์คลิกเลือกหัวข้อตามที่ต้องการดังนี้</p>	
+
+	<div class="image"><img src="images/20190516_04_bill123_customer.png" class="u-max-full-width" />
+	<div>ใส่ข้อมูลลูกค้าหากต้องการ</div>
+	</div>
+	
+<ul>
+<li><b>ผู้ซื้อ</b>: ใส่ชื่อผู้ซื้อสินค้า</li>
+<li><b>ข้อมูลผู้ซื้อ</b>:</li>
+	<ul>
+	<li><b>เพศ</b>: คลิกเลือกระบุเพศ ◯ชาย ◯หญิง หรือ ◯ไม่ระบุ</li>
+	<li><b>อายุ</b>: คลิกเลือกช่วงอายุของลูกค้า</li>	
+	</ul>
+</ul>
+
+
+<h3>ใส่รายการสินค้า</h3>
+
+	<div class="image"><img src="images/20190516_05_bill123_sell.png" class="u-max-full-width" />
+	<div>ใส่รายการสินค้า</div>
+	</div>
+
+<ol>
+<li>หากต้องการขายจำนวนเกิน 1 ชิ้น ให้แก้ไขจำนวนที่จะขายก่อน</li>
+<li>เลือกที่ช่อง ป้อนรหัสสินค้า จากนั้นให้พิมพ์รหัสสินค้า หรือยิงจากเครื่องอ่านบาร์โค้ด จากนั้นกด Enter หรือ Tab เพื่อบันทึกข้อมูล</li>
+<li>รายการสินค้าที่ป้อน จะมาปรากฎอยู่ที่ตาราง ต่อกันไปเรื่อย ๆ</li>
+</ol>
+
+<h3>ลบรายการสินค้า</h3>
+<p>วิธีลบรายการสินค้า วิธีการจะตรงไปตรงมาคือ ให้คลิกเลือกที่รหัสสินค้าที่ต้องการจะลบ จากนั้นกดปุ่ม Delete บนแป้นพิมพ์เพื่อลบ เมื่อลบแล้วรายการดังกล่าวจะว่าง และราคาสินค้าจะเป็นศูนย์</p>
+
+	<div class="image"><img src="images/20190516_06_bill123_delete.png" class="u-max-full-width" />
+	<div>วิธีลบรายการสินค้า</div>
+	</div>
+
+<h3>การแก้ไขจำนวนสินค้า</h3>
+<p>หากต้องการแก้ไขจำนวนสินค้าของรายการที่ใส่เข้าไปแล้ว สามารถทำได้โดยคลิกที่ช่องจำนวนของรายการดังกล่าว พิมพ์ตัวเลขจำนวนที่ต้องการลงไป จากนั้นกดปุ่ม Enter หรือ Tab เพื่อแก้ไข</p>
+
+	<div class="image"><img src="images/20190516_07_bill123_qty.png" class="u-max-full-width" />
+	<div>วิธีลบรายการสินค้า</div>
+	</div>
+
+<h3>การบันทึกรายการขาย</h3>	
+<p>เมื่อใส่รายการสินค้าที่ต้องการเรียบร้อยแล้ว และตรวจสอบความถูกต้องของจำนวนสินค้าและมูลค่าสินค้า จากนั้นให้เลือกที่ช่อง ชำระเงิน ใส่ตัวเลขเงินที่ชำระ จากนั้นกดปุ่ม Enter หรือ Tab เพื่อบันทึก</p>
+	<div class="image"><img src="images/20190516_08_bill123_payment.png" class="u-max-full-width" />
+	<div>วิธีใส่เงินที่ชำระ</div>
+	</div>
+<ol>
+<li>หากลูกค้าชำระเงินพอดี ให้ใส่ 0</li>
+<li>หากชำระเกิน ให้ใส่ตัวเลขเงินที่ชำระจริงลงไป เพื่อคำนวณเงินทอน</li>
+</ol>
+
+	<div class="image"><img src="images/20190516_09_bill123_payment.png" class="u-max-full-width" />
+	<div>หากต้องการพิมพ์ใบเสร็จ ให้คลิกปุ่ม <b>[ พิมพ์ใบเสร็จ ]</b> หรือ <b>[ ปิด ]</b> เพื่อจบการบันทึก</div>
+	</div>	
+	
+<h3>การยกเลิกรายการที่ยังไม่ได้ทำการบันทึก</h3>	
+<p>ในกรณีที่เราต้องการยกเลิกรายการสินค้าที่ใส่เข้าไปแล้วทั้งหมดแต่ยังไม่ได้บันทึกลงฐานข้อมูล สามารถทำได้โดยคลิกที่ปุ่ม  <span class="nowrap" style="color:red;"><b>[ ยกเลิกรายการทั้งหมด ]</b></span> เพื่อลบรายการที่ใส่ กดยืนยันเพื่อลบข้อมูลสินค้า</p>
+
+	<div class="image"><img src="images/20190516_10_bill123_cancel.png" class="u-max-full-width" />
+	<div>วิธีการยกเลิกรายการที่ยังไม่ได้บันทึก</div>
+	</div>	
+
+
+	
+	
+	
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+
+
+	
+	
+<h2>การพิมพ์ใบเสร็จซ้ำ</h2>	
+<p>หากมีความจำเป็นต้องการพิมพ์ใบเสร็จซ้ำ จะพิมพ์ต้นฉบับ หรือ สำเนา สามารถทำได้โดยเลือกชีท <b>พิมพ์-ยกเลิกรายการ</b> จากนั้นให้ใส่หมายเลขบิลที่ต้องการลงในช่อง <b>ระบุหมายเลขบิล</b> เช่น ใส่หมายเลข 23 แล้วกด Enter หรือ Tab</p>
+
+	<div class="image"><img src="images/20190516_11_bill123_print.png" class="u-max-full-width" />
+	<div>การพิมพ์ใบเสร็จซ้ำ</div>
+	</div>	
+
+<p>ตรวจสอบข้อมูลของบิลว่าถูกต้องหรือไม่ ถ้าถูกต้องแล้วให้คลิกที่ปุ่ม <b>[ พิมพ์ต้นฉบับ ]</b> หรือ <b>[ พิมพ์สำเนา ]</b></p>	
+	
+	
+<h2>การยกเลิกบิลที่บันทึกไปแล้ว</h2>	
+<p>ในกรณีที่ทำรายการและบันทึกจนได้หมายเลขบิลเรียบร้อยแล้ว แต่ปรากฎว่าไม่ถูกต้อง และต้องการลบทิ้ง สามารถทำได้โดยเลือกชีท <b>พิมพ์-ยกเลิกรายการ</b> จากนั้นให้ใส่หมายเลขบิลที่ต้องการลงในช่อง <b>ระบุหมายเลขบิล</b> เช่น ใส่หมายเลข 23 แล้วกด Enter หรือ Tab</p>	
+	
+	<div class="image"><img src="images/20190516_12_bill123_cancel.png" class="u-max-full-width" />
+	<div>การยกเลิกบิล</div>
+	</div>	
+
+<p>ตรวจสอบข้อมูลของบิลว่าถูกต้องหรือไม่ ถ้าถูกต้องแล้วให้คลิกที่ปุ่ม <span class="nowrap" style="color:red;"><b>[ ยกเลิกบิล ]</b></span></p>	
+	
+	<div class="image"><img src="images/20190516_13_bill123_cancel_confirm.png" class="u-max-full-width" />
+	<div>ยืนยันการยกเลิกบิล</div>
+	</div>		
+	<div class="image"><img src="images/20190516_14_bill123_cancel_result.png" class="u-max-full-width" />
+	<div>แจ้งผลการยกเลิก</div>
+	</div>			
+
+	
+<p>เมื่อลองเปิดดูบิลหมายเลขที่ยกเลิกไปแล้ว จะพบว่าโปรแกรมจะแจ้งว่าบิลหมายเลขดังกล่าวถูกยกเลิกไปแล้ว</p>	
+
+	<div class="image"><img src="images/20190516_15_bill123_cancel_alert.png" class="u-max-full-width" />
+	<div>แจ้งเตือนหากพยายามเปิดบิลที่ถูกยกเลิกไปแล้ว</div>
+	</div>			
+	
+	
+<h2>การตั้งค่าสำหรับพิมพ์ใบเสร็จ</h2>	
+
+	<div class="image"><img src="images/20190516_16_bill123_print.png" class="u-max-full-width" />
+	<div>ชีท paper สำหรับตั้งค่าสำหรับพิมพ์ใบเสร็จ</div>
+	</div>			
+
+
+<p>สำหรับใบเสร็จ ผู้ใช้งานสามารถออกแบบและกำหนดค่าหน้ากระดาษได้จากชีทชื่อ <b>paper</b> โดยชีทนี้จะมีการแบ่งส่วนของการพิมพ์เป็น 3 ส่วนได้แก่</p>
+<ul>
+<li><b>ส่วนหัวกระดาษ</b> จะเป็นส่วนที่พิมพ์เพียงครั้งเดียว ในตัวอย่างคือแถวที่ 1 ถึง 9</li>
+<li><b>ส่วนรายการสินค้า</b> จะเป็นส่วนที่พิมพ์ซ้ำตามจำนวนสินค้าในใบเสร็จ ในตัวอย่างคือแถวที่ 10 และ 11</li>
+<li><b>ส่วนท้ายกระดาษ</b> จะเป็นส่วนที่พิมพ์สรุปจำนวนรวมของสินค้าทั้งหมด จะพิมพ์ครั้งเดียวต่อท้ายรายการสินค้า</li>
+</ul>
+<p>หากต้องการแก้ไขรูปแบบการพิมพ์ แนะนำให้ปรับมุมมองเป็น Page Break Preview ก่อน เพื่อจะได้เห็นว่ามีส่วนใดเกินหน้ากระดาษหรือไม่ การเลือกสามารถทำได้โดยเลือกจากเมนู View Page → Page Break Preview</p>
+<p>หากมีการแก้ไขรูปแบบ เมื่อแก้ไขเรียบร้อยแล้ว อย่าลืมบันทึกไฟล์ (Ctrl+S) ด้วยเพื่อบันทึกการเปลี่ยนแปลงของไฟล์</p>
+	<div class="image"><img src="images/20190516_17_bill123_page_break_preview.png" class="u-max-full-width" />
+	<div>การเปลี่ยนมุมมองเป็น Page Break Preview</div>
+	</div>	
+
+	
+<h3>การกำหนดคอลัมน์ที่จะพิมพ์ออกกระดาษ</h3>	
+<p>ในการกำหนดพื้นที่ที่จะพิมพ์ออกกระดาษ สามารถทำได้โดยการที่ต้องการพิมพ์ เช่น ในตัวอย่างต้องการพิมพ์คอลัมน์ B ถึง F ก็ให้คลิกเลือกคอลัมน์ B จนถึง F แล้วเลือกเมนู Page Layout → Print Area → Set Print Area</p>	
+	
+	<div class="image"><img src="images/20190516_18_bill123_set_print_area.gif" class="u-max-full-width" />
+	<div>การกำหนด Print Area</div>
+	</div>		
+
+	<p>เมื่อสั่งพิมพ์ โปรแกรม Excel จะพิมพ์โดยย่อให้ไม่เกินขนาดความกว้างของกระดาษ เมื่อกำหนดเรียบร้อยแล้ว อย่าลืมบันทึกไฟล์ (Ctrl+S) ด้วย</p>	
+	
+	<div class="image"><img src="images/20190516_17_bill123_print_sample.png" class="u-max-full-width" />
+	<div>ตัวอย่างเมื่อพิมพ์ออกกระดาษ</div>
+	</div>		
+
+<h3>กำหนดหัวกระดาษซ้ำ สำหรับพิมพ์ออกกระดาษเป็นแผ่น</h3>	
+<p>ในกรณีที่ไม่ได้พิมพ์ออกกระดาษใบเสร็จแบบต่อเนื่อง แต่พิมพ์ออกกระดาษเป็นแผ่น เช่น พิมพ์ออกกระดาษ A4 และมีความต้องการหากมีการสั่งซื้อจนพิมพ์เกิน 1 หน้า ให้ซ้ำหัวกระดาษด้วย จำเป็นต้องกำหนด Rows to repeat at top: ดังนี้</p>	
+
+	<div class="image"><img src="images/20190516_18_bill123_set_print_header_row_repeat.gif" class="u-max-full-width" />
+	<div>การกำหนด Rows to repeat at top</div>
+	</div>		
+	
+	
+	
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->	
+	
+	
+	
+	
+	
+<h1>จัดการหลังร้าน</h1>	
+<p>ในส่วนของหน้าร้านที่จบไปนั้น ยังไม่เพียงต่อการใช้งานจริงที่ยังต้องมีหลังร้าน เพื่อตรวจสอบจำนวนสินค้าคงเหลือ ยอดขาย รายงาน ซึ่งตรงจุดนี้ผมได้เขียนโปรแกรมเพิ่มเติมบางส่วน เพื่อให้สนับสนุนในส่วนนี้ด้วย ถึงจะไม่ครบถ้วน ผู้ใช้มีอิสระในการที่จะเอาฐานข้อมูล Access มาเปิดดูข้อมูลใน Excel ได้อย่างไม่มีปัญหา คราวนี้มาลองดูกันว่ามีส่วนไหนบ้างที่ผู้ใช้งานสามารถเอาไปใช้งานได้ทันที</p>
+
+
+
+
+<h2>แก้ไข เพิ่มเติม สินค้า ด้วย bill123_Products.xlsm</h2>
+<p>เนื่องจากได้อธิบายการใช้งานไปแล้วในหัวข้อ <b>วิธีเพิ่มรายการสินค้าในระบบ</b> จึงไม่ขออธิบายเพิ่มเติมในส่วนนี้</p>
+
+	<div class="image"><img src="images/20190516_02_products.png" class="u-max-full-width" />
+	<div>แก้ไขรายการสินค้า</div>
+	</div>
+
+<h2>จัดการสต๊อกด้วย bill123_Stock.xlsm</h2>
+<h3>แก้ไขสินค้าคงเหลือ</h3>
+
+	<div class="image"><img src="images/20190516_19_stock_remain.png" class="u-max-full-width" />
+	<div>แก้ไขสินค้าคงเหลือ</div>
+	</div>
+	
+<p>ชีท <b>Stock</b> ใช้สำหรับการนับสต๊อก เมื่อนับสินค้าคงเหลือแล้ว หากสินค้าตัวไหนไม่ตรง ให้มาปรับที่นี่ โดยใส่ค่าที่นับได้จริงลงไปที่ช่อง <b>จำนวนคงเหลือ</b> วิธีการใช้งานมีดังนี้</p>
+<ol>
+<li>หยุดใช้งานโปรแกรมบิล 123 ก่อน</li>
+<li>คลิกที่ปุ่ม <b>เรียกข้อมูลเดิม</b> เพื่อให้ได้ข้อมูลล่าสุด</li>
+<li>หากรายการสินค้าไหน จำนวนไม่ตรง ให้แก้ไขจำนวนคงเหลือที่นับได้ที่ช่อง <b>จำนวนคงเหลือ</b></li>
+<li>คลิกปุ่ม <b>บันทึก</b> เพื่อบันทึกจำนวนลงในฐานข้อมูล</li>
+</ol>
+
+<h3>รับสินค้าเข้า</h3>
+
+	<div class="image"><img src="images/20190516_20_stock_received.png" class="u-max-full-width" />
+	<div>ทำรายการรับสินค้า ยืมสินค้า</div>
+	</div>
+
+<p>เมื่อมีการรับสินค้าเข้าสต็อกใหม่ ให้บันทึกรับสินค้าเข้าที่ชีท <b>Stock Received</b> วิธีใช้งานดังนี้</p>
+<ol>
+<li>หยุดใช้งานโปรแกรมบิล 123 ก่อน</li>
+<li>คลิกที่ปุ่ม <b>เรียกข้อมูลเดิม</b> เพื่อให้ได้ข้อมูลล่าสุด</li>
+<li>ให้ระบุจำนวนสินค้าที่รับเข้า ที่ช่อง <b>รับสินค้า เพิ่ม/ลด</b> โดยหากเป็นการลดจำนวนสินค้า ให้ใส่เป็นตัวเลขติดลบ</li>
+<li>คลิกปุ่ม <b>บันทึก</b> เพื่อบันทึกจำนวนลงในฐานข้อมูล</li>
+</ol>
+
+
+
+<h2>ดูรายงานการขายด้วย bill123_Report.xlsm</h2>
+<h3>ดูการเคลื่อนไหวของสินค้า (Stock Card)</h3>
+<p>เมื่อต้องการดูว่าสินค้าที่สนใจ มีการรับเข้า ขายออก สูญหาย (ปรับสต็อก) อย่างไรบ้าง มีวิธีใช้งานดังนี้</p>
+
+	<div class="image"><img src="images/20190516_21_report_stock_card.png" class="u-max-full-width" />
+	<div>ดูรายการ Stock Card</div>
+	</div>
+
+<ol>
+<li>ไปที่ชีท <b>Stock Card</b></li>
+<li>ระบุรหัสสินค้าที่ต้องการดู ที่ช่อง <b>รหัสสินค้า</b></li>
+<li>หากต้องการดูเฉพาะช่วงวันที่ที่สนใจ ให้ระบุช่วงเวลาในช่อง <b>วันที่</b> (ถ้าไม่ระบุ จะแสดงทุกรายการ)</li>
+<li>คลิกปุ่ม <b>เรียกข้อมูล</b></li>
+<li>โปรแกรมจะแสดงรายการเคลื่อนไหวของสินค้าที่ตารางด้านล่าง</li>
+</ol>
+
+
+<h3>ดูสรุปยอดขายรวมแต่ละหมายเลขบิล</h3>
+<p>หากต้องการดูสรุปยอดขายทั้งบิล ให้ดูรายงานที่ชีท <b>Sales Report 1</b> มีวิธีใช้งานดังนี้</p>
+
+	<div class="image"><img src="images/20190516_22_report_sales1.png" class="u-max-full-width" />
+	<div>ดูสรุปยอดขายตามบิล</div>
+	</div>
+
+<ol>
+<li>ไปที่ชีท <b>Sales Report 1</b></li>
+<li>หากต้องการดูเฉพาะหมายเลขบิลที่สนใจ ให้ระบุหมายเลขที่ช่อง <b>หมายเลขบิล</b> (ถ้าไม่ระบุ จะแสดงทุกรายการ)</li>
+<li>หากต้องการดูเฉพาะช่วงวันที่ที่สนใจ ให้ระบุช่วงเวลาในช่อง <b>วันที่</b> (ถ้าไม่ระบุ จะแสดงทุกรายการ)</li>
+<li>คลิกปุ่ม <b>เรียกข้อมูล</b></li>
+<li>โปรแกรมจะแสดงรายงานยอดขายและรายละเอียดรวมตามหมายเลขบิล</li>
+<li>หากใครใช้ Pivot Table เป็นสามารถดูรายงานเพิ่มเติมได้ที่ชีท <b>PivotTable1</b></li>
+</ol>
+
+	
+<h3>ดูสรุปยอดขายรวมแสดงรายละเอียดสินค้า</h3>	
+<p>หากต้องการดูสรุปยอดขายโดยแสดงรายละเอียดสินค้า ให้ดูรายงานที่ชีท <b>Sales Report 2</b> มีวิธีใช้งานดังนี้</p>
+
+	<div class="image"><img src="images/20190516_23_report_sales2.png" class="u-max-full-width" />
+	<div>ดูสรุปยอดขายแสดงรายละเอียดสินค้า</div>
+	</div>
+
+<ol>
+<li>ไปที่ชีท <b>Sales Report 2</b></li>
+<li>หากต้องการดูเฉพาะหมายเลขบิลที่สนใจ ให้ระบุหมายเลขที่ช่อง <b>หมายเลขบิล</b> (ถ้าไม่ระบุ จะแสดงทุกรายการ)</li>
+<li>หากต้องการดูเฉพาะช่วงวันที่ที่สนใจ ให้ระบุช่วงเวลาในช่อง <b>วันที่</b> (ถ้าไม่ระบุ จะแสดงทุกรายการ)</li>
+<li>คลิกปุ่ม <b>เรียกข้อมูล</b></li>
+<li>โปรแกรมจะแสดงรายงานยอดขายและรายละเอียดรวมตามหมายเลขบิล</li>
+<li>หากใครใช้ Pivot Table เป็นสามารถดูรายงานเพิ่มเติมได้ที่ชีท <b>PivotTable2</b></li>
+</ol>	
+	
+
+
+<h1>การเปิดไฟล์ฐานข้อมูล Access ด้วย Excel</h1>
+<h2>การนำเข้าไฟล์ Access</h2>
+<p>ในกรณีที่ต้องการรายงานเพิ่มเติม และผู้ใช้งานมีความเข้าใจในการทำงานด้วยข้อมูลจากฐานข้อมูล สามารถใช้โปรแกรม Excel นำเข้าข้อมูลได้จากเมนู Data → From Access หรือหากต้องการจัดการ Join หรือ Filter ข้อมูลสามารถใช้ Data → From Other Sources → From Microsoft Query ได้</p>
+
+	<div class="image"><img src="images/20190516_24_import_access.png" class="u-max-full-width" />
+	<div>การนำเข้าข้อมูลจากไฟล์ Access</div>
+	</div>
+
+<h2>Data Dictionary</h2>
+	<div class="image"><img src="images/20190516_25_table_name.png" class="u-max-full-width" />
+	<div>Table ที่อยู่ในไฟล์ Access</div>
+	</div>
+
+	<div class="image"><img src="images/20190516_26_datadic_bill_detail.png" class="u-max-full-width" />
+	<div>Table detail</div>
+	</div>
+	
+	<div class="image"><img src="images/20190516_27_datadic_bill_header.png" class="u-max-full-width" />
+	<div>Table billHeader</div>
+	</div>	
+	
+	<div class="image"><img src="images/20190516_28_datadic_product.png" class="u-max-full-width" />
+	<div>Table product</div>
+	</div>	
+	
+	<div class="image"><img src="images/20190516_29_datadic_stock.png" class="u-max-full-width" />
+	<div>Table stock</div>
+	</div>	
+	
+<h1>เมื่อโปรแกรม Error ให้ทำอย่างไร</h1>
+<p>โปรแกรมนี้ผมเขียนและทดสอบในปริมาณที่จำกัด (ทดสอบอยู่คนเดียว) จึงมีโอกาสสูงที่จะยังมีความผิดพลาดในโปรแกรมอยู่ ดังนั้นในกรณีที่ใช้งานไปแล้ว เกิดความผิดพลาด ให้ทำดังนี้</p>
+<ol>
+<li>จับภาพหน้าจอ ขณะที่เกิดความผิดพลาด</li>
+<li>คลิกที่ปุ่ม Debug</li>
+<li>จับภาพหน้าจอ ตำแหน่งของโปรแกรมที่เกิดปัญหา</li>
+<li>ส่งชื่อไฟล์ที่เกิดปัญหา และภาพจากข้อ 1 และ 2 มาให้ผู้เขียนช่วยดูและแก้ไข</li>
+</ol>
+
+	<div class="image"><img src="images/20190516_30_error1.png" class="u-max-full-width" />
+	<div>ภาพหน้าจอตอนโปรแกรมเกิดความผิดพลาด คลิกปุ่ม Debug เพื่อแสดงตำแหน่งที่มีปัญหา</div>
+	</div>	
+
+	<div class="image"><img src="images/20190516_31_error2.png" class="u-max-full-width" />
+	<div>ภาพหน้าจอของโปรแกรมตำแหน่งที่เกิดปัญหา</div>
+	</div>	
+	
+
+
+	
+<h1>ดาวน์โหลดโปรแกรม "บิล 123"</h1>	
+<p>สำหรับคนที่สนใจ สามารถดาวน์โหลดโปรแกรม (ไฟล์ Zip) ไปใช้งาน สามารถคลิกที่ปุ่มดาวน์โหลดด้านล่างได้เลย</p>
+
+	<div class="image"><a href="https://drive.google.com/file/d/1YlhYBDQU6XLXCnRgoUt9YGFOrLO3gZCw/view" target="ext_link"><img src="images/20190516_32_download.png" class="u-max-full-width" /></a>
+	</div>		
+
+	
+	<div class="image"><img src="images/20190516_32_download_click.png" class="u-max-full-width" />
+	<div>วิธีการดาวน์โหลด</div>
+	</div>		
+	
+<p>ใช้งานแล้วดีไม่ดีอย่างไร Comment ไว้ด้านล่าง เผื่อผู้เขียนมีเวลาจะมาช่วยปรับปรุงแก้ไขให้นะครับ</p>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+
+</div></div>
+
+
+
+
+<!--comments-->
+<div class="container">
+	<div class="fb-like" data-share="true" data-show-faces="true" />
+	<div style="padding-top:10rem;">&nbsp;</div>
+	<div class="fb-comments" data-numposts="10" data-width="100%"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
