@@ -252,9 +252,9 @@ p {
 
 
 
-h1 { font-size: 3.5rem; }
-h2 { font-size: 3.0rem; }
-h3 { font-size: 2.5rem; }
+h1 { font-size: 3.5rem; border-bottom: 3px solid black;}
+h2 { font-size: 3.0rem; border-bottom: 2px solid black; }
+h3 { font-size: 2.5rem; border-bottom: 1px solid black; }
 h4 { font-size: 2.0rem; }
 h5 { font-size: 1.5rem; }
 h6 { font-size: 1.25rem; }
