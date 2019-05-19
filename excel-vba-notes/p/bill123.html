@@ -5,25 +5,19 @@
 	<meta name="tags" contents="Excel,VBA,Cookbook,Statistic">
 
 	<!--header-->
-	<meta property="fb:app_id" content="306783623357456" />
 	<meta charset="utf-8">
 	<meta name="author" content="Charin Nawaritloha">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="fb:app_id" content="306783623357456" />
 
 	
-	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
-	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
-	<link href='css/main.css' rel='stylesheet' type='text/css'>
-	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	<link href='../css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='../css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='../css/main.css' rel='stylesheet' type='text/css'>
+	<link href='../css/fonts.css' rel='stylesheet' type='text/css'>
 	
-	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="icon" type="image/png" href="../favicon.png">
 	
-	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
-	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
-	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
-	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
-	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
-	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	<!--/header-->
 </head>
 
@@ -33,17 +27,45 @@
 <div id="fb-root"></div>
 <script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
 <!--/facebook-->
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml            : true,
+      version          : 'v3.2'
+    });
+  };
+
+  (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/th_TH/sdk/xfbml.customerchat.js';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Your customer chat code -->
+<div class="fb-customerchat"
+  attribution=setup_tool
+  page_id="212011649344147"
+  logged_in_greeting="สวัสดีครับ หลังจากได้ข้อความ ผมจะรีบตอบกลับให้เร็วที่สุดครับ"
+  logged_out_greeting="สวัสดีครับ หลังจากได้ข้อความ ผมจะรีบตอบกลับให้เร็วที่สุดครับ">
+</div>
+
 
 
 <div class="container">
 <!--navbar-->
 <div id="navbar">
 	<div class="container">
-		<a href="index.html">หน้าหลัก</a>
-		<a href="p/vba.html">รับเขียน VBA</a>
-		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
-		<a href="p/km.html" style="display: inline-block">แหล่งอ้างอิงข้อมูล</a>
-		<a href="p/profiles.html">ผู้เขียน</a>
+		<a href="../index.html">หน้าหลัก</a>
+		<a href="bill123.html">บิล123</a>
+		<a href="vba.html">รับเขียน VBA</a>
+		<a href="macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="km.html" class="nowrap">แหล่งอ้างอิงข้อมูล</a>
+		<a href="portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="profiles.html" class="nowrap">ผู้เขียน</a>
 	</div>
 </div>
 <div id="navbar_space"></div>
