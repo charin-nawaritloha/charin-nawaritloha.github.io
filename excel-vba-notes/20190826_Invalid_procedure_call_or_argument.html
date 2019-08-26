@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>พบปัญหา Invalid procedure call or argument ใน VBA หลังจาก Update Windows 10 Version 1903</title>
+	<meta name="tags" contents="VBA">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: "ca-pub-9963456691869043",
+			enable_page_level_ads: true
+		});
+	</script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/bill123.html">บิล123</a>
+		<a href="p/vba.html">รับเขียน VBA</a>
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" class="nowrap">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<h1>พบปัญหา Invalid procedure call or argument ใน VBA หลังจาก Update Windows 10 Version 1903</h1>
+	
+<p>เมื่อเดือนสิงหาที่ผ่านมา ทาง Microsoft ได้ปล่อย Update Windows 10 Version 1903 ออกมาสด ๆ ร้อน ๆ สำหรับคนที่ใช้งาน Windows ทั่วไปหลังจาก Updated แล้วก็คงใช้งานตามปกติ แต่สำหรับคนที่ใช้โปรแกรม VBA บางส่วน ไม่ว่าจะใน Excel หรือ Access ต่างได้รับผลกระทบจากการ Update ครั้งนี้</p>
+	<div class="image"><img src="images/20190826_01_windows10.png" class="u-max-full-width" />
+	<div>Windows 10 Version 1903 ที่ลงเมื่อเดือนสิงหาคม พ.ศ.2562 ที่ผ่านมา</div>
+	</div>
+
+<p>ปัญหาที่เกิดขึ้นคือ โปรแกรมที่ใช้ VBA เดิมที่เคยใช้งานได้ตามปกติ กลับขึ้น Error ว่า Invalid procedure call or argument ทั้งที่ไม่เคยเกิดขึ้นมาก่อน โปรแกรมก็ไม่ได้ไปแก้ไขอะไร </p>
+	<div class="image"><img src="images/20190826_02_VBA_error.png" class="u-max-full-width" />
+	<div>VBA ขึ้น Error หลังจากเปิดใช้งานตามปกติ</div>
+	</div>
+
+<p>เลยลองวิธีเดิมที่เคยเจอปัญหาแบบเวลา VBA มันเอ๋อก็คือ Repair โปรแกรม Microsoft Office อีกรอบครับ</p>
+	<div class="image"><img src="images/20190826_03_repair_office.png" class="u-max-full-width" />
+	<div>ทำการ Repair Microsoft Office</div>
+	</div>
+
+<p>ผลปรากฎว่าไม่หายครับ ยังขึ้นเหมือนเดิม เลยลองเข้าไปดูว่ามัน Error ตรงไหน เมื่อ Debug แล้วพบว่ามัน Error ตอนกำหนดค่าตัวแปรแบบ ParamArray</p>	
+	<div class="image"><img src="images/20190826_04_vba_code.png" class="u-max-full-width" />
+	<div>เกิด Error เมื่อพยายาม copy ตัวแปรจาก ParamArray</div>
+	</div>	
+
+<!--ads1-->
+<div class="ads"></div>
+<!--/ads1-->
+
+	
+<p>และเมื่อตรวจสอบเพิ่มเติมจึงพบว่ามัน Error เฉพาะเวลาที่ไม่มีค่าตัวแปรส่งมาให้ ParamArray เท่านั้น หากมีการส่งค่ามามันจะไม่ Error ลองดูตัวอย่าง Code</p>	
+
+<pre class="brush: vb">
+Public Sub Test()
+	Call ShowQuestion("message", "title", "option1", "option2")	'แบบนี้ OK ไม่เกิด Error ส่ง "option1" และ "option2" ให้ตัวแปร templates
+	
+	Call ShowQuestion("message", "title")	'<-- แบบนี้จะเกิด Error ไม่มีการส่งค่าให้ตัวแปร templates()
+	
+End Sub
+
+Public Sub ShowQuestion(ByVal sMessage As String, ByVal sTitle As String, ParamArray templates() As Variant)
+	Me.iconShow.Picture = Me.iconQuestion.Picture
+	m_bYesNo = True
+	nClickButton = vbNo
+	m_sMessage = sMessage
+	m_sTitle = sTitle
+	m_templates = templates	'<-- จะ Error ที่บรรทัดนี้
+	Call MakeMessage
+End Sub
+</pre>
+
+<p>เมื่อลองไปดูว่าตัวแปร m_templates ประกาศประเภทข้อมูลเอาไว้อย่างไร ก็พบว่ามันประกาศไว้แบบเดียวกันกับ template คือเป็น Array ของข้อมูลประเภท Variant </p>
+	<div class="image"><img src="images/20190826_05_vba_code.png" class="u-max-full-width" />
+	<div>ส่วนประกาศตัวแปร m_templates</div>
+	</div>
+
+<p>วิธีแก้ไขปัญหาของผมที่ใช้คือ ลองตัดการประกาศแบบ Array เป็น Variant ธรรมดาแทน ซึ่งผลปรากฎว่าผ่านครับ ไม่เกิด Error</p>
+
+	<div class="image"><img src="images/20190826_06_vba_code.png" class="u-max-full-width" />
+	<div>แก้ไข Code โดยเปลี่ยนจาก Array เป็น Variant ธรรมดา</div>
+	</div>
+
+<p>อาจมีคนสงสัยว่าตอนแรกจะประกาศตัวแปรเป็น Array ทำไม ที่ทำแบบนั้นเพื่อให้เวลาเขียนโปรแกรม มันจะได้แสดง infomation ของตัวแปรนั้นถูกต้องครับ และสะดวกในการเขียนโปรแกรมเพราะตัว IDE จะแสดงว่าเป็น Array</p>
+
+<p>แล้วคนอื่น ๆ มีใครที่มีปัญหาแบบนี้ไหม ที่ลองค้นหา Google ก็มี แต่อาจจะกระทบไม่มาก เพราะการเขียนโปรแกรม VBA โดยออกแบบฟังก์ชั่นให้รองรับการส่ง Parameters หลาย ๆ ตัวแบบยืดหยุ่น (dynamic number of arguments) ปกติก็ไม่ได้ใช้กันบ่อย ๆ แต่ถ้าใช้ก็มีปวดหัวกันงานนี้เพราะต้องตามไปแก้ไข Code กัน ตัวอย่างผู้ที่ได้รับผลกระทบ <a href="https://answers.microsoft.com/en-us/msoffice/forum/all/windows-update-2019-08-cumulative-update-has/baeea089-9bba-4a2a-9660-0a220f1656e9?auth=1" target="ext_link">Microsoft Community</a> ข้างล่างคือ Code ที่ยกตัวอย่างการเกิด Error ครับ</p>
+
+<pre class="brush: vb">
+Sub Test()
+
+	Test1 "A", "B"		'Works OK with and without Windows Update
+
+	Test1			'Fails after Windows Update
+
+End Sub
+
+Sub Test1(ParamArray P() As Variant)
+
+	Test2 P
+
+End Sub
+
+Sub Test2(ByVal P As Variant)    'Error occurs on this line
+
+End Sub
+</pre>
+
+<!--ads2-->
+<div class="ads"></div>
+<!--/ads2-->
+
+<p>ก็ถือว่าเป็นเคสที่แปลกประหลาดมากที่ Update Windows แล้ว VBA ใช้งานไม่ได้ เกิดปัญหา ส่วนตัวผู้เขียนเองเคยเจอปัญหาคล้าย ๆ แบบนี้กับ Action Script ที่ใช้งานบน Flash Player ที่พอเปลี่ยน Version แล้ว Code ที่เขียนบางแบบจะใช้งานไม่ได้ ซึ่งก็เซ็งพอสมควร แต่กับ VBA ก็ไม่เคยคิดว่าจะเกิดปัญหาแบบเดียวกัน ซึ่งก็หวังว่าจะมีปัญหาแค่จุดนี้จุดเดียว เพราะถ้ามีจุดอื่นแบบที่ทำงานไม่ถูกต้องและไม่แสดง Error เนี่ย จะเลวร้ายสุด ๆ เลย สาธุ...</p>
+
+</div></div>
+
+
+
+
+
+
+
+
+
+<!--comments-->
+<div class="container">
+	<div class="fb-like" data-share="true" data-show-faces="true" />
+	<div style="padding-top:10rem;">&nbsp;</div>
+	<div class="fb-comments" data-numposts="10" data-width="100%"></div>
+</div>
+<!--/comments-->
+
+
+
+
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+
+
+
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
