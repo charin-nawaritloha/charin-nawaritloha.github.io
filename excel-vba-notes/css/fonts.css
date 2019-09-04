@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree&display=swap');
+
 @font-face {
 	font-family: 'Quark';
 	src: url('../fonts/Quark-Light.ttf');
@@ -19,7 +21,7 @@
 
 
 html,body {
-  font-family: Leelawadee, Tahoma, sans-serif;
+  font-family: 'Bai Jamjuree', Leelawadee, Tahoma, sans-serif;
   line-height: 2rem;
 }
 
@@ -35,6 +37,6 @@ button,
 input[type="submit"],
 input[type="reset"],
 input[type="button"] {
-	font-family: Quark, Leelawadee, Tahoma, sans-serif;
+	font-family: Quark, 'Bai Jamjuree', Leelawadee, Tahoma, sans-serif;
 	font-size: 1.8rem;
 }
