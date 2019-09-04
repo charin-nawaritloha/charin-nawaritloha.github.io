@@ -459,6 +459,28 @@
 	<div>วิธีการดาวน์โหลด</div>
 	</div>		
 	
+<h1>แก้ไขปัญหาโปรแกรมทำงานไม่ได้</h1>	
+<h2>ใช้งานกับ Windows 10 แล้วขึ้น Error ว่า Invalid procedure call or argument</h2>
+<p>ปัญหานี้เกิดจาก Update เป็น Windows 10 Version 1903 แล้วมีปัญหากับโปรแกรม VBA ในการเรียก ParamArray ที่มีค่าว่าง วิธีแก้ไขไม่ยาก ให้ทำขั้นตอนตามรูปด้านล่างทุกไฟล์ที่เกิดปัญหา ก็จะสามารถใช้งานได้ตามปกติ</p>
+
+	<div class="image"><img src="images/20190516_33_vba_fix_windows10.png" class="u-max-full-width" />
+	<div>คลิกขวาที่ชีทใดก็ได้ แล้วคลิกเมนู View Code</div>
+	</div>		
+
+	<div class="image"><img src="images/20190516_34_vba_fix_windows10.png" class="u-max-full-width" />
+	<div>โปรแกรมจะเปิด VBA Editor ขึ้นมา ดับเบิ้ลคลิกที่โฟลเดอร์ Forms คลิกขวาที่ MessageBoxUnicode จากนั้นเลือกเมนู View Code</div>
+	</div>		
+	
+	<div class="image"><img src="images/20190516_35_vba_fix_windows10.png" class="u-max-full-width" />
+	<div>ในหน้าต่างด้านขวา จะมี source code โปรแกรม ให้เลื่อนไปด้านบนสุด จะเห็นคำสั่ง Dim m_sMessage() As String</div>
+	</div>		
+	
+	<div class="image"><img src="images/20190516_36_vba_fix_windows10.png" class="u-max-full-width" />
+	<div>ให้ลบเครื่องหมายวงเล็บทิ้งไป จนเหลือ Dim m_sMessage As String จากนั้นให้บันทึกไฟล์ Excel เป็นอันเสร็จสิ้นการแก้ไข</div>
+	</div>		
+
+	
+	
 <p>ใช้งานแล้วดีไม่ดีอย่างไร Comment ไว้ด้านล่าง เผื่อผู้เขียนมีเวลาจะมาช่วยปรับปรุงแก้ไขให้นะครับ</p>
 
 <!--ads2-->
