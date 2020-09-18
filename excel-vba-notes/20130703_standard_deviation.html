@@ -24,13 +24,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -44,6 +39,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -63,8 +62,12 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
 
-<a href="https://pixabay.com/photos/financial-analytics-blur-business-2860753/" target="ext_link"><img src="images/20130703_00.jpg" class="u-max-full-width" title="Image by 6689062 on Pixabay" /></a>
+
+
+
+<a href="https://pixabay.com/photos/financial-analytics-blur-business-2860753/" target="ext_link"><img src="images/20130703/20130703_00.jpg" class="u-max-full-width" title="Image by 6689062 on Pixabay" /></a>
 
 <h1>เราได้อะไรจาก "ค่าเบี่ยงเบนมาตรฐาน" (standard deviation)</h1>
 
@@ -73,12 +76,12 @@
 <h2>ค่าเฉลี่ย (average)</h2>
 
 <p>เริ่มต้นด้วยการคำนวณสถิติที่น่าจะคุ้นเคยกันดี คือ "ค่าเฉลี่ย" เรื่องนี้น่าจะเข้าใจง่ายสุด (เลยยังไม่ได้คืนครู) มันคือการคำนวณโดยเอาตัวเลขของข้อมูลมาบวกกันทุกตัวแล้วหารด้วยจำนวนข้อมูล ขอแนบสมการให้ดูเท่ๆ กันหน่อย</p>
-	<div class="image"><img src="images/20130703_01_AVERAGE.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_01_AVERAGE.png" class="u-max-full-width" />
 	<div>สมการสำหรับหาค่าเฉลี่ย</div>
 	</div>
 	
 <p>ตัวอย่าง: อุณหภูมิวันจันทร์ - ศุกร์ คือ 30.0 31.5 30.5 29.0 29.5 30.0 และ 30.5 ตามลำดับ ถ้านำมาคิดเป็นอุณหภูมิเฉลี่ยของสัปดาห์นี้ = (30.0+31.5+30.5+29.0+29.5+30.0+30.5) / 7 = 30.14 มาลองทำทำใน Excel กันดู</p>	
-	<div class="image"><img src="images/20130703_02_AVERAGE_excel.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_02_AVERAGE_excel.png" class="u-max-full-width" />
 	<div>หาค่าเฉลี่ยของกลุ่มข้อมูลที่สนใจด้วยฟังก์ชั่น AVERAGE</div>
 	</div>
 
@@ -87,12 +90,12 @@
 
 <h2>การกระจายตัวของข้อมูล</h2>
 <p>ในชีวิตจริงเราจะพบข้อมูลที่ได้มักจะมีการกระจายตัวที่ไม่เท่ากันหรือไม่ใกล้เคียงกันเสมอไป จากตัวอย่างที่แล้ว ถ้าเกิดพายุเข้าอากาศแปรปวน จะเกิดอะไรขึ้นมาลองดูกราฟกัน</p>
-	<div class="image"><img src="images/20130703_03_graph.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_03_graph.png" class="u-max-full-width" />
 	<div>เปรียบเทียบอากาศปกติ และ แปรปรวน</div>
 	</div>
 
 <p>จากข้อมูลจะเห็นว่าแม้ข้อมูลได้ค่าเฉลี่ยเท่ากัน <b>แต่แค่มองด้วยตาเปล่าก็จะเห็นว่าข้อมูลด้านล่างมีความแปรปรวนมากและค่าเฉลี่ยที่ได้มาไม่น่าจะนำมาแทนชุดข้อมูลดังกล่าวได้</b> คราวนี้ปัญหาคือถ้าข้อมูลมีจำนวนมาก ๆ การดูด้วยสายตาคงไม่เพียงพอจะตัดสินได้ว่าข้อมูลมันปกติหรือไม่ปกติ</p>
-	<div class="image"><img src="images/20130703_04_real_life.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_04_real_life.png" class="u-max-full-width" />
 	<div>ข้อมูลในชิวิตจริงแค่นี้มันจิบ ๆ แบบนี้ดูไม่ออกแน่ว่ามันแปรปรวนหรือเปล่า</div>
 	</div>
 
@@ -102,11 +105,11 @@
 
 <h2>ค่าเบี่ยงเบนมาตรฐาน  (standard deviation หรือ SD)</h2>
 <p>ค่าเบี่ยงเบนมาตรฐาน หรือ SD คิดค้นโดย ฟรานซิส กาลตัน (<a href="http://en.wikipedia.org/wiki/Francis_Galton" target="ext_link">Francis Galton</a>) ในช่วงปลายคริสต์ทศวรรษ 1860 จุดประสงค์ของการคำนวณค่าเบียงเบนมาตรฐานก็คือหาค่าการกระจายตัวของข้อมูลที่ออกหากจากค่าเฉลี่ยกลางของข้อมูล ค่ายิ่งมากแสดงว่ามีการแปรปรวนหรือการกระจายของข้อมูลสูง เพื่อให้เข้าใจยิ่งขึ้นเรามาลองดูภาพกัน</p>
-	<div class="image"><img src="images/20130703_05_SD1.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_05_SD1.png" class="u-max-full-width" />
 	<div>ค่าเบี่ยงเบนมาตรฐาน (SD) คือ คือเอาระยะเส้นสีเหลืองมารวมกันหาค่าเฉลี่ย</div>
 	</div>
 <p>จากภาพกราฟจะเห็นว่ายิ่งผลรวมความยาวของเส้นสีเหลืองยิ่งมาก ค่า SD ก็จะยิ่งสูงขึ้น ในทางสถิติหากมีการเก็บข้อมูลมาแล้วค่า SD เกินค่าที่รับได้จะถือว่าข้อมูลกระจายตัวเกินไป (อันนี้แล้วแต่งานและเงื่อนไข) ซึ่งก็ต้องหาเหตุผลต่อว่าทำไมถึงเป็นอย่างนั้น จากตัวอย่างที่ยกมาเกิดจากอากาศแปรปรวนเลยทำให้ค่า SD กระฉูดนั้นเอง เกือบลืมแปะสูตรซะหน่อย</p>
-	<div class="image"><img src="images/20130703_06_SD2.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_06_SD2.png" class="u-max-full-width" />
 	<div>สมการสำหรับหาค่า SD</div>
 	</div>
 
@@ -114,7 +117,7 @@
 <p>ในฟาร์มไก่ไข่ มีไก่อยู่ 1,000 ตัว โดยแบ่งอยู่ในโรงเลี้ยงจำนวน 4 โรง โดยค่าเฉลี่ยที่ควรจะเป็นไก่จะออกไข่ประมาณ 80% (มีพัก 20%) ฟาร์มไก่มีแรงงานคนจำกัดไม่สามารถนับไข่ที่ออกจากแม่ไก่แบบตัวต่อตัวได้</p>
 
 <p>เมื่อเลี้ยงไก่เพื่อขายไข่ หากไก่กินอาหารแต่ออกไข่น้อยกว่าที่ควรจะเป็นก็จะขาดทุน ดังนั้นเราต้องหาให้ได้ว่ามีไก่ตัวไหนอู้ กินแล้วไม่ไข่บ้างหรือเปล่า</p>
-	<div class="image"><img src="images/20130703_07_ex1.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_07_ex1.png" class="u-max-full-width" />
 	<div>รายงานไข่ที่เก็บได้ใน 1 เดือน จำนวน 30 วัน</div>
 	</div>
 
@@ -126,7 +129,7 @@
 </ul>
 
 <p>เพื่อให้เห็นภาพลองมาดูกราฟของโรง 1 และ 4 กัน</p>
-	<div class="image"><img src="images/20130703_08_ex2.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_08_ex2.png" class="u-max-full-width" />
 	<div>เปรียบเทียบจำนวนไข่ที่เก็บได้ในแต่ละวันของโรง 1 และ 4</div>
 	</div>
 
@@ -136,7 +139,7 @@
 
 <h2>ตัวอย่างการวิเคราะห์ ผลการทำข้อสอบ</h2>
 <p>อาจารย์วิชาภาษาอังกฤษได้ทดสอบเด็ก 2 ห้อง เพื่อวัดผล ปรากฎว่าค่าเฉลี่ยที่ได้ 2 ห้องใกล้เคียงกัน แต่ค่า SD ต่างกัน</p>
-	<div class="image"><img src="images/20130703_09_ex3.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20130703/20130703_09_ex3.png" class="u-max-full-width" />
 	<div>ผลการทดสอบของเด็กทั้ง 10 คน</div>
 	</div>
 
@@ -147,6 +150,10 @@
 <!--/ads2-->
 
 
+
+
+
+<!--/content -->
 </div></div>
 
 

@@ -25,13 +25,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -45,6 +40,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -64,6 +63,11 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
+
+
+
+
 <h1>การเรียกใช้งานฐานข้อมูล SQLite ผ่าน ODBC บน Excel</h1>
 <p>เมื่อวานเกิดนึกสนุก นั่งรื้อตัวเชื่อมต่อฐานข้อมูลบน VBA ที่เขียนไว้นานแล้วใหม่ ของเดิมใช้ต่อกับ Access Database อย่างเดียว ก็เลยอยากทดลองต่อกับฐานข้อมูลอื่นดูบ้าง เลยลองจับเอา SQLite มาลองดู เนื่องจากเป็นฐานข้อมูลที่เรียบง่าย และเหมาะกับการใช้บันทึกข้อมูลทั่วไปที่ใช้งานทีละคน (หรือไม่กี่คนพร้อมกัน) </p>
 
@@ -72,7 +76,7 @@
 <p>การเชื่อมต่อที่จะใช้ทดสอบในครั้งนี้ จะใช้ ODBC ซึ่งเป็นวิธีการเชื่อมต่อที่ Excel และ VBA รองรับอยู่แล้ว แค่หาตัวโปรแกรม driver ที่จะใช้เป็นตัวกลางคุยกันเท่านั้น เท่าที่หาได้ในอินเทอร์เน็ตจะมี 2 แบบคือ Open source ใช้งานฟรี แต่เสี่ยงมี bugs บ้าง กับตัวเสียเงิน</p>
 <p>แน่นอนเนื่องจากเป็นการทดสอบ เลยเลือกตัวฟรีมาใช้ดู โดยการไปดาวน์โหลดที่เว็บไซต์ <a href="http://www.ch-werner.de/sqliteodbc/" target="ext_link">http://www.ch-werner.de/sqliteodbc/</a> ถ้าใครใช้ Windows รุ่น 64-bit และตัว Excel เป็น 64-bit ด้วย ให้ลงรุ่น 64-bit (x64) ผู้เขียนใช้ 32-bit เลยลงรุ่น x86 ธรรมดา</p>
 
-	<div class="image"><img src="images/20190411_01_ODBC_Driver.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_01_ODBC_Driver.png" class="u-max-full-width" />
 	<div>ดาวน์โหลด ODBC Driver สำหรับ SQLite Database</div>
 	</div>
 
@@ -84,7 +88,7 @@
 
 <p>ขั้นต่อไป ให้ลองสร้างฐานข้อมูลสำหรับทดสอบ ผู้เขียนใช้โปรแกรม <a href="https://sqlitebrowser.org/" target="ext_link">SQLite Database Browser</a> สร้างตัวอย่างสำหรับข้อมูล ชื่อ R:\demo.db3 และตารางชื่อ demo ดังนี้</p>
 
-	<div class="image"><img src="images/20190411_02_Table_demo.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_02_Table_demo.png" class="u-max-full-width" />
 	<div>ตัวอย่างฐานข้อมูลที่สร้างเพื่อใช้ทดสอบ</div>
 	</div>
 
@@ -98,70 +102,70 @@
 <h2>นำเข้าข้อมูลด้วย Microsoft Query</h2>
 <p>เมื่อมีข้อมูลสำหรับทดสอบเรียบร้อยแล้ว ขั้นตอนต่อไป ให้สร้างไฟล์ Excel ใหม่ขึ้นมา จากนั้นให้คลิกที่แท็บ Data → From Other Sources → From Microsoft Query เพื่อเปิดหน้าต่างสำหรับเชื่อมต่อฐานข้อมูล และเลือก Driver สำหรับเชื่อมต่อตามภาพด้านล่าง</p>
 
-	<div class="image"><img src="images/20190411_03_insert_database.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_03_insert_database.png" class="u-max-full-width" />
 	<div>แทรกข้อมูลจากภายนอกด้วย Microsoft Query</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_04_choose_data_source.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_04_choose_data_source.png" class="u-max-full-width" />
 	<div>เลือก Data source เป็น SQLite3 Datasource</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_05_select_file.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_05_select_file.png" class="u-max-full-width" />
 	<div>ในหน้าต่างตั้งค่าการเชื่อมต่อ ให้เลือกไฟล์ R:\demo.db3 ที่เตรียมไว้ กด OK เพื่อบันทึก</div>
 	</div>
 
 <p>ในบางกรณี จะเกิดปัญหา ตัวเชื่อมต่อมองไม่เห็นตารางในฐานข้อมูล ให้ลองคลิกที่ System Tables โดยลองคลิกเลือก หรือไม่คลิกเลือก ทำสลับกันไปมา แล้วกด OK จนมีตารางขึ้นมาให้เลือก </p>
 
-	<div class="image"><img src="images/20190411_06_no_visible_tables.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_06_no_visible_tables.png" class="u-max-full-width" />
 	<div>อาจเกิดปัญหาตัวเชื่อมต่อไม่พบตารางในฐานข้อมูล</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_07_system_tables.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_07_system_tables.png" class="u-max-full-width" />
 	<div>ลองคลิกเลือก Options → System Tables เพื่อให้เจอตาราง</div>
 	</div>
 
 <p>เมื่อเห็นตาราง demo แล้ว ให้คลิกที่ปุ่ม &gt; เพื่อนำค่าฟิลด์ (Field) ในตารางไปแสดง (ในที่นี้คือ id fullname และ age)</p>
 
-	<div class="image"><img src="images/20190411_09_select_demo.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_09_select_demo.png" class="u-max-full-width" />
 	<div>คลิก &gt; เพื่อเลือกฟิลด์ไปแสดงผล</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_10_next.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_10_next.png" class="u-max-full-width" />
 	<div>คลิก Next เพื่อไปหน้าถัดไป</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_11_next.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_11_next.png" class="u-max-full-width" />
 	<div>คลิก Next เพื่อไปหน้าถัดไป</div>
 	</div>
 
-	<div class="image"><img src="images/20190411_12_finish.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_12_finish.png" class="u-max-full-width" />
 	<div>คลิก Finish เพื่อจบการนำเข้าข้อมูล และกลับไปยัง Excel</div>
 	</div>
 	
 <p>จากขั้นตอนที่กล่าวมา ตอนนี้โปรแกรม Excel รู้แหล่งข้อมูลที่จะให้นำเข้าแล้ว สิ่งสุดท้ายที่จะทำคือ กำหนดตำแหน่งที่จะให้แสดงข้อมูลจากตาราง ให้เลือกเซลล์ที่ต้องการ และคลิก OK</p>
 
-	<div class="image"><img src="images/20190411_13_import_data.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_13_import_data.png" class="u-max-full-width" />
 	<div>เลือกตำแหน่งที่จะให้แสดงตารางข้อมูล และกด OK เพื่อยืนยัน</div>
 	</div>	
 	
-	<div class="image"><img src="images/20190411_14_import_completed.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_14_import_completed.png" class="u-max-full-width" />
 	<div>Excel จะทำการสร้าง table เพื่อใช้แสดงข้อมูลจาก SQLite ชื่อ demo ที่เรานำเข้า</div>
 	</div>		
 
 <h2>การนำเข้าข้อมูลล่าสุดเมื่อข้อมูลเปลี่ยนแปลง</h2>	
 <p>สิ่งที่น่าสนใจอีกอย่างสำหรับการนำเข้าข้อมูลด้วยวิธีการข้างต้นคือ เมื่อตารางในฐานข้อมูลมีการเปลี่ยนแปลง ผู้ใช้งานสามารถ Refresh เพื่อสั่งให้ Excel ทำการดึงข้อมูลล่าสุดมาแสดงได้ ในตัวอย่างจะลองเพิ่มข้อมูลเข้าไปอีก 1 แถว ดังนี้</p>
 
-	<div class="image"><img src="images/20190411_15_test_add_row.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_15_test_add_row.png" class="u-max-full-width" />
 	<div>ลองเพิ่มข้อมูลใหม่เข้าไปอีก 1 แถว</div>
 	</div>
 	
 <p>วิธีการ Refresh ข้อมูล สามารถทำได้โดย ให้คลิกเลือก table ที่ใช้แสดงข้อมูลจาก demo.db3 จากนั้นให้เลือกแท็บ Data → Refresh All → Refresh เพื่อดึงข้อมูลล่าสุดมาแสดง</p>
 
-	<div class="image"><img src="images/20190411_16_refresh.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_16_refresh.png" class="u-max-full-width" />
 	<div>วิธีการ Refresh ข้อมูล</div>
 	</div>	
 	
-	<div class="image"><img src="images/20190411_17_table_updated.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_17_table_updated.png" class="u-max-full-width" />
 	<div>ข้อมูลใหม่ในแถวที่ 3 แสดงใน table แล้ว</div>
 	</div>	
 	
@@ -191,11 +195,11 @@ End Sub
 <p>ที่มาของการเชื่อมต่อให้ดูได้จากชื่อใน ODBC Data source หากระบุไม่ตรง หรือชื่อผิดจะทำให้โปรแกรม Error</p>
 
 
-	<div class="image"><img src="images/20190411_18_vba_odbc.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_18_vba_odbc.png" class="u-max-full-width" />
 	<div>ตัวอย่างการเชื่อมต่อ ODBC ผ่าน ADODB</div>
 	</div>
 	
-	<div class="image"><img src="images/20190411_19_vba_odbc_result.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_19_vba_odbc_result.png" class="u-max-full-width" />
 	<div>ผลที่ได้ มาแต่ id ข้อมูลอื่น ๆ ไม่มาด้วย</div>
 	</div>	
 	
@@ -224,7 +228,7 @@ Sub SQLiteDemo2()
 End Sub
 </pre>
 
-	<div class="image"><img src="images/20190411_20_vba_odbc_result2.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190411/20190411_20_vba_odbc_result2.png" class="u-max-full-width" />
 	<div>ผลที่ได้จากโปรแกรม SQLiteDemo2()</div>
 	</div>
 <h2>ส่งท้าย</h2>
@@ -238,7 +242,7 @@ End Sub
 <div class="ads"></div>
 <!--/ads2-->
 
-
+<!--/content -->
 </div></div>
 
 

@@ -34,6 +34,40 @@ text-decoration: underline;
   }
 
 
+/* TOC */
+#tocBox {
+	display: block;
+    float: left;
+    z-index: 100;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+	padding-top: 1.5rem;
+	padding-left: 1.5rem;
+}
+
+#divtoc {
+	overflow: hidden; 
+	padding: 1rem;	
+	visibility:visible; 
+	max-width: 100%;
+	transition: height 0.5s, width 0.5s, visibility 0.5s, opacity 0.5s ease-out;
+	background:rgba(255,255,255,0.95);	
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+#divtoc > ol, #divtoc > ol ol, #divtoc > ol ol ol {
+	margin-left: 0.5rem;
+	font-size: 100%;
+}
+
+
+.clickmenu {
+	cursor: pointer;
+}
+
+
+
 
 /* navbar */
 #navbar {
@@ -48,12 +82,16 @@ text-decoration: underline;
       top: 0;
       left: 0;
       padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
+      padding-bottom: 1.5rem;	  
       line-height: 2rem;
       box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 320px) {
+	#navbar {
+		padding-left: 2rem;
+	}
+	
   #navbar a{
 	font-family: Quark;
 	font-weight: 600;
@@ -85,6 +123,12 @@ text-decoration: underline;
     color: #0fa0ce;
     text-decoration: underline;
   }
+}
+
+@media (min-width: 700px) {
+	#navbar {
+		padding-left: inherit;
+	}
 }
 
 
@@ -201,15 +245,27 @@ label.radiogroup {
     display: block;
     background-color: #fff;
     text-align: center;
+	margin-top: 2.5rem;
     margin-bottom: 2.5rem;
-    border: 1px solid #DDD;
-    padding: 0.5rem;
+    border: 1px solid #F0F0F0;
+    padding: 0.75rem;
     font-weight: bold;
+	text-shadow: 1px 1px 0px #EEE;
+	box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.05);
 }
 
 .image > div {
     padding-top: 1.5rem;
+	padding-bottom: 1.5rem;	
 }
+
+.image > img {
+    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2);
+    padding: 0.75rem;
+}
+
+
+
 
 
 .ads {
@@ -252,9 +308,22 @@ p {
 
 
 
-h1 { font-size: 3.5rem; border-bottom: 3px solid black;}
-h2 { font-size: 3.0rem; border-bottom: 2px solid black; }
-h3 { font-size: 2.5rem; border-bottom: 1px solid black; }
+h1 { font-size: 3.5rem; border-bottom: 3px solid black; padding-top: 1rem;}
+h2 { font-size: 3.0rem; border-bottom: 2px solid black; padding-top: 1rem; }
+h3 { font-size: 2.5rem; border-bottom: 1px solid black; padding-top: 1rem; }
 h4 { font-size: 2.0rem; }
 h5 { font-size: 1.5rem; }
 h6 { font-size: 1.25rem; }
+
+
+/*
+display tag as block and center horizontally
+*/
+iframe.youtube {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;	
+	max-width: 100%;
+}
+
+

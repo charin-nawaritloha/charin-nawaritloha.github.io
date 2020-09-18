@@ -25,13 +25,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -45,6 +40,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -64,6 +63,11 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
+
+
+
+
 <h1>วิธีการใช้ Table ใน Excel</h1>
 
 <p>Table ความสามารถที่ผมเองก็ไม่ค่อยได้ใช้ เนื่องจากงานส่วนใหญ่คือเอาตัวเลขจากฐานข้อมูลมายำๆๆๆ เพื่อให้ได้รายงาน ซึ่งภายหลังอยากจะนำข้อมูลจาก database มา import ต้องแสดงเป็น Table ดังนั้น เพื่อให้ได้ประสิทธิภาพและการใช้งานสูงสุด เราควรศึกษาการใช้งานที่ถูกต้องไว้ซะหน่อย ซึ่งจะเน้นภาพเยอะ ๆ เพราะกลับมาดูแล้วมันเร็วกว่าอ่าน <span class="nowrap"> &gt;‿‿&lt; ~!!</span> สำหรับหัวข้อที่จะพูดหลัก ๆ มีดังนี้</p>
@@ -85,18 +89,18 @@
 <li>คลิกที่เมนู Insert → Table</li>
 </ol>
 
-	<div class="image"><img src="images/20121127_01_ExcelTable01.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_01_ExcelTable01.png" class="u-max-full-width" />
 	<div>คลิกเลือกข้อมูลที่ต้องการ <br />แล้วคลิกที่ Insert → Table</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_02_ExcelTable02.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_02_ExcelTable02.png" class="u-max-full-width" />
 	<div>โปรแกรม Excel จะให้เรายืนยันพื้นที่ <br />กด OK เพื่อสร้าง Table</div>
 	</div>
 
 <p>เมื่อสร้าง Table แล้วจะพบว่าข้อมูลของเรามีการจัดรูปแบบตามค่าเริ่มต้นของ Excel และจะมีเมนู Table Tools เพิ่มขึ้นมา สำหรับชื่อ Table ในตัวอย่างนี้จะเป็น Table1</p>
 
-	<div class="image"><img src="images/20121127_03_ExcelTable03.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_03_ExcelTable03.png" class="u-max-full-width" />
 	<div>แก้ไขชื่อ Table รวมถึงใช้งานและปรับแต่งได้ที่นี่</div>
 	</div>
 
@@ -104,11 +108,11 @@
 
 <p>ผู้ใช้สามารถใส่สีและรูปแบบต่าง ๆ ให้กับตารางได้ง่าย ๆ โดยคลิกเลือกที่ Table Styles จากนั้นเลือกรูปแบบที่ต้องการ หรือจะสร้างใหม่ก็สามารถทำได้ ซึ่งตรงนี้ช่วยให้เราสามารถดูข้อมูลได้ง่ายขึ้นกว่าเดิมอีกด้วย	</p>
 
-	<div class="image"><img src="images/20121127_04_ExcelTable04.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_04_ExcelTable04.png" class="u-max-full-width" />
 	<div>ปรับแต่งรูปแบบด้วย Table Styles</div>
 	</div>
 
-	<div class="image"><img src="images/20121127_05_ExcelTable05.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_05_ExcelTable05.png" class="u-max-full-width" />
 	<div>สามารถปรับแต่ง Table Style Options เพิ่มเติมได้หลายจุด <br />สำหรับ Total Row ผู้ใช้สามารถเลือกสูตรที่ใช้คำนวณได้อีกด้วย</div>
 	</div>
 
@@ -123,15 +127,15 @@
 <p>สำหรับการลบข้อมูลในตาราง เหมือนการลบแถวธรรมดา</p>
 
 
-	<div class="image"><img src="images/20121127_06_ExcelTable06.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_06_ExcelTable06.png" class="u-max-full-width" />
 	<div>ที่แถวสุดท้าย จะมีมุมที่สามารถขยายพื้นที่ด้วยเมาส์ได้</div>
 	</div>	
 	
-	<div class="image"><img src="images/20121127_07_ExcelTable07.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_07_ExcelTable07.png" class="u-max-full-width" />
 	<div>ใช้เมาส์คลิกลากเพื่อเพิ่มพื้นที่ Table</div>
 	</div>	
 	
-	<div class="image"><img src="images/20121127_08_ExcelTable08.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_08_ExcelTable08.png" class="u-max-full-width" />
 	<div>ได้พื้นที่ว่างใหม่ตามที่ต้องการ</div>
 	</div>	
 
@@ -150,21 +154,21 @@
 
 <p>เนื่องจาก Table ต้องมีการกำหนดพื้นที่ที่ชัดเจน ดังนั้นเมื่อเราเพิ่มสูตรคำนวณเข้าไป โปรแกรม Excel จะช่วยเติมส่วนที่เหลือให้เราอัตโนมัติ	</p>
 
-	<div class="image"><img src="images/20121127_09_ExcelTable09.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_09_ExcelTable09.png" class="u-max-full-width" />
 	<div>เพิ่มคอลัมน์ Discount 10% → ใส่สูตร ราคา * 10% แบบปกติ</div>
 	</div>	
 
-	<div class="image"><img src="images/20121127_10_ExcelTable10.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_10_ExcelTable10.png" class="u-max-full-width" />
 	<div>เมื่อกดปุ่ม Enter โปรแกรม Excel จะทำการใส่สูตรในแถวที่เหลือให้อัตโนมัติ</div>
 	</div>		
 	
 <p>แต่ในการใช้งานจริง ๆ หากมีการใส่สูตรคำนวณที่อ้างจากคอลัมน์ใน Table แนะนำว่าให้อ้างแบบใช้ชื่อคอลัมน์จะดีกว่าในเรื่องความเข้าใจ และ ง่ายต่อการแก้ไขเมื่อมีการเพิ่มข้อมูล</p>
 
-	<div class="image"><img src="images/20121127_11_ExcelTableX01.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_11_ExcelTableX01.png" class="u-max-full-width" />
 	<div>ลองพิมพ์ [ โปรแกรม Excel  → จะขึ้นชื่อคอลัมน์มาให้เลือก</div>
 	</div>	
 	
-	<div class="image"><img src="images/20121127_12_ExcelTableX02.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_12_ExcelTableX02.png" class="u-max-full-width" />
 	<div>ใส่สูตร [Price] * 10% → กด Enter จะได้ผลเหมือนกัน</div>
 	</div>	
 	
@@ -173,11 +177,11 @@
 	
 <p>ในการดึงข้อมูลจาก Table มาใช้งาน ไม่ว่าจะเขียนสูตรคำนวณ หรือ ค้นหาข้อมูล จะมีรูปแบบการอ้างอิง โดยในตัวอย่างตั้งชื่อ Table ว่า Table1 ดังนั้นเราสามารถอ้างชื่อ Table1 เหมือนเหมือนกันชื่อที่เราสร้างขึ้นเองได้ทันที	</p>
 
-	<div class="image"><img src="images/20121127_13_ExcelTable11.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_13_ExcelTable11.png" class="u-max-full-width" />
 	<div>ลองพิมพ์ =T โปรแกรม Excel → จะแสดง Table1 มาให้อัตโนมัติ</div>
 	</div>
 
-	<div class="image"><img src="images/20121127_14_ExcelTable12.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_14_ExcelTable12.png" class="u-max-full-width" />
 	<div>จะเห็นว่า Table1 จะอ้างถึงพื้นที่ข้อมูลใน Table <span style="color:red">ไม่รวมส่วน Header ของ Table</span></div>
 	</div>
 
@@ -195,32 +199,32 @@
 
 <p>ในภาพตัวอย่าง จะเห็นพื้นที่ที่อ้างอิงจะเป็นกรอบสีน้ำเงิน</p>
 
-	<div class="image"><img src="images/20121127_15_ExcelTable13.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_15_ExcelTable13.png" class="u-max-full-width" />
 	<div>พิมพ์ [ ต่อท้ายชื่อ Table</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_16_ExcelTable14.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_16_ExcelTable14.png" class="u-max-full-width" />
 	<div>[#All]</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_17_ExcelTable16.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_17_ExcelTable16.png" class="u-max-full-width" />
 	<div>[#Headers]</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_18_ExcelTable17.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_18_ExcelTable17.png" class="u-max-full-width" />
 	<div>[#This Row]</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_19_ExcelTable15.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_19_ExcelTable15.png" class="u-max-full-width" />
 	<div>[#Data]</div>
 	</div>
 
 
-	<div class="image"><img src="images/20121127_20_ExcelTable18.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_20_ExcelTable18.png" class="u-max-full-width" />
 	<div>[#Total]</div>
 	</div>
 
@@ -229,25 +233,25 @@
 
 <p>ในการอ้างอิงถึงคอลัมน์ สามารถใช้เดี่ยว ๆ หรือผสมกับ [#This Row] [#Data] และ [#Total] ได้ เช่น =Table1[[#This Row], [Price]] ในตัวอย่างให้ลองดูสูตรกับกรอบสีเหลียมที่ล้อมพื้นที่สีตามสูตร จะเข้าใจง่ายขึ้น</p>
 
-	<div class="image"><img src="images/20121127_21_ExcelTable19.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_21_ExcelTable19.png" class="u-max-full-width" />
 	<div>=Table1[[#This Row], [Price]]</div>
 	</div>
 
 	
-	<div class="image"><img src="images/20121127_22_ExcelTable20.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_22_ExcelTable20.png" class="u-max-full-width" />
 	<div>=COUNTIF(Table1[Price], ">3000")</div>
 	</div>	
 	
-	<div class="image"><img src="images/20121127_23_ExcelTable20-1.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_23_ExcelTable20-1.png" class="u-max-full-width" />
 	<div>=Table1[Price] - Table1[Discount 10%]</div>
 	</div>	
 	
 	
-	<div class="image"><img src="images/20121127_24_ExcelTable21.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_24_ExcelTable21.png" class="u-max-full-width" />
 	<div>=SUM(Table1[Price])</div>
 	</div>	
 	
-	<div class="image"><img src="images/20121127_25_ExcelTable22.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20121127/20121127_25_ExcelTable22.png" class="u-max-full-width" />
 	<div>=Table1[[#Totals], [Price]]</div>
 	</div>	
 	
@@ -271,17 +275,10 @@
 	
 	
 	
-	
+<!--/content -->	
 </div></div>
 
 
-
-
-
-
-
-</div>
-</div><!--/row-->
 
 
 

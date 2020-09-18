@@ -25,13 +25,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -45,6 +40,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -64,14 +63,18 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
+
+
+
 <h1>ตัวเลือกจังหวัด อำเภอ ตำบล แบบลูกโซ่ ไม่ใช้แมโคร (Droplist combo box/Dependent Dropdown List)</h1>
 <p>น่าจะมีคนใช้บ่อย ๆ กับแบบฟอร์มที่อยู่ ที่อยากให้เลือกข้อมูล จังหวัด แล้วแสดงอำเภอเฉพาะจังหวัดที่เลือก แล้วแสดงตำบลของอำเภอที่เลือก เป็นแบบลูกโซ่ ใน Excel (Dependent Dropdown List) สามารถทำได้ครับ ไม่ยาก ผมได้ทำมาสำเร็จรูปมาให้ใช้งานแล้วครับ โดยเป็น Droplist ธรรมดา ไม่ได้ใช้แมโครหรือคำสั่งพิเศษแต่ประการใด แต่ใช้วิธีสร้าง Formula Name ตามชื่อจังหวัด จังหวัด+อำเภอ เอาไว้ล่วงหน้า แล้วใช้คำสั่ง INDIRECT ในการดึงมาใช้งานอีกที (ลองใช้คำสั่ง Data→Data Validation เพื่อดูสูตรได้)</p>
 
-	<div class="image"><img src="images/20190301_01_address_autolist.gif" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_01_address_autolist.gif" class="u-max-full-width" />
 	<div>การเลือกจังหวัด อำเภอ ตำบล แบบลูกโซ่ (ตัวเลือกแบบที่อยู่แบบ Dependent Dropdown List)</div>
 	</div>
 
-	<div class="image"><img src="images/20190301_07_datavalidation.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_07_datavalidation.png" class="u-max-full-width" />
 	<div>สูตรที่ผูกไว้กับ Data Validation ของตัวเลือกอำเภอ</div>
 	</div>
 
@@ -84,26 +87,26 @@
 <h2>การคัดลอกไปใช้งาน</h2>
 <p>ในไฟล์ <b>20190301_address_autolist.xlsx</b> จะมีชีทชื่อ Provice อยู่ ให้ทำการคัดลอกไปที่ไฟล์ที่เราต้องการจะทำแบบฟอร์ม</p>
 
-	<div class="image"><img src="images/20190301_02_copy_province.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_02_copy_province.png" class="u-max-full-width" />
 	<div>Copy ชีท Province ไปไว้ในไฟล์ที่เราต้องการจะใช้งาน</div>
 	</div>
 
 <p>จากนั้นให้ทำการคัดลอกตัวเลือก จังหวัด อำเภอ ตำบล แล้วนำไปวางที่แบบฟอร์มที่เราต้องการจะใช้งาน โดยให้วางไว้ที่ว่าง ๆ เพื่อจะได้ทำการย้ายตัว Droplist ไปวางบนฟอร์มอีกที</p>
 
-	<div class="image"><img src="images/20190301_03_copy_droplist.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_03_copy_droplist.png" class="u-max-full-width" />
 	<div>ทำการคลิกเลือกพื้นที่ จังหวัด อำเภอ ตำบล แล้ว Copy</div>
 	</div>
 
-	<div class="image"><img src="images/20190301_04_paste_droplist.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_04_paste_droplist.png" class="u-max-full-width" />
 	<div>วางในไฟล์แบบฟอร์มที่เราต้องการ ตรงไหนก็ได้ที่ว่าง ๆ โปรแกรมจะถามว่าชื่อซ้ำ ต้องการให้ใช้ชื่อในไฟล์ใหม่หรือไม่ ให้เลือก Yes</div>
 	</div>
 
 
-	<div class="image"><img src="images/20190301_05_move_droplist.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_05_move_droplist.png" class="u-max-full-width" />
 	<div>ขั้นตอนสุดท้ายคือ ย้ายตัว Droplist ไปวางไปบนแบบฟอร์มที่จะใช้งานจริง</div>
 	</div>
 	
-	<div class="image"><img src="images/20190301_06_move_droplist.gif" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_06_move_droplist.gif" class="u-max-full-width" />
 	<div>เมื่อย้ายเรียบร้อยแล้ว ให้ทดสอบดูว่าใช้งานได้หรือไม่</div>
 	</div>
 
@@ -111,7 +114,7 @@
 <p>หากสนใจจะใช้งาน สามารถดาวน์โหลดไฟล์ไปใช้งานได้เลย</p>
 <p><a href="https://github.com/charin-nawaritloha/excel-vba-notes-samples/raw/master/20190301_address_autolist/20190301_address_autolist.xlsx" target="ext_link">คลิกเพื่อดาวน์โหลดจาก GitHub</a></p>
 
-	<div class="image"><img src="images/20190301_06_download.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190301/20190301_06_download.png" class="u-max-full-width" />
 	<div>คลิกที่ปุ่มดาวน์โหลดมุมบนขวา</div>
 	</div>
 
@@ -128,7 +131,7 @@
 <div class="ads"></div>
 <!--/ads2-->
 
-
+<!--/content -->
 </div></div>
 
 

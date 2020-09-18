@@ -25,13 +25,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -45,6 +40,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -64,25 +63,30 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
+
+
+
+
 <h1>พบปัญหา Invalid procedure call or argument ใน VBA หลังจาก Update Windows 10 Version 1903</h1>
 	
 <p>เมื่อเดือนสิงหาที่ผ่านมา ทาง Microsoft ได้ปล่อย Update Windows 10 Version 1903 ออกมาสด ๆ ร้อน ๆ สำหรับคนที่ใช้งาน Windows ทั่วไปหลังจาก Updated แล้วก็คงใช้งานตามปกติ แต่สำหรับคนที่ใช้โปรแกรม VBA บางส่วน ไม่ว่าจะใน Excel หรือ Access ต่างได้รับผลกระทบจากการ Update ครั้งนี้</p>
-	<div class="image"><img src="images/20190826_01_windows10.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_01_windows10.png" class="u-max-full-width" />
 	<div>Windows 10 Version 1903 ที่ลงเมื่อเดือนสิงหาคม พ.ศ.2562 ที่ผ่านมา</div>
 	</div>
 
 <p>ปัญหาที่เกิดขึ้นคือ โปรแกรมที่ใช้ VBA เดิมที่เคยใช้งานได้ตามปกติ กลับขึ้น Error ว่า Invalid procedure call or argument ทั้งที่ไม่เคยเกิดขึ้นมาก่อน โปรแกรมก็ไม่ได้ไปแก้ไขอะไร </p>
-	<div class="image"><img src="images/20190826_02_VBA_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_02_VBA_error.png" class="u-max-full-width" />
 	<div>VBA ขึ้น Error หลังจากเปิดใช้งานตามปกติ</div>
 	</div>
 
 <p>เลยลองวิธีเดิมที่เคยเจอปัญหาแบบเวลา VBA มันเอ๋อก็คือ Repair โปรแกรม Microsoft Office อีกรอบครับ</p>
-	<div class="image"><img src="images/20190826_03_repair_office.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_03_repair_office.png" class="u-max-full-width" />
 	<div>ทำการ Repair Microsoft Office</div>
 	</div>
 
 <p>ผลปรากฎว่าไม่หายครับ ยังขึ้นเหมือนเดิม เลยลองเข้าไปดูว่ามัน Error ตรงไหน เมื่อ Debug แล้วพบว่ามัน Error ตอนกำหนดค่าตัวแปรแบบ ParamArray</p>	
-	<div class="image"><img src="images/20190826_04_vba_code.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_04_vba_code.png" class="u-max-full-width" />
 	<div>เกิด Error เมื่อพยายาม copy ตัวแปรจาก ParamArray</div>
 	</div>	
 
@@ -113,13 +117,13 @@ End Sub
 </pre>
 
 <p>เมื่อลองไปดูว่าตัวแปร m_templates ประกาศประเภทข้อมูลเอาไว้อย่างไร ก็พบว่ามันประกาศไว้แบบเดียวกันกับ template คือเป็น Array ของข้อมูลประเภท Variant </p>
-	<div class="image"><img src="images/20190826_05_vba_code.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_05_vba_code.png" class="u-max-full-width" />
 	<div>ส่วนประกาศตัวแปร m_templates</div>
 	</div>
 
 <p>วิธีแก้ไขปัญหาของผมที่ใช้คือ ลองตัดการประกาศแบบ Array เป็น Variant ธรรมดาแทน ซึ่งผลปรากฎว่าผ่านครับ ไม่เกิด Error</p>
 
-	<div class="image"><img src="images/20190826_06_vba_code.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20190826/20190826_06_vba_code.png" class="u-max-full-width" />
 	<div>แก้ไข Code โดยเปลี่ยนจาก Array เป็น Variant ธรรมดา</div>
 	</div>
 
@@ -153,6 +157,9 @@ End Sub
 
 <p>ก็ถือว่าเป็นเคสที่แปลกประหลาดมากที่ Update Windows แล้ว VBA ใช้งานไม่ได้ เกิดปัญหา ส่วนตัวผู้เขียนเองเคยเจอปัญหาคล้าย ๆ แบบนี้กับ Action Script ที่ใช้งานบน Flash Player ที่พอเปลี่ยน Version แล้ว Code ที่เขียนบางแบบจะใช้งานไม่ได้ ซึ่งก็เซ็งพอสมควร แต่กับ VBA ก็ไม่เคยคิดว่าจะเกิดปัญหาแบบเดียวกัน ซึ่งก็หวังว่าจะมีปัญหาแค่จุดนี้จุดเดียว เพราะถ้ามีจุดอื่นแบบที่ทำงานไม่ถูกต้องและไม่แสดง Error เนี่ย จะเลวร้ายสุด ๆ เลย สาธุ...</p>
 
+
+
+<!--/content -->
 </div></div>
 
 

@@ -24,13 +24,8 @@
 	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
 	<script type="text/javascript">SyntaxHighlighter.all();</script>
 	
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-		(adsbygoogle = window.adsbygoogle || []).push({
-			google_ad_client: "ca-pub-9963456691869043",
-			enable_page_level_ads: true
-		});
-	</script>
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!--/header-->
 </head>
 
@@ -44,6 +39,10 @@
 
 <div class="container">
 <!--navbar-->
+<div id="tocBox">
+<img id="clickmenu" src="images/menu.png" />
+<div id="divtoc"></div>
+</div>
 <div id="navbar">
 	<div class="container">
 		<a href="index.html">หน้าหลัก</a>
@@ -63,6 +62,10 @@
 
 <div class="row">
 <div class="twelve columns">
+<!--content -->
+
+
+
 <h1>เพิ่มความทนทานต่อความผิดพลาดในแมโคร</h1>
 </div></div>
 
@@ -81,11 +84,11 @@
 
 <p>ยังมีอีกเยอะแยะตาแป๊ะมาก ๆ แต่หลัก ๆ ก็เจอประมาณนี้ การป้องกันความผิดพลาดหรือจัดการความผิดพลาดนั้นเป็นเรื่องที่สำคัญมาก ๆ เพราะช่วยให้ผู้ใช้งานไม่มึนตรึ๊บกับกล่องข้อความที่อ่านแล้วไม่เข้าใจเลย ยิ่งถ้าผู้ใช้ไม่ได้อยู่ที่ไซต์งานแล้วแล้วยิ่งปวดหัวไปกันใหญ่เพราะเราก็มึนว่ามัน Error ตรงไหน</p>
 
-	<div class="image"><img src="images/20131009_01_runtime_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_01_runtime_error.png" class="u-max-full-width" />
 	<div>ผู้ใช้งานเจอแบบนี้ขึ้นมาถึงกับไปต่อไม่ถูกเลย</div>
 	</div>
 
-	<div class="image"><img src="images/20131009_02_excel_help.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_02_excel_help.png" class="u-max-full-width" />
 	<div>มีปุ่ม Help ลองกดดูเผื่อช่วยอะไรได้บ้าง .... ง่ะ (;ﾉﾟДﾟ)ﾉ</div>
 	</div>
 	
@@ -123,7 +126,7 @@
 โดยลองทำเป็นตารางให้ผู้ใช้งานกรอกเพื่อคำนวณราคาสินค้าขายยกลัง ผลลัพธ์ที่ต้องการคือสินค้าที่ราคาต่อหน่วยถูกที่สุด
 </p>
 
-	<div class="image"><img src="images/20131009_03_new_name.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_03_new_name.png" class="u-max-full-width" />
 	<div>ทำตาราง 3 คอลัมน์ให้กรอกข้อมูลสินค้า จำนวน และราคา<br/>กำหนดชื่อว่า table_product เพื่อใช้อ้างอิงในแมโคร</div>
 	</div>
 
@@ -174,20 +177,20 @@ End Sub
 
 <p>ลองมาปู้ยี่ปู้ยำโปรแกรมกันโดยลอง<span style="color:red">ใส่ข้อมูลไม่ครบ</span> แถวที่ 4 ไม่ใส่จำนวนชิ้น เมื่อ Run แมโคร ก็จะเจอ</p>
 
-	<div class="image"><img src="images/20131009_04_runtime_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_04_runtime_error.png" class="u-max-full-width" />
 	<div>ผ่าง!!! Division by zero</div>
 	</div>
 
 
 <p>หรือป้อน<span style="color:red;">ข้อมูลที่ไม่ใช่ตัวเลข</span> ซึ่งอาจจะเกิดจากความผิดพลาดที่ไม่ตั้งใจของผู้ใช้ เมื่อ Run แมโคร ก็จะเจอ</p>	
 
-	<div class="image"><img src="images/20131009_05_runtime_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_05_runtime_error.png" class="u-max-full-width" />
 	<div>Type mismatch อะไร mismatch จะรู้ไหม （　ﾟ Дﾟ）</div>
 	</div>	
 	
 <p>หรือถ้าผู้ใช้งานดันทะลึ่งไป<span style="color:red;">ลบ Name ที่ตั้งเอาไว้</span> ไม่ว่าจะตั้งใจหรือเพราะรู้เท่าไม่ถึงการณ์ก็แล้วแต่ พอ Run แมโครก็จะ Error อีกแล้ว</p>	
 	
-	<div class="image"><img src="images/20131009_06_delete_name.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_06_delete_name.png" class="u-max-full-width" />
 	<div>อ๊ากกก...ลบ Name ทิ้งทำม๊ายยยย (+_+)</div>
 	</div>	
 	
@@ -256,7 +259,7 @@ End Sub
 	
 <p>จาก Sub Demo2() มีการปรับปรุงโดยการเพิ่มส่วนในการตรวจสอบค่าต่าง ๆ ก่อนนำไปใช้งาน หรือข้อมูลที่ได้อาจมีปัญหาจะทำการขึ้นข้อความเตือนและหยุดการทำงาน เพื่อให้ผู้ใช้กลับไปแก้ไขให้ถูกต้องก่อน จะเห็นว่าจำนวนบรรทัดของเดิม 30 เพิ่มเป็น 50 ก็กะคร่าว ๆ ว่าในส่วนของตรวจสอบความผิดพลาดเกือบ 30-50% ของงานที่ทำเลยก็ได้ ความจำเป็นในการเพิ่มและความถี่ในการตรวจสอบก็อยู่ที่ว่าต้องการให้โปรแกรมมันทนทานต่อความผิดพลาดได้แค่ไหน ถ้าขณะที่ใช้งานโปรแกรมอยู่ใกล้ ๆ สามารถเดินไปดูได้ ก็ไม่จำเป็นต้องลงทุนอะไรมาก แต่ถ้าหากเกิดปัญหาจะแก้ไขหรือตามดูแลลำบากก็ต้องจัดกันเต็ม ๆ</p>	
 	
-	<div class="image"><img src="images/20131009_07_check_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_07_check_error.png" class="u-max-full-width" />
 	<div>คราวนี้ไม่มึนล่ะ เพราะบอกเป็นภาษามนุษย์</div>
 	</div>	
 	
@@ -350,13 +353,13 @@ handle_error:
 End Sub
 </pre>
 
-	<div class="image"><img src="images/20131009_08_error_log.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_08_error_log.png" class="u-max-full-width" />
 	<div>เมื่อ Run โปรแกรม จะเกิด Error โปรแกรมจะแจ้งปัญหาและเปิดไฟล์ error_log.txt</div>
 	</div>	
 
 <p>อีกเทคนิคคือ ในกรณีที่โปรแกรมมีการเรียก Sub หลัก แล้ว Sub หลักไปเรียก Sub ย่อย ๆ ก็ให้วางคำสั่ง On Error ไว้ที่ Sub หลักเท่านั้น เมื่อเกิด Error ที่ Sub ย่อย ๆ ก็จะเด้งกลับมาที่ Sub หลักเพื่อจัดการ Error ทั้งหมดก็ได้ แต่วิธีนี้มีข้อจำกัดคือ พอกลับมาที่ Sub หลักแล้วจะไม่กลับไปทำที่ Sub ย่อยต่อ ดั้งนั้นไม่มีวิธีการตายตัวอยู่ที่การออกแบบ แล้วแต่ทรัพยากรจะอำนวยครับ</p>
 
-	<div class="image"><img src="images/20131009_09_on_error.png" class="u-max-full-width" />
+	<div class="image"><img src="images/20131009/20131009_09_on_error.png" class="u-max-full-width" />
 	<div>เฉพาะ Sub Main เท่านั้นที่มี On Error เมื่อเกิด Error ที่ Sub X จะไม่กลับไปที่ Sub X ต่อ</div>
 	</div>
 
@@ -368,7 +371,7 @@ End Sub
 <div class="ads"></div>
 <!--/ads2-->
 
-
+<!--/content -->
 </div>
 </div>
 
