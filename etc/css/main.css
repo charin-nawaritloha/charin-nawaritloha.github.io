@@ -93,7 +93,7 @@ text-decoration: underline;
 	}
 	
   #navbar a{
-	font-family: Quark;
+	/*font-family: Quark;*/
 	font-weight: 600;
 	font-size: 1.7rem;
 	margin-right: 2rem;
@@ -111,7 +111,7 @@ text-decoration: underline;
 
 @media (min-width: 400px) {
   #navbar a{
-    font-family: Quark;
+    /*font-family: Quark;*/
     font-weight: 600;
     font-size: 2rem;
     margin-right: 2rem;
