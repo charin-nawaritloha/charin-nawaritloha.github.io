@@ -265,12 +265,16 @@ function share_twitter()
 <!--Disqus-->
 <div id="disqus_thread"></div>
 <script>
-    (function() {
-    var d = document, s = d.createElement('script');
-    s.src = 'https://made2order-duck.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-    })();
+	var disqus_config = function () {
+	this.language = 'th';
+	};
+		
+	(function() {
+	var d = document, s = d.createElement('script');
+	s.src = 'https://made2order-duck.disqus.com/embed.js';
+	s.setAttribute('data-timestamp', +new Date());
+	(d.head || d.body).appendChild(s);
+	})();
 </script>
 <!--/Disqus-->
 
