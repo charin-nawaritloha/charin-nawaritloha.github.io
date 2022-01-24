@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>โปรแกรมสร้าง QR code บน Excel</title>
+	<meta name="tags" contents="">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link href='SyntaxHighlighter/shCore.css' rel='stylesheet' type='text/css'>
+	<link href='SyntaxHighlighter/shThemeDefault.css' rel='stylesheet' type='text/css'>
+	<script src='SyntaxHighlighter/shCore.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shAutoloader.js' type='text/javascript'></script>
+	<script src='SyntaxHighlighter/shBrushVb.js' type='text/javascript'></script>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/bill123.html">บิล123</a>
+		<!-- <a href="p/vba.html">รับเขียน VBA</a> -->
+		<a href="p/macros.html">วิธีเปิด/ปิด แมโคร</a>
+		<a href="p/km.html" class="nowrap">แหล่งอ้างอิงข้อมูล</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>โปรแกรมสร้าง QR code บน Excel</h1>
+
+<p><img class="u-max-full-width" src="images/20220119/cover.png" /></p>
+
+<p>QR code เป็นรหัสจุดแบบ 2D&nbsp;มีหน้าที่ใส่ข้อมูลเพื่อให้ใช้เครื่องอ่าน หรือกล้องมือถือ ถ่ายภาพแล้วดึงข้อมูลออกมาได้ เป็นมาตรฐานสากล สามารถใช้งานได้ฟรี&nbsp;คิดค้นโดยคนญี่ปุ่นชื่อ <a href="https://www.denso-wave.com/en/technology/vol1.html" target="_blank">Masahiro Hara</a> บริษัท&nbsp;<a href="https://www.denso-wave.com/en/" target="_blank">Denso Wave</a> เมื่อปี ค.ศ.1994</p>
+
+<p>โปรแกรมสร้าง QR code บน Excel ผู้เขียนไม่ได้เป็นคนเขียนอัลกอลิทึมที่เป็น VBA เอง แต่เอาจากเว็บของคุณ&nbsp;<a href="http://members.chello.at/~easyfilter/barcode.html" target="_blank">Alois Zingl</a> อีกที ซึ่งเขาแจกให้ใช้งานฟรี ซึ่งในเว็บจะมี&nbsp;2D Barcode Generator ทั้ง&nbsp;Data Matrix, QR, Aztec และ&nbsp;Code 128 ซึ่งสามารถสร้างโดยการพิมพ์สูตรในเซลล์ของชีทที่ต้องการ โปรแกรมก็จะสร้างภาพรหัสดังกล่าวให้อัตโนมัติ โดยขนาดของรหัสจะอ้างอิงตามขนาดของเซลล์ที่ใส่สูตรอยู่ โดยภาพที่ได้จะเป็นภาพแบบเวกเตอร์คุณภาพสูง พิมพ์ออกมาบนกระดาษได้คมชัด</p>
+
+<h2>โปรแกรม duck QR code</h2>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/duck_qr_code.png" />
+<div>โปรแกรม duck QR code สร้างนำไปใช้งานได้ฟรี</div>
+</div>
+
+<p>ผู้เขียนได้เขียนโปรแกรมช่วยสร้าง QR code ครั้งละจำนวนมาก ๆ พร้อมรองรับป้ายข้อความด้านล่าง โดยสามารถใช้งานได้ฟรี โดยมีคุณสมบัติ</p>
+
+<ul>
+	<li>สามารถสร้างแค่ QR code ชิ้นเดียว แค่ใส่ข้อความ กำหนดขนาดที่ต้องการ แล้วกดปุ่ม ก็จะได้ QR code บนชีท Excel ทันที</li>
+	<li>หากต้องการสร้างครั้งละหลาย ๆ ชิ้น สามารถใส่ข้อมูลในไฟล์ Excel แล้วนำมาใช้เป็นข้อมูลสำหรับสร้าง QR code ได้ทันที</li>
+	<li>สามารถกำหนดขนาดของ QR code ได้</li>
+	<li>สามารถเลือกรูปแบบภาพเป็น เวกเตอร์ หรือ บิตแมพ ได้</li>
+	<li>สามารถตั้งค่าหน้ากระดาษได้</li>
+</ul>
+
+<h3>การสร้าง QR code แบบชิ้นเดียว</h3>
+
+<ol>
+	<li>ให้ใส่ข้อความที่ต้องการในข้อ 1.</li>
+	<li>กดปุ่ม สร้าง QR code</li>
+</ol>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/generate_one_code.png" />
+<div>การสร้าง QR code แบบชิ้นเดียว</div>
+</div>
+
+<h3>การสร้าง QR code พร้อม ๆ กันหลายชิ้น</h3>
+
+<p>ให้ผู้ใช้ทำการเตรียมไฟล์ Excel ที่มีข้อมูลรหัส และ ป้ายชื่อ (ถ้าต้องการ) ในชีทแรก (รองรับแค่ชีทแรกชีทเดียว) โดยคอลัมน์แรกจะเป็นรหัสหรือข้อความที่จะใช้สร้าง QR code คอลัมน์ที่สองเป็นป้ายข้อความ</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/data_input_5x1.png" />
+<div>ตัวอย่าง การสร้าง 5x1&nbsp;ชิ้น</div>
+</div>
+
+<p>หากต้องการสร้างเป็นตาราง ก็ให้ใส่ข้อมูลต่อ ๆ กันไปตามความต้องการ ตัวอย่างสร้าง 5x2 ชิ้น</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/data_input_5x2.png" />
+<div>ตัวอย่าง การสร้าง 5x2&nbsp;ชิ้น</div>
+</div>
+
+<p>เมื่อเตรียมไฟล์เรียบร้อยแล้ว ให้กดปุ่ม เลือกไฟล์ เพื่อเลือกไฟล์ที่จะดึงข้อมูลมาใช้สร้าง QR code จากนั้นกดปุ่ม สร้าง QR code เพื่อทำงาน</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/create_from_file.png" />
+<div>วิธีการเลือกไฟล์ข้อมูลที่มีรหัสและป้ายข้อความ สำหรับสร้าง QR code</div>
+</div>
+
+<h3>ภาพเวกเตอร์ และ บิตแมพ</h3>
+
+<p>สำหรับตัวเลือก รูปแบบภาพ ผู้ใช้งานสามารถเลือกได้ 2 แบบ ซึ่งจะมีความแตกต่างกันดังนี้</p>
+
+<ul>
+	<li><strong>เวกเตอร์ (Vector image)</strong><br />
+	เป็นภาพที่มี<strong>ความคมชัดสูง ไม่ว่าจะย่อหรือขยาย ภาพที่ได้จะยังคมชัดเสมอ</strong> ข้อเสียของภาพแบบนี้คือ ใช้หน่วยความจำเยอะมาก และทำงานแสดงผลบนหน้าจอได้ช้า เมื่อบันทึกไฟล์ที่สร้างจะใช้เนื้อที่เยอะกว่าแบบบิตแมพมาก <span style="color:#c0392b;">หากสร้าง QR code หลายชิ้นพร้อมกันจำนวนมาก ๆ อาจทำให้เครื่องค้างได้</span></li>
+</ul>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/img_vector.png" />
+<div>ภาพเวกเตอร์</div>
+</div>
+
+<ul>
+	<li><strong>บิตแมพ (Bitmap image)</strong><br />
+	เป็นภาพที่มีความละเอียดเท่ากับที่จะพิมพ์ หากมีการย่อ หรือขยาย จะทำให้ความคมชัดของภาพไม่เหมือนต้นฉบับ แต่ข้อดีคือ ใช้หน่วยความจำน้อยกว่าเวกเตอร์มาก และทำงานได้เร็ว เมื่อบันทึกไฟล์จะใช้มีขนาดเล็กกว่ามาก <strong>เหมาะสำหรับทำ QR code จำนวนมากในชีทเดียว</strong></li>
+</ul>
+
+<div class="image"><img class="u-max-full-width" src="images/20220119/img_bitmap.png" />
+<div>ภาพแบบบิตแมพ</div>
+</div>
+
+<h2>ดาวน์โหลด</h2>
+
+<p>ไฟล์โปรแกรมสร้าง QR code จะเป็นไฟล์ Excel ที่บรรจุโปรแกรมแมโครเอาไว้ ผู้ใช้งานจำเป็นต้องอนุญาติให้ Excel ดำเนินการเข้าถึงแมโครได้ ถึงจะใช้งานได้</p>
+
+<ul>
+	<li><a href="downloads/QR_code/duck_QR_code.xlsm">duck_QR_code.xlsm</a> ไฟล์โปรแกรม</li>
+	<li><a href="downloads/QR_code/data_example.xlsx">data_example.xlsx</a> ไฟล์ตัวอย่างข้อมูล</li>
+	<li><a href="downloads/QR_code/data_example2.xlsx">data_example2.xlsx</a> ไฟล์ตัวอย่างข้อมูล</li>
+</ul>
+
+<p><span style="color:#ff0000;"><strong>** ปัญหาการใช้งานที่อาจเกิดขึ้นได้</strong></span></p>
+
+<ul>
+	<li>การสร้าง QR code แบบบิตแมพจำนวนมาก พบว่าในบางครั้ง ภาพที่ออกมามีเส้นขอบของจุดในภาพเป็นสีเทาจาง ๆ แม้ไม่มีผลต่อการอ่านจากเครื่องอ่าน แต่อาการนี้ยังไม่สามารถหาสาเหตุและวิธีการแก้ไขปัญหาได้ เนื่องจากการแปลงภาพบิตแมพอาศัย Paste Special ของ Excel แปลงจากเวกเตอร์เป็นบิตแมพ ซึ่งกระบวนการภายในผู้เขียนไม่สามารถเข้าไปแก้ไขหรือปรับแต่อะไรได้</li>
+	<li>ปัญหา Clipboard เกิดความผิดพลาด ปัญหานี้เนื่องจากมีการเข้าถึงและใช้ Clipboard ตามจำนวน QR code หากมีการสร้างเป็นจำนวนมาก ๆ อาจทำให้เกิดปัญหาไม่สามารถเข้าถึง Clipboard ได้</li>
+</ul>
+
+<h3>แจ้งปัญหาและติชม</h3>
+
+<p>หากท่านใดมีคำแนะนำ ติชม หรือสอบถาม สามารถเข้าไปคอมเม้นได้ที่<a href="https://www.facebook.com/made2order.duck/posts/1055282818350355">โพส</a>นี้ครับ</p>
+
+<p><iframe allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true" frameborder="0" height="250" scrolling="no" src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fmade2order.duck%2Fposts%2F1055282818350355&amp;width=500&amp;show_text=true&amp;appId=306783623357456&amp;height=250" style="border:none;overflow:hidden" width="500"></iframe></p>
+
+<p>&nbsp;</p>
+
+
+
+<!--/content -->
+</div></div>
+
+
+
+
+<!--comments-->
+<div class="container">
+	<div class="fb-like" data-share="true" data-show-faces="true" />
+	<div style="padding-top:10rem;">&nbsp;</div>
+	<div class="fb-comments" data-numposts="10" data-width="100%"></div>
+</div>
+<!--/comments-->
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
