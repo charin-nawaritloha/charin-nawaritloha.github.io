@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Optiboot boot loader แก้ไขปัญหาใช้ Watch dog ใน Arduino Pro / Pro Mini ราคาถูกจากจีนไม่ได้</title>
+	<meta name="tags" contents="HowTo">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<!--
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+-->
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Optiboot boot loader แก้ไขปัญหาใช้ Watch dog ใน Arduino Pro / Pro Mini ราคาถูกจากจีนไม่ได้</h1>
+
+<p><img alt="Arduino pro micro (AtMega32U4) ที่มา https://en.wikipedia.org/wiki/Arduino" class="u-max-full-width" src="images/20221118/cover.jpg" /></p>
+
+<p>บันทึกการแก้ไขปัญหา ซื้อ Arduino ราคาถูกจากจีนมา (จากเว็บ Aliexpress.com)&nbsp;พบว่ารุ่นที่ซื้อมันไม่สามารถใช้งาน Watch dog ได้ เพื่อแก้ไขปัญหาดังกล่าวจำเป็นต้องใช้ Boot loader ตัวใหม่ที่รองรับ จากการศึกษาพบว่า <a href="https://github.com/Optiboot/optiboot" target="_blank"><strong>Optiboot</strong></a>&nbsp;เสถียร รองรับ Watch dog และสามารถใช้งานกับบอร์ดจีนที่ซื้อมาได้</p>
+
+<h2>การเพิ่ม Board สำหรับโปรแกรม&nbsp;Arduino IDE</h2>
+
+<p>เพิ่มรายการสำหรับเรียกใช้บอร์ด&nbsp;Arduino Pro / Pro mini แบบ 5V. 16MHz ทั้ง ATmega328p และ ATmega168p</p>
+
+<p>ให้เปิดไฟล์ในโฟลเดอร์ของ Arduino IDE ชื่อ boards.txt&nbsp; ในโฟลเดอร์&nbsp;<span style="font-size:11.0pt"><span style="line-height:115%"><span style="font-family:&quot;Calibri&quot;,sans-serif">Arduino\hardware\arduino\avr\<strong>boards.txt</strong> ถ้าลงโปรแกรมใน Program Files จะอยู่ใน&nbsp;C:\Program Files (x86)\Arduino\hardware\arduino\avr\boards.txt</span></span></span></p>
+
+<p>ให้ทำการเพิ่มรายการบอร์ดใหม่เข้าไปต่อท้ายดังนี้</p>
+
+<blockquote>
+<pre>
+## Arduino Pro or Pro Mini optiboot (5V, 16 MHz) w/ ATmega328P
+## --------------------------------------------------
+pro.menu.cpu.16MHzatmega328optiboot=ATmega328P optiboot (5V, 16 MHz)
+pro.menu.cpu.16MHzatmega328optiboot.upload.maximum_size=30720
+pro.menu.cpu.16MHzatmega328optiboot.upload.maximum_data_size=2048
+pro.menu.cpu.16MHzatmega328optiboot.upload.speed=115200
+pro.menu.cpu.16MHzatmega328optiboot.bootloader.low_fuses=0xFF
+pro.menu.cpu.16MHzatmega328optiboot.bootloader.high_fuses=0xDA
+pro.menu.cpu.16MHzatmega328optiboot.bootloader.extended_fuses=0xFD
+pro.menu.cpu.16MHzatmega328optiboot.bootloader.file=optiboot/optiboot_atmega328.hex
+pro.menu.cpu.16MHzatmega328optiboot.build.mcu=atmega328p
+pro.menu.cpu.16MHzatmega328optiboot.build.f_cpu=16000000L
+
+## Arduino Pro or Pro Mini optiboot (5V, 16 MHz) w/ ATmega168
+## -------------------------------------------------
+pro.menu.cpu.16MHzatmega168optiboot=ATmega168 optiboot (5V, 16 MHz)
+pro.menu.cpu.16MHzatmega168optiboot.upload.maximum_size=14336
+pro.menu.cpu.16MHzatmega168optiboot.upload.maximum_data_size=1024
+pro.menu.cpu.16MHzatmega168optiboot.upload.speed=115200
+pro.menu.cpu.16MHzatmega168optiboot.bootloader.low_fuses=0xff
+pro.menu.cpu.16MHzatmega168optiboot.bootloader.high_fuses=0xdd
+pro.menu.cpu.16MHzatmega168optiboot.bootloader.extended_fuses=0xF8
+pro.menu.cpu.16MHzatmega168optiboot.bootloader.file=optiboot/optiboot_atmega168.hex
+pro.menu.cpu.16MHzatmega168optiboot.build.mcu=atmega168
+pro.menu.cpu.16MHzatmega168optiboot.build.f_cpu=16000000L
+</pre>
+</blockquote>
+
+<p>หากเพิ่มถูกต้อง จะมีเมนูให้เลือกเพิ่มเข้ามาใน IDE</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20221118/20221118_add_new_boards.png" />
+<div>บอร์ดที่เพิ่มเข้ามาในเมนูของ IDE</div>
+</div>
+
+<h2>การไขปัญหา&nbsp;burn bootloader แล้วขึ้น Error</h2>
+
+<p>จากการทดลอง burn bootloader&nbsp;Optiboot&nbsp;กับ Arduino pro/ pro mini ของจีน พบว่าขึ้น Error จำเป็นต้องแก้ไข command line ของโปรแกรม burn bootloader โดยใส่ <span style="color:#c0392b;"><strong>-F</strong></span> เข้าไปในคำสั่งดังนี้</p>
+
+<p>เปิดไฟล์&nbsp;C:\Program Files (x86)\Arduino\hardware\arduino\avr\<strong>platform.txt</strong></p>
+
+<p>ทำการเพิ่ม <span style="color:#c0392b;"><strong>-F</strong></span> เข้าไปในคำสั่ง 2 คำสั่ง&nbsp;tools.avrdude.erase.patter และ&nbsp;tools.avrdude.bootloader.pattern</p>
+
+<blockquote>
+<pre>
+tools.avrdude.erase.pattern=&quot;{cmd.path}&quot; <span style="color:#c0392b;"><strong>-F</strong></span> &quot;-C{config.path}&quot; {erase.verbose} -p{build.mcu} -c{protocol} {program.extra_params} -e -Ulock:w:{bootloader.unlock_bits}:m -Uefuse:w:{bootloader.extended_fuses}:m -Uhfuse:w:{bootloader.high_fuses}:m -Ulfuse:w:{bootloader.low_fuses}:m
+tools.avrdude.bootloader.pattern=&quot;{cmd.path}&quot; <span style="color:#c0392b;"><strong>-F</strong></span> &quot;-C{config.path}&quot; {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} &quot;-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i&quot; -Ulock:w:{bootloader.lock_bits}:m
+</pre>
+</blockquote>
+
+<div class="image"><img class="u-max-full-width" src="images/20221118/20221118_burn_bootloader.jpg" />
+<div><a href="https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP" target="_blank">Arduino as ISP</a> ที่สร้างเอาไว้ burn bootloader</div>
+</div>
+
+
+
+<!--/content -->
+</div></div>
+
+
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</div>
+<!--/share button-->
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
