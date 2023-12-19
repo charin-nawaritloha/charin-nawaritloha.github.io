@@ -155,11 +155,6 @@
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://charin-nawaritloha.github.io/etc/20220602_Stock_Exchange_of_Thailand_holiday_for_google_calendar.html</loc>
-  <lastmod>2022-06-02T12:00:00+07:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
   <loc>https://charin-nawaritloha.github.io/etc/20221118_config_arduino_ide_for_optiboot.html</loc>
   <lastmod>2022-11-18T12:00:00+07:00</lastmod>
   <priority>0.64</priority>
@@ -174,7 +169,11 @@
   <lastmod>2022-12-16T12:00:00+07:00</lastmod>
   <priority>0.64</priority>
 </url>
-
+<url>
+  <loc>https://charin-nawaritloha.github.io/etc/20231219_flutter_display_unfinished_jpeg_image.html</loc>
+  <lastmod>2023-12-19T12:00:00+07:00</lastmod>
+  <priority>0.64</priority>
+</url>
 
 
 

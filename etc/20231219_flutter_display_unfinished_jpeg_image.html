@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การแสดงภาพ Jpeg ที่กำลังโหลดจากอินเทอร์เน็ตยังไม่เสร็จ</title>
+	<meta name="tags" contents="Computer">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<!--
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+-->
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การแสดงภาพ Jpeg ที่กำลังโหลดจากอินเทอร์เน็ตยังไม่เสร็จ</h1>
+
+<p><img class="u-max-full-width" src="images/20231219/20231219_flutter_logo.svg" /></p>
+
+<p>บันทึกผลการทดลอง แสดงภาพ Jpeg ในขณะที่ยังโหลดไม่เสร็จ เพื่อแสดงภาพแบบ Progressive Jpeg เพื่อให้ผู้ใช้งานเห็นภาพร่างก่อนที่ภาพจะโหลดมาเสร็จสมบูรณ์</p>
+
+<h2>ปัญหาที่พบ</h2>
+
+<p>หากเราเอาข้อมูลภาพ Jpeg ที่โหลดมาแต่ยังไม่เสร็จมาแสดงใน Widget ผลที่ได้คือ Exception Error ที่แจ้งว่า&nbsp;ImageException: Invalid progressive encoding หลังจากพยายามหาวิธีการโดยใช้&nbsp;dependencies ที่มีพบว่า</p>
+
+<ol>
+	<li>ตัว Flutter ไม่รองรับข้อมูลภาพ Jpeg ที่ไม่สมบูรณ์ และไม่มี option ที่จะให้แสดงภาพบางส่วนก่อน</li>
+	<li>ลองหาใน&nbsp;dependencies แล้ว หาไม่เจอ เจอแต่เอาภาพความละเอียดต่ำมาแสดงก่อนแล้วเมื่อโหลดเสร็จค่อยเอาภาพจริงที่ต้องการมาแสดง</li>
+	<li>ในตัว iOS และ Android มี libraries ที่ช่วยเรื่องนี้อยู่คือ (<a href="https://github.com/flutter/flutter/issues/14966" target="_blank">มาจาก issues ของ flutter</a>)
+	<ul>
+		<li>iOS - <a href="https://github.com/contentful-labs/Concorde" target="_blank">Concorde</a></li>
+		<li>Android -&nbsp;<a href="https://github.com/facebook/fresco" target="_blank">Fresco</a></li>
+	</ul>
+	</li>
+	<li>ถ้าเขียนเพื่อใช้งานบน Web หรือ Windows&nbsp; ต้องหาตัวอื่นมาใช้ ซึ่งขี้เกียจหาแล้ว หลังจากการหามาหลายครั้งก็ไม่เจอตัวเลือกที่ดี</li>
+</ol>
+
+<h3>วิธีแก้ไขปัญหา</h3>
+
+<p>หลังจากลองพยายามใช้ตัว <a href="https://api.flutter.dev/flutter/painting/ImageProvider-class.html" target="_blank">ImageProvider</a> ของ Flutter และ&nbsp;<a href="https://pub.dev/packages/image" target="_blank">image</a> สรุปว่าไม่เจอทางออกว่าจะทำยังไงก็ปัญหาตรงนี้ดี จากการศึกษา<a href="https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format#File_format_structure" target="_blank">รูปแบบของไฟล์ Jpeg</a> พบว่าเมื่อจบไฟล์จะมีข้อมูล 2 byte คือ 0xFF และ 0xD9 เพื่อบอกว่าเป็น End of Image</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20231219/20231219_jpeg_format.png" />
+<div>JFIF file structure</div>
+</div>
+
+<p>เพื่อบอกตัวถอดรหัสภาพ Jpeg ว่าข้อมูลภาพจบแล้ว แม้ว่าภาพจะไม่สมบูรณ์ก็ตาม เลยลองใส่ข้อมูล EOI ต่อท้ายเข้าไป ผลที่ได้คือตัวถอดรหัสสามารถถอดรหัสภาพที่มีได้ และสามารถเอาข้อมูลดังกว่ามาแสดงบนหน้าจอได้</p>
+
+<p>ในตัวอย่าง ได้ลองทำไฟล์&nbsp;test.jpg ขึ้นมา แล้วลองนำบางส่วนของไฟล์มาแสดง โดยทำการเพิ่ม EOI ต่อท้ายเข้าไป</p>
+
+<pre>
+<code>
+    int testPercent = 30; // test load only 30% of jpeg image file
+    File jpeg = File(&#39;D:\\test.jpg&#39;);
+    Uint8List content = jpeg.readAsBytesSync();
+    int lengthTest = ((content.length / 100) * testPercent).truncate(); // calculate size of content
+    Uint8List&nbsp;jpegContext = Uint8List.fromList([...content.sublist(0, lengthTest), 0xFF, 0xD9]); // add EOI after jpeg data
+&nbsp;   MemoryImage?&nbsp;outputImage; // ImageProvider for Image() widget
+    try {
+      outputImage&nbsp;= MemoryImage(jpegContext);
+      setState(() {
+        debugPrint(&#39;size of jpeg is ${jpegContext!.length}, $counter&#39;);
+      });
+    } catch (e) {
+      outputImage&nbsp;= null;
+    }
+</code></pre>
+
+<p>ในส่วนของการแสดงภาพ ใช้ Image widget ธรรมดาแสดงภาพ</p>
+
+<pre>
+
+<code>    if(outputImage != null) {
+        Image(image: outputImage!, gaplessPlayback: true);
+    }</code>
+</pre>
+
+<p>เนื่องจากต้องการ update ภาพทุกครั้งที่มีข้อมูลใหม่มาจากอินเทอร์เน็ต ก็ให้กำหนด gaplessPlayback เป็น true เพื่อให้ค้างภาพเดิมไว้แล้วเขียนภาพใหม่ทับ</p>
+
+<h2>ปัญหาที่พบหลังจากที่ใช้ EOI</h2>
+
+<p>เนื่องจากการเพิ่ม EOI เข้าไปต่อท้ายเป็นการแก้ไขแบบ hack ซึ่งไม่ใช่วิธีที่ถูกต้อง และอาจทำให้บางครั้งตัวถอดรหัสภาพไม่สามารถถอดรหัสภาพได้ ดังนั้นอย่าลืมใช้ try catch เพื่อจัดการปัญหาเมื่อถอดรหัสไม่ได้ด้วย ซึ่งจากที่ใช้อยู่ก็คือหากถอดรหัสไม่ได้ก็ไม่ไป update ตัว Image widget และรอข้อมูลมาเพิ่มแล้วลองใหม่ หากไม่เกิด error ก็แสดงภาพที่โหลดมาได้ตามปกติ</p>
+
+
+
+<!--/content -->
+</div></div>
+
+
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</div>
+<!--/share button-->
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
