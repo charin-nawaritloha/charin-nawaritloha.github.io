@@ -169,7 +169,7 @@ text-decoration: underline;
 
 
 /* fix text link overflow */
-a {
+a, blockquote {
   word-break: break-all;
 }
 
