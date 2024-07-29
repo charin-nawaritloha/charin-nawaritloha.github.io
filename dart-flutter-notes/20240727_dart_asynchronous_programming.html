@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Asynchronous programming</title>
+	<meta name="tags" contents="">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link rel="stylesheet" href="highlight/styles/vs.min.css">
+	<script src="highlight/highlight.min.js"></script>
+	<script>hljs.highlightAll();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Asynchronous programming</h1>
+
+<p><img class="u-max-full-width" src="images/20240727/20240727_cover.svg" /></p>
+
+<p>ในบทความนี้จะกล่าวถึงการใช้ class ที่เกี่ยวข้องกับการเขียนโปรแกรม asynchronous&nbsp;</p>
+
+<ul>
+	<li>Future</li>
+	<li>Stream</li>
+</ul>
+
+<h2>Future</h2>
+
+<p>Future เป็น Object ที่จะทำงานใน MicroTask&nbsp;</p>
+
+<div class="image"><img class="u-max-full-width" src="images/20240727/20240727_010_microtask.png" />
+<div>ลำดับการทำงานของแอปเมื่อมีการใช้ microtask ในการทำงานแบบ asynchronous</div>
+</div>
+
+<p>เมื่อทำงานเสร็จจะส่งค่ากลับมาที่โปรแกรมหลัก โดยการส่งผ่าน call back function โดยตัวมันจะมีสถานะอยู่ 2 สถานะ คือ&nbsp;</p>
+
+<ul>
+	<li>เสร็จแล้ว&nbsp;</li>
+	<li>ยังทำงานไม่เสร็จ&nbsp;</li>
+</ul>
+
+<p>และเมื่อทำงานเสร็จแล้ว จะมี 2 ผลลัพธ์คือ&nbsp;</p>
+
+<ul>
+	<li>ทำสำเร็จและคืนค่าถ้ามี&nbsp;</li>
+	<li>ทำไม่สำเร็จพร้อม error ที่พบ</li>
+</ul>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main(List&lt;String&gt; args) {
+&nbsp; Future.delayed(Duration(seconds: 2)).then((_) =&gt; print(&#39;after delay 2 seconds&#39;));
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้</p>
+
+<blockquote>
+<p>end of main<br />
+after delay 2 seconds</p>
+</blockquote>
+
+<p>ในกรณีที่จำเป็นต้องการการจัดการมากกว่า 1-2 statements แนะนำว่าทำเป็น callback function ดีกว่า ด้านล่างให้ผลเหมือนกัน</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void callback(_) {
+&nbsp; print(&#39;after delay 2 seconds&#39;);
+}
+
+void main(List&lt;String&gt; args) {
+&nbsp; //Future.delayed(Duration(seconds: 2)).then((_) =&gt; print(&#39;after delay 2 seconds&#39;));
+&nbsp; Future.delayed(Duration(seconds: 2)).then(callback);
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ถ้าเราต้องการรอให้เสร็จก่อนจึงทำงานใน statement ถัดไป ให้ใช้ await เพื่อรอ Future ทำงานเสร็จ เหมือนโปรแกรม Synchronous ธรรมดา การใช้ await keyword สามารถระบุใน function ที่เป็น async เท่านั้น</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main(List&lt;String&gt; args) async {
+&nbsp;&nbsp;//Future.delayed(Duration(seconds: 2)).then((_) =&gt; print(&#39;after delay 2 seconds&#39;));
+&nbsp;&nbsp;await Future.delayed(Duration(seconds: 2)).then(callback);
+&nbsp;&nbsp;print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้</p>
+
+<blockquote>
+<p>after delay 2 seconds<br />
+end of main</p>
+</blockquote>
+
+<p>** การใส่ async ที่ด้านหลัง function ไม่ได้ทำให้ function ดังกล่าวเป็น Asynchronous เสมอไป แต่อาจหมายถึงมีการทำงานที่รองานจาก Future/Stream ได้</p>
+
+<h3>การใช้ try catch throw ใน Future function</h3>
+
+<p>ในการเขียนคำสั่ง try catch สามารถทำได้เหมือนปกติใน synchronous ปกติ แต่ throw จะมีปัญหา หากไม่มี function ที่จะมารองรับผลที่ได้จากการ throw&nbsp;<br />
+ตัวอย่าง testNumber เป็น Future&lt;bool&gt; function ที่จะไม่รับเลขติดลบ โดยจะ throw Exception ออกมา</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Future&lt;bool&gt; testNumber(int number) async {
+&nbsp; print(&#39;testNumber($number)&#39;);
+&nbsp; await Future.delayed(Duration(seconds: 1));
+&nbsp; if (number &gt;= 0) {
+&nbsp; &nbsp; return number % 2 != 0;
+&nbsp; }
+
+&nbsp; throw Exception(&#39;only positive number!&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ถ้าต้องการใช้ try catch ต้องใช้ await ในการเรียกใช้งาน เพื่อให้โปรแกรมรอรับผลการทำงานรวมถึง Exception ด้วย <span style="color:#ff0000;">แต่ถ้าไม่ใส่ await เพื่อรอ เมื่อเกิดการ throw จะไม่มีตัวรับ Exception และโปรแกรมส่วนนี้ก็จะค้างอยู่ในระบบตลอดไปจนผู้ใช้งานสั่งปิดโปรแกรม</span></p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">try {
+&nbsp; &nbsp; if (await testNumber(number)) {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is odd number&#39;);
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is even number&#39;);
+&nbsp; &nbsp; }
+&nbsp; } catch (e) {
+&nbsp; &nbsp; print(e);
+&nbsp; }
+</code></pre>
+</div>
+</div>
+
+<p>หากต้องการเรียกให้มันจัดการ error หลังทำงานเสร็จ โดยไม่ใช้ await try catch ให้ใช้การกำหนด function ใน onError: ใน then() แทน</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; &nbsp; testNumber(number).then((result) {
+&nbsp; &nbsp; &nbsp; if (result) {
+&nbsp; &nbsp; &nbsp; &nbsp; print(&#39;$number is odd number&#39;);
+&nbsp; &nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; &nbsp; print(&#39;$number is even number&#39;);
+&nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }, onError: (e) =&gt; print(e));
+
+</code></pre>
+</div>
+</div>
+
+<p>ถ้ากำหนดให้ number = -1 ผลที่ได้จะเป็น</p>
+
+<blockquote>
+<p>end of main<br />
+Exception: only positive number!</p>
+</blockquote>
+
+<p>สำหรับตัว onError จะทำงานเหมือน catch(exception, stack) นั้นคือส่งค่า Exception และ Stack นอกจากนี้ยังมี catchError ที่จะช่วยในการดักจับ Error ได้อีกทาง</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; testNumber(number).then((result) {
+&nbsp; &nbsp; if (result) {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is odd number&#39;);
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is even number&#39;);
+&nbsp; &nbsp; }
+&nbsp; }, onError: (e) {
+&nbsp; &nbsp; print(&#39;this is onError! throw e to catchError&#39;);
+&nbsp; &nbsp; throw (e);
+&nbsp; }).catchError((e2) =&gt; print(&#39;Error from catchError = $e2&#39;));
+
+</code></pre>
+</div>
+</div>
+
+<p>ถ้ากำหนดให้ number = -1 ผลที่ได้จะเป็น</p>
+
+<blockquote>
+<p>end of main<br />
+this is onError! throw e to catchError<br />
+Error from catchError = Exception: only positive number!</p>
+</blockquote>
+
+<p>ในการทำงานจริง หากใน onError ไม่มีการส่ง Exception ออกมา สามารถใช้แค่ catchError อย่างเดียวได้เลย ซึ่งจะเหมาะมากกว่า onError หากมีคำสั่งหลาย ๆ คำสั่ง ทำให้อ่านง่ายกว่าการเอาไปใส่ใน onError</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; testNumber(number).then((result) {
+&nbsp; &nbsp; if (result) {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is odd number&#39;);
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; print(&#39;$number is even number&#39;);
+&nbsp; &nbsp; }
+&nbsp; }).catchError((e2) =&gt; print(&#39;Error from catchError = $e2&#39;));
+
+</code></pre>
+</div>
+</div>
+
+<p>ถ้ากำหนดให้ number = -1 ผลที่ได้จะเป็น</p>
+
+<blockquote>
+<p>end of main<br />
+Error from catchError = Exception: only positive number!</p>
+</blockquote>
+
+<p>สำหรับส่วนที่ทำงานแบบ finally ก็คือ whenComplete โดยจะทำงานเสมอไม่ว่าจะมี error หรือไม่ก็ตาม ลองทำให้เกิด error ดู</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp;&nbsp;testNumber(-1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then((_) =&gt; print(&quot;.then&quot;))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.whenComplete(() =&gt; print(&#39;.whenComplete&#39;))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.catchError((e) =&gt; print(&#39;.catchError $e&#39;));
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้คือ</p>
+
+<blockquote>
+<p>.whenComplete<br />
+.catchError Exception: only positive number!</p>
+</blockquote>
+
+<p>หากไม่เกิด error คำสั่งใน whenComplete ก็ยังทำงาน</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp;&nbsp;testNumber(1)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then((_) =&gt; print(&quot;.then&quot;))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.whenComplete(() =&gt; print(&#39;.whenComplete&#39;))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.catchError((e) =&gt; print(&#39;.catchError $e&#39;));
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้คือ</p>
+
+<blockquote>
+<p>.then<br />
+.whenComplete</p>
+</blockquote>
+
+<h3>ป้องกันปัญหา synchronous error ด้วย Future.sync()</h3>
+
+<p>จากปัญหาที่หากเขียนโปรแกรม synchronous ใน asynchronous ทำให้ไม่สามารถดักจับ error ได้ถูกต้อง สามารถแก้ไขปัญหาความผิดพลาดดังกล่าวด้วย Future.sync() โดยเอาฟังก์ชั่นที่เขียนขึ้นเข้าไปใส่ข้างใน</p>
+
+<p>เมื่อโปรแกรมที่ใส่เข้าใน Future.sync() คืนค่าเป็น Future&lt;T&gt; มันก็คืนออกมาเป็น Future&lt;T&gt; เหมือนเดิมไม่ได้ไปทำอะไร แต่หากคือค่าที่ไม่ใช่ Future ตัว Future.sync() จะทำการแปลงให้เป็น Future&lt;T&gt; ที่มีสถานะทำงานสำเร็จแล้วคืนไปแทน</p>
+
+<h3>await</h3>
+
+<p>การใช้งาน await เพื่อลดความสับสนในการทำงานตามลำดับใน asynchronous program เช่น การเขียนฟังก์ชั่นที่จะทำงานโดยเรียก f1 f2 f3 ซึ่งเป็น Future&lt;int&gt; ตามลำดับ โดยผลของการทำงานจะเป็น r1 r2 r3 ตามลำดับ</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Future&lt;int&gt; f1() {
+&nbsp; return Future.sync(() =&gt; 1);
+}
+
+Future&lt;int&gt; f2(int r1) {
+&nbsp; return Future.sync(() =&gt; r1 + 2);
+}
+
+Future&lt;int&gt; f3(int r2) {
+&nbsp; return Future.sync(() =&gt; r2 + 3);
+}
+
+void testAwait() {
+&nbsp; f1().then((r1) {
+&nbsp; &nbsp; f2(r1).then((r2) {
+&nbsp; &nbsp; &nbsp; f3(r2).then((r3) {
+&nbsp; &nbsp; &nbsp; &nbsp; print(r3);
+&nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; });
+&nbsp; });
+}
+
+void main() {
+&nbsp; testAwait();
+&nbsp; print(&#39;end main.&#39;);
+}
+
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้</p>
+
+<blockquote>
+<p>end main.<br />
+6</p>
+</blockquote>
+
+<p>ในการเรียก f1 f2 f3 ให้ทำงานตามลำดับในโปรแกรม asynchronous ดูซับซ้อนและหากมีลำดับการทำงานมากกว่านี้จะทำให้แก้ไขและดูแลลำบาก แบบนี้สามารถใช้ await เพื่อรอการทำงานได้</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void testAwait2() async {
+&nbsp; var r1 = await f1();
+&nbsp; var r2 = await f2(r1);
+&nbsp; var r3 = await f3(r2);
+&nbsp; print(r3);
+}
+</code></pre>
+</div>
+</div>
+
+<h3>จัดการ Timeout</h3>
+
+<p>ในการรอให้งาน asynchronous เสร็จนั้น หากไม่กำหนดเวลา มันก็จะรอไปเรื่อย ๆ จนกว่างานจะเสร็จและส่งผลกลับมาถ้ามี แต่หากในงานที่รอไปเรื่อย ๆ ไม่ได้ สามารถระบุเวลาสูงสุดที่รอได้ หากเกิดเวลาดังกล่าวให้จบการรอและไปทำในส่วนที่ระบุหากเลยเวลาที่กำหนดได้<br />
+ตัวอย่าง w1 จะเป็นฟังก์ชั่นที่ใช้เวลา 5 วินาทีถึงจะทำงานเสร็จ และคือค่าเป็นสองเท่าของเลขที่ส่งมา</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Future&lt;int&gt; w1(int x) async {
+&nbsp; await Future.delayed(Duration(seconds: 5));
+&nbsp; return x * 2;
+}
+
+void main() {
+&nbsp; w1(1).then((x) {
+&nbsp; &nbsp; print(&#39;result = $x&#39;);
+&nbsp; });
+&nbsp; print(&#39;end main.&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>หากในการทำงานจริง สามารถรอได้แค่ 2 วินาที ให้เพิ่ม .timeout เข้าไป และใส่ฟังก์ชั่นใน onTimeout: เพื่อทำงานหากเกิด timeout</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp;&nbsp;w1(1).then((x) {
+&nbsp;&nbsp;&nbsp;&nbsp;print(&#39;result = $x&#39;);
+&nbsp;&nbsp;}).timeout(Duration(seconds: 2), onTimeout: () {
+&nbsp;&nbsp;&nbsp;&nbsp;print(&#39;timeout&#39;);
+&nbsp;&nbsp;});
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้ เมื่อครบ 2 วินาที จะพิมพ์ timeout และโปรแกรมจะรอต่อจนครบ 5 วินาที ก็จะพิมพ์ result = 2 ออกมาด้วย<br />
+หากไม่ต้องการผลการทำงานของงานหลัง timeout ให้เขียนรับค่าที่คืนมาแทน ผลของส่วนไหนคืนมาก่อนก็ใช้ส่วนนั้น</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp;&nbsp;var x = await w1(1).timeout(Duration(seconds: 2), onTimeout: () =&gt; 0);
+&nbsp;&nbsp;if (x &gt; 0) {
+&nbsp;&nbsp;&nbsp;&nbsp;print(&#39;result = x&#39;);
+&nbsp;&nbsp;} else {
+&nbsp;&nbsp;&nbsp;&nbsp;print(&#39;timeout&#39;);
+&nbsp;&nbsp;}
+</code></pre>
+</div>
+</div>
+
+<p>หากไม่กำหนดฟังก์ชั่นใน onTimeout: จะเกิด TimeoutException ขึ้นมา เพื่อใช้กับ try{} ได้</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; try {
+&nbsp; &nbsp; var x = await w1(1).timeout(Duration(seconds: 2));
+&nbsp; &nbsp; print(&#39;result = x&#39;);
+&nbsp; } on TimeoutException {
+&nbsp; &nbsp; print(&#39;timeout&#39;);
+&nbsp; }
+</code></pre>
+</div>
+</div>
+
+<p><span style="color:#ff0000;">เนื่องจาก Future ไม่ได้ใส่ความสามารถในส่วนของการยกเลิกงานที่ทำค้างเอาไว้แม้จะ timeout ไปแล้วก็ตาม หากต้องการยกเลิกงานที่ทำหลังจาก timeout ให้ใช้ Stream แทนจะตรงการใช้งานมากกว่า เนื่องจากรองรับการยกเลิกได้</span></p>
+
+<h2>Stream</h2>
+
+<p>เป็นคลาสที่ออกแบบมาให้ส่งผลการทำงานออกมาตามลำดับแบบ asynchronous ผู้ใช้งานสามารถ Stream API ได้แก่ await for หรือ listen() เพื่อรอรับข้อมูลที่ส่งกลับมาจาก Stream โดยตัว Stream มีอยู่ 2 รูปแบบได้แก่</p>
+
+<ol>
+	<li>single subscription&nbsp;</li>
+	<li>broadcast</li>
+</ol>
+
+<p>ตัวอย่าง การสร้างและใช้งาน Stream</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Stream&lt;int&gt; countStream(int to) async* {
+&nbsp; for (int i = 1; i &lt;= to; i++) {
+&nbsp; &nbsp; yield i;
+&nbsp; }
+}
+
+Future&lt;int&gt; sumStream(Stream&lt;int&gt; stream) async {
+&nbsp; var sum = 0;
+&nbsp; await for (final value in stream) {
+&nbsp; &nbsp; print(value);
+&nbsp; &nbsp; sum += value;
+&nbsp; }
+&nbsp; return sum;
+}
+
+Future&lt;void&gt; printResult(Future&lt;int&gt; sum) async {
+&nbsp; sum.then((value) =&gt; print(&#39;Total sum is $value&#39;));
+}
+
+void main() {
+&nbsp; Stream&lt;int&gt; stream = countStream(3);
+&nbsp; Future&lt;int&gt; sum = sumStream(stream);
+&nbsp; printResult(sum);
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้</p>
+
+<blockquote>
+<p>end of main<br />
+1<br />
+2<br />
+3<br />
+Total sum is 6</p>
+</blockquote>
+
+<p>จากตัวอย่าง จะเห็นว่าฟังก์ชั่นไหนที่เป็น Stream จะใช้ yield คืนผลการทำงานแทน return และมี async* ต่อท่ายชื่อฟังก์ชั่น ส่วน await for จะเป็นคำสั่งที่ใช้อ่านค่าจาก Stream มาทีละค่า (ค่าที่ได้จาก yield) จนจบการทำงานของ Stream</p>
+
+<p>ตัว Stream ยังมีคำสั่ง listen() เพื่อสร้าง StreamSubscription ไว้ใช้สำหรับรับข้อมูลที่ได้จาก Stream คล้าย ๆ กับ then() ใน Future เพื่อให้สามารถใช้งานในฟังก์ชั่น synchronous ได้ จากตัวอย่างข้างบน จะลองเขียนใหม่โดยใช้คำสั่ง listen โดยคำสั่งมีรายละเอียดวิธีใช้ดังนี้</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">StreamSubscription&lt;int&gt; listen(
+&nbsp; void Function(int)? onData,&nbsp;
+&nbsp; {
+&nbsp; Function? onError,
+&nbsp; void Function()? onDone,
+&nbsp; bool? cancelOnError,
+&nbsp; }
+)
+</code></pre>
+</div>
+</div>
+
+<p>โปรแกรมที่เขียนใหม่ ที่ได้ผลออกมาเหมือนกัน หากในส่วนการจัดการข้อมูลที่ได้จาก Stream มีคำสั่งไม่มาก แนะนำให้ใส่ไว้ใน onData ก็จะมีข้อดีตรงอ่านและแก้ไขภายหลังง่าย แต่หากมีคำสั่งซับซ้อนให้ส่งต่อไปทำในฟังก์ชั่นที่เขียนแยกออกไปดีกว่า</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp;&nbsp;int sum = 0;
+&nbsp;&nbsp;var stream = countStream(3);
+&nbsp;&nbsp;stream.listen((value) {
+&nbsp;&nbsp;&nbsp;&nbsp;print(value);
+&nbsp;&nbsp;&nbsp;&nbsp;sum += value;
+&nbsp;&nbsp;}, onDone: () =&gt; print(&#39;Total sum is $sum&#39;));
+&nbsp;&nbsp;print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<h3>การจัดการ Error</h3>
+
+<p>ตัว Stream สามารถโยน Exception error ได้เหมือนฟังก์ชั่นปกติ โดยใช้คำสั่ง throw ส่วนตัวโปรแกรมที่อ่านค่าจาก Stream สามารถใช้ try{} ในการจัด error เหมือนการทำงานกับ Future</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Stream&lt;int&gt; countStream(int to) async* {
+&nbsp; for (int i = 1; i &lt;= to; i++) {
+&nbsp; &nbsp; if (i == 4) {
+&nbsp; &nbsp; &nbsp; throw Exception(&#39;Intentional exception&#39;);
+&nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; yield i;
+&nbsp; &nbsp; }
+&nbsp; }
+}
+
+Future&lt;int&gt; sumStream(Stream&lt;int&gt; stream) async {
+&nbsp; var sum = 0;
+&nbsp; try {
+&nbsp; &nbsp; await for (final value in stream) {
+&nbsp; &nbsp; &nbsp; sum += value;
+&nbsp; &nbsp; }
+&nbsp; } catch (e) {
+&nbsp; &nbsp; return -1;
+&nbsp; }
+&nbsp; return sum;
+}
+
+void main() async {
+&nbsp; var stream = countStream(10);
+&nbsp; var sum = await sumStream(stream);
+&nbsp; print(sum); // print &rarr; -1
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<h3>การใช้งาน Stream แบบ Iterable</h3>
+
+<p>ข้อมูลที่เป็น Stream จะสามารถใช้ฟังก์ชั่นของ Iterable ได้ เนื่องจากตัวมันจะส่งข้อมูลออกมาเป็นลำดับ เช่น forEach ตัวอย่างข้างล่างจะทำงานรวมผลบวกที่ได้จาก Stream และได้ผลเหมือนโปรแกรมด้านบนที่ผ่านมา</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp;&nbsp;int sum = 0;
+&nbsp;&nbsp;var stream = countStream(3);
+&nbsp;&nbsp;stream.forEach((value) =&gt; sum += value).then((_) =&gt; print(sum));
+&nbsp;&nbsp;print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้คือ 6 โดย &nbsp;forEach จะคืนค่ากลับมาเป็น Future&lt;void&gt;&nbsp;</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Future&lt;void&gt; forEach(void Function(int) action)
+</code></pre>
+</div>
+</div>
+
+<p>ดังนั้นเมื่อทำ forEach เสร็จแล้วจึงสามารถใช้ then() เพื่อทำงานเมื่อ Stream ส่งข้อมูลมาหมดแล้ว (ในตัวอย่างคือ 1 2 3)<br />
+อีกตัวอย่าง ใช้ reduce ในการหารวมผลรวม</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp; var stream2 = countStream(3);
+&nbsp; stream2.reduce((previous, element) =&gt; previous + element).then((sum2) =&gt; print(sum2));
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ในกรณีที่ต้องการใช้ await แทน then ในฟังก์ชั่นที่เป็น async ก็สามารถใช้งานได้เช่นกัน</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() async {
+&nbsp;&nbsp;var stream2 = countStream(3);
+&nbsp;&nbsp;int sum2 = await stream2.reduce((previous, element) =&gt; previous + element);
+&nbsp;&nbsp;print(sum2);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ดูคำสั่งอื่น ๆ ทั้งหมด <a href="https://dart.dev/libraries/async/using-streams#process-stream-methods" target="_blank">https://dart.dev/libraries/async/using-streams#process-stream-methods</a></p>
+
+<h3>Stream แบบ single subscription</h3>
+
+<p>เป็น Stream ที่ออกแบบมาให้ผู้ที่ใช้งานต้องรับข้อมูลตั้งแต่ต้น ไม่สามารถมาขอใช้งานข้อมูลระหว่างการประมวลผลของ Stream ได้ หากพยายามขอใช้งานข้อมูลซ้ำซ้อนจะได้ <span style="color:#ff0000;">Exception error &rarr; Bad state: Stream has already been listened to.</span> ที่เป็นแบบนี้เนื่องจากงานที่ใช้ single subscription จะเป็นงานประเภทอ่านข้อมูลจากไฟล์&nbsp;จากเน็ตเวิร์ค จาก web request ซึ่งจำเป็นต้องได้ข้อมูลตามลำดับตั้งแต่เริ่มต้นจนจบ การได้ข้อมูลระหว่างทางได้ข้อมูลไม่ครบถ้วนจึงเป็นเรื่องที่ไม่สมเหตุสมผล</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp;&nbsp;var stream = countStream(3);
+
+&nbsp;&nbsp;// first listen
+&nbsp;&nbsp;stream.listen((value) {});
+
+&nbsp;&nbsp;// try add more listen (Bad state here!)
+&nbsp;&nbsp;stream.listen((value) {});
+
+&nbsp;&nbsp;print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+
+<p>ผลที่ได้ จะเกิด Excption error โดย #3 จะระบุไปที่แถวของคำสั่งที่พยายามจะ listen ซ้ำ ในที่คือที่ไฟล์ stream_demo.dart แถวที่ 35 คอลัมน์ที่ 10</p>
+
+<blockquote>
+<p>Unhandled exception:<br />
+Bad state: Stream has already been listened to.<br />
+#0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_StreamController._subscribe (dart:async/stream_controller.dart:686:7)<br />
+#1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_ControllerStream._createSubscription (dart:async/stream_controller.dart:837:19)<br />
+#2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_StreamImpl.listen (dart:async/stream_impl.dart:497:9)<br />
+<span style="color:#ff0000;">#3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;main (file:/// stream_demo.dart:35:10) stream_demo.dart:35&nbsp;</span><br />
+#4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_delayEntrypointInvocation.&lt;anonymous closure&gt; (dart:isolate-patch/isolate_patch.dart:297:19)<br />
+#5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:184:12)</p>
+</blockquote>
+
+<h3>Stream แบบ Broadcast streams</h3>
+
+<p>เป็น Stream ที่ทำงานในลักษณะให้ข้อมูลล่าสุดออกมาเรื่อย ๆ การใช้งานไม่จำเป็นต้องสนใจข้อมูลที่เคยส่งออกมาแล้ว เช่น&nbsp;</p>
+
+<ul>
+	<li>events ของ keyboard หรือ mouse</li>
+	<li>ข้อมูลเสียงจากการฟังวิทยุ online&nbsp;</li>
+	<li>การประกาศข้อมูลปรับปรุงล่าสุดของ Database service</li>
+</ul>
+
+<p>เมื่อมีการ listen() ข้อมูลที่ได้จะเป็นข้อมูลที่ได้หลังจากลงเบียนไปแล้ว และสามารถ listen() ได้เกิน 1 จุด เมื่อไหร่ก็ได้ แต่ข้อมูลที่มีก่อนหน้าจะทำเรียก listen() จะไม่สามารถเรียกดูได้&nbsp;</p>
+
+<p>ตัวอย่างที่พบบ่อยในงานเขียนโปรแกรมกับคลาวน์ เช่น ติดต่อฐานข้อมูล Firebase Realtime Database ที่สามารถเขียนโปรแกรม เพื่อ listen() ตำแหน่งโหนดที่มีการเปลี่ยนแปลง และนำข้อมูลล่าสุดมาแสดงในแอป</p>
+
+<p>เมื่อต้องการยกเลิกการ listen() สามารถใช้ cancel() เพื่อจบการรับค่าที่ได้จาก StreamSubscription&nbsp;<br />
+(เอกสารอ้างอิง StreamSubscription &rarr; <a href="https://api.dart.dev/stable/3.4.4/dart-async/StreamSubscription-class.html" target="_blank">https://api.dart.dev/stable/3.4.4/dart-async/StreamSubscription-class.html</a>)</p>
+
+<p>&nbsp;</p>
+
+<h3>วิธีการสร้าง Stream ด้วย StreamController</h3>
+
+<h4>การสร้าง single subscription stream</h4>
+
+<p>ในการสร้าง Stream แบบ single subscription ที่ดีควรจะรองรับการทำงาน 2 อย่างคือ</p>
+
+<ol>
+	<li>ตัว Stream จะเริ่มทำงานเมื่อมีการ listen()</li>
+	<li>ต้องสามารถหยุดการทำงานชั่วคราว pause() และ resume() ได้</li>
+</ol>
+
+<p>StreamController จะมีตัวแปรที่ใช้ตอนสร้าง Stream ดังนี้</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">StreamController&lt;T&gt;({
+&nbsp; void onListen()?,
+&nbsp; void onPause()?,
+&nbsp; void onResume()?,
+&nbsp; FutureOr&lt;void&gt; onCancel()?,
+&nbsp; bool sync = false
+})
+
+</code></pre>
+</div>
+</div>
+
+<p>เวลาที่เขียนฟังก์ชั่นที่เป็น Stream ก็ให้คืน Stream ที่สร้างจาก StreamController กลับไปให้ตัวเรียกฟังก์ชั่น ตัวอย่างด้านล่างนำมาจาก&nbsp;<a href="https://dart.dev/libraries/async/creating-streams#honoring-the-pause-state" target="_blank">https://dart.dev/libraries/async/creating-streams#honoring-the-pause-state</a>&nbsp;</p>
+
+<p>เป็นการสร้างตัวจับเวลา จะคืนค่าเป็นตัวนับเวลาที่ผ่านไปเรื่อย ๆ จนครบค่า maxCount หากระบุ การจับเวลาจะใช้ Timer เพื่อนับเวลาไปเรื่อย ๆ โดยจะมีฟังก์ชั่น&nbsp;</p>
+
+<ul>
+	<li>startTimer() และ stopTimer() เป็นตัวเริ่มและหยุด Timer&nbsp;</li>
+	<li>tick() สำหรับส่งค่าตัว counter ที่นับได้กลับไป และตรวจสอบว่านับจนถึง maxCount หรือยัง</li>
+</ul>
+
+<p>การทำงานก็เพียงสร้าง StreamController โดยระบุฟังก์ชั่นข้างต้นไป ส่วนวิธีการส่งค่าของ Stream กลับไป จะใช้ add() ของตัว StreamController แทนคำสั่ง yield&nbsp;</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Stream&lt;int&gt; timedCounter(Duration interval, [int? maxCount]) {
+&nbsp;&nbsp;late StreamController&lt;int&gt; controller;
+&nbsp;&nbsp;Timer? timer;
+&nbsp;&nbsp;int counter = 0;
+
+&nbsp;&nbsp;// ตัวนับเวลา
+&nbsp;&nbsp;void tick(_) {}
+
+&nbsp;&nbsp;// เมื่อมีการ listen() และ resume()
+&nbsp;&nbsp;void startTimer() {}
+
+&nbsp;&nbsp;// เมื่อต้องการ pause() หรือ cancel()
+&nbsp;&nbsp;void stopTimer() {}
+
+&nbsp;&nbsp;controller = StreamController&lt;int&gt;(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onListen: startTimer,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onPause: stopTimer,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onResume: startTimer,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onCancel: stopTimer);
+
+&nbsp;&nbsp;return controller.stream;
+}
+</code></pre>
+</div>
+</div>
+
+<p>เมื่อทำการ listen() ตัว StreamController เรียก startTimer() เพิ่มเริ่มจับเวลา เมื่อครบเวลา interval ตัว Timer ก็จะไปเรียก tick() เพื่อเพิ่มค่า counter และส่งค่า counter กลับไปที่ตัวเรียก Stream</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; void startTimer() {
+&nbsp; &nbsp; timer = Timer.periodic(interval, tick);
+&nbsp; }
+</code></pre>
+
+<p>ในการควบคุมการทำงาน tick() จะตรวจสอบว่ามีการกำหนดค่า maxCount ด้วยหรือไม่ ถ้ามี จะตรวจสอบว่าถ้านับครบแล้วจะจบการทำงานของ Stream โดยเรียกคำสั่ง close()</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; void tick(_) {
+&nbsp; &nbsp; counter++;
+&nbsp; &nbsp; controller.add(counter); // Ask stream to send counter values as event.
+&nbsp; &nbsp; if (counter == maxCount) {
+&nbsp; &nbsp; &nbsp; timer?.cancel();
+&nbsp; &nbsp; &nbsp; controller.close(); // Ask stream to shut down and tell listeners.
+&nbsp; &nbsp; }
+&nbsp; }
+</code></pre>
+
+<p>เมื่อผู้ใช้งานต้องการหยุดการนับชั่วคราว จะเรียกคำสั่ง pause() จากตัว StreamSubscription โปรแกรมจะไปเรียก stopTimer() เพื่อหยุดการทำงานชั่วคราว และเมื่อผู้ใช้งานเรียก resume() โปรแกรมจะไปเรียก startTimer() เพื่อสร้าง Timer เพื่อนับเวลาต่อ</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">&nbsp; void stopTimer() {
+&nbsp; &nbsp; timer?.cancel();
+&nbsp; &nbsp; timer = null;
+&nbsp; }
+</code></pre>
+
+<p>ข้อควรทราบ เมื่อมีการเรียก pause() ตัว Stream จะยังคงอยู่จนกว่าจะมีคำสั่ง resume() เพื่อทำงานต่อ แต่หากในโปรแกรมที่เหลือไม่มีคำสั่ง resume() ตัว StreamController จะถูก close() อัตโนมัติเมื่อจบโปรแกรม<br />
+ลองเรียกใช้งาน</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp; var myTimer = timedCounter(Duration(seconds: 1), 3);
+&nbsp; myTimer.listen((event) =&gt; print(event));
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>ผลที่ได้ จะพิมพ์ ค่า counter ทุก 1 วินาที เมื่อครบ 3 จะจบโปรแกรม</p>
+
+<blockquote>
+<p>end of main<br />
+1<br />
+2<br />
+3</p>
+</blockquote>
+
+<h4>การสร้าง broadcast stream</h4>
+
+<p>อ้างอิงจาก <a href="https://api.dart.dev/stable/3.4.4/dart-async/StreamController/StreamController.broadcast.html" target="_blank">https://api.dart.dev/stable/3.4.4/dart-async/StreamController/StreamController.broadcast.html</a></p>
+
+<p>สำหรับ Broadcast streams จะมีจุดที่แตกต่างคือ สามารถ listen() ได้มากกว่า 1 ครั้ง เมื่อผู้ใช้งานเรียกใช้ pause() ตัว StreamController จะหยุดส่งข้อมูลให้แต่ตัว Stream ยังทำงานต่อไปเรื่อย ๆ และทำการ buffer ข้อมูลจนกว่าจะเรียก resume() หรือยกเลิก buffer เมื่อ cancel()</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">StreamController&lt;T&gt;.broadcast({
+&nbsp; void onListen()?,
+&nbsp; void onCancel()?,
+&nbsp; bool sync = false
+})
+</code></pre>
+</div>
+</div>
+
+<p>สำหรับตัวแปร sync จะเป็นการใช้งานแบบ SynchronousStreamController ซึ่งจะไม่พูดถึงในบทความนี้<br />
+ตัวอย่าง จะเป็นการดัดแปลงตัวอย่างก่อนหน้า timedCounter ให้ทำงานแบบ broadcase stream&nbsp;</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">Stream&lt;int&gt; timedCounter(Duration interval, [int? maxCount]) {
+
+&nbsp; // same as before
+
+&nbsp; controller = StreamController&lt;int&gt;.broadcast(onListen: startTimer, onCancel: stopTimer);
+
+&nbsp; return controller.stream;
+}
+</code></pre>
+</div>
+</div>
+
+<p>ในคำสั่งสร้าง StreamController จะใช้ broadcast() แทน ในส่วนของโปรแกรม main() ที่เรียก จะจำลองว่ามีตัวที่ 2 ทำการ listen() ช้าไป 2 วินาที&nbsp;</p>
+
+<div class="row">
+<div class="twelve columns">
+<pre><code class="language-dart">void main() {
+&nbsp; var myTimer = timedCounter(Duration(seconds: 1), 3);
+&nbsp; myTimer.listen((event) =&gt; print(&#39;#1 $event&#39;));
+&nbsp; Future.delayed(Duration(seconds: 2), () =&gt; myTimer.listen((event) =&gt; print(&#39;#2 $event&#39;)));
+&nbsp; print(&#39;end of main&#39;);
+}
+</code></pre>
+
+<p>ผลที่ได้ ตัว #2 ที่เข้ามา listen() ช้าไป 2 วินาที จะได้ค่าจาก Stream กลับมาแค่ 3 เพียงค่าเดียวแล้วจบการทำงาน</p>
+
+<blockquote>
+<p>end of main<br />
+#1 1<br />
+#1 2<br />
+#1 3<br />
+#2 3</p>
+</blockquote>
+</div>
+</div>
+
+<h2>ส่งท้าย</h2>
+
+<p>การเขียนโปรแกรมเพื่อสร้างแอปที่ใช้งานในปัจจุบัน มีการใช้งานที่ซับซ้อนและใช้ระบบ parallel&nbsp;processing ทำงานขนานกันพร้อมกันเป็นอย่างมาก ดังนั้นการเข้าถึงวิธีการเขียนและจัดการโปรแกรมแบบ asynchronous จึงมีความสำคัญมาก ที่ยกตัวอย่างมาด้านบนเป็นเพียงพื้นฐานที่ต้องทราบ แต่ในการใช้งานจริงจำเป็นต้องมีทักษะในการนำเอาส่วนที่เป็น asynchronous มาใส่ในแอป โดยที่สามารถกลับมาอ่านและทำความเข้าใจได้ง่าย เพราะการทำงานมันไม่เรียงลำดับ การที่เขียนโปรแกรมโดยไม่สนใจการกลับมาแก้ไขถือว่าเป็นการสร้างหนี้ทางเทคนิค (Technical debt)ที่รอวันระเบิด 🤯💣💥</p>
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
