@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: เขียนฟังก์ชั่น asynchronous เพื่อคืนค่า Future จากผลของ Stream</title>
+	<meta name="tags" contents="[tags]">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link rel="stylesheet" href="highlight/styles/vs.min.css">
+	<script src="highlight/highlight.min.js"></script>
+	<script>hljs.highlightAll();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: เขียนฟังก์ชั่น asynchronous เพื่อคืนค่า Future จากผลของ Stream</h1>
+<p><img src="images/20240801/20240801_0000_cover.svg" class="u-max-full-width" /></p>
+<p>เนื่องจากการทำงานแบบ asynchronous นั้นแทบจะเป็นการทำงานหลักของโปรแกรมสมัยใหม่ รวมถึง Dart และ Flutter ด้วย แต่ด้วยความเปิดกว้างของผู้ออกแบบภาษา ทำให้โปรแกรมเมอร์สามารถสร้างฟังก์ชั่นเพื่อคืนค่าเป็น Future และ Stream ได้หลายรูปแบบมาก เมื่อลองดูตัวอย่างใน Stack Overflow แล้วพบว่ามีตั้งแต่ระดับพื้น ๆ จนถึงจินตนาการไม่ถึงเลยทีเดียว</p>
+<p>Note ตัวนี้เลยเขียนเอาไว้เป็นตัวอย่างเผื่อกลับมาดูเป็นตอนนึกไม่ออก</p>
+<h2>เขียนกันแบบพื้น ๆ</h2>
+<p>ในตัวอย่างที่เจอ และน่าสนใจและใช้กันบ่อย ๆ คือ การอ่านรายชื่อไฟล์และโฟลเดอร์ ใน <code>dart:io</code> มีคำสั่ง <code>Directory.list()</code> มาให้ใช้อยู่แล้ว โดยคืนค่าเป็น Stream ถ้าเขียนแบบง่าย ๆ เรียงลำดับเป็น synchronous ก็ใช้ <code>await for</code> ช่วย แต่ในตัวอย่างนี้จะเพิ่มเงื่อนไขว่า <em>จะเอาแต่ไฟล์เท่านั้น ไม่เอาโฟลเดอร์</em> จะเห็นว่ามีคำสั่ง <code>if (file is File)</code> เพื่อเลือกเฉพาะไฟล์มาใช้</p>
+<pre><code class="language-dart">Future&lt;List&lt;String&gt;&gt; dirFiles(Directory dir) async {
+  List&lt;String&gt; files = &lt;String&gt;[];
+  Stream&lt;FileSystemEntity&gt; lister = dir.list(recursive: false);
+  await for (FileSystemEntity file in lister) {
+    if (file is File) files.add(file.path);
+  }
+  
+  return files;
+}
+
+void main(List&lt;String&gt; arguments) {
+  test_playground.dirFiles(Directory(r&quot;D:\My Data&quot;)).then((listOfFile) {
+    print(listOfFile.join('\n'));
+  });
+  print('end of main');
+}
+</code></pre>
+<p>ผลการทำงาน จะแสดงรายการไฟล์ในโฟลเดอร์ <code>D:\My Data</code> ออกมาที่หน้าจอ</p>
+<blockquote>
+<p>end of main<br/>
+D:\My Data\Add new folder.vbs<br/>
+D:\My Data\Clear old files.vbs<br/>
+D:\My Data\desktop.ini<br/>
+D:\My Data\FileSyncSettings.ffs_gui<br/>
+D:\My Data\sync.ffs_db<br/></p>
+</blockquote>
+<p>แล้วถ้าไม่ใช่ <code>await for</code> แต่ใช้ <code>await</code> แทนได้ไหม ก็ได้นะ แต่ก็จะแปลก ๆ ว่าทำไปทำไม 😅 ทำโดยการแปลง StreamSubscription เป็น Future แทน</p>
+<pre><code class="language-dart">Future&lt;List&lt;String&gt;&gt; dirFiles(Directory dir) async {
+  List&lt;String&gt; files = [];
+  Stream&lt;FileSystemEntity&gt; lister = dir.list(recursive: false);
+  await lister.listen((file) {
+    if (file is File) files.add(file.path);
+  }).asFuture();
+  
+  return files;
+}
+</code></pre>
+<p>ข้างล่างนี่เหมือนข้างบน แต่แตกบรรทัดให้เห็นชัดเจนขึ้น</p>
+<pre><code class="language-dart">Future&lt;List&lt;String&gt;&gt; dirFiles(Directory dir) async {
+  List&lt;String&gt; files = [];
+  Stream&lt;FileSystemEntity&gt; lister = dir.list(recursive: false);
+  StreamSubscription&lt;FileSystemEntity&gt; listener = lister.listen((file) {
+    if (file is File) files.add(file.path);
+  });
+
+  await listener.asFuture();
+
+  return files;
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ลองแบบไม่ใช่ async แล้วใช้คำสั่งกลุ่ม Iterable ของ Stream แทน</h2>
+<p>ตัว Stream จะสามารถใช้คำสั่งแบบ Iterable ได้ และเมื่อทำงานเสร็จจะคืนค่ามาเป็น Future ดังนั้นใช้ <code>forEach()</code> เพื่อเลือกเฉพาะไฟล์ และเมื่อเสร็จแล้วจะคืนค่าเป็น <code>Future&lt;void&gt;</code> ก็ใช้ <code>.then()</code> เพื่อคืนค่า files กลับไปเมื่อทำงานเสร็จ</p>
+<pre><code class="language-dart">Future&lt;List&lt;String&gt;&gt; dirFiles(Directory dir) {
+  Stream&lt;FileSystemEntity&gt; lister = dir.list(recursive: false);
+  List&lt;String&gt; files = [];
+  
+  return lister.forEach((file) {
+    if (file is File) files.add(file.path);
+  }).then((_) =&gt; files);
+}
+</code></pre>
+<p>เนื่องจาก <code>forEach()</code> มีประสิทธิภาพต่ำ เหมาะกับงานที่ทำมีขนาดเล็ก หรือการใช้ <code>forEach()</code> ทำให้อ่านง่ายกว่า และจำนวนข้อมูลที่ทำงานด้วยมีจำนวนน้อย นอกเหนือจากนี้แนะนำว่าใช้ await for แทน เพราะประสิทธิภาพดีกว่ามาก</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>ใช้ Completer()</h2>
+<p>ตัว Completer จะเป็น Object ที่ช่วยให้สร้าง Future Object และเปลี่ยนสถานะของ Future เป็น completed ได้ตามต้องการ การใช้งานคือสร้าง Completer ที่เก็บข้อมูลตามที่ต้องการ (ในที่นี้คือ <code>List&lt;String&gt;</code>) เมื่อทำงาน asynchronous เสร็จแล้วให้ใช้คำสั่ง <code>Completer.complete(files)</code> เพื่อให้โปรแกรมที่รออยู่ทราบว่า completed แล้วเอาข้อมูลไปใช้งานต่อไป</p>
+<pre><code class="language-dart">Future&lt;List&lt;String&gt;&gt; dirFiles(Directory dir) {
+  var files = &lt;String&gt;[];
+  var completer = Completer&lt;List&lt;String&gt;&gt;();
+  var lister = dir.list(recursive: false);
+
+  lister.listen((file) {
+    if (file is File) files.add(file.path);
+  }, onDone: () =&gt; completer.complete(files));
+
+  return completer.future;
+}
+</code></pre>
+<p>จาก [คำแนะนำในการเขียนโปรแกรมให้มีประสิทธิภาพ] (https://dart.dev/effective-dart/usage#avoid-using-completer-directly) ไม่แนะนำให้ใช้ Completer ในงานที่สามารถใช้คำสั่งใน Future หรือ Stream ได้อยู่แล้ว เนื่องจากในการดูแลรักษาโปรแกรม ตัว Future Object จะมีความชัดเจนกว่า และจัดการเรื่อง error ง่ายกว่า</p>
+<p>เมื่อไหร่ควรใช้ Completer</p>
+<ol>
+<li>new asynchronous primitives นั้นคือสามารถนำ Completer มาใช้งานใน
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.4.4/dart-async/Timer-class.html">Timer</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.4.4/dart-async/scheduleMicrotask.html">scheduleMicrotask</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.4.4/dart-async/Zone-class.html">Zone</a></li>
+</ul>
+</li>
+<li>interfacing with asynchronous code that doesn't use futures
+<ul>
+<li>Callback-based API หรือ Database query ที่ไม่ได้ออกแบบมาเพื่อรองรับ Future</li>
+<li>asynchronous code ที่มีความซับซ้อน</li>
+</ul>
+</li>
+</ol>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>ทิ้งท้าย</h2>
+<ul>
+<li><code>async </code>เป็นการบอกว่าจะเขียนงาน asynchronous ให้เหมือนรูปแบบ synchronous โดยการใช้ <code>await</code> / <code>await for</code>  แต่ถ้าสุดท้ายไม่ได้ใช้ ก็ให้เอา <code>async</code> ออกจากการประกาศของฟังก์ชั่น</li>
+<li>หากฟังก์ชั่นไหนที่สามารถใช้ <code>await</code> / <code>await for</code> ได้ ก็ให้ใช้ เนื่องจากจะกลับมาแก้ไข code ได้ง่ายกว่าการใช้งาน <code>.then()</code> หรือ <code>.listen()</code></li>
+<li>การดักจับ Exception ด้วย try-catch กับฟังก์ชั่นที่เป็น asynchronous ต้องเขียนเป็น synchronous ด้วย await</li>
+</ul>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<![CDATA[
+<~+,^C)z!"-tSh/41P'tu:$^;D51&1LSCg&qR'gB%H""q3>2!VNJ$@BOd/il9J#]/u6%"9Cn^/L;^0Oql,j*Jk?Wa:Jp)BsW2VI=sdNER)drSc,=Yg&VQ8o'XfIRIg$@T/iYcCs`U.4H%6!EO6TRs,*S83#]faX#R\LUHommj7,'JZj3epSN%NC.pVi8G2R^r09kd/`mN*lGS*I#n-fH.n]MZZf+YiJZT*Oq+;]GB8#NlM72uchOpJS*b,Ua(X4@Vj_XB87?fM1aj:?=\++5nGXaKWS_oK0q\[f7s[8O-bN^I<sJO-l.&#2*FN2&<kF9RlKrAZiqUSA7d5isgCn'[FfS@'##5N4"Cipd$3PYd?GUEGm_6&?892dp,O6@sVjFW<p7q"#,_45Ri.a74D0iU@_F4cc@fK0$df$l>PUd?!X#V^DTX=<-]QUM"Rg,)6\*ro>T0rX;pk<pW=@_$&]U%&[ASn&-[-@>s(sn8D[7.?;-_aZk=SPgkl`nSYU^Yhq05)'N81'd$%dcgf3"@%n?ADZuA>)@\=$0869J]M5u"7_1nqNBgrTX9Fk?p)-Gp[ll#hmGjW;jS''ISg[(Dg0;A3P-F;Nm(jSN=rmV\EMEs6')+D]294oj#6_\j@ET5_&,*WR,uP$L:)8oj+WY6pJV('iiKjZEH'R;%KKhqh1`<)N726fZrp[Kpc@,t(od=*sO(pD)3,LTWR#)@CH@aZ"<p3/$9UWIM&9V0uI<$HI$.O-ae-/#E;3np>S\cuJ%tAKPaG7#aOrkSXc_qQ[b17i0Q,\!/1i/VR%114'kP2[n1\<*.mbq3b7<CqFT.$1$FC-^HaBT;$+hgS0mNl$=q-P;\^+o?8UlWs2aqL10B[_M\n+oaJ#i*ErG#!KF@*M,!i3r--ogZt27BN`T?5]oL"[WrTV05P:1Lt!fJl0)5P*\Ya<Ck3*93Z0sb"rFtM'JHK5iLTG5%F#CNq@bp9)Q#mouqF[C\[u:\VGNB,3rGu62m!WMjN@^0L81GJH>?cg2'\X!B+erP?t&o23#3Ki(Lk)WF8F@OK:)ns"lMiH;,HGM+)\8\1L`s\K/uNOPOt>*2&B"b:5.B9UTB8NcoEZ'lIYTO^JGo%t<5K+rmWu)80ted1+'s,n[ZDb/+4$g]7$VCDr9'W@h+.qm'C6bZqr6d?*0ro\nchRkR?!lkY[d=q:dD^$>u+X=l7-2\4PXTIQ'FE4Zp>mM_^1/ZTQU3YKdN@C7Wu-C*U?>'7q%@l_4ojr0QGi:f^m&oC5=/,0/F!\SeM-R[cP<k\V=Xnf-;<\;q(V'NI#Q/4"b7&W!X4;:T&*G^'Ln9^bUaD7poI(209kd,E?BF4"BHG(KUgoJtUm0>5bTjk\S\=PAY)P?o0=.=Ns:"9urnio-QML,j)>KGi(?*`:&2R,ACj]ulNV"*)-`9lT8%WZ1\dS>=A=;Kb^M0Rt#<62"K6BN4%J0>XL!8hO&JJfZe=q5-\i*/P8dAN#B4T:;Ir/S[I`nGH82![nl>64=WNj<cK1l$i^L#6aWSm+$&n`AFs>R8qc#og!Ipgg4&3#B4-a.6d!$lR8?3-7jE;*t-9:-.a<,+T;\e^,In/Zb])!K'nu8Tf;9KW<3D@W4:]nd>a.Q0i\SOX9*INpGk<p7GFDr`p>13gFA\BR4c8=R%JnG2ROtl[,_?0Eb8*Y8;H?DnqLAE?;W)bB21u`0Yef$Dj+Iq5$('BWp5KMY#;%U>&N_7$boo+>]?(ai'u0Kb';>j!0E`QO"L89pdqTO%)(,cJ=.o%h\O8Dn8%LbD:F7m_'M6-Klc[*KLG>b>5K,Pg'!&UT:PFjH,6m`L3M=bSCahf13+d@eU$:XQ9q^0/A<3m@Jhn<GEi!+U4),;0'OnqOF0o8Wh/og9X;_9WqiV%]_@F8M5&FX=@um6B8'8#O1r6%^IZN\80dbg:J&!jhbQ<:F1`.8PC"jb.XGL=_Qs`Am%A5Yb(=\80:KqnRTGMNr&d"fDkET3;0/H@5sSDB/8kd6u?)#4fPdBC.#>?RaCq("&"pQ0;tjhNkL%^3;OC4A:*Jcjm4qM#k*R,F^dKhRU*LlP4k%XCf9S-?\'#pen7NhPTX,jmm8,;[$O\2hrOE">qCYpE<+l^AqngAfVI!\0m7D/F)5W3bf6'8,suFG&%]&DW*Su%1')dMNCVeXOjDYu!-2'/B\ASZ78fV:1Q=s&Dmc'NhXo90\LZJD_+k:'GfO1YG.?HrX_rkrrL)bOT'X;akM-is:g\662JeXnl;7PW[Aa]`lS_=,G%T%)4*=!WU<K8<2hN&RZ0I^)]`SoEJ.+<^:h+dt)5c:<l_W8n'k6laA4:iE">7rO<`9Sd2/4K%=h8rFm@U6nBU\UA4#25Ab.$;%@X^W/-@ah&Ji?6J2&UZH1=X5pE$F4rc=59LJftHhU`#W,X3!2@2=_Ye)'j.L"/@mMiZ5AFRMD'0'k#,634YSf-;@j4gbAVlAK$s7^5Beb1>c=.4[.2,Qpp?so4G#?A6oXDQ8p'aSp@7WP_jJhinEcT%DBVO"!'m\;7:epC2G-*iV`$n=LR2X[9;@$EEfqgHj2dZp-NPKhlrc"RH]F.[ka_4RW6^&Sb9SI5Kh63neO#.-irr8n6-"\<iT%kZ=Lej7;7gjr;J3V"P$55EHjl1<Bj<t0PccGs.9b^WcZbh6FpbY34>*LktAUGdeFZI680G`O;(?.^:sD):,g$eKCCA$)AS[C>5;G+HTA(0faZ_:(SHu&#Y_(MbU"$t,aB`T]hP8Xh81tmDl24*^UU=,Gc[$CFkqdAD^aP&1Aar/j2T,qko&Q$(>$d_*@hO;D6_fo92_J>k"`+t5BH5-(KU>'RUgL*:#^Zq4ap+OYU%KTmi0LD":n\%m<U;LR4I!*V;&`%R:ofV3Bdte.D^<RB/8=saN,C&doj-GV_cLsa;t!=TC8]V"I`^P`;\?J_7H&7[8WP9Pe#DqLGnbf1*SZ?/omc7O6kr<2`s=n%pr8gr&$2_eApoC]HGj,G=nn%32orU=]6BFRjGPh7oVqC@SbTkk#GJSEKG(IU`)5Gld59p8O3G2gF8Xe[1pkD+>k=YM'AaZLg4=;:"_LGC9F6G:c_3+H1SNE3ePL,s"l@?9.ugO!2pc,CVn'_2V%eF&,ddm1:e'#3OJo8rHc?k$(&@`PqcOOBf?c#'/q>"W"Vd6o:0aq?B^81H;eS'9Ji*S+hH%V05RfFZK?'XLgYYN[Y3IK`Y#O^jf(;2:'6pAi@lbLJii8WgH^B9[*F.%`8if^"sX*J~>
+]]>
+</markdown>
