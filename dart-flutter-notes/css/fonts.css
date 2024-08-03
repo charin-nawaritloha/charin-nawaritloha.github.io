@@ -50,12 +50,14 @@ html {
   font-size: 75%; //overwrite skeleton.css
 }
 
-/* font size for mobile phone */
-@media (min-width: 320px) {
+
+/* font size for big mobile phone */
+@media (max-width: 480px) {
 	html {
 	  font-size: 65%; //overwrite skeleton.css
 	}
 }
+
 
 html,body {
   font-family: BaiJamjuree, Leelawadee, Tahoma, sans-serif;
