@@ -282,6 +282,21 @@ label.radiogroup {
 	padding-bottom: 4rem;
 }
 
+/* notice box and img inside */
+div.notice {
+	border: 1px solid #9de7fb;
+	border-radius: 6px;
+	padding: 0.5rem;
+	min-height: 8rem;
+}
+
+div.notice > div > img {
+	width:8rem;
+	float:left;
+	padding:0 0.5rem 0.5rem 0;
+}
+
+
 
 /*
 Overwrite css from skeleton.css
@@ -306,8 +321,8 @@ p {
 
 
 h1 { font-size: 3.5rem; border-bottom: 3px solid black; padding-top: 1rem;}
-h2 { font-size: 3.0rem; border-bottom: 2px solid black; padding-top: 1rem; }
-h3 { font-size: 2.5rem; border-bottom: 1px solid black; padding-top: 1rem; }
+h2 { font-size: 3.0rem; border-bottom: 2px solid black; padding-top: 2rem; }
+h3 { font-size: 2.5rem; border-bottom: 1px solid black; padding-top: 2rem; }
 h4 { font-size: 2.0rem; }
 h5 { font-size: 1.5rem; }
 h6 { font-size: 1.25rem; }

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Number เบื้องต้นกับจำนวนตัวเลข</title>
+	<meta name="tags" contents="[tags]">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link rel="stylesheet" href="highlight/styles/vs.css">
+	<script src="highlight/highlight.js"></script>
+	<script src="highlight/highlightjs-line-numbers.min.js"></script>
+	
+	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Number เบื้องต้นกับจำนวนตัวเลข</h1>
+<p><img src="images/20240803/20240803_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ใน Dart จะมีประเภทข้อมูลพื้นฐานเกี่ยวกับจำนวนตัวเลข โดยจะมี num class เป็น super class ที่จะสามารถใส่ค่าตัวเลขได้ทั้งเลขจำนวนเต็ม (int) และเลขทศนิยม (double) โดยช่วงค่าตัวเลขที่จะใส่ได้จะเป็นไปตามสถาปัตยกรรมของเครื่องคอมพิวเตอร์ที่นำไปทำงานด้วย</p>
+<div class="image"><img src="images/20240803/20240803_0100_class.png" class="u-max-full-width" /><div>num class</div></div>
+<p>ในการใช้งานจริง หากผู้ใช้งานไม่ได้นำไปประมวลผลระดับบิต ก็ไม่จำเป็นต้องมาสนใจว่ามันจะเก็บเป็น int หรือ double เลย แต่ถ้าเมื่อไหร่สนใจสิ่งต่อไปนี้</p>
+<ul>
+<li>ความถูกต้องของเลขทศนิยม</li>
+<li>การปัดเศษ</li>
+<li>การแปลงจาก double เป็น int ตามฟังก์ชั่นการใช้งาน</li>
+</ul>
+<p>หากมีสิ่งเหล่านี้ ก็ควรลงรายละเอียดเกี่ยวกับการทำงานมากขึ้น</p>
+<h2>num class</h2>
+<p>เป็น class ที่ใช้เก็บจำนวนตัวเลข ทั้งจำนวนเต็ม และเลขทศนิยม หากผู้ใช้ประกาศแบบระบุเจาะจงประเภท สามารถทำได้ดังนี้</p>
+<pre><code class="language-dart">
+num myNum = 0;
+
+</code></pre>
+<p>ตัว num class จะมีการจัดการตัวเลขจำนวนเต็มกับเลขทศนิยมไม่เหมือนกัน อยู่ที่ว่าข้อมูลที่เก็บเป็นข้อมูลแบบไหน ตัวอย่างเช่น</p>
+<pre><code class="language-dart">void main() {
+  num myNumber = 0.999999999;
+  print(myNumber);
+  myNumber = 100;
+  print(myNumber);
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>0.999999999<br/>
+100</p>
+</blockquote>
+<p>แต่ถ้าเปลี่ยนจาก num เป็น double ผลที่ได้จะไม่เหมือนกัน</p>
+<pre><code class="language-dart">void main() {
+  double myNumber = 0.999999999;
+  print(myNumber);
+  myNumber = 100;
+  print(myNumber);
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>0.999999999<br/>
+100.0</p>
+</blockquote>
+<p>โปรดสังเกตว่าตัวเลข 100 ที่เป็นจำนวนเต็มที่ใส่เข้าไปภายหลังถูกเปลี่ยนเป็น double 100.0</p>
+<p>ใครที่เขียนโปรแกรมจัดการพวกจำนวนตัวเลข น่าจะเคยเจอปัญหาเกี่ยวกับเรื่องการเก็บตัวเลข และการประมวล ที่สุดท้ายมีจุดทศนิยม และได้ผลคลาดเคลื่อนไป ดังนั้นการทำความเข้าใจตรวงนี้น่าจะช่วยให้ลดปํญหาดังกล่าว</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>int เลขจำนวนเต็ม</h2>
+<p>ตัว Dart VM หากนำไปทำงานบนเครื่องที่ใช้ CPU แบบ 64-bit จะสามารถเก็บค่าตัวเลขได้ตั้งแต่ -2^53 ถึง 2^53 หรือ -9,007,199,254,740,992 ถึง 9,007,199,254,740,992 (เก็บได้ 16 หลัก) ซึ่งในปีที่เขียน 2024 อุปกรณ์ที่ใช้งานแบบ 32-bit แทบจะหาไม่ได้แล้ว</p>
+<p>?! ในกรณีที่แปลง Dart เป็น javascript จะสามารถประมวลผลที่ระดับ 32-bit เท่านั้น</p>
+<p>สามารถประกาศตัวแปรเพื่อเก็บเลขจำนวนเต็มได้ดังนี้</p>
+<pre><code class="language-dart">
+  int intNumber = 0;
+  var intNumber = 0;
+  
+</code></pre>
+<p>ในบางภาษา ผู้ใช้สามารถกำหนดค่าตัวเลขทศนิยมกับตัวแปรแบบจำนวนเต็มได้ แต่ใน Dart ไม่สามารถทำได้โดยตรง ผู้ใช้ต้องทำการ cast ด้วยตัวเอง บางคนมองไม่สะดวกแต่ปลอดภัยต่อการตรวจสอบการทำงาน</p>
+<pre><code class="language-dart">
+int intNumber = 0.5; // compile error
+
+</code></pre>
+<p>code ด้านบนจะขึ้น <font color="red">compile error → A value of type 'double' can't be assigned to a variable of type 'int'. Try changing the type of the variable, or casting the right-hand type to 'int'.</font> ผู้ใช้จำเป็นต้อง cast ให้เป็น int ก่อน ดังนี้</p>
+<pre><code class="language-dart">void main() {
+  int intNumber = 0.5.toInt();
+  print(intNumber);
+  intNumber = 0.5.round();
+  print(intNumber);
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>0 <br/>
+1</p>
+</blockquote>
+<p>ผลที่ได้จะเห็นว่า <code>toInt()</code> คือตัดเศษทิ้งไปเลย ส่วน <code>round()</code> จะปัดขึ้นให้ การที่ผู้ใช้งานเป็นผู้กำหนดวิธีการแปลงค่าเองทุกจุด แม้จะดูยุ่งยากและน่ารำคาญแต่สำหรับผู้เขียนนั้นชอบมาก😍 ลำบากตอนนี้ดีกว่าไปนั่งปวดหัวตอนหา bugs ดังนั้น method ที่จะใช้ในการแปลงข้ามไปมาจึงสำคัญมาก ควรใช้งานให้ถูกต้อง</p>
+<p>?! ถ้าต้องการเก็บข้อมูลตัวเลขที่อาจเป็นทั้งจำนวนเต็มและทศนิยม แนะนำว่าใช้ num จะดีกว่า ไม่มีปัญหาเรื่องการแปลงไปมาตอนเก็บข้อมูล แต่อาจมีปัญหาตอนใช้ข้อมูล เพราะไม่รู้ว่าข้างในเป็น int หรือ double จำเป็นต้องแปลงให้เหมาะสมก่อนนำไปใช้ประมวลและแสดงผล</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>เลขทศนิยม double</h2>
+<p>ใน Dart จะใช้การเก็บตัวเลขทศนิยมแบบ <a target="_blank" href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> ขนาด 64-bit ช่วงค่าที่เก็บได้คือ 2.2250738585072014e-308 ถึง 1.7976931348 623158e+308</p>
+<p>รูปแบบการเขียนตัวเลข floating-point แบบ Scientific จะใช้รูปแบบ ±9.9999999e±999 เช่น</p>
+<ul>
+<li>1.25e+5 จะมีค่าเท่ากับ 1.25 * 10<sup>5</sup> = 1.25 * 10,000 = 125,000.0</li>
+<li>1.25e-5 จะมีค่าเท่ากับ  1.25 * 10<sup>-5</sup> = 1.25 * 0.00001 = 0.0000125</li>
+<li>-1.25e+2 จะมีค่าเท่ากับ -1.25 * 10<sup>2</sup> = -1.25 * 100 = -125.0</li>
+<li>-1.25e-2 จะมีค่าเท่ากับ  -1.25 * 10<sup>-2</sup> = -1.25 * 0.01 = -0.0125</li>
+</ul>
+<div class="image"><img src="images/20240803/20240803_0300_ieee_754.svg" class="u-max-full-width" /><div>วิธีการเก็บข้อมูลของเลขทศนิยมแบบ 64-bit</div></div>
+<p>อธิบายวิธีเก็บค่าของตัว double (ไม่จำเป็นต้องรู้ก็ได้) จะแทน S คือ เครื่องหมายบวกลบ sign, E คือส่วนของตัวยกกำลัง exponent, F คือ เลขเศษส่วน fraction</p>
+<ul>
+<li>ถ้า E=2047 (111 1111 1111)<sub>2</sub> และ F ≠ 0 ค่าที่ได้คือ <strong>NaN (&quot;Not a number&quot;)</strong></li>
+<li>ถ้า E=2047 (111 1111 1111)<sub>2</sub> และ F = 0 และ S = 1 ค่าที่ได้คือ <strong>-Infinity</strong></li>
+<li>ถ้า E=2047 (111 1111 1111)<sub>2</sub> และ F = 0 และ S = 0 ค่าที่ได้คือ <strong>Infinity</strong></li>
+<li>ถ้า 0&lt;E&lt;2047 ค่าที่ได้จะคำนวณจาก <strong>(-1)<sup>S</sup> * 2<sup>(E-1023)</sup> * (1.F)</strong> โดย (1.F) มีจุดมุ่งหมายเพื่อแสดงเลขฐานสองที่สร้างขึ้นโดยการเติม F ด้วยเลข 1 นำหน้าและตามด้วยเลข <a target="_blank" href="https://www.quora.com/What-is-a-binary-point">binary point</a></li>
+<li>ถ้า E = 0 และ F ≠ 0 ค่าที่ได้จะคำนวณจาก <strong>(-1)<sup>S</sup> * 2<sup>(-1022)</sup> * (0.F)</strong> เท่ากับ <strong>unnormalized values</strong></li>
+<li>ถ้า E = 0 และ F = 0  และ S = 1 ค่าที่ได้ <strong>-0</strong></li>
+<li>ถ้า E = 0 และ F = 0  และ S = 0 ค่าที่ได้ <strong>0</strong></li>
+</ul>
+<p>สำหรับการใช้งานทั่วไป double คงไม่มีปัญหาอะไร นอกการวิธีการเก็บข้อมูลที่หากเกินความละเอียดที่ fraction จะเก็บได้ จะเกิดการปัดค่าให้สามารถเก็บได้</p>
+<pre><code class="language-dart">void main() {
+  double myFloat   = 0.9999999999999999; // max digit can F store
+  print(myFloat);
+  double whatWrong = 0.99999999999999999; // more than F can store
+  print(whatWrong);
+  double maxFloat = 1.7976931348623158e+308; // max value that double can store
+  print(maxFloat);
+  print(maxFloat + 0.0000000000000001e+308); //Infinity
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>0.9999999999999999<br/>
+1.0<br/>
+1.7976931348623157e+308<br/>
+Infinity</p>
+</blockquote>
+<p>การประมวผล บวก ลบ คูณ หาร และอื่น ๆ กับเลข double ผลที่ได้จะเป็น double โดยหากผลที่ได้ ความละเอียดของค่าตัวเลขมากกว่าค่าที่จะเก็บได้ จะมีการปัดค่าให้ใกล้เคียงกับผลลัพธ์มากที่สุด</p>
+<p>จากตัวอย่างด้านล่าง แสดงให้เห็นว่า ผลที่ได้เกินกว่าจะเก็บในค่า fraction ได้จะถูกปัดเศษให้ใกล้เคียงกับผลลัพธ์มากที่สุด</p>
+<pre><code class="language-dart">void main() {
+  double numA = 17976931348623158.0;
+  double result = numA * 100.0;
+  print(result);          //1797693134862315800.0
+  print(result + 1.0);    //1797693134862315800.0
+  print(result + 100.0);  //1797693134862315800.0
+  print(result + 200.0);  //1797693134862316000.0 = 1.797693134862316e+18
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>1797693134862315800.0<br/>
+1797693134862315800.0<br/>
+1797693134862315800.0<br/>
+1797693134862316000.0</p>
+</blockquote>
+<p>17976931348623158 คือเลขที่เก็บใน fraction ซึ่งจำนวนหลักเป็นค่าสูงสุดแล้ว เมื่อคูณด้วย 1000 จะกลายเป็น 1.7976931348623158e+18  เมื่อพยายามบวกค่าเข้าไป</p>
+<ul>
+<li>บวก 1 ปัดทิ้งเลย เพราะเกินกว่าค่า fraction จะเก็บได้</li>
+<li>บวก 100 ปัดทิ้งเลย เพราะเกินกว่าค่า fraction จะเก็บได้</li>
+<li>บวก 200 เก็บได้ 1797693134862316000.0 = 1.797693134862316e+18 ตัว  fraction  → 1 797 693 134 862 316 ลดลงจาก 17 หลัก เหลือ 16 หลัก</li>
+</ul>
+<p>?! ถ้าเห็นตัวเลขแล้วมึน ก็จำหลักง่าย ๆ ว่า มันเก็บค่า fraction ได้ประมาณ 17 หลัก ค่าสูงสุดประมาณ 17,000 ล้านล้าน (ค่าคงที่ <code>double.maxFinite</code>) หากต้องการคำนวณค่าที่ต้องการความแม่นยำ ให้ส่วนเสริมที่รองรับการคำนวณพวก math เพิ่มเติม เพราะหากใช่ไม่ระวังจะได้ค่าที่ไม่ได้คาดหมายเอาไว้ และเกิด bug ในโปรแกรมได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การแปลงค่าจาก double เป็น int</h2>
+<p>ในการแปลงค่าจาก int เป็น double ไม่ค่อยมีปัญหาอะไร ยกเว้นจะแปลงเลขจำนวนเต็มที่มีค่าเกิน 17 หลัก ส่วนที่เกินจะถูกปัดทิ้งเป็นค่าที่ใกล้เคียงที่สุด โดยส่วนที่ปัดทิ้งจะกลายเป็นเลข 0 ทั้งหมด ในโปรแกรมทั่วไปคงใช้ไม่เกิน 😅 แต่ในการแปลง double เป็น int จะมีประเด็นเรื่องเศษเลขทศนิยมว่าจะเอากับมันยังไงดี ปัดขึ้น ปัดลง ปัดทิ้ง หรือตั้งแต่ 0.5 ค่อยปัดขึ้น เลือกใช้ให้ถูกตามความต้องการ มาลองดูตัวอย่างกัน</p>
+<p>การแปลงจาก double เป็น int จะมี 3 แบบ คือ ปัดขึ้นหรือลง ปัดเศษทิ้ง ปัดขึ้น</p>
+<div class="image"><img src="images/20240803/20240803_0200_convert_to_int.png" class="u-max-full-width" /><div>รูปแบบคำสั่งที่ใช้ในการปัดเศษเพื่อให้เป็นจำนวนเต็ม</div></div>
+<h2>ปัดเศษขึ้นหรือลง <code>round()</code></h2>
+<p>หลักการของ <code>round()</code> คือ ถ้ามีเศษตั้งแต่ 0.5 จะปัดขึ้น นอกนั้นปัดลง</p>
+<pre><code class="language-dart">void main() {
+  print(1.99999.round()); // → 2
+  print(1.5.round()); // → 2
+  print(1.49999.round()); // → 1
+  print(1.1.round()); // → 1
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ปัดเศษทิ้ง <code>toInt()</code>  <code>truncate()</code> <code>floor()</code></h3>
+<p>ทั้ง 3 คำสั่งให้ผลเดียวกันคือ ปัดเศษทิ้ง ผู้เขียนเข้าใจว่าคนออกแบบเพื่อให้สะดวกต่อการเรียกใช้ เนื่องจากหากเคยใช้ภาษาอื่นมาก่อน ก็จะมีคำสั่งจำพวกนี้ ดังนั้นเลือกใช้ได้ตามสะดวก</p>
+<pre><code class="language-dart">void main() {
+  print(1.99999.toInt()); // → 1
+  print(1.5.toInt()); // → 1
+  print(1.49999.toInt()); // → 1
+  print(1.1.toInt()); // → 1
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ถ้ามีเศษ จะปัดขึ้น ceil()</h3>
+<p>ถ้ามีค่าเศษจะปัดขึ้นหมด</p>
+<pre><code class="language-dart">void main() {
+  print(1.99999.ceil()); // → 2
+  print(1.5.ceil()); // → 2
+  print(1.1.ceil()); // → 2
+  print(1.00000000000001.ceil()); // → 2
+  print(1.0.ceil()); // → 1  
+}
+</code></pre>
+<h2>การแปลงข้อความเป็นตัวเลข</h2>
+<p>จะมีคำสั่ง <code>parse()</code> และ <code>tryParse()</code> ที่เป็นแบบ static ใน <code>num</code> <code>int</code> และ <code>double</code> ดังนั้นหากต้องการแปลงค่าข้อความให้เป็นตัวเลขแบบไหนก็เลือกใช้แบบนั้น</p>
+<ul>
+<li><code>parse()</code> เป็นการแปลงข้อความเป็นตัวเลข หากแปลงไม่สำเร็จจะโยน FormatException กลับมา</li>
+<li><code>tryParse()</code> เป็นการแปลงข้อความเป็นตัวเลขเหมือนกัน แต่หากแปลงไม่ได้จะคืนเป็นค่า <code>null</code></li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>รูปแบบข้อความตัวเลขที่ยอมรับได้</h3>
+<p>หากใช้ num.parse ในการแปลงค่า จะได้ค่าคืนมาเป็น int หรือ double ตามรูปแบบของตัวเลขที่แปลง</p>
+<pre><code class="language-dart">void main() {
+  var value = num.parse('2021'); // 2021
+  print('${value.runtimeType}\t$value');
+  value = num.parse('3.14'); // 3.14
+  print('${value.runtimeType}\t$value');
+  value = num.parse('  3.14 \xA0'); // 3.14
+  print('${value.runtimeType}\t$value');
+  value = num.parse('0.'); // 0.0
+  print('${value.runtimeType}\t$value');
+  value = num.parse('.0'); // 0.0
+  print('${value.runtimeType}\t$value');
+  value = num.parse('-1.e3'); // -1000.0
+  print('${value.runtimeType}\t$value');
+  value = num.parse('1234E+7'); // 12340000000.0
+  print('${value.runtimeType}\t$value');
+  value = num.parse('+.12e-9'); // 1.2e-10
+  print('${value.runtimeType}\t$value');
+  value = num.parse('-NaN'); // NaN
+  print('${value.runtimeType}\t$value');
+  value = num.parse('0xFF'); // 255
+  print('${value.runtimeType}\t$value');
+  value = num.parse(double.infinity.toString()); // Infinity
+  print('${value.runtimeType}\t$value');
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>int	2021<br/>
+double	3.14<br/>
+double	3.14<br/>
+double	0.0<br/>
+double	0.0<br/>
+double	-1000.0<br/>
+double	12340000000.0<br/>
+double	1.2e-10<br/>
+double	NaN<br/>
+int	255<br/>
+double	Infinity<br/></p>
+</blockquote>
+<p>ข้อควรระวัง อย่าเอา int.parse() ไปทำการแปลงข้อความที่เลขที่เป็น double ไม่งั้นจะเกิด Error</p>
+<pre><code class="language-dart">void main() {
+  print(num.parse('120.5'));
+  print(double.parse('120.5'));
+  print(int.parse('120.5')); // Error → FormatException: Invalid radix-10 number
+}
+</code></pre>
+<p>แต่ถ้าเอา double.parse() ไปแปลงข้อความที่เลขจำนวนเต็ม สามารถแปลงได้ โดยผลออกมาจะเป็น double</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>แปลงเลขฐานอื่นนอกจากฐาน 10</h3>
+<p>ในกรณีที่ต้องการแปลงเลขฐานอื่น ที่ไม่ใช่ฐาน 10 ให้กำหนด radix เพิ่มเติม ใน <code>int.parse()</code></p>
+<pre><code class="language-dart">void main() {
+  print(int.parse('1111', radix: 2)); // → 15
+  print(int.parse('F', radix: 16)); // → 15
+  print(int.parse('17', radix: 8)); // → 15
+}
+</code></pre>
+<h2>พอล่ะ เยอะ</h2>
+<p>เนื่องจากอยากเอาไว้แค่มาทวนความจำ มันเลยมีเรื่องที่ยังไม่ได้เขียนในนี้อีกหลายอย่าง</p>
+<ul>
+<li>การแปลง toString() เพื่อให้ได้รูปแบบตัวเลขที่ต้องการ ซึ่งมันจะมีแปลงหลายแบบอยู่ เช่น <code>.toStringAsPrecision()</code>, <code>.toStringAsExponential()</code> ฯลฯ</li>
+<li>พวก operator <code>+ - * / % ~/ &gt; &lt; == &gt;= &lt;=</code> ส่วน bitwise operator ปกติแทบไม่เคยใช้เลย จะใช้ทีค่อยกลับมาดูทีดีกว่า</li>
+</ul>
+<p>สามารถไปศึกษาเพิ่มเติมต่อได้ที่:</p>
+<ul>
+<li><a target="_blank" href="https://dart.dev/language/built-in-types#numbers">dart.dev</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/num-class.html">num class</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/int-class.html">int class</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/double-class.html">double class</a></li>
+</ul>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<![CDATA[
+<~+,^C)z!"-t5CMt35Oe3j`s.Nub^g2i0S69n.O@^LP3stJ4&-eA(4t+"s+ZU_o8'^[;BD&bW#ErU`g51BuRC'W$+e'_[3YW?lAD&#QbqBsq(ZZq`])#DidkeVC(#6n2]fX\K?!Ub)Wo!(2cX%=CKVe,!Z6)AYnR7kK9p>%pMiZ;^T-eo!Eep?7BsO9VYOLq.RXB``cLC9G5!QrqcdQFflBQ/:mbFp(NoO*B?FbA.]m-%o4^883o#ijM:6TVFj=!_tfiL*'X#,*b-9H8,j#";3E6fdf]eoQR1jR>0YjpHV_SptmS0/lj+p[AO:7<0\1lViqh+_#)n2_RbJtqsIO5\mYDY]EB_=6JXnqlOcbq]2\9p<nBTBA1A(]V4p0:uS;ZIRWWT!2;__k)=H_4EeS6r]2?&qk6>dYhr^qNB'JOsXPrS2[sYA#QK;]?;.BQ1"<T`97V*Zl$F!(=e-rf)'K)5pC]!KV1:Zc5@q\k9C+YLoYG=KhcX'NaOCBA/?>:O"9o-DW:;\iI9&T%G8SIo\to7_]C%f=T&PhD,7Bk5kQ[&:)O":]66[bn(il])Jk8?i;p6f+,^45E:smW2efQ&C%;=tDPtSmN&<7PZ:nZY*1QSp=A!aLgH.c[It<+F_ZS#s:N=KD@#J=WBqUtV..)_)ElrAk4@_LTj5;_=cGp4%7nsR<-Vk1`&&O]P'9=F'"(rj?luBnQmgu1AL+C$YGK9Oc)6sO!IAOHDZV@][HP/YPP,3p]q@PfQ)B]9T8ZY-D/[0)0PVS>+!]V<JY_!N!E5L4@ngF#dgX?a$g-\Qe+WFWEl(]*o98'm3[/;0/"=DFkjXc+5V`BTL5scKug^Ajp3&j2BaU3VXV\7`_*-=M(66@ABaP@U\8O]),i#GD6G1,G5cG'd!q;:l2>#B;P,36j\8[WidDhHRreVba=E%".W.^Ved3AJ6;Lg9lQo;?;c+EW&J0CcqdhJ.V\'QCp(2/j\+KeRkSeQVX?R!iLEh0cTZh1U&mhA%\(ZNpn8$Y@seFd2cTbOq(3H7u(lk)Ehj'(s8toU+qNiZ.Rj^RlXRpPH1VW[MfD'u/DOP%BM3.%tL(T_HTq(Q39aihinlOSjPh=G9I&#V/pMc.+<El3*In1_3?0<rRH4^#"Wu0WrIt<I@8j]8ffDm'kt&V63n3's,6U=s0lj/P"h/=0F0bNl*0eWc>S`;PN!rMMpl>&50"E$J(P%@IV[1dn_Ods,;VR6,Xcm[0J+\Y9[m+EA_h"[#sZ6?ui4*aq@RG)Xq!,gl]XtNS[`7FecMab!DIXlOd>2Q0e"FFJ^Il445&>1^P!dD+e4eY;;bA6SV\?pE\FV=0[[ha#.I9g>,PX(+uj^lrD%9<$mhJ%uW4sXajjI%53W#mcR9?Zi*'"Vnj)eUXHl*Q*hgie0q$LS@FK,?V>1X^T(QFh\]&Ss,)J.e-6Sqa']_O4rrY(1MT7^#G>B#':e^sa#qDmO4&q^oLW_D[Y_2--7h9j3Q"61VL?>NmU(E4D/P2cr_rsB7fZ]l!WM>9?\$T#0K!!;%Wih]&&Ka4$knC:OuQ,`>GsFY[5e79OP_e]?[O06EG]mCEMge3g"EW"F)l)CdM\OFD3-4?pD)0$#pd<W!hp"0X,nZX5S&g#Kfi0l69_g#2`.&E,WEFDNoVD`W=^mg!Z"AXM$Bk-HgjEaC+lFEk/&#h&K#%50)3J&5b]]4f0E>_fHL\gFkNt3qd*n]$FWP:[4l]#P&8-6H934CW%2NWQ1eob=-5,/k*p4e5!P8\#p-roS<cHYf$GH]TH"/EXR.I*a891RH)gg3E=>Wss!-mST@2dXfUUk^%CQlC(F"k\O=N$`6QKOpaejIO_6b@o-I!Op3-^OoXg9'RD=1Q9:.%XVSV0Ie'sA8Qbp&OemrO;B`4IdHi__-nPHuN<3pk".;<[&@Y7U,YNen56SZ@,JWa?CKAU#TC3VDOH0KossmEMb@_ZrD`g(=WH<naUgg+Uk"65jtt#]oao@14[RNHR/Y:?8UmZXCS%^]+4^i'"U=D012>hh1^OQ4G4q=W)c*0-#gWfa"_0$._Fm(#h,rN2$K9Gr'2%&B5r;pj)K;<n=s'/I9rN?MF7g2JCoJPK'79iH`O2;6[JMf@IWSQ&h!\!oD]l_gTAD$>#&/_%"P]jtd(nb2C/;Z-IX>QBS>hmJ"N.;C0Vm)SmM--Ud?>\6;"'Yku)kJF],=C+PD\0LQJ*'#$0/"PPH!_;W5J@4(Mr+Q#_"MiNA6/W%t+;[^qbHYP!n+EKMq)qC@,.2Ub^P[s%B6-E\>]m#3Gm;jMj2DR^!0hRFU9.//1B!*E2A&k$W%.49kHQlBs-c/s5I]RST:8M1iRX&dSI@Nqu:SkL">;]]8_qY)kC(QNeq:h7.Ifd.B2c>oXb=$-,pm;;L!]!<p8\8&E'1YTr"%8"Oi<g(d+(2Xkf!0S<Yj'3omF>HZ?0@5'3Eg_1dR=qKj%/TTT6jt/;S+[k&N^5g7^MT=Eh"_\8*T<;:u&8ueqbWEmO62fpBCBtK+=.V,Q)$^?[@=5fR.h)d_WqnJS%d>]W'^e7@QtM<tr6.__M]mE^qRTBX1bR`eo<OVbY\BMn<i(,*Sr!F=QB:PG*<)*Uf\BjQ4L/K+ugu]T=u/?LKVV-:RuHa]hA==GNg/#ikt]JZ3UO[k17:ni^(_FaD`7!chMn:kfg2hHsMmK^%X[h9($`DforXO8EAa61F?ZQG4>_old]#cG#:EEW7rQS7GLD%`2ZuWt,'/V(?Bt;;!O0Oe>Qi1n)_^`(Y6LktF#UGLEZh3&;grF6h;]do3Rdm_n/p9Jn0Pk)=e"_O9A+&\3UdL2poU=fCc5V(1nMZp!QJe@+'n_No;S]b:*K*8Cp&njLg,#Ch"V.hc4f?XD"&c2p^[!ip.Iog[EFdEJDCWOYn=OmptB$B0T&b]UL$$dH5%p-4k,PL%8ha'mjE:%jG*SA[Ir9<FC\W0UZ0WO&V0MiJ6qC,FUA286!.A_*lLCGjU>qLsRZ)GRpf^.@WhMe#ngjd0uP\=X]:5MHXu,7FF-Em$2ImZl%[goWOLU>!`![uUp2OnSdm^qu[%O_^sRO3i*9U!&Usg;+E@9I>p&`ToYFd"C*,EJ/qfOA_AlLuauF?R8L!`=lac8:=;$:$-XCCXV#$'BrTf+)\JR5E*Y@<YcLC1/_F0nPnsGhF\cp6Wq):XoU*!2k8!(W48u<Y5D4hlZAIR.kWL=]HZ-_^OGei3+13J3?:"=]&YG/jdi5k$m)b2bC9(YF`d7GXZt-4=5RpPM&[;#gABjB+:R7"D]OP*#uZG-1Uf?!30_;=d_8A%X&!k$ATY:W6_q1,D@>,=Ka*"0/Cn((0i:r3.rP;dF`^Tl?195'9/.NP#_4UO2Rc)u\X%No"!_gf,[nieS8.6+Lm1k.K^,!nPl>0'GEV=>eIR`o,DJW2+g!k$<=-.Z]sA]3?M"NMg1cKFi5('BIrsG-='oZ[NrO.UMebVVk106?DB#Vo2Tg!Y:r;dUc]fGaK,gj8O4:'+7n:1"fT%l'NSm&"<M&sKjMW0r5PomIBk'Klr#i5?<.`LpKIV#9R@pj]/`qnKrQ[fb6TMupAd6KEY4napI`g?E03.OXRIIeh@8m:N.hAB(oEO:'IM,kWKUf2E3KQ?n/lQ]$@k5pcR7^@*Va6$#V0*,KaW.%nHAf=s!+q3jQ<IFcDps%=X2.sNZ^_uiJkk*]Hs0cD#WuTBTKZKPia51BE6S_iJ8Ie?`9R\l!R?3q+:Q&ThF!=l]]!'.f34llo7leH(X'pd<?s\qmo!rV&:Pl"kMdC[[YQaR6fl6;<00[,E9e#0SCuCK/u[Xm7G2]M<QZt>Ti-+m+P[lGhMX5d<)qIDC!!\7D++u`Mr-n9LL\ur^SP4$>7B4P@t=YJ8=8t_8u`2ton_[to"&V@A7jS*MIhs!OEE,5E,pp380rn,R_+C%QsO5*22,hSYfmV\)2WsB'I2)0lE>PB>'r,#O@cnsSuA@Z-n4b@HS!YkLT%Ufer$J$=LO:YmnV#V\hNJg^;gp\<j1!nWe)G0e(nC=#`"K3[L&Zlq"s?gT`0q3k<SUBf:2n$Qn%#-0/8/DB9S(BdO:V@L%2ZA\PDrZg_m6Yb&s6i&$=jJhV0JL[]JPeOl.g`)pL)i[FV-QSo%]Z20C]A<JolXR<q`=L60hAA@l'B3i4M_4&/9pT5E6nEai]^S)n^(+MY]J=V<]V$<78@1_F.Q'4&:,8k]K],aHZMjVH[jS&p@"BoK]:.+,aH,`j;Ok@c[h)YSoDb=Ib50*I7<eiI*(St1V8fa2UF-=LMd!>F,._7OU/Q=>'lkj\Z/m*!<!9Fj[sfO3?_Hp<O$>@a5lGWCq*Hs_3o;ARnNE4er!l_"]FC_jK+KWJ4+\h^IWZ]a'WM7D5NO)^#&DH]X%)(GdE/e*?)`V"YM\V&,hnlo,JNasZkA4+;J_bi6`2/@'PBW$V`q[FBK^IggIEh:JO"JeVN4].WQ9QtXa3RO<$RpNb1jQDMYZtM^sPq=!n4VkS;UB'itiP(K1qU3Hi=G"T;'aJ'>4NO?SqGK\OWMY^=RFm@]#%d+^[6p'G7]_JE?Ahgh<m\R!\b&`+7^^+p]OOCE?)bA1L'`'"U`hd_F]jt4<TTo_R^En%jE&g;LK]@mAjfA*.^X)E]9cOTGp>p#b_k2kXFE`-$l`g0j\)_W%XX_i2$2'j#GmrVbA,+7L+5X@(26A%^O>qRn$;ma<phHJ;,VK\mXT,sb_0a:]VHDqn+l]lnqu303ftH1]-9:-^89DMo`(#NcZp=kjck]*WP-'pWAhYX*U@HLHf'`,OjOo*X3qB*M$B^jh$m7P4dRgH;asW_7[i3B[)V#S6fait"=a82)M>H2`Lp[pgpW4]3uCt;b1A8VGr[7C*;R3.-:;!(^eE&-dO%tgamN3"L+6#nIa;r:PTm,)8DL7D%Z\D.j;s8G,#*:3a`/kI@!p@2VCcUSU=i5oH"0B=GuVt^5*mXgA7$.MY0bp>cnWcGmjIKV>WTm4^=OOgon"D34K&(jTG9uQE5d``p8rIUUYUsK_.[,u"<c$7>+RH:jiUAd%WtL=B9SY`3@O*I]#Zh]P;#?D?XNM:4dE!')h2M347iE?6>M'$NP95;_&#8@Yc/7)1kE=j)u4dQ>rV?&`1KetO<-gOoTLJB<mnNLWnSTkU7ptW6D5Ht:%[`IY9qG(\6\T$!N.g\]Up/FL2240j`\7*-l)Xp5M2o6)5E[b%DRjCBlPr(FAa_Y1VRh%Jgc'7QG5>!kQAie?G!9bSPlo;F'$>Nbk7<tU-Mf@<sq#->$G=_5o$1g@BDM8oRV=)^!EOVE[UQier%AO9WbP2fn*69`WePClWZeZHV-Y#HcTVAK[lGn6\",WV!PK;P$6rIQo?4(#4:W;Ds-=T/=p\f<"8HV#e_Z$(jB80`#Y1KXOJ.A5$[We6m?;K>("`MMOQ:0qsUa"d^YXYri2G'9D<2#<.CP+9pSA;<nQ6\+=\l0ak?AaenKFS$`GiDT]>BDZ2jbhlc9qt9_]%88HcRsDR>/aX&PD([d-UkO!S_G&M."bls:.)5L/Tn<^n!&_]@]^NIB;[Drdh2_;Y'c)of^ks78`brbm9$rtHQ8<5i.6*5%->4"9*mO$=O(+;jn(_tT\1$.c'`BLY#A#6LqfD\6*rXnrb5?HmV_[fOrp9M@(qQkiNO2duI;!pgkK\)GqN-1#rqYISS&$;96=!4h/BrV5E%GjC[Vnn.L6JeM;>5SUruEVjo!"lYnl&9L?gpiV<?fEYj_'.0NTp;@R=$'U0RT$aiDnKYklfuF<KjBhCecTY\+QII-I^=g^?OgGbI)$)M(r\ThU"XA^Edln2S31_UeGB/HsMMC#Q0@(Br8G@pUPjP&n7<09JeEJgneu:SuWjDpt0O=2K9`Y-XET<e)\<_+fDSl;0I;^?4KudI-*nFRd1g:ke<Vu5@+NY(W'\.[=R7hu5`R7kQnMeCO8sO5k6KZ",Yc@-8f_RjtcXG-rX'S14OK'R^MJC*a@#D/ST(#!h\TDCR/O^"LmiXU:qM]FYMkBTk_?u>2LbuMoiEaTRY3V+,n[37$K*G%El\&JgZo^-i\3$h5cX_cC,-ki*O2gnhP4+l%L+gMAq\5kUqW-X>[a9X3[O[7L]JskrCW+uJ6CC\dI'.65q2DfA]"YJ^db/0WA+M$O?hOZ:d+&4SgFIW\D<ZCa`"[jbF.UP7c24LecF?#19q*'FhsV17U3_K/8M@&mLr[.RdS^kV^!6kF^CkX?G$(`P`f)j7U)Q;c2L*aLB3aKCS4'Xsg"u9E05a;,\cFZ*KlQkmpoe[>J2s!hLP:#@Rr=]r4-tTp6.#/p9_i`5-tDQ:#E3DUR0qCp"PN)r:Is'50AE%W!)]Wjq8ho6[t<K@&E`P!XK$2s,[@U?0Rr$I5\"uBJ!3au%T=,8<WBdNMj@/Y2nX+3l`L!CbM?PNXp&6nh.#eWkE`#uXjQdmlm)RL/#Xs@SX<]B7\I/SG3"^>h9?j5W3=72)]T-A\1Rq1#icm9fqs$43.)2>otT(IafC+~>
+]]>
+</markdown>

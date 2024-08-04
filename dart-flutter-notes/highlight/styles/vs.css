@@ -42,3 +42,11 @@ code.hljs{
 .hljs-strong{
     font-weight:700
 }
+
+
+/* https://github.com/wcoder/highlightjs-line-numbers.js/tree/master */
+.hljs-ln-n {
+    color: lightcoral;
+    padding-right: 1rem;
+    border-right: 3px solid #ddd;
+}

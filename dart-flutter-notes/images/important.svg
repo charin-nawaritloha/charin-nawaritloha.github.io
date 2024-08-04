@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" id="svg2" x="0" y="0" version="1.1" viewBox="0 0 40 40">
+  <style>
+    .st3{fill-rule:evenodd;clip-rule:evenodd;fill:#fff}
+  </style>
+  <g id="a5" transform="translate(-152.58531 -164.89677)">
+    <radialGradient id="s1" cx="274.4164" cy="88.0722" r="26.5" gradientTransform="matrix(.7194 0 0 -.7194 -24.0004 249.0373)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b8b8b8"/>
+      <stop offset=".9" stop-color="#b8b8b8"/>
+      <stop offset="1" stop-color="#b8b8b8" stop-opacity="0"/>
+    </radialGradient>
+    <circle id="a4" cx="173.4" cy="185.7" r="19.1" fill="url(#s1)"/>
+    <linearGradient id="circle3822_2_" x1="-49.0323" x2="-51.0489" y1="413.6381" y2="409.3624" gradientTransform="matrix(10.2857 0 0 -10.2857 690.9052 4409.1777)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ebff"/>
+      <stop offset="1" stop-color="#4fa9ff"/>
+    </linearGradient>
+    <circle id="a3" cx="172.4" cy="184.7" r="17.4" fill="url(#circle3822_2_)"/>
+    <linearGradient id="s2" x1="-49.3175" x2="-51.5224" y1="410.1087" y2="411.3313" gradientTransform="matrix(10.2857 0 0 -10.2857 690.9052 4409.1777)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2b79e0"/>
+      <stop offset="1" stop-color="#008df7"/>
+    </linearGradient>
+    <path fill="url(#s2)" d="M172.4 202.7c-4.8 0-9.4-1.9-12.8-5.3-3.4-3.4-5.3-7.9-5.3-12.8s1.9-9.4 5.3-12.8c3.4-3.4 7.9-5.3 12.8-5.3 4.8 0 9.4 1.9 12.8 5.3 3.4 3.4 5.3 7.9 5.3 12.8s-1.9 9.4-5.3 12.8c-3.5 3.4-8 5.3-12.8 5.3zm0-34.8c-9.2 0-16.7 7.5-16.7 16.7s7.5 16.7 16.7 16.7 16.7-7.5 16.7-16.7-7.5-16.7-16.7-16.7z"/>
+    <path id="a2" d="M175.1 193.5c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7c0-1.5 1.2-2.7 2.7-2.7 1.5 0 2.7 1.2 2.7 2.7z" class="st3"/>
+    <path id="a1" d="M175.4 173.9h-6l1 14h4l1-14z" class="st3"/>
+  </g>
+</svg>
