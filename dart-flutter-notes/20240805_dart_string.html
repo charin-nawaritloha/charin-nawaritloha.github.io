@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: String เบื้องต้น</title>
+	<meta name="tags" contents="[tags]">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<link rel="stylesheet" href="highlight/styles/vs.css">
+	<script src="highlight/highlight.js"></script>
+	<script src="highlight/highlightjs-line-numbers.min.js"></script>
+	
+	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: String เบื้องต้น</h1>
+<p><img src="images/20240805/20240805_0000_cover.svg" class="u-max-full-width" /></p>
+<p>การจัดการ String หรือข้อมูลประเภทข้อความต่าง ๆ ที่อยู่ใน dart:core → String class ตัว Dart มีรูปแบบการจัดการที่ค่อนข้างยืดหยุ่น มีรูปแบบในการประกาศได้หลายแบบ ช่วยอำนวยความสะดวกให้กับผู้ที่เขียนโปรแกรมเป็นอย่างดี</p>
+<p>การเก็บข้อมูล String จะเป็นการเอาข้อมูลตัวอักษรแต่ละตัวมาเรียงกันตามการเข้ารหัสแบบ <a target="_blank" href="https://en.wikipedia.org/wiki/UTF-16" title="UTF-16 - Wikipedia">UTF-16</a> ซึ่งจะไม่เหมือนกับที่นิยมใช้กันบนเว็บไซต์หรือ source code โปรแกรมที่ใช้ <a target="_blank" href="https://en.wikipedia.org/wiki/UTF-8" title="UTF-8 - Wikipedia">UTF-8</a></p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/>String class เป็น immutable นั้นคือ ไม่สามารถแก้ไขข้อมูลได้หลังจากสร้าง object เรียบร้อยแล้ว หากมีการแก้ไขข้อมูลใน string ข้อมูลใหม่ที่แก้ไขจะถูกสร้างเป็น object ตัวใหม่ โดย string ตัวเดิมจะถูกปล่อยไว้อย่างนั้น รอจนตัว Garbage Collection มาเก็บกวาดภายหลัง  ดังนั้นโปรดระวังการเขียนโปรแกรมที่มีการสร้างข้อมูลใหม่ที่ซ้ำซ้อนเป็นจำนวนมาก เพราะจะทำให้ประสิทธิภาพของแอปแย่ลง</div></div>
+<h2>การประกาศตัวแปรแบบ String</h2>
+<p>ข้อมูลที่เป็น String สามารถเขียนได้หลายแบบ โดยจะคล้ายกับภาษาอื่น ๆ ตัว String จะอยู่ในเครื่องหมาย <code>'</code> หรือ <code>&quot;</code></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ประกาศ String แบบบรรทัดเดียว</h3>
+<p>การประกาศแบบข้อมูลอยู่ในบรรทัดเดียวก็ไม่มีอะไร ตรงไปตรงมา เริ่มต้นด้วย <code>'</code> ก็จบด้วย <code>'</code> หรือเริ่มต้นด้วย <code>&quot;</code> ก็จบด้วย <code>&quot;</code> แค่นั้น จะมีตัวอักษรพิเศษที่จะใช้สำหรับ escape string คือ <code>\</code></p>
+<pre><code class="language-dart">'Single quotes';
+&quot;Double quotes&quot;;
+'Double quotes in &quot;single&quot; quotes';
+&quot;Single quotes in 'double' quotes&quot;;
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ประกาศ String แบบหลายบรรทัด</h3>
+<p>ในการประกาศข้อมูล String แบบครั้งเดียวมีหลายบรรทัด ให้ใช้เครื่องหมาย <code>'''</code> หรือ <code>&quot;&quot;&quot;</code> ในการเริ่มต้นและสิ้นสุดข้อความ โดยตัวอักษรตัวแรกจะอยู่ต่อเครื่องหมายทันทีหรือขึ้นบรรทัดก็ได้ มีความหมายเหมือนกัน</p>
+<pre><code class="language-dart">void main() {
+  var test1 = '''A
+multiline
+string''';
+
+  var test2 = &quot;&quot;&quot;
+Another
+multiline
+string&quot;&quot;&quot;;
+
+  print(test1);
+  print(&quot;------------&quot;);
+  print(test2);
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>A<br/>
+multiline<br/>
+string<br/>
+------------<br/>
+Another<br/>
+multiline<br/>
+string</p>
+</blockquote>
+<p>การประกาศแบบหลายบรรทัดตามตัวอย่างข้างบนจะมีค่าเท่ากับการใส่ <code>\n</code> เป็น escape string ที่แทนการขึ้นบรรทัดใหม่ดังนี้</p>
+<pre><code class="language-dart">
+void main() {
+  var test1 = 'A\nmultiline\nstring';
+  var test2 = &quot;Another\nmultiline\nstring&quot;;
+
+  print(test1);
+  print(&quot;------------&quot;);
+  print(test2);
+}
+
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ประกาศ String แบบตัดเป็นข้อความยาว ๆ เป็น หลาย ๆ ชิ้น เพื่อไม่ให้เกินขอบขวา</h3>
+<p>หากข้อความที่ต้องการ มีความยาวเกินไปจนทะลุขอบขวาของจอ  สามารถตัดข้อความออกแบบส่วน ๆ แล้วแบ่งไปอยู่บรรทัดถัดไปได้ โดยให้ทำการปิดข้อความตามปกติ แล้วขึ้นข้อความที่ต่อกันในบรรทัดถัดไป โดยไม่ใส่ <code>;</code> ที่จุดสิ้นสุดของแต่ละบรรทัด เพื่อบอก Dart ว่าเป็นข้อความต่อกัน และปิดบรรทัดสุดท้ายด้วย <code>;</code> ตามปกติ การทำแบบนี้ตัว Dart จะเอาข้อความมาต่อกันให้อัตโนมัติ</p>
+<pre><code class="language-dart">void main() {
+  var test1 = 'ดาร์ต (Dart) เป็นภาษาโปรแกรมที่ออกแบบโดย Lars Bak และ Kasper Lund '
+      'และพัฒนาโดยกูเกิล สามารถใช้ในการพัฒนาโปรแกรมประยุกต์บนเว็บ และ แอปมือถือ '
+      'ตลอดจนแอปพลิเคชันเซิร์ฟเวอร์ และ แอปพลิเคชันเดสก์ท็อป';
+  print(test1);
+}
+</code></pre>
+<p>หรือใช้เครื่องหมาย <code>+</code> เพื่อเชื่อมกันข้อความก็ได้เช่นกัน (แต่อาจโดนตัว editor แจ้งแนะนำให้ทำเป็น interpolation หรือเอาเครื่องหมาย <code>+</code> ออกไป เพราะไม่จำเป็น)</p>
+<pre><code class="language-dart">void main() {
+  var test1 = 'ดาร์ต (Dart) เป็นภาษาโปรแกรมที่ออกแบบโดย Lars Bak และ Kasper Lund ' +
+      'และพัฒนาโดยกูเกิล สามารถใช้ในการพัฒนาโปรแกรมประยุกต์บนเว็บ และ แอปมือถือ ' +
+      'ตลอดจนแอปพลิเคชันเซิร์ฟเวอร์ และ แอปพลิเคชันเดสก์ท็อป';
+  print(test1);
+}
+</code></pre>
+<p>การประกาศแบบนี้เพื่อเพิ่มความสะดวกในการเขียนโปรแกรม หากใช้หลักการเดียวกัน แต่ไม่ขึ้นบรรทัดใหม่ ก็จะเหมือนเอาข้อความต่อกันแต่เขียนแยกกัน</p>
+<pre><code class="language-dart">void main() {
+  print('I don\'t want to go &quot;CafeCat&quot;.');
+  print(&quot;I don't &quot; 'want to go &quot;CafeCat&quot;.');
+}
+</code></pre>
+<p>ผลที่ได้จะเหมือนกันทั้ง 2 คำสั่ง</p>
+<blockquote>
+<p>I don't want to go &quot;CafeCat&quot;.<br/>
+I don't want to go &quot;CafeCat&quot;.</p>
+</blockquote>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/>ควรใช้การประกาศแบบนี้เมื่อจำเป็นจริง ๆ และไม่ทำให้การกลับมาแก้ไขนั้นอ่านยาก หรือทำให้ลำบากในการทำความเข้าใจ</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>escape string การใช้อักขระพิเศษในข้อความ</h2>
+<p>การ escape string ก็คล้ายกับภาษาอื่น ๆ คือใช้ <code>\</code> นำหน้าอักขระที่ต้องการ escape เช่น</p>
+<pre><code class="language-dart">
+  var test1 = 'I don\'t want to sleep'; // OK  escape ' inside string
+  var test2 = 'I don't want to sleep';  // compile error → Error: String starting with ' must end with '
+
+</code></pre>
+<p>นอกจากนี้ยังมีอักขระพิเศษต่าง ๆ ที่สามารถใช้งานในข้อความ string ได้ ที่ใช้กันบ่อย ๆ เช่น</p>
+<ul>
+<li><code>\t</code> → 	Tab</li>
+<li><code>\n</code> → 	Newline</li>
+<li><code>\r</code> → 	Carriage return</li>
+<li><code>\&quot;</code> → 	Double quote</li>
+<li><code>\'</code> → 	Single quote</li>
+<li><code>\\</code> → 	Backslash</li>
+<li><code>\xnn</code> →  ตัวอักษรตามตาราง Ascii แบบเลขฐาน 16 ค่า 00-FF (0 ถึง 255 ฐาน 10)</li>
+<li><code>\unnnn</code> → ตัวอักษร Unicode ลำดับที่ nnnn โดย n แทนเลขฐาน 16 เช่น \u263A = ☺</li>
+<li><code>\u{nnnnn...}</code> → ตัวอักษร Unicode ลำดับที่ nnnnn... โดย n แทนเลขฐาน 16 เช่น \u{1F436} = 🐶</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การสร้าง raw string</h2>
+<p>raw string เป็นการระบุว่าข้อความจะไม่ทำการ escape string ตัวอักษร <code>\</code> จะมีผลเหมือนตัวอักษรปกติ วิธีการประกาศ raw string ให้ใส่ <code>r</code> ไว้ด้านหน้าข้อความ ก่อน <code>&quot;</code> หรือ <code>'</code></p>
+<pre><code class="language-dart">void main() {
+  var test1 = r&quot;this is raw string → \n doesn't covert to newline&quot;;
+  print(test1);
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>this is raw string → \n doesn't covert to newline</p>
+</blockquote>
+<p>การใช้ raw string ช่วยให้ผู้เขียนโปรแกรมไม่ต้องมาคอยใส่ <code>\\</code> เพื่อให้แสดง <code>\</code> ได้ถูกต้องเช่น</p>
+<pre><code class="language-dart">
+  var test1 = r&quot;D:\My Data\hello.text&quot;;
+  var test2 = &quot;D:\\My Data\\hello.text&quot;; // same as test1
+
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/>ไม่ใช่แค่เครื่องหมาย `\` ที่จะถูกละเว้น การใช้ interpolation เพื่อแสดงค่าตัวแปรในก็จะถูกละเว้นด้วย โปรดใช้ raw string อย่างระมัดระวัง</div></div>
+<p>ข้อจำกัดของ raw string เนื่องจากมันไม่สามารถ escape string อะไรได้เลย ทำให้ไม่สามารถใช้เครื่องหมาย <code>&quot;</code> ในข้อความ <code>&quot;text&quot;</code> หรือ <code>'</code> ใน <code>'text'</code> ได้</p>
+<pre><code class="language-dart">  print(r&quot;I don't want to go anywhere&quot;); // OK
+  print('I don\'t want to go anywhere'); // OK
+
+  print(r'I don't want to go anywhere'); // compile error
+  print(r'I don\'t want to go anywhere'); // compile error
+</code></pre>
+<h2>String interpolation การประมวลผลประโยคภาษา Dart ที่อยู่ใน String</h2>
+<p>ความสามารถที่ภาษาใหม่ ๆ มีกันคือ ผู้เขียนโปรแกรมสามารถใส่คำสั่งหรือตัวแปรที่จะให้ประมวลผลด้วย <code>.toString()</code> ใส่ไว้ใน string ที่ต้องการได้เลย</p>
+<pre><code class="language-dart">void main() {
+  var num1 = 100, num2 = 200;
+  print(num2.toString() + ' is twice as much as ' + num1.toString() + &quot;.&quot;);
+  print('$num2 is twice as much as $num1.');
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>200 is twice as much as 100.<br/>
+200 is twice as much as 100.</p>
+</blockquote>
+<p>ในตัวอย่าง <code>print()</code> ตัวที่สองใช้วิธี interpolation โดยการใส่ <code>num1</code> และ <code>num2</code> เข้าไปใน string ได้เลย</p>
+<p>การระบุว่าตัวไหนเป็นคำสั่งหรือตัวแปรใน Dart ที่จะเอาไปแทรกในข้อความ ให้ใส่ <code>$</code> ไว้ด้านหน้าตัวแปรที่จะแทรก แต่หากเป็นประโยคคำสั่งจะใช้ <code>${...}</code> ครอบคำสั่งเอาไว้</p>
+<pre><code class="language-dart">void main() {
+  var num1 = 100, num2 = 200;
+  print('$num2 is twice as much as $num1.');
+  print('$num2 + $num1 = ${num2 + num1}');
+  print('$num2 in heximal number is ${num2.toRadixString(16).toUpperCase()}');
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>200 is twice as much as 100.<br/>
+200 + 100 = 300<br/>
+200 in heximal number is C8</p>
+</blockquote>
+<p>เนื่องจากการใช้ String interpolation จะทำการเรียกใช้ <code>.toString()</code> ให้อัตโนมัติหากไม่ระบุ ดังนั้นอาจเกิด bug ขึ้นโดยไม่ตั้งใจได้ เช่น</p>
+<pre><code class="language-dart">void main() {
+  String? userName;
+  print('Your username is ' + userName); // Compile error: The argument type 'String?' can't be assigned to the parameter type 'String'.
+  print('Your username is $userName'); // output → Your username is null
+}
+</code></pre>
+<p>จะเห็นว่าในแถวที่ 4 จะพิมพ์คำว่า null ออกมา เพราะ <code>userName</code> ยังไม่ได้กำหนดค่าใด ๆ จึงมีค่าเริ่มต้นเป็น <code>null</code> และเมื่อทำการ interpolation จะกลายเป็นการเรียกคำสั่ง <code>null.toString()</code> ทำให้พิมพ์คำว่า null ในข้อความให้ผู้ใช้งานเห็น ซึ่งเป็นเรื่องที่ไม่สมเหตุสมผล</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/>การใช้ String interpolation จะมีประโยชน์ก็ต่อเมื่อ ผู้ที่เขียนหรือแก้ไขโปรแกรม สามารถเข้าใจและนึกถึงผลลัพธ์ของข้อความที่จะออกมาได้ในเวลาอันรวดเร็ว แต่ถ้าหากทำแล้วมันดูยากและซับซ้อนกว่าเดิม การใช้ `+` ในการเชื่อมข้อความเข้าด้วยกันอาจเป็นทางเลือกที่ดีกว่า</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การใช้ operator กับ String</h2>
+<p>String class รองรับตัว operator 4 ตัวด้วยกันคือ <code>+</code> <code>*</code> <code>==</code> <code>[]</code></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การเชื่อม string เข้าด้วยกันด้วย <code>+</code></h3>
+<p>ในการเชื่อม string มากกว่า 1 ชิ้นเข้ารวมกัน สามารถใช้ <code>+</code> ในการเชื่อมได้เลย</p>
+<pre><code class="language-dart">void main() {
+  String text1 = &quot;My name is&quot;;
+  String text2 = &quot; David&quot;;
+  String result = text1 + text2;
+  print(result); // output → My name is David
+}
+</code></pre>
+<p>ข้อควรระวัง อย่าใช้ <code>+</code> เพื่อสร้างข้อความที่การใช้แล้วทิ้งจำนวนมาก เพราะจะทำให้โปรแกรมช้าลง และใช้หน่วยความจำมากโดยไม่จำเป็น เช่น เขียนโปรแกรมเพื่อแสดงตัวเลขจำนวนคี่ที่อยู่ในช่วง 1 ถึง 100 แบบตัวอย่างต่อไปนี้</p>
+<pre><code class="language-dart">void main() {
+  String text1 = &quot;Odd number from 1 to 100 are&quot;;
+
+  for (var i = 1; i &lt;= 100; ++i) {
+    if (i % 2 != 0) {
+      text1 = text1 + &quot; &quot; +$i;
+    }
+  }
+
+  print(text1); // → Odd number from 1 to 100 are 1 3 5 7 9 11 13 15 17 19 21 ... 93 95 97 99
+}
+</code></pre>
+<p>จากตัวอย่างจะเป็นการสร้างข้อความใหม่ ที่เกิดจากข้อความเก่า ตามด้วยตัวเลขคี่ตัวใหม่ในแต่ละรอบของการวนลูป <code>for()</code> เนื่องจากตัว String class เป็น immutable ทำให้โปรแกรมข้างต้นสร้างข้อความใหม่ขึ้นมาในแต่ละรอบดังนี้</p>
+<ul>
+<li>Odd number from 1 to 100 are 1</li>
+<li>Odd number from 1 to 100 are 1 3</li>
+<li>Odd number from 1 to 100 are 1 3 5</li>
+<li>Odd number from 1 to 100 are 1 3 5 7</li>
+<li>Odd number from 1 to 100 are 1 3 5 7 9</li>
+<li>...</li>
+<li>Odd number from 1 to 100 are 1 3 5 7 9 ... 99</li>
+</ul>
+<p>นี่คือข้อความที่สร้างขึ้นทั้งหมด และทิ้งไว้ในหน่วยความจำในแต่ละรอบ และหากเขียนแอปที่ใช้งานจริงเป็นการดึงข้อมูลจากหลาย ๆ ไฟล์มาต่อกัน การเขียนแบบนี้จะทำให้ประสิทธิภาพของแอปแย่ลงมาก ๆ ส่วนวิธีแก้ไขให้เปลี่ยนไปใช้  <a target="_blank" href="https://api.dart.dev/stable/dart-core/StringBuffer-class.html" title="StringBuffer class - dart:core library - Dart API">StringBuffer class</a> แทน</p>
+<pre><code class="language-dart">void main() {
+  StringBuffer buffer = StringBuffer();
+  buffer.write(&quot;Odd number from 1 to 100 are &quot;);
+
+  for (var i = 1; i &lt;= 100; ++i) {
+    if (i % 2 != 0) {
+      buffer.write(&quot; $i&quot;);
+    }
+  }
+
+  print(buffer); // → Odd number from 1 to 100 are 1 3 5 7 9 11 13 15 17 19 21 ... 93 95 97 99
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การทำซ้ำข้อความด้วย <code>*</code></h3>
+<p>ในการทำซ้ำข้อความตามจำนวนครั้งที่กำหนด สามารถใช้ <code>*</code> กับตัวเลขจำนวนที่การทำซ้ำดังนี้</p>
+<pre><code class="language-dart">void main() {
+  String oneTime = 'time ';
+  String threeTime = oneTime * 3;
+  print(threeTime); // output → time time time 
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเปรียบเทียบข้อความที่เหมือนกันด้วย <code>==</code></h3>
+<p>การเปรียบเทียบข้อความจากสองแหล่งมีตัวอักษรตามลำดับตรงกันทุกลำดับหรือไม่ สามารถใช้ <code>==</code> เพื่อเปรียบเทียบได้ โดยผลจะคืนค่าเป็น <code>true</code> หากข้อความที่เปรียบเทียบเหมือนกันทุกตัวอักษร</p>
+<p>การเปรียบเทียบสามารถเปรียบระหว่างตัวแปร ข้อความ และยังสามารถใช้ <code>.hashCode</code> ในการเปรียบเทียบก็ได้ โดย <code>.hashCode</code> ของ string ที่มีลำดับตัวอักษรเหมือนกันจะมีค่าตัวเลขเท่ากัน</p>
+<pre><code class="language-dart">void main() {
+  String text1 = &quot;text1&quot;;
+  String text2 = &quot;text2&quot;;
+
+  print(text1 == text2); // false
+  print(text1 == &quot;text1&quot;); // true
+  print(text1.hashCode == &quot;text1&quot;.hashCode); //true
+}
+</code></pre>
+<h3>การเข้าถึงตัวอักษรในลำดับที่ต้องการด้วย <code>[]</code></h3>
+<p>ในการเข้าถึงตัวอักษรในลำดับที่ต้องการในข้อความ สามารถใช้ <code>[]</code> เพื่อระบุตำแหน่ง index ที่ต้องการได้ โดยตัวอักษรตัวแรก index=<code>0</code> ตัวสุดท้ายคือ index=<code>.length - 1</code></p>
+<pre><code class="language-dart">void main() {
+  String text1 = &quot;01234&quot;; // text1.length → 5
+  print(text1[0]);
+  print(text1[1]);
+  print(text1[2]);
+  print(text1[3]);
+  print(text1[4]);
+  print(text1[5]);
+}
+</code></pre>
+<p>ผลที่ได้คือ</p>
+<blockquote>
+<p>0<br/>
+1<br/>
+2<br/>
+3<br/>
+4<br/>
+<font color="red">Unhandled exception:<br/>
+RangeError (index): Invalid value: Not in inclusive range 0..4: 5<br/>
+#0      _StringBase.[] (dart:core-patch/string_patch.dart:274:41)<br/>
+#1      main (file:///D:/My%20Data/dart/dart_tester/bin/dart_string.dart:8:14) dart_string.dart:8<br/>
+#2      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:297:19)<br/>
+#3      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:184:12)</font></p>
+</blockquote>
+<p>จากตัวอย่างหากอ้างถึงตำแหน่งที่เกินตัวอักษรลำดับสุดท้าย จะเกิด RangeError ดังนั้นการใช้งานควรตรวจสอบเสมอว่าค่าตำแหน่งที่อ้าง เท่ากับหรือมากกว่า <code>.length</code> หรือไม่</p>
+<h2>อ่านเพิ่มที่ไหนต่อ</h2>
+<ul>
+<li>ตัวอย่างการใช้ String เบื้องต้น <a target="_blank" href="https://dart.dev/language/built-in-types#strings" title="Built-in types | Dart">dart.dev</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String-class.html" title="String class - dart:core library - Dart API">String Class API</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/StringBuffer-class.html" title="StringBuffer class - dart:core library - Dart API">StringBuffer</a></li>
+</ul>
+<p>นอกจากนี้ยังมีส่วนที่นำเอา String ไปใช้งานในส่วนอื่น ๆ อีก</p>
+<ul>
+<li><a target="_blank" href="https://dart.dev/libraries/dart-core#strings-and-regular-expressions" title="title">Strings and regular expressions</a> ที่ใช้สำหรับค้นหาข้อความที่ตรงกับรูปแบบที่กำหนด และแทนที่ด้วยข้อความใหม่ที่ต้องการได้ ช่วยลดความซับซ้อนในการเขียนโปรแกรมได้มากขึ้น</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.4.4/dart-core/RegExp-class.html">RegExp class</a></li>
+<li>การ convert ข้อมูล string เพื่อนำไปใช้งานอื่น ๆ ใน <a target="_blank" href="https://api.dart.dev/stable/3.4.4/dart-convert/dart-convert-library.html" title="dart:convert library - Dart API">dart:convert library</a> เช่น เข้ารหัสแบบ base64 JSON หรือแปลง UTF-16 ↔ UTF-8</li>
+</ul>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<![CDATA[
+<~+,^C)z!".OEBl=q\QCh6/rkf-(!MsHuOck)_N]_:IADs*$JK.cC/0etnAZ7Uf\$ip5"'u)'/OYJ[%tfFD8+s`$=V*E"6U6#EU%[(Lq$$X/G3d]+Y7<Ii**CDhJ^pj)j412S^K:@p>RZd3*^7`00Ns4fdHA42_d<)XhU.\'mU<<2dHb]1o?QR@kf@PC?+r'pX]DL_r)^)Vl#gA*\pM-YB!;*EfA4k,HG8f'I/bEdG"9fggZopR])02/,CKA/0)M9SmK:mM^"5E_a`\8L9mkfJhU*-i*P]Y'_d<'DTBp6tGBC=Gh16p1:*WLNr:It#'c;p2OJ]hViF!_bScNL'*W\7[O;rC^lOOB372B32bO6jH?QceKi+BH;j%k!W/p?"6^DK:3(/Pj1/V!..Xn1fP!m_Eh0DN1p3:sfVE.nC!mBG2jM:7<R'ST>&dOf;"i2Y+BdLL0b@B]PE7,sX0(AXBR6(jk>3KNT!i:u"HKQ7n+4R*r(i1bH3lC`*umnGRr]fXmDTh>eSa_WGacnj,W%e83u-$crOp`,(e9gL;NB-/k$]C#07pk4!/NuJEF44m9cN@q?ZGn1GG3QJ-`M9DN=r6Aj?e<R;(/6bd1Vl!Qq\K628Y-DRU<8qG6MZ9+X]q?YN:;XcE5,E8_Fhd3aIm@[+'HYg;cf-pU+\4gI]$k;iWH+ogI>*%$`?W)eNd(eUmbg24ndtTW?Qjm4VOS!-geJar)KCsls57rJOirRZT,D8<B>j5aR%$VAnp?:)#o,_8]%YG]V%s0gb]=qnONJ1!**&N]?cWoCi80fn++8uomWcgnk-F18"CC#XTAohrP=*"TDlf(P8NdSaQUA`bqtTbJ#XL2+&-A;t#"""f/QIbgIK)uX>+^U./!<d(4q=j,@N\ci9CiFW?BE!(YPTRM7sFhMhn2:cXOS@8QqC0sTg[%cUh)uDSq&4P`//YXM>^49Z4niG\.H,QXHA3V"GDK:;!BBb[tXY]AL0?6!.=Cn=u.OGr`4j4"4bX1!6*qOB12?a/Yio&OPR+EgIq3YW7Y1p`D%QFG8.l;"CXL6KjWbM`1]<O]lV<!29f&^]*H%;2u"Nbp)&"3('*7NTi,&iPUtYK%/]ne:o(^D''TsDTstea0(acHbc)(MjJhg)bMCas'PgB2a9jNbMGj\dBV?pFn2L:>&5=@BajC)cFD33V`uICletlc>Cp9Vo3+!3]jgnkH6+p5&JQe(<)l:*=VQCRI4OQ,RCIRfh5f\FeWO__VT#a&!B01_]PH:-E@_i;)8sAWKeEnD^XWo[f-XoKee5pDW[M&2k6k==.$)ZTJR%0M]ll9c[;ULI$,tHFqd]p?a'#uVJfuF0QXRljnpa`ddp(mL1X6HP'bQ;`YJ\]]'Yf:^/Wt\ifYs(3(;Qn]_XZKG[.#aHr%0!p\B.PX,*??S7N8%":V0$m&UhmD'(dTUi;'e9IR##r92fVr&cbpV_%VZRTF!q:XEhN*[hb;6q=dLPs*B+si'PC>I$04EMT>hFi>BW$9KTpN/YuuM9-S,BPIjIfQjXpXjhr=r=dFF</W5.6,G"45XF80_4*Yj9M,gBN,*&gj3oF$@X$?.oOc4BS<a>//qgRXkY7n9`$@1u[o0H(mc>GEDCf7F,\Q=`!VJ9&2JIWT,.h9*T8(pVI#_)17/-Z%L^)A\uF.ZKIYO5au0-([E!;Fq@%9>W(r__oH[jpe.Ynm@6f_%h44m84A'&A<QJ24?o?Is2CJ^U]S&SJsQo)@G";?r=]&MQ0D=@)*2gMuOt:+V#*\4DM`1-hsC@:;4o4?M*;krBQ@jW`J`6?$*&(TtVAo:$^[PL=Fq*?j`#_dPNL,C(#JD%n./e+Heh$(hoKn7Zu]T3lEA+aj^&e+Yui+6OW!mU:IZXkmb6e_1r,$o$G:I`$,YbHWl5>o2A5GgkF9f(2\54D!i]-'C?<8>#;;DRCnVq*P+rH<@[_''/sq^`lc^0fi/UP45<cdKd\m6H07Qafq97cIXht!rsh&DV^cR/9hOD"b$H8#+JGS4guZiYl:eI(/pOe@aN]2+!XsYLW^#.)lQ>)Im9]OP$)taW"-71q@R4[mIO:o%)nH>J84$(AXb1=b$16D9V<7ac%1.=H!L&%Z%h?(+)]fQ!<m3l'Sq3hgNHl<@)WV.A0qf@3DVKLt7]>l(Tf4F[S04bj[TS/=\d^sgh?//&qEN"1GEa?K>Q@/#eRE6MgD*?=lX"cS`]/5'@,dQ`A-;aJLYm4Kif?Bg_HXihq,+pLJoltunAf_%KJJ=As&UO;obdGpB8#4IZ,/QCO]nRIH_")P;HgN34/oh6/^?)8/5DVna,]5Cc/e;=DGf5V(+RuW598_AD+P>,O*chh?7?!HSiZ;c0j=?E*R_D0!^;LNpjji\9Mg$?-[U@_iBtb#4\AQg<$S8M2nZCZ;0TFrk6R"fYtG.p?7%@B=ufjaK8R:]Lhm[i[&L!X`3NK$bi2%KBN'1.*UN>;rqk+Zf1$T6b#kqb[fREMZTR&2-("l],\I`=B?dAPm_j$I0T?&1EA^Gf^ZK=C]t[4c*o9UgHHa:PO,9?3SGTVio)Wi:'#Do32*.bm1$:<E@79F"/,)gneZ`?eND"]_nWa?XDHCOf:ooY#'^7^)\'*jl%*P!1)+TVH%'Bh4#$DAX0pF9n=4r9M.oj`H2hQP%)3gfL^\;R_@I!#5pVfHO]-$65&58"Tfh8,kkJEhQ?FL!T$\rbp$Tj?.n6D6qoU_Ie3u/.k&fGQ0=_tq,O\1":d?W1C("Lq%G8,Hh</D5<019kpLWUq#;6Eg;b2$:Flm#[U'!@lO;"tl\$u,F"GMX;[&_R9@Xf%;3Hc39Z7o1DZN2Oh+4iD9['[KAka$2*L^MXo34<b/2F*"/EW#8mn$QW:T,.0#(LkMU2*WA]9N3/Ak_UK:4rs)@6Q6D48YfUuXa:(q1D,OHAn7`g2l<;hL^lfs<YbpDsrhM&6dO[pErbt$E<hKl%m5+n\2<A`hTMRKI*KjLS:<=.aM9uW^_F#uT#jJOkq=H=rj66rV.e4^e90:U>,h,h/1QRZ[K:@Pj@TH!prPQ[lP%]Y^_gCa]LcY+H6oJ?WOsK+6c@fcr,SDb'ng+b)M`55CL.:UMRmm/8Xe>2eg'Z7Cd<m1%b<o\DR6(@p'$]Ug7Mq:J'&W"=*mgM^>+p*HFJ'/Ee]E$lJ[$\tQ1>$7j-(jAo]AS1*2[ln.B*(D"eS2V-q9;MB?R<&!'UY0;+H]Q#5s(8UOpJYoVn8MYQ-n9o3WขC=;d;Q8IN2'Comr;u2#e_Z^b3HZ8Vi4m&*dgp?QeZ;M:K'SlQo4Q8/emnGR#c*s12>icYVFU+IQ*,P>,m5M'%&9Egkjs8QBuE%B:cEi5k1Z@;W.>)?kn,)7U^j1S@7qba`t[XlHjj(#Z3j:&&8=2(>T_Nm8kRc/QpR0<=?5%d7aR)sb(Xm]^;^d"c]O;/-*K0XUhrEOi>hcS[B)DAV=uBMBd$Yt-`F&NTo-rKD,KCC,l,$o2rkj.7?:6J:KJ7ACiOnhR`c.2?(+(q1$#c,1A@"cc7cnY'.sJlYdhPRXgjP!)d1:Bq-TY!e/aO?>be14.YAiYdu*6Tl'!"B]Vi%SlcN<_p?3=[816(-fiM5GJ^.L^LM6o-Ct.Sac*KF%q@7'CC6,2U&4T4>W58!;R$DXE;c;\e>IJ%lQ#%pQV'>Pf5Hq!ENeq%YV<f\`WGd?U,QI=l#;]ntO*e:9l(Z&&iF?+<pZrPoob*F\/#;5SW0_db11:q@bb-4U;Xue:6$2_p$;4K8>ah5dHplN"XSS,C=Q5^CmJt-QFbUYbArRP\LDj/r[!$uE<@kb<eU8`RFV43c<HXdX%k>`Y^L11Z69-1s/&.lmT]%Z$5jo)Oq9fJIY)PQ0+SM#X;d&j2qU;=.kf<j%[>S%5Ag*@M3@\/_YVS0iWV!1<AHt9ek,*f[^6QlqK621a?KFMg<iu?GJ*(d"\lpC@QT#N_@=nAZ.:h&J#0Q\jG%67+/].]dB(dfVN0J5U"Kp]&If]k=n48[ZT<;5.PLQU4*SDk+6],p^M12B2JB.!*b+mg[d&>Z$b&&t*_pEY/Q2g#oY*6(7DjZgt?O%33ZI9otcS6Ai7Ba8&WHMS#I+2+Z-H-@;Cpl:/C_CdI"72-UMSJGs[9696A[;m-`Z+skU<I,<'FV(*F7E]RZpFZ//`AoC`HA,Z[EN%`<Xt4OIj&G7a%TP&$1SK@i5@5#^jk88oaN-J@5l'RTZ-dZZ%T;,L/kPS_k7n(OK;bM2."Da:Y+*!EZn!,f_Fhh1"2''K8/RN$/P^k0N5(l/FEW2_AQ3p=((DTL1)1;8;`;l@^keP=6HsKMXge)@mYq(3m*l":E=YNFORdi/QcbGg3F]VGO#P<VoVQe?(<#jU%%m_%Uk7Nr>sZA9AU%W)'t`$NS=cRLq)[k$C.8F$EN4h[7]T?itVbaZJ8btgl/ec@sE$F1,K&M*%c/n8AjPF27]9AXY<ibP$jPd/29VY.n,Pi:gci[-uN[5m0rqZVf1(&[:kAfK]8hid"N'U<CYq2<=^daal]k>0CTg"6p`<CiOBFj:QilY4?X!n"Z[AQ.X[V1:tjgmjAB'/lK\Sk/SR%YM?&pF<m=jZ8[>UD%VqU>k,k#b)(+nF:kt:7pUg,e\B5DW!Xb.1m"#$G#k+sLHk*h/<Quu/]Z<M8,e$)D%i'NH$eeT8Tl!cZfRfhq?5#B&QkCc^.C"4*dFZNHV00'=&]3J,ECLGpbd-k4-hb*f5S>=f9>,u=g!P@MV)(Mck:noupa1*B>&bFGXp<6tMc`^Md_^R0a[>/_ls\q?4@5(4")9^K=&t*ZgsZEt\l_Wdd[Uo1FJan2od^b?,r]/KV4O2'j]*NI$&CVQ2ns.YH$Cd.hXAXY&E6>[h4e'EJW*&hF7VnU<fQN!jcIS9371q>I([I^!"2.n)G9m]ehu#AFjbUD?)k8"cS8(pF74;ED1_f,=oF=@e/&nc:qqC3'U/5ZTb0.2`Z"O5-L,KjJ,d(0FXDu/W#;G/cE5:m>/sQ@[4rr+*6W,^Vo5>Ygl*etHP<4?'Hog6*i"C-0t7uWNHY\%gT:l"j<PD51U/5o#=hkY98Q6>R^T/#4$bW$Ad6g;r)e*'rN<DN"c\_g2+57_Fbh!Oll)?XJ8n@N\M#^k>!(4(NL`1>D'qANk1&S!(@=5tRBIJ\em/hmV=uJ6eJ1i:TQPtJ^/60hNSd!m;)pW(.6+`nDDAn,Kqe?EQcBV4r9lS6b3c^-`2c_p<[qH>8=1lS^D\IR`]^np]5qU.KK%;\3su]8TpuoA]F&-lr!oU_[0<MoB$b<B?7A/H-;K5,`V\EfcY^#*rWZ/]E7Wu1;Zn8n?j9BCBpaNV%;I[q3si=D:n*+%)Xq:og^MDtKXoPc2eRAVg5G6Og&@>mLZ'kl/r5r@*E>h8+m>ic3`;3*9J;[d0(l@0EAcoc0JW678[\9c[8G?q,'jL+na@ScrG%i.Qa"7M[4YYn\/RVjI%Zg+oR4O8iSU`pg,7\-0.qX]9dU+,iSYb21JAlM3F"3s4`!?Mj#noXb4#K9kKN1"&G7=Yqstq:FlJodNr6QN94^N"BV@Rd2.l&sYSJWL;7ZskR9;t$U0,jG,#Ne&.IuaK(q,[bn(uFA4CV[=iB-uRp$LB0lLuk<cN;k42=R)?+fDpN$_V]QN82/7;pfAKpjiH;,5V$-UYLl\b<fsVe\6?p,sle9+/oOs_@"n-PpX+$Q(eDLikHl:(M'E,a@R@S=ij]K:i`Ie8b1u2<k+@sa\A-:@Gp`!>iOZ7:aI3Rr!2I`3VAR1ZXC/#M1DCH=1OoU)&k)*[t'm$?U<Y>9>ZN^VD*D?<qQ@8[&rA`a?Y[_A:dmM:hShuO#&Q@,hn',0W[$M%G@t<o)Map:\$t<GQ*?$"!(=pL>UN@!tDb"@NUB+N0a][r,:8->uhT8?E9*)^^Me_;*>m8"_Z$Y+]afmCd''5Y(uSnB`=Eb69S1F)GH3A@A.RgRcnCc8j<l^"l2!-bnD*p**?rgeW/m4,1*@PXpPlkSi$#FXpr8M''!<4YBIX!o:?>D1'XR>U%+o=!U"&7e?bsqlLZSd!tVUQR,[,oY%)pEqD7km<5jX\NRO:_U]u39nqe<'l4(D<VA=ifJ1Wanb"@bu>_nln+1irXMfgCS=!JWilIm(6X"HrrV,Znb[gLF%G:hU8F[tjgnY%dPmXaAM5OsC:p@W2@-G7H7+hb#_Xd"+BaJhTU:>JqmNDS&+\)A_ikVfD(Ysk>Z:it'n+0+cZLWWPDlE>mq"<g84r0LlA3s^_lh*h`kq2-OL7<A=[.d!faq[Eh+-G)!KIE9b1aG*f*TjBTk,.s7e<Rb$/W3f[6S?9RPeEY)LmV6TbAl]T[$C[/7EE.A6U;tI-/*?!sG[&GA2XP4Jn[-Peg.ktJ(O1h?n44Pg'Xph>f6$.Y4j9j[=nV:HeMuQrWNA-_-mbrt3ql4Q&k't[CBD,q?u%mb1Tu+S(duOUmjc*i@XEJD/k+BD<nN(@6*&8miOq52=n47][+]5=NBtG%5daLXSVNDDU=ZH_qYaA3iBbU9Q`n2l[eD0$Jul44,p_WNp]I(Eq<?A7o<YiE4]+pI`/bYQY(eMd5;b<@EIR3/S%kGqnmYJg4n,(>H$(N.VO#(ir"cVsH-a^dB#h`)edG2FLmtI\gjD3+P+-6,(hK&.CN0IJ@[/m).#r2J`pFHYXZ1/Fm$uj.R.B%#g6DMHltYt\Hu1LneVmc"_r1BHXMMbhm"7:>.\DTnH'b?V^X+[qjL$eMo<miQ2lHFRT,TP_V@AGN&g3iFb8(DucriZZ\L#okN(rcgX1AC"J:4F4griGR-D4lAgF?m6MlVMCJ#Y[_Treg)9D`Xpi!=^&f!Hm>3>a'Mm-ea^qf?jIkIAU@1AcMI'ar>5p(9D.:?m>YrNa-s^]23ZE*7J]\_jT=r`0R^[tA6M[F>[jfjkpoo%JrmFhq-.PhqSj=At@!J"TGA_Q,1BZ2b[p!-%pi9?2r@GTmJ^`Y-AP+scZ-&^WN*PqF!0U#.AKW=-N4ZSY!.cFkejPB/\O:ukgeMGa_S-7!E<h$Od&2qAV-VI:I@5'"GuL+LT3VFY,NLmjNJQ:Wh>Pd2uY1&Q?u)s"=il@s-OV2@G0]4s\a'uLUthM1^2idQH54R&\,O[QM'H,+o;S9mf=anQM=^+?_7pZ,!7+9*fK0dF&=b!X!il6!=n[r8>W'Bu!cbZ8<^H\df;0ueo$;Umjg35U"sT!-SiKK-A6"bHEAB8:e%mHA-'G[`DLHcObFN\c,Xb"3kfqrYA?Q#8oEca#Xi5$eRoG%qflq4m]AZZLfq"Di8aj;3l,qI0gSchn=%Zq\/Z>Q=a~>
+]]>
+</markdown>

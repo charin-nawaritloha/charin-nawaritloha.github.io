@@ -288,12 +288,14 @@ div.notice {
 	border-radius: 6px;
 	padding: 0.5rem;
 	min-height: 8rem;
+	margin-bottom: 1.5rem;
+	margin-top: 1.5rem;	
 }
 
 div.notice > div > img {
 	width:8rem;
 	float:left;
-	padding:0 0.5rem 0.5rem 0;
+	padding:0 0.5rem 0.5rem 0;	
 }
 
 
@@ -348,7 +350,7 @@ iframe.youtube {
 Google Ads
 */
 .google-auto-placed, .gcse-search, ins{
-	padding-top: 4rem;
-	padding-bottom: 4rem;
+	padding-top: 5rem;
+	padding-bottom: 5rem;
 }
 
