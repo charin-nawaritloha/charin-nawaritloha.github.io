@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Collections → List เบื้องต้น</title>	
+
+	<!--header-->	
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<!-- syntax highlight -->
+	<link rel="stylesheet" href="highlight/styles/vs.css">
+	<script src="highlight/highlight.js"></script>
+	<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Collections → List เบื้องต้น</h1>
+<p><img src="images/20240814/20240814_0000_cover.svg" class="u-max-full-width" /></p>
+<p>List (<a target="_blank" href="https://api.dart.dev/stable/dart-core/List-class.html" title="List class - dart:core library - Dart API">List class</a>)  เป็น indexable collection ที่ทำหน้าที่คล้ายกับข้อมูลประเภท array ในภาษาคอมพิวเตอร์อื่น ๆ เป็นการเก็บข้อมูลหลาย ๆ ตัว เป็นลำดับแถว สามารถกำหนดประเภทข้อมูลที่อยู่ภายใน List ได้ว่าจะเป็นข้อมูลประเภทไหน ตัวเลข ตัวอักษร หรือ Object กำหนดประเภทข้อมูลผ่าน <a target="_blank" href="https://dart.dev/language/generics" title="Generics | Dart">Generic</a></p>
+<div class="image"><img src="images/20240814/20240814_0100_class.png" class="u-max-full-width" /><div>List class มีการ implements Iterable class</div></div>
+<h2>การสร้าง List</h2>
+<p>การสร้างและประกาศข้อมูล List จะใช้เครื่องหมายวงเล็บก้ามปู <code>[...]</code> เพื่อใส่สมาชิกภายในนั้น</p>
+<pre><code class="language-dart">void main() {
+  var myList = [1, 2, 3];
+  
+  print(myList); // output → [1, 2, 3]
+  print(myList.length); // output → 3
+  print(myList.elementAt(0)); // output → 1
+  print(myList.elementAt(1)); // output → 2
+  print(myList.elementAt(2)); // output → 3
+}
+</code></pre>
+<p>จากตัวอย่าง การประกาศโดยใช้ <code>[...]</code> จะตีความเป็น type annotation ดังนี้</p>
+<pre><code class="language-dart">  List&lt;int&gt; myList = [1, 2, 3];
+</code></pre>
+<p>ตัว myList ที่สร้างขึ้น จะเป็น List ที่จะเก็บเฉพาะข้อมูลที่เป็น <code>int</code> เท่านั้น หากพยายามเพิ่มหรือแก้ไขข้อมูลที่ไม่ใช่ <code>int</code> เข้าไป จะทำให้เกิด error ขึ้น</p>
+<pre><code class="language-dart">void main() {
+  List&lt;int&gt; myList = [1, 2, 3];
+  dynamic x = 10.5;
+  myList.add(x); // Unhandled exception: type 'double' is not a subtype of type 'int'
+  print(myList);
+}
+</code></pre>
+<p>ในกรณีที่ต้องการให้ List เก็บข้อมูลแบบ <code>dynamic</code> ให้ประกาศ Generic เป็น <code>dynamic</code> แบบนี้</p>
+<pre><code class="language-dart">  var myList1 = &lt;dynamic&gt;[1, 2, 3, 'ABC', 10.5];
+  List&lt;dynamic&gt; myList2 = [1, 2, 3, 'ABC', 10.5]; //same as myList1
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง List แบบแก้ไขค่าใน List ไม่ได้ (unmodifiable list)</h3>
+<p>หากต้องการสร้าง List ที่ไม่สามารถเปลี่ยนแปลงค่าได้ (แก้ไขค่า/เพิ่ม/ลด สมาชิกใน List) สำหรับไว้ใช้งาน ให้ใช้ keyword <code>const</code> ในการประกาศ List</p>
+<pre><code class="language-dart">  const myList1 = [0, 1, 2];
+  const List&lt;int&gt; myList2 = [0, 1, 2]; //same as myList1
+  var myList3 = const [0, 1, 2]; //same as myList1
+  var myList4 = const &lt;int&gt;[0, 1, 2]; //same as myList1
+
+  myList1.add(10); // error → Unsupported operation: Cannot add to an unmodifiable list
+  myList2.add(20); // error → Unsupported operation: Cannot add to an unmodifiable list
+</code></pre>
+<p>หากต้องการสร้าง unmodifiable list จาก list ที่มีอยู่แล้วในตัวแปรอื่น สามารถสร้างด้วย <code>.unmodifiable()</code> constructor ตามตัวอย่าง</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = &lt;int&gt;[1, 2, 3]; // normal list
+  myList1.add(30); //OK
+
+  var myList2 = List.unmodifiable(myList1); // use myList1 as init data
+  print(myList2); // output → [1, 2, 3, 30]
+  myList2.add(30); // error → Unsupported operation: Cannot add to an unmodifiable list
+  myList2[0] = 100; // error → Unsupported operation: Cannot modify an unmodifiable list
+}
+</code></pre>
+<h3>การสร้าง List แบบจำนวนสมาชิกคงที่ (Fixed-length list)</h3>
+<p>การสร้าง List ที่มีสมาชิกคงที่ ไม่สามารถเพิ่ม/ลด จำนวนสมาชิกใน List โดยการใช้ <code>.from()</code> และ <code>.filled()</code> constructor โดยกำหนดค่า <code>growable: false </code></p>
+<ul>
+<li><code>.from()</code> จะเป็นการสร้าง List จาก List ที่มีอยู่แล้ว <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/List.from.html" title="List.from constructor - List - dart:core library - Dart API">ดู API เพิ่มเติม</a></li>
+<li><code>.filled()</code>  จะเป็นการสร้าง List โดยเติมค่าเริ่มต้นเข้าไปตามจำนวนสมาชิกที่ต้องการ <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/List.filled.html" title="List.filled constructor - List - dart:core library - Dart API">ดู API เพิ่มเติม</a></li>
+</ul>
+<p>ตัวอย่างการใช้ <code>.from()</code> ในการสร้างจาก List ที่มีอยู่แล้ว อาจเป็นตัวแปร หรือระบุ List ที่ต้องการสร้างลงไป</p>
+<pre><code class="language-dart">void main() {
+  var myList = List.from(&lt;int&gt;[1, 2, 3], growable: false);
+  print(myList); // output → [1, 2, 3]
+  myList[0] = 0; // modify element index 0 from 1 to zero
+  print(myList); // output → [0, 2, 3]
+  myList.add(4); // error → Unsupported operation: Cannot add to a fixed-length list
+}
+</code></pre>
+<p>ตัวอย่างการใช้ <code>.filled()</code> โดยต้องระบุค่าเริ่มต้นของสมาชิกใน List</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = List.filled(3, 0, growable: false);
+  print(myList1); // output → [0, 0, 0]
+  myList1[0] = 10; // modify element index 0 from 0 to 10
+  print(myList1); // output → [10, 0, 0]
+  myList1.add(4); // error → Unsupported operation: Cannot add to a fixed-length list
+}
+</code></pre>
+<h2>การเข้าถึงสมาชิกใน List</h2>
+<p>ตำแหน่งของสมาชิกใน List จะเป็น zero-based indexing นั้นคือ สมาชิกตัวแรกจะมีค่า index เป็น 0 สามารถเข้าถึงด้วยคำสั่ง <code>.elementAt(index)</code> หรือใช้วงเล็บก้ามปู <code>[index]</code> ก็ได้แล้วแต่สะดวก</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = [0, 1, 2];
+  print(myList1[0]); // output → 0
+  print(myList1[1]); // output → 1
+  print(myList1[2]); // output → 2
+  print(myList1[3]); // RangeError (index): Invalid value: Not in inclusive range 0..2: 3
+}
+</code></pre>
+<p>ในตัวอย่าง ค่า index ของ myList1 จะมีค่าอยู่ที่ <code>0</code> ถึง <code>myList1.length - 1</code></p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>หากพยายามเข้าถึง index ที่ไม่มีอยู่จริงจะเกิด RangeError ขึ้น โปรดระวังในการใช้งาน</p>
+</div></div>
+<p>การแก้ไขค่าของสมาชิก สามารถทำโดยใช้เครื่องหมาย = ในการกำหนดค่าใหม่ของสมาชิกในตำแหน่ง index ที่ต้องการ</p>
+<pre><code class="language-dart">  var myList1 = [0, 1, 2];
+  myList1[1] = 2;
+  myList1[2] = 4;
+  print(myList1); // output → [0, 2, 4]
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การเพิ่ม ลบ แก้ไข สมาชิกใน List</h2>
+<p>ตัว List จะมีคำสั่งในการจัดการข้อมูลของสมาชิก ดังนี้</p>
+<h3>เพิ่มสมาชิกต่อท้าย</h3>
+<ul>
+<li><code>.add()</code> ใช้เพิ่มสมาชิกใหม่ 1 ตัว เข้าไปต่อท้าย  <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/add.html">ดู API เพิ่มเติม</a></li>
+<li><code>.addAll()</code> ใช้เพิ่มสมาชิกใหม่ที่เป็น List เข้าไปต่อท้าย <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/addAll.html">ดู API เพิ่มเติม</a></li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>แทรกสมาชิกตรงตำแหน่ง index</h3>
+<ul>
+<li><code>.insert()</code> ทำการแทรกที่ตำแหน่ง index ด้วยสมาชิก 1 ตัว สมาชิกเดิมที่ตำแหน่ง index จะถูกเลื่อนไป index + 1 <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/insert.html">ดู API เพิ่มเติม</a></li>
+<li><code>.insertAll()</code> ทำการแทรกที่ตำแหน่ง index ด้วย List ที่ต้องการ สมาชิกเดิมที่ตำแหน่ง index จะถูกเลื่อนไป index + <code>.length</code> ของ List ที่แทรก <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/insertAll.html">ดู API เพิ่มเติม</a></li>
+</ul>
+<h3>ลบสมาชิก</h3>
+<ul>
+<li><code>.remove()</code> ใช้ลบสมาชิกที่มีค่าตรงกับที่กำหนด ในกรณีที่มีข้อมูลซ้ำ จะลบตัวแรกที่พบแค่ตัวเดียว <strong>คืนค่า <code>false</code> หากไม่เจอข้อมูลที่จะให้ลบ</strong>  <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/remove.html">ดู API เพิ่มเติม</a></li>
+<li><code>.removeAt()</code> ใช้ลบสมาชิกตรงตำแหน่ง index ที่ระบุ <strong>หากทำสำเร็จจะคืนค่าเป็นสมาชิกตัวที่ลบ</strong> และจะมีผลทำให้ <code>.length</code> มีค่าลดลง 1 สมาชิกที่อยู่หลังจาก index ที่ลบ จะถูกเลื่อนมาข้างหน้าแทนตัวที่ลบไป <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/removeAt.html">ดู API เพิ่มเติม</a></li>
+<li><code>.removeLast()</code> จะลบจากตัวสมาชิกที่อยู่ด้านหลังสุด  <strong>หากทำสำเร็จจะคืนค่าเป็นสมาชิกตัวที่ลบ</strong> และจะมีผลทำให้ <code>.length</code> มีค่าลดลง 1 <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/removeLast.html">ดู API เพิ่มเติม</a></li>
+<li><code>.removeRange()</code> ลบสมาชิกที่มีค่า index ในช่วงที่ระบุ เช่น <code>list.removeRange(1, 4)</code> ผลคือจะลบสมาชิกที่ index เท่ากับ 1 2 และ 3 ทิ้งไป มีผลทำให้ <code>.length</code> มีค่าลดลง <code>4-1=3</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/removeRange.html">ดู API เพิ่มเติม</a></li>
+<li><code>.removeWhere()</code> ลบสมาชิก <strong>ทุกตัว</strong> ที่ตรงกับเงื่อนไขทดสอบ <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/removeWhere.html">ดู API เพิ่มเติม</a></li>
+<li><code>.clear()</code> ลบสมาชิกทุกตัวทิ้ง มีผลทำให้ <code>.length</code> เท่ากับ <code>0</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/clear.html">ดู API เพิ่มเติม</a></li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การแทนที่สมาชิก</h3>
+<ul>
+<li><code>.replaceRange()</code> เป็นคำสั่งที่รวม 2 คำสั่งเข้าด้วยกันคือ <code>.removeRange()</code> → <code>.insertAll()</code> มีข้อดีคือประสิทธิภาพดีกว่า <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/replaceRange.html">ดู API เพิ่มเติม</a></li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>คำสั่งอรรถประโยชน์ อื่น ๆ</h3>
+<ul>
+<li><code>.sort()</code> เรียงลำดับสมาชิกใน List สามารถใช้การเรียงลำดับตามค่าปริยายของข้อมูลก็ได้ หรือจะใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Comparator.html" title="Comparator typedef - dart:core library - Dart API">Comparator</a> ฟังก์ชั่น เพื่อกำหนดวิธีการเรียงลำดับก็ได้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/sort.html">ดู API เพิ่มเติม</a></li>
+<li><code>.shuffle()</code> เปลี่ยนลำดับ index ของสมาชิกแบบสุ่ม <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/shuffle.html">ดู API เพิ่มเติม</a> <br/>แต่หากต้องการสุ่มเลือก index ไม่ได้ต้องการสุ่มสลับลำดับใน List ทั้งหมด แนะนำว่าใช้ <code>Random().nextInt(List.length);</code> เพื่อเอาค่า index มาดึงข้อมูลดีกว่า <a target="_blank" href="https://api.dart.dev/stable/3.5.0/dart-math/Random-class.html" title="Random class - dart:math library - Dart API">Random class</a></li>
+<li><code>.sublist()</code> คืนค่าเป็น List ตามช่วงค่า index ที่ระบุ เช่น <code>.sublist(1, 3)</code> จะคืน List ของสมาชิก index ที่ 1 และ 2 กลับมา หากไม่กำหนดค่า end index จะคืน List จนถึงสมาชิกตัวสุดท้าย <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/sublist.html">ดู API เพิ่มเติม</a></li>
+</ul>
+<h2>การค้นหาสมาชิกใน List ด้วย <code>.indexOf()</code> <code>.lastIndexOf()</code>  <code>.indexWhere()</code> <code>.lastIndexWhere()</code></h2>
+<p>List รองรับการค้นหาค่าของสมาชิก และคืนค่า index ของสมาชิกที่ตรงกับค่าหรือเงื่อนไขที่ต้องการ</p>
+<p>ในการค้นหา index ของสมาชิกใน List ที่มีค่าซ้ำ สามารถเพิ่มตำแหน่ง start index เพื่อข้ามไปตำแหน่งที่จะค้นหาถัดไป</p>
+<p>ในกรณีที่ไม่เจอสิ่งที่ค้นหา จะคืนค่า <code>-1</code> กลับมา</p>
+<h3>การค้นหาสมาชิกแบบตรงไปตรงมา ตามค่าที่สนใจ</h3>
+<p>การค้นหาสมาชิกที่ต้องการใน List อยู่ตำแหน่ง index ที่เท่าไหร่ หากเป็นการหาค่าเป็นตรงไปตรงมา สามารถใช้  <code>.indexOf()</code> และ <code>.lastIndexOf()</code></p>
+<ul>
+<li><code>.indexOf()</code> หาสมาชิกที่ตรงกับที่ระบุ หน้าไปหลัง จาก index <code>0</code> → <code>.length -1</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/indexOf.html">ดูรายละเอียด API เพิ่มเติม</a></li>
+<li><code>.lastIndexOf()</code> หาสมาชิกที่ตรงกับที่ระบุ หลังไปหน้า จาก index <code>.length -1</code> → <code>0</code> จะมีทิศทางในการค้นหาตรงข้ามกับ <code>.indexOf()</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/lastIndexOf.html">ดูรายละเอียด API เพิ่มเติม</a></li>
+</ul>
+<p>ตัวอย่างการใช้ <code>.indexOf()</code> ในการค้นหาสมาชิก โดยจะจำลองว่าหากมีสมาชิกที่ค่าซ้ำกัน จะค้นหาตัวต่อไปอย่างไร</p>
+<pre><code class="language-dart">void main() {
+  var myList = ['A', 'B', 'C', 'B', 'C'];
+  print(myList.indexOf('X')); // output → -1  
+  print(myList.indexOf('A')); // output → 0
+  print(myList.indexOf('C')); // output → 2
+
+  // search duplicate value
+  var lastFound = myList.indexOf('B');
+  print(lastFound); // output → 1
+  print(myList.indexOf('B', lastFound + 1)); // output → 3
+}
+</code></pre>
+<p>ตัวอย่างการใช้ <code>.lastIndexOf()</code> ในการค้นหาสมาชิก จากหลังมาหน้า โดยจะจำลองว่าหากมีสมาชิกที่ค่าซ้ำกัน จะค้นหาตัวก่อนหน้าอย่างไร</p>
+<pre><code class="language-dart">void main() {
+  var myList = ['A', 'B', 'C', 'B', 'C'];
+  print(myList.lastIndexOf('X')); // output → -1  
+  print(myList.lastIndexOf('A')); // output → 0
+  print(myList.lastIndexOf('C')); // output → 4
+
+  // search duplicate value
+  var lastFound = myList.lastIndexOf('B');
+  print(lastFound); // output → 3
+  print(myList.lastIndexOf('B', lastFound - 1)); // output → 1
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การค้นหาสมาชิกที่ตรงกับเงื่อนไขในฟังก์ชั่นทีต้องการ</h3>
+<p>การค้นหาที่ต้องเขียนโปรแกรมเพื่อตรวจสอบสมาชิกว่าตรงกับที่ต้องการหรือไม่ สามารถใช้ <code>.indexWhere()</code> และ <code>.lastIndexWhere()</code> ให้เขียนฟังก์ชั่นที่ทดสอบและส่งค่า boolean กลับมา โดยจะคืนค่า index ของสมาชิกที่ตรงกับเงื่อนไขที่กำหนด</p>
+<p>ตัวอย่าง การค้นหาค่าสมาชิก ที่มีค่ามากกว่า 2 ที่เจอเป็นตัวแรก</p>
+<pre><code class="language-dart">void main() {
+  var myList = [0, 1, 2, 3, 4, 5, 6];
+  var foundIndex = myList.indexWhere((element) =&gt; element &gt; 2);
+  print(foundIndex); // output → 3
+}
+</code></pre>
+<p>ตัวอย่าง การค้นหาค่าสมาชิก ที่มีค่ามากกว่า 2 ที่เจอเป็นตัวสุดท้าย (ค้นหาจากหลังมาหน้า)</p>
+<pre><code class="language-dart">void main() {
+  var myList = [0, 1, 2, 3, 4, 5, 6];
+  var foundIndex = myList.lastIndexWhere((element) =&gt; element &gt; 2);
+  print(foundIndex); // output → 6
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การค้นหาข้อมูลสมาชิกที่มีประสิทธิภาพ</h3>
+<p>เนื่องจากตัว <code>.indexOf()</code> <code>.lastIndexOf()</code>  <code>.indexWhere()</code> <code>.lastIndexWhere()</code> <strong>ออกแบบมาเพื่อค้นหา ว่ามีสมาชิกใน List ตรงกับที่ค้นหาหรือไม่</strong> ถ้าไม่เจอก็ได้ค่า <code>-1</code> กลับมา การที่พยายามเอาไปทดสอบเพื่อหาสมาชิกทุกตัวที่เหลือว่ามี index ใดบ้างที่ตรง หาก List มีขนาดใหญ่ จะเกิดปัญหาเรื่องประสิทธิภาพขึ้น แนะนำว่าใช้คำสั่ง <code>for()</code> เพื่อไล่ตรวจสอบสมาชิกทุกตัวจะดีกว่า</p>
+<pre><code class="language-dart">void main() {
+  var myList = [0, 1, 2, 3, 4, 5, 6];
+  for (int index = 0; index &lt; myList.length; ++index) {
+    if (myList[index] &gt; 2) {
+      print(index);
+    }
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>3<br/>
+4<br/>
+5<br/>
+6</p>
+</blockquote>
+<h2>การสร้าง List ใหม่ด้วย <code>+</code></h2>
+<p>หากต้องการสร้าง List ใหม่ ที่เกิด List จำนวน 2 ตัวเข้าด้วยกัน สามารถใช้ <code>+</code> ในการเชื่อมต่อ List ได้</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = [1, 2];
+  var myList2 = [3, 4];
+  var myList12 = myList1 + myList2;
+  print(myList12); // output → [1, 2, 3, 4]
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ใช้เพื่อสร้าง List ใหม่เท่านั้น หากต้องการจะเอาไปต่อ List เดิม อย่าใช้วิธีนี้ <br/>❎<code>myList1 = myList1 + myList2;</code> <br/>ให้ใช้ ✅ <code>myList1.addAll(myList2);</code></p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้ Spread Operator <code>...</code> เพื่อใช้เพิ่มสมาชิกใน List ใหม่ ด้วย List ที่มีอยู่</h2>
+<p>นอกจากการใช้ <code>.addAll()</code> และ <code>+</code> เพื่อทำงานกับตัวแปรข้อมูล List แล้ว ยังสามารถใช้ <code>...</code> เพื่ออ้างถึงตัวแปร List ที่จะนำไปใส่ใน List ใหม่ที่ต้องการสร้างได้อีกด้วย ซึ่งบางครั้งก็สะดวกในการเขียนโปรแกรม เนื่องจากสั้นและเข้าใจได้ง่าย</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = [1, 2];
+  var myList2 = [10, 20, ...myList1];
+  print(myList2); // output → [10, 20, 1, 2]
+
+  var myList3 = [...myList1, ...myList2];
+  print(myList3); // output → [1, 2, 10, 20, 1, 2]
+}
+</code></pre>
+<p>จากตัวอย่างข้างบน สามารถเขียนโดยไม่ใช้ <code>...</code> เพื่อให้ผลเหมือนกันดังนี้</p>
+<pre><code class="language-dart">void main() {
+  var myList1 = [1, 2];
+  var myList2 = [10, 20];
+  myList2.addAll(myList1);
+  print(myList2); // output → [10, 20, 1, 2]
+
+  var myList3 = myList1 + myList2;
+  print(myList3); // output → [1, 2, 10, 20, 1, 2]
+}
+</code></pre>
+<p>ดูข้อมูลเพิ่มเติมเกี่ยวกับ <a target="_blank" href="https://dart.dev/language/collections#spread-operators" title="Collections | Dart">Spread Operator</a></p>
+<h2>ห้าม❎เปรียบเทียบ List มีสมาชิกเท่ากันหรือไม่ด้วย <code>==</code></h2>
+<p>อันนี้อาจดูแปลก ๆ หน่อย😅ที่ไม่สามารถใช้ <code>==</code> เปรียบเทียบระหว่าง List ได้ แม้จะมีสมาชิกเหมือนกันทุกประการ แต่ใน <a target="_blank" href="https://api.dart.dev/stable/3.5.0/dart-core/List/operator_equals.html">API</a> บอกไว้ว่า</p>
+<blockquote>
+<p>Whether this list is equal to <code>other</code>.<br/>
+Lists are, by default, only equal to themselves. Even if <code>other</code> is also a list, <strong>the equality comparison <em>does not</em> compare the elements of the two lists</strong>.<br/></p>
+</blockquote>
+<pre><code class="language-dart">void main() {
+  var myList1 = [1, 2];
+  var myList2 = List.from(myList1);
+  var myList3 = [1, 2];
+
+  print(myList1); // output → [1, 2]
+  print(myList2); // output → [1, 2]
+  print(myList1 == myList2); // output → false
+  print(myList1 == myList3); // output → false
+  print(myList1 == myList1); // output → true
+
+  var myList4 = myList1;
+  print(myList1 == myList4); // output → true
+}
+</code></pre>
+<p>จากตัวอย่างจะเห็นว่า <code>==</code> เอาไว้ทดสอบว่าตัวแปรสองตัว อ้างอิงไปที่ตัว List เดียวกันหรือไม่เท่านั้น (ในตัวอย่างคือ <code>myList1</code> กับ <code>myList4</code>)</p>
+<h2>การสร้าง array แบบหลายมิติ</h2>
+<p>อ้างอิงตาม Dart 3.5.0 จะใช้ List เป็นประเภทข้อมูลที่เก็บเป็นแถว แต่มีแค่มิติเดียว หากต้องการใช้งานแบบหลายมิติ จำเป็นต้องใช้วิธีการประกาศแบบ List ใน List ซ้อนกันอีกที ตัวอย่างการสร้าง List แบบ 2 มิติ</p>
+<pre><code class="language-dart">void main() {
+  var array2d = [
+    [1, 2],
+    [3, 4]
+  ];
+  print(array2d[0][0]); // output → 1
+  print(array2d[0][1]); // output → 2
+  print(array2d[1][0]); // output → 3
+  print(array2d[1][1]); // output → 4
+}
+</code></pre>
+<p>หากต้องการเขียนใช้งานใสรูปแบบที่เคยใช้ในภาษาอื่น เช่น <code>array2d(1, 0)</code> <code>array2d[1, 0]</code> แบบนี้จำเป็นต้องเขียน Class ขึ้นมาจัดการเอง หรืออาจจะไปลองดูใน Dart Packages ในเว็บ <a target="_blank" href="https://pub.dev/packages" title="The official repository for Dart and Flutter packages.">pub.dev</a> ว่ามีใครที่สร้างเอาไว้บ้างหรือเปล่า</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>เทคนิคการเอาตัวสมาชิกที่ซ้ำออกจาก List</h2>
+<p>เนื่องจาก List สามารถใส่ข้อมูลซ้ำได้ หากต้องการใช้ข้อมูลของ List ที่เป็นค่าที่ตัดตัวซ้ำออกไป วิธีการที่เขียนโปรแกรมสั้น และสะดวก สามารถทำได้โดยแปลงจาก List → Set → List เนื่องจาก <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set-class.html" title="Set class - dart:core library - Dart API">Set</a> เป็น collection ที่ไม่มีการเก็บข้อมูลที่ซ้ำกัน เมื่อแปลงจาก List ที่มีสมาชิกข้อมูลซ้ำกัน มันจะตัดออกเหลือแค่ตัวเดียว</p>
+<pre><code class="language-dart">void main() {
+  var myList = [0, 1, 2, 1, 2, 1, 2, 3];
+  var mySet = Set.from(myList); // alternate method → myList.toSet()
+  var resultList = mySet.toList();
+  print(resultList); // output → [0, 1, 2, 3]
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>วิธีนี้เหมาะกับการแปลงเพื่อใช้งานเล็กน้อย ถ้าเป็นไปได้การเอาผลของ Set ที่ได้จากการแปลง List ไปใช่ต่อเลยจะช่วยประหยัดหน่วยความจำ <br/>ในกรณี List มีขนาดใหญ่มาก ๆ ควรเขียนคำสั่งจัดการเองเลยอาจมีประสิทธิภาพดีกว่า</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<![CDATA[
+ก~+,^C)z!".OflYdcpFoP3es22,ขJIdmdh'MG!P,X%6j$9P?)c;5%=:j:3G:7@8ggOi-A[/38;.;jq8c,3X/5pS[:kZVR"9IiIAGG$jr"o!$B^WF7F!("H/1*X`Rp++oa4ta]4ceJ\p[VVbgE97p_"D@p#ZoK(1ecj)?i;@"geUhhcgKrKj#m3KIeH4%S`\UCSit$ก#NK=_][L#TCc7d-WU[7`0l0)-_1,Jj6'กcpY,CMrEb0,@f^(PC6(BiZiU+0$%9ก\l*;b/-22]:3emfJB1tL-8!F4&?^au^5='.O$oN1#phL\mX@9EBu`hfX`i32o$5MOGh"6^8Biขjg?XK(AISit6&n+*eJr9u2^:@d`O(\*Z9[?G7LjMRm@[[h%aE9[,XdLYs9N4$d!jOmD%Iข\d=0$bS)&BDU&jCe5?\EqVd4Sq;@glXb7ag9TEG)UhjikqPhlo4^uO#[(=jCc4_(5))F&f]\=T@lU#qjcS?p=am&2Sk;6417V*L25Z_lT3eGZS/R\p)H.9MTON"D+uA._-XA7,nq@qOaLg:q0.FZ8/WjR4)@UArข=;%bd0Gm\9cbAUขn3\82n(cr9d^Zh'8!5(b]ho^X'52^b/-9k1M22ZLZ?#C'nmdgoohO+$f#0i@p5fX'4AFX:KpAX\j$fS@cb0,]N"go$b@I(gk.no?KF.hZ-FCSROhU2`:p"7Q='T\ก2M#(N7%*ROtfAhL-3I]J,?e8Qjn=\rVmeIขsEZN3-/5ขdXDNGN"./Jn+QHliCn;#dko@.R[Y\l$4\$dkOUNlk*^ข/RREIkก4H8VpT0/GIc(LUPEกb4NGdoja[k\1Mp@eL&\iJb%[s3m4pkah2_=pfEhขkaXR#(p_^g6+GPk-ขf\+2=u4NsJbeE.lmqf0B&"K*PJ"`]กLB8.BU!Cp;H/OR\_XPG#`#n;Ff3-idkKjqขY6B5;blpb8b88&]Nrsum5CRY+8_SUAIKIO&kPVQb#9b=]2Y.;WAqMFgZ5=H!6mSX(i7Rf:aD&)MlD_3[l-SZL;PDKKR2cAM=:B2o!9tTpAcN-KDmRกk$si^NDt.s"jof:W+Ykqljmขf^fกI(G?,0Knn"H.5jกZQlRZ(hFP(J\QjUBQUst,3กN_NF1VU]Mnl#HLP^D@HFuuMR$b%^*,,PY7Q+kEO%^d\[[7B-กStHR/oL(DFm3HIr,5:gim^[`Oj#DpI;R1,BPqnCXk\Uc]NW(E_JOO60)t2`Q+j30T2gL/dnP=r+_6ขj(HP#%:%6'^1ขiC8kdขLIEK5^ng#n3RC!_ขd2peA+Bข4dU7KY+S@?4b7h)bKp6.(MqO*YQ4X=^s`5iZT$UB?$dgH1i)d@\mAWFEP#-#jYkZ270D$cG*AdAo#4,Hm$"+P8'X?M5:`d:WsrT3Vee%ZCU46-;:_V^t`0-CkN?FEZR,#[m(T3LqLขO\N=8!fNuFg'OKoS^uT1=&bZ!9IC+J+`^=@f::)3d=lk&BG@.j$&19]s6sL4nU;sbq+7ข;Yกps+sXuU86cf#H4i%\o6!`T$_=)uK*T+*Y-Rm:.`p*MH'o;FRJก6@E9[m#`0*ctJY@?Peb#eFBJ$V,aR'_WdreS3;/P70'+r*+N+[uGR6`0_lr*Yu^Sp%p;=4udJ+8$,QjW)-YlY#2\M@oi,t_dp-b)9$=BK4m'""0Pq4UPXSqf7Po3?jMejl(QikFSkG7c*u7!UtZaiPaRlQ._WhB9]E'n-W#'LขY^Mb]e)[,"tQ:D_6UJsaoข:AdV[?tS"/barl(Y_'TL4%3L8PAWTVO"c9m.Z(5?g=(r[H1^g\.IKmCtJ:]?B4M&qPr0Ua-E[7+0BjA?PiH%Q7r_gVs++:W-Sdk:89B4/HaCs13'KnsBข\W$6iH*4Dl]WHdj\a_eSib.9G$ข&N?J%?-g%SD`m;jdK]IjaU-En=Kqr-I(&aEZ5TกE?o5\#Yg'(c(ข,)u]s6RN$$^[)$pกMS[rOra6ก2S3:ข?6_dXiAY=B#N]pq]\cQZ`+:/)9ngp?N'53`];Q:6lC&Rก!3qulk%%mXUJJI[plT@6k%m5M0E#f'*_VYeHc12[Q!f[=_'V3QG(``YAoamJJ/p:2h])^&[GFL"pb+2DlP$T9QO[o](n]@8_I=/+e_cQ2bq^!e=6Rfu-&:61bDAt_@0p;Oaj#kMTfr?X2E#k)6[/gU\l'%u]RfRกข:L-+*HGS?TbJกLsd.[T.i)hHc!Ol3i=daaKj/@9eVDAN^[Y6XrCp7O+!"ED-8!_YB-^p:*9QRXg,;\MSpF9&=opll(Y9rFFTNQoT/MGf1It[/?C%a'fgLR*t2/CFank=*Zluc-!W]li_q1i\p#_hjW[kgPQpEU5JaZpq7`-/r_8s"]h:;Hku(/Q[i]aFt0I6*lJQQpmpd?[-#QZ5Cก3Fbb;o_I6jHข'K$hrPSrI)4DD?%NUH2!ขZN:e:hV[1HO^"*$On5SUSD6k_\/iVqB:\FkmRCqKE/0OmjF4?Lf!7m^K)m^1bM%aNen[,"am]\;YpMcN%KL:ข#ATs+ns?@a'5gVKQ?KA44M'OH@*O4Z(;rc!!69)?"aLfkg52B(s5"H'U]/I.'=`'T?aU6&H4bVY:NFh:Af.Np:gQ.oAV^0,,l!OEAf;i+*"Ei7dข`E!s/bha/DWj(=:)YbL"X9mK6[EZV9IAs?0"`A/P#7`f3'nQ4m!.HCu$JoH_6_lUS?C;1P7G"1%Hh7Bf&S.ui=C+/RE5h"9PTYeEf$i@[(85S-C9pDก26Bi)"rกL^DJ3a/mCก;p996nu=?17gขYIMAX6jข17#)M(fQWrMEH1Y,3H7t8,"/l%I%PNmo(#ขJTmกHNbcขiกQ&Lug73i+AG!agf6(DZJ63ก%;`rh/I[Ap(ขi6ก)#ca@F[^;_o]BU)5CJR#-a4qHTHกqlFo8#!Ab?k7=AonQ*UV`^4,PmgWiWกpX`03/D/:N5CIO;SQFmNUV7e6?]H^'DEk*OIEioL_CjM!PdnI2Q3)_AQ*3.Y@STPesn#dQ55'?\5Lf@I(PDO0FflHJ'+U"aขltY'3IS)&7oGdI#ก1'a5VJpg9G5[EDN`O(rAG?tu=iN$'4l2%%+ก-a+4WptNข#^Dc;TR0q]29NF#%q`"g2Rt0a;),_FcW"5Z?0(IA3]'M&`^hIMขNiLqq;1tI2^)3]m3Cc"KJ$PกijCYf;V#-,/1Q6@sM1$Z:r[ST1T5ibPo?&Da#mh?eEI(qW6;gHD]oK9Bq/oHgfSYuf5!qLfX9]P\M1eg2RTG'R0G#so52;j3e/Dd_jlPqL202)Q*#&uO.%Q80VkqlXW/lQV,p9[Y-b%กr-8kPZdLT$o5"C-:+9'$2fขTJ$0uRW:L3K.`kL8;q(?)k#!BrZDWขoFBj3'XuaiZ6RQ&HMmc+jCp"K1(9`-83I'YYGRBN.9Y0IkG$2G*)Uo?I#57&.'/k(iN0].huCSF9c,pQ/'$qgPsp`hi%ขIIRS%M3_[!\qW:Vg0s]P]8kK`&%h2g'W6nq(UmLO'j^1k+:R7%.F"C=.em88_d3@Q+O*ข+("ZtX?'_gD?rkQu4gE6tYY)@/U!&tqg=Vn8/?!Kข0++V=&rfRE;$a8gkRiP!31deEV!Z@XT5SaMp[T;*p*e8$_@O;JoGcJ4ข?*(YOQ^CNg2(cnaE(,sGuF=WpQ.iTE6%k\lsb"\YTshnUI]!9a)]ca#Hn-E?1:uWDA9`4).-r9Ps0O=@6auL.U^6gขn)279$/$jaO%I=D/9DrO@F4qIcqgse#=Es$"5JlX3ขHJT)D\N$/8S9s$3mY^o;%V&\hhO_cO51]8E1,5qYJhRH.2@R&lA"ecp6JขP3!u/)#N]:W-4@#eF"Uot-ก^n5neRJIbf@\SEHD;-@FpOm/K0WDhZ];lWq_&GuB!Emd"8ESmicINa8Y%O(:^kMcL7f)bT0a!c&กo-_AYa&;)[@กa050h`sS$?].$rEYg#\!%8V66hELP.NAQกQQVlEs-0jnQr!4=g\j;lZ9_:Eข43=-FY+5ขขj(8N)l=X`skข&lRdsp1_]O2D*h5!QtkX3%*Xo#7(e,AXVa1/VIHg&nfuoEก\'SH4al:=;/oDllrfF4oic^pUH#;h"AftrIDJ1K+=B%+[*WVZ-กrP?b0?8MMMQBLA;pmd[kS/OoS.f;^K,e9Bd'+*UMd@]E`^lU(;=(F'U+RE*5&1QPEpIFH?,J;/TJ=Z&PL?CfbkH5WHFI)IG[m0/(W*]ข");[*u@OIVA)Rg7W#ขL1_3.mQกPP@U1H5Q^D(r;*mn,DEDT"54SN)5JPKe)Z3W[FmVJri;$`aSr5rกข/?k?X9bK'J6IWI4)\!JkE:J9EEG!bNeVข]?PYbbb%Lbng.WJ/O#\uT2_Xs/jR@Da0$S*GtTmmKJ_P)[TQKjU_R^@2Xg(f4ne5@1R*FFCf[D2tT=Uก11.Tm\:;DBV\bMDi(13\3th:2D4S16cr:`n2]g"Rg7"Sjm*"NamM;8OHPRU%GmN+`2Q6MX.pW24g(]I-QP)AAcAn`ONfTt4b=S?nO1fE:6"nกc[FZ*u*scW@VkXtu)pJ`Dcก;ก^#ข["b8O8-9RiHaQh@7i"F#Y+.X;Wdj_a@VK9U-9bs)Y*2Y!V3ก+\`'7#,a#[j;m`AJbA'*3;.?`-(YBu_Iqข#iW3Cq"0?กr?CBQMO-%FU?i3m!XA3Vb'A%=ข;bp:)2ขcmhN8ZGm2Q1;jThi\G`g`6Q+pEN$!ขc7P\McTlOTLJfOc)Yn.]jDC(JTbepNR3\6L]Y7ขa^$81tdD[Kh$Z@ZR`n5D[gcZ9f%7?tขegKQ2+m%`okOnT+!/25YTb,ul@ht;p'u-6arSolAY[IdJjH!AmYsAj?GQ+;SQM4@Y^pe9j[n7VA05O"N-K2t23dc)Rl#lgC\+Gbข=aMI2ch=FC$&KdsbK*"ข$nG13#_Sfe7Bi'*gC6BJ,ขA9G-p&\P,3VW.H?=4*N-Qh:/4$JnกYV7c1%,.*,ข=$FeW$;j&l8KYbeSQ]n35H^XP"NHm3im=mGsEc.I+@ข@.B[8iP,S6Wc@YBk;SกKกM]:S9U!b[eZu`A*!lh/^NC#hqtUJ;l2C.Wcc6D'e6?^4J_8+-H:?DC!ขp$##$SKPf2'$_p^AssV]lMCnV9ILE`:e3iuuH2^jLTnJJsb$HAe45'osg001j)u_)LM%LFQhhEfq2g\V9^S,XSuI]1&2%$h#FขeZLtW)%;.d[(]ukkขS3A[W9tZMBoUR[ka-;$nea4rHE-1m37$bh$`p6+%W3=W8L\กBT8bf'c@V@8XQn6กgbM-$K9TemFCn\ข]T;T@kL5[j=T#@21F1G!h4FNO+7'm.3sQmY/9;Dr(m_B+/$@Q_V#W9G#0d4Dl%@2IBN-rTกj#2f;GlE21rb&pT_U6)U)\`NI=u,TAEM=hQLudQ1T_t*eP[1Qd:'pJhs'2HfSTKSc$iiDp_D/CกX!#KQ9lXZ5ZI-P`ZaS6\Qpjf;$k\51n7Q1s?mI3_Y(j03W4(^05JY[W[^LPhfQJYcIm;G#l[:hcG`:ic:"tOhAop,C#P\i(m)JLe;D9Hl_7#RnC8Mdi(ข+r;D-F7oto+V,^T/OI[n'^An%rqH0"Bi1R6(kQ7ขi[*QD+^,J"20^-ข#GZ6GUU"a6;r3rBM5:U[2h$GBMlLnXกmZ&C1RK_d_GX)shSjPq/Qe`C4@`_otFCh$!qaLp1T/2OJ5:*.oKcukFP`2'R`i71[ErauBd@N6Qขk6AJFTiJ_$8AU:plnQo.P1qb(W1Nch;co=A,5g[+pTPh"o*4ข`c4YD*ib%'U!t65Y0Xb\\C3E\F!&`ZX4?RZIK&kUBJt#B\_Wd,7\_,q]+C0%K8FJ*Y'oOB]8EP^#:+qKcCW;tWCL`]ReQ3;[FUCs/;q\.Ie_:$i2oQ0Fick:Eo@NM8q0ZS`e2\iq0jI8k[D?:W?b^962*กH@^Uข?0DB_*`P('/0YJ[D$rnกjXHPXb9@K6`)ldh]:#8UKgMA.H-*0d7?eJ)U',;kV6tMP\AC4r0Q7=ข1/Bkกqeb%t:8!C#XeH9aNAGU2%Md:3f:1Y4b;#:/#:0i:Yg:"N1ก[E"D:ANf)Ie??05.sYS0.uNV[DGqe0]Rhข6bAX7`\#IZ^,/RSH"g6bTi@Oih7@b4\e9uAONu:P2ej.(kp2gaMgl*6AJขOc;กrs04I%cja7;q'SgYDb#!Zก&e+GDLFM4=9CVooSi"57(L2OrDlo((]c_a;WLr1*4fn*P?(5rI^$q/"LQL:$@LDrfE\/cn*psJJJaMJHB&fWtN,jaXu2VAL4:T*M%n(LRH?kk1FqaiVtl!ข(`SW;1YBaE?jhM'/@G?bY%r@GgZP3H]VRQjnSktข(d`FRX/ft5P;)-if`\f/e,f7HGjeD)[$'We*cX6Q^2\?DOE/.:HD_C+'L_1NeFTjY+YG#A)3-P@bjJข1oY.Lb8+D;llHno$OUc_Xj@&%b`;n5S1@T^`kQK9-2tk)$bYj]E5f9U=Qก5mlNRM$;,Ab6%mL]2QEL_[=กBA`X8Ee(9AMl?^^7(t[Fn/S$.=YId1sAD[Vdkbขก;o3กGfB&0sI#LQV=le5Xo`;11EIXh5;AOT;Wg_is\+Gh%ข&@TkqGluกSขF";EYr[D3;!+tCYgfDGpjga$MC#1Oh0b$);!s\9:_]W^bCk$uข/W;MN;,hL"9?qk(4A6gA`(0Q/T4#&eLbXI@EUal]XOSI`!*9'b%8M3^Klu408RgTq?`9,.bQoGFWp21$ntFrcjF9f$กCQiAD"Is't]OKGก'W-KGs0-lf.J\NNขbP`jldN.,A1p+GTIN\2r9)*o3g*RขAD!.+Y=Y4q1PB*o%)9M35&/O865ขcK8eoGs'dk&eF+_AZnc,Yg2Z]?L+fgK)rpLAsDr:.,I:X'IO0@4nr\E9%,Hufr]fQ29\/aRsrDrk,k$+[4r@;\*@_#8-JabกlW#@gd.[K`X`h:Bk^%./k;1Pa:*s+9G=n-'Z]R:B6eaA\FกV4FnDPk*\G#``OU!(4@*SGQTgYNVo[oF5TZuu.U"l-กG_b&28Db\'-sF81*C`กPmYb"NR7qLR,5@kVUf*X.:?EDAsh.$fXi#iInYPj;X\P'Qrf;ns*fiRX&I8-:uY*NK$RTG6\8,K'$LA*h+^cu]`bK&PibpCV#i8T8s[[H=k*Zb,e[GEY=!fbe*r"[C6=ขVNBOe^$3k2]%p;WT7[UขK4VSluoLYgI@6-Cpa,.]E1eขTe3+sOr5/ng%`#@rBhFj=09p#SBpHdpek^=oY)=oNbj_5กqX\Gb*EGf"Cn4u(6WKOO9,NJj+!Zข:7qR*#B(kLKOQ4MTumnCNI-gE?5O?-3e-;7FcW'`sKM2uj)@Hr7BCT'ขkjก)K/CJAgW`aOH[WE*#D+V5ขO[c=lBNgCMbGd9MEh.tOS\/EZn"!8#EXD)~ข
+]]>
+</markdown>
