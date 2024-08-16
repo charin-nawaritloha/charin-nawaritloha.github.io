@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Collections → Set เบื้องต้น</title>	
+
+	<!--header-->	
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<!-- syntax highlight -->
+	<link rel="stylesheet" href="highlight/styles/vs.css">
+	<script src="highlight/highlight.js"></script>
+	<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+	
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Collections → Set เบื้องต้น</h1>
+<p><img src="images/20240815/20240815_0000_cover.svg" class="u-max-full-width" /></p>
+<p>Set (<a target="_blank" href="https://api.dart.dev/stable/dart-core/Set-class.html" title="Set class - dart:core library - Dart API">Set class</a>) เป็นข้อมูลประเภท collection ที่ใช้เก็บข้อมูลสมาชิก<strong>ที่ไม่ซ้ำกัน</strong> และ<strong>ไม่มีการเรียงลำดับข้อมูล</strong> ใครมาก่อนก็อยู่ก่อน หากเพิ่มสมาชิกใหม่แล้วซ้ำกับข้อมูลที่มีอยู่ก็จะตัดทิ้ง ข้อมูลสมาชิกของ Set จะประกาศอยู่ในเครื่องหมายปีกกา <code>{...}</code></p>
+<pre><code class="language-dart">void main() {
+  var mySet = {'Y', 'M', 'C', 'A'};
+  print(mySet); // output → {Y, M, C, A}
+  print(mySet.length); // output →  4
+  print(mySet.first); // output → Y
+  print(mySet.last); // output → A
+
+  mySet.add('X'); // add new member 
+  print(mySet); // output → {Y, M, C, A, X}
+
+  mySet.addAll({'Z', 'A'}); // add by Set (Set is Iterable)
+  print(mySet);// output → {Y, M, C, A, X, Z}
+
+  mySet.addAll(['Z', 'T']); // add by List (List is Iterable)
+  print(mySet);// output → {Y, M, C, A, X, Z, T}
+}
+
+</code></pre>
+<h2>การสร้าง Set</h2>
+<p>การสร้าง Set ใหม่สามารถทำได้โดยใช้วงเล็บปีกกา <code>{...}</code> ในการกำหนด Set ใหม่ ตัว Set รองรับการกำหนดประเภทข้อมูลผ่าน <a target="_blank" href="https://dart.dev/language/generics" title="Generics | Dart">Generic</a></p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ข้อควรระวังในการประกาศ Set ว่าง (empty Set) เนื่องจากข้อมูล Set และ Map ใช้เครื่องหมาย วงเล็บปีกกา <code>{...}</code> เหมือนกัน หากประกาศตัวแปรแบบ <code>var</code> และ <code>{}</code> เท่านั้น จะทำให้ compiler ตีความว่าเป็นข้อมูล Map ไม่ใช่ Set</p>
+</div></div>
+<pre><code class="language-dart">void main() {
+  var myEmptySet1 = &lt;String&gt;{};
+  Set&lt;String&gt; myEmptySet2 = {}; // same as myEmptySet1
+  
+  var itIsMapNotSet = {}; // ❎ warning!! not use this form to declare empty Set
+
+  var mySet1 = {'Y', 'M', 'C', 'A'}; // Set of &lt;String&gt;
+  var mySet2 = &lt;String&gt;{'Y', 'M', 'C', 'A'}; // same as mySet1
+  Set&lt;String&gt; mySet3 = {'Y', 'M', 'C', 'A'}; // same as mySet1
+
+  mySet3.add('K'); // OK
+  mySet3.add(10); // error → The argument type 'int' can't be assigned to the parameter type 'String'.
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง Set แบบไม่สามารถเปลี่ยนแปลงค่าได้ (unmodifiable Set)</h3>
+<p>หากต้องการสร้าง Set ที่ไม่สามารถเปลี่ยนแปลงค่าได้ (แก้ไขค่า/เพิ่ม/ลด สมาชิกใน Set) สำหรับไว้ใช้งาน ให้ใช้ keyword <code>const</code> ในการประกาศ Set</p>
+<pre><code class="language-dart">void main() {
+  const mySet1 = {0, 1, 2};
+  const Set&lt;int&gt; mySet2 = {0, 1, 2}; //same as mySet1
+  var mySet3 = const {0, 1, 2}; //same as mySet1
+  var mySet4 = const &lt;int&gt;{0, 1, 2}; //same as mySet1
+
+  var mySet5 = const &lt;int&gt;{...mySet1}; // use other Set as init data
+  print(mySet5); // output → {0, 1, 2}
+
+  mySet1.add(10); // error → Unsupported operation: Cannot change an unmodifiable set
+  mySet2.add(20); // error → Unsupported operation: Cannot change an unmodifiable set
+  mySet2.removeAll({0, 1}); // error → Unsupported operation: Cannot change an unmodifiable set
+}
+</code></pre>
+<p>อีกวิธีคือการสร้างด้วย <code>.unmodifiable()</code> constructor ตามตัวอย่างดังนี้ (<a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/Set.unmodifiable.html" title="Set.unmodifiable constructor - Set - dart:core library - Dart API">ดู API เพิ่มเติม</a>)</p>
+<pre><code class="language-dart">void main() {
+  var mySet1 = Set.unmodifiable({0, 1, 2}); // use Set elements as init data
+  var mySet2 = Set.unmodifiable([0, 1, 2]); // use List elements as init data
+  var mySet3 = Set.unmodifiable(mySet1); // use other Set as init data
+
+  mySet1.add(10); // error → Unsupported operation: Cannot change an unmodifiable set
+  mySet2.add(20); // error → Unsupported operation: Cannot change an unmodifiable set
+  mySet3.removeAll({0, 1}); // error → Unsupported operation: Cannot change an unmodifiable set
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การเข้าถึงและตรวจสอบการมีอยู่ของสมาชิกภายใน Set</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเข้าถึงตามตำแหน่งของสมาชิก</h3>
+<p>การเข้าถึงสมาชิกใน Set ตามตำแหน่งที่ต้องการ สามารถใช้คำสั่งต่อไปนี้</p>
+<ul>
+<li><code>.first</code> เข้าถึงสมาชิกตัวแรก</li>
+<li><code>.last</code> เข้าถึงสมาชิกตัวสุดท้าย</li>
+<li><code>.elementAt(<em>index</em>)</code> เข้าถึงสมาชิกลำดับที่ <em>index</em> → <code>0</code> ถึง <code>Set.length - 1</code></li>
+</ul>
+<pre><code class="language-dart">void main() {
+  var mySet1 = {'A', 'B', 'C', 'D', 'E'};
+  print(mySet1.first); // output → A
+  print(mySet1.elementAt(0)); // output → A
+  print(mySet1.elementAt(2)); // output → C
+  print(mySet1.elementAt(mySet1.length - 1)); // output → E
+  print(mySet1.last); // output → E
+
+  print(mySet1.elementAt(9)); // error → RangeError (index): Index out of range: index should be less than 5: 9
+  print(mySet1[0]); // error → The operator '[]' isn't defined for the type 'Set&lt;String&gt;'.
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>อย่าอ้างตำแหน่ง index ที่ไม่อยู่ในช่วงที่กำหนด เพราะจะทำให้เกิด error ได้<br/>Set ไม่รองรับการเข้าถึงสมาชิกด้วยเครื่องหมายวงเล็บก้ามปู <code>[<em>index</em>]</code></p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การตรวจสอบว่าใน Set มีสมาชิกที่สนใจหรือไม่</h3>
+<ul>
+<li><code>.lookup()</code> ใช้เพื่อดูว่าใน Set มีสิ่งที่สนใจอยู่หรือไม่ ถ้ามี จะคืนค่าสมาชิกตัวนั้นกลับมา ถ้าไม่เจอจะคืนค่า <code>null</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/lookup.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.contains()</code> ใช้ทดสอบว่ามีค่าที่สนใจอยู่ใน Set หรือไม่ ถ้ามีจะคืนค่า <code>true</code> กลับมา <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/contains.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.containsAll()</code> ใช้ทดสอบว่ามี elements ที่สนใจหรือไม่ ถ้ามีครบทุก elements ที่ระบุจะคืนค่า <code>true</code> กลับมา <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/containsAll.html">ดู API เพิ่มเติม...</a></li>
+</ul>
+<pre><code class="language-dart">void main() {
+  var mySet1 = {1, 2, 3, 10, 20, 30};
+
+  var lookupResult1 = mySet1.lookup(10);
+  print(lookupResult1); // output → 10
+
+  var lookupResult2 = mySet1.lookup(100);
+  print(lookupResult2); // output → null
+
+  bool containsResult1 = mySet1.contains(10);
+  print(containsResult1); // output → true
+
+  bool containsResult2 = mySet1.contains(100);
+  print(containsResult2); // output → false
+
+  bool containsAllResult1 = mySet1.containsAll({1, 10, 30});
+  print(containsAllResult1); // output → true
+
+  bool containsAllResult2 = mySet1.containsAll({1, 10, 40});
+  print(containsAllResult2); // output → false
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การเพิ่ม ลบ สมาชิกใน Set</h2>
+<p>ตัว Set จะมีคำสั่งในการจัดการข้อมูลของสมาชิก เพิ่ม และ ลบ เท่านั้น การแก้ไขสมาชิกตัวใดตัวหนึ่งโดยตรงไม่สามารถทำได้ หากต้องการแก้ไขให้ทำโดย remove ตัวเก่าออกแล้วแทนด้วยค่าใหม่โดยการ add เข้าไปใน Set</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเพิ่มสามาชิกใหม่</h3>
+<ul>
+<li><code>.add()</code> ใช้เพิ่มสมาชิกใหม่ 1 ตัว <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/add.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.addAll()</code> ใช้เพิ่มสมาชิกใหม่มากกว่า 1 ตัว ด้วย Iterable elements <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/addAll.html">ดู API เพิ่มเติม...</a></li>
+</ul>
+<pre><code class="language-dart">void main() {
+  var mySet1 = {1, 2, 3};
+  var mySet2 = &lt;int&gt;{};
+
+  mySet2.add(0); // add single element
+  print(mySet2);  // output → {0}
+  mySet2.addAll(mySet1); // add from othter Set
+  print(mySet2); // output → {0, 1, 2, 3}
+  mySet2.addAll([10, 20, 30]); // add from List elements
+  print(mySet2); // output → {0, 1, 2, 3, 10, 20, 30}
+}
+</code></pre>
+<h3>การลบสมาชิก</h3>
+<ul>
+<li><code>.remove()</code> ใช้ลบสมาชิกที่ตรงกับค่าที่ต้องการ หากลบสำเร็จจะคืนค่าเป็น <code>true</code> หากไม่พบค่าที่จะลบจะคืนค่า <code>false</code> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/remove.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.removeAll()</code> ใช้ลบสมาชิกที่ตรงกับค่าใน elements ที่ต้องการ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/removeAll.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.retainAll()</code> ใช้ลบสมาชิกที่ไม่ตรงกับค่าใน elements ที่ต้องการ (ทำงานตรงข้ามกับ <code>.removeAll()</code> ) <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/retainAll.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.removeWhere()</code> ใช้ลบสมาชิกที่ตรงกับเงื่อนไขที่กำหนด <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/removeWhere.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.retainWhere()</code> ใช้ลบสมาชิกที่ไม่ตรงกับเงื่อนไขที่กำหนด (ทำงานตรงข้ามกับ <code>.removeWhere()</code> )  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/retainWhere.html">ดู API เพิ่มเติม...</a></li>
+<li><code>.clear()</code> ใช้ลบสมาชิกทุกตัวใน Set มีผลทำให้เป็น Set ว่าง (empty Set) และค่า <code>.length</code> เป็น 0 <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/clear.html">ดู API เพิ่มเติม...</a></li>
+</ul>
+<p>ตัวอย่าง การลบข้อมูลโดยใช้กลุ่มคำสั่ง remove และ clear</p>
+<pre><code class="language-dart">void main() {
+  var mySet1 = {1, 2, 3, 10, 20, 30};
+
+  bool result = mySet1.remove(1);
+  print(result); // output → true
+  print(mySet1); // output → {2, 3, 10, 20, 30}
+
+  mySet1.removeAll({10, 30});
+  print(mySet1); // output → {2, 3, 20}
+
+  mySet1.removeWhere((element) =&gt; element &gt; 10);
+  print(mySet1); // output → {2, 3}
+
+  mySet1.clear();
+  print(mySet1); // output → {}
+}
+</code></pre>
+<p>ตัวอย่าง การลบข้อมูลโดยใช้กลุ่มคำสั่ง retain ที่จะทำงานตรงข้ามกับกลุ่มคำสั่ง remove</p>
+<pre><code class="language-dart">void main() {
+  var mySet1 = {1, 2, 3, 10, 20, 30};
+
+  mySet1.retainAll({10, 30, 40});
+  print(mySet1); // output → {10, 30}
+
+  mySet1.retainWhere((element) =&gt; element &gt; 10);
+  print(mySet1); // output → {30}
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การประมวลผลด้านคณิตศาสตร์ union intersection และ difference</h2>
+<p>สิ่งที่ Set ต่างจากข้อมูล Collections อื่น ๆ คือ มันสามารถทำการ union intersection และ difference ตามที่เคยเรียนในวิชาคณิตศาสตร์ได้ สามารถนำไปประยุกต์เพื่อประมวลข้อมูลในโปรแกรมได้สะดวกขึ้น</p>
+<h3>∪ union นำข้อมูลของ 2 Set มารวมกัน</h3>
+<p>การ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/union.html" title="union method - Set class - dart:core library - Dart API">union</a> จะเป็นการรวมสมาชิกของ Set ทั้ง 2 เข้าด้วยกัน โดยหากมีตัวไหนซ้ำ จะเลือกไว้เพียง 1 ตัว</p>
+<div class="image"><img src="images/20240815/20240815_0200_union.png" class="u-max-full-width" /><div>การ union ของ Set จำนวน 2 ชุดเข้าด้วยกัน</div></div>
+<pre><code class="language-dart">void main() {
+  var setA = {1, 2, 3, 4};
+  var setB = {2, 4, 6, 8};
+  var result = setA.union(setB);
+  print(result); // output → {1, 2, 3, 4, 6, 8}
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>∩ intersection เลือกข้อมูลของ 2 Set ที่เหมือนกัน</h3>
+<p>การ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/intersection.html" title="intersection method - Set class - dart:core library - Dart API">intersection</a> จะเป็นการเลือกสมาชิกของ Set ทั้ง 2 ที่เหมือนกันเท่านั้น</p>
+<div class="image"><img src="images/20240815/20240815_0300_intersection.png" class="u-max-full-width" /><div>การ intersection ของ Set จำนวน 2 ชุดเข้าด้วยกัน</div></div>
+<pre><code class="language-dart">void main() {
+  var setA = {1, 2, 3, 4};
+  var setB = {2, 4, 6, 8};
+  var result = setA.intersection(setB);
+  print(result); // output → {2, 4}
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>difference เลือกข้อมูลของ Set ที่ไม่มีในอีก Set</h3>
+<p>การ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set/difference.html" title="difference method - Set class - dart:core library - Dart API">difference</a> จะเป็นเอาตัว Set ที่เลือกเป็นตัวตั้ง แล้วลบด้วย Set ที่ใช้เปรียบเทียบ ผลที่ได้คือ สมาชิกใน Set ที่เป็นตัวตั้งที่ไม่อยู่ใน Set ที่เปรียบเทียบ ภาพด้านล่างแสดงการ difference ของ Set A และ B</p>
+<div class="image"><img src="images/20240815/20240815_0400_diff.png" class="u-max-full-width" /><div>การ difference ของ Set จำนวน 2 ชุด</div></div>
+<pre><code class="language-dart">void main() {
+  var setA = {1, 2, 3, 4};
+  var setB = {2, 4, 6, 8};
+
+  var resultA = setA.difference(setB);
+  print(resultA); // output → {1, 3}
+
+  var resultB = setB.difference(setA);
+  print(resultB); // output → {6, 8}
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<![CDATA[
+ก~+,^C)z!".6q?#SKKp"b/u_b'\IacIfO:5@@o4Xb#@"C8I0l*.UN!R]?'9hZ`7P"HO8#3$o,h/:l_jtsEn"c\KaขCljSe$RWข+nA9\F7(Et93G$W@XEnTMt`gHHbSt-ขO]??6jmten+Bd1Ed]Tof3eFrY-SCsdB+\N:ZกI[d?dH&4GgP2p`=k@S"?(?3d5IU\_LjT)AW/X2jBZuZdX!4E4NV&7ข#QQ??ZTkXm6*eXikV3_oQ!FYr_kIg[PAH^WrQVg/)"7qE6gA!5L/DWWcW24a/2kJt"Gee3`JF=3jqtSA#6MBKM(FP5)J]nkg$\P5$aqM@YpG"YKU0M=3f%0aUF!5D`_nURbq;-],UT]sqm:T^CL,4f.U;\2aIOM77)/$lF3YiFjTqs$HTh,,G"G,i5#YJRl,V!+*mn(^hGEกa9d#ก$L`tqW37Gr0UmY&e#.*"SGM&hkaVKX=XMNS7KIhGYZUToXfPZ8c28"\กXuCOW-S_Q:8[\9MisD5WYLtfX(uZ$:h=hTk6BCGOTS2HN[cDepgI\[UBgEiu1ffY,_Vm4ED\!J#Dc[4+"n'(Yk'L.,0ขJgiขYFpt6c$BQ)C8[EUTZH+Vm%V4=-giO`CZ40DYf^rH!\^^VZAr_93L4kM02ข,jpR)Lbr2O&fud?!K2lขV@SUZHBdUYCf&u#/c6*DWB1qขcYa'.^V)iCMQ)qX[VQd/T;lFE7GE74QoR^n/TWO(,?/cM42o\Q:mj7p`cWj"cn'AIF_b6!M"\(.X\Oi!Sco4ar@2'KNL'_Q()lUAc-L7\/MUPขt$&pD&fi2HtL:*`:87\ข#+&R[2VS3VU(ldYmMRk:/ข^6rP8H1Vqu_-ZuMl+*g/]/$$F35j.8W\o'lI;ก6rH-rgIZb,rq/pnm&ZGJ.Aqข6Q=i.9n+]WRT6=QfS$,5Mp2#8rOAขl"f/gq&QX*(mH7;,!^!3j2n%E72oP+rHE!_OR)]9;UB?ข[,!EtN)`hc9^;cLmE;ft8mEZIicก#N?e?;PAEgNSB-lp5ข,'Z0sJ?/tfN'กB"D*s`a#8*r9Ld?B%=0a(+CQ:\(:([uoRPTJ9p_i7\i$=)(9CD^TLBNK)LA/1P8o_:-,!EmuqanF2m2JgI2J@#I83HXsRGhc#%[8p7C.dbIq@YiกJ)L$&^m4,K4;"aM;SHXN\e(8กU-a#bgn^`i/oo6=nC4VIBF`mOMq=`ขp!sm;\7ก7u,5I/%Y_g)APก;=uoGKW^#mL&pi,3Wo]]KWOj$t9pn6N6tof)[$#s?gD4*M/s5D!=b+BitV=S7;16pข]qVrn0kPY,riV8CขZ;*7/ขLs04+bbR-T9eMข(BXT0VBh;QBdJPs*ZMTpMS`^UG6P2V5qdJX/ข_ข7K6/W"/ก^0o'humi554]tSD@RMJขV@Qma72b6XกกtY?1V/7V&$0h(c[)qB+YNiC//oN2EeI)RNUDTGWuU/_2ZYikA@b%UขGKhk('an/c"Eb.^DlWiK9fro_O$g?$.lrOJh"h?eO:!,GuSQT-_H=(&I.i(AXN5PY$]Xoh87c-P3mdOก!Zp08NE7Z^5Zข7)k5UกD;*^Y$H;UoaLi@DLV!Y?"eG008qGjal\l/R68;?9W1gB\LKGH\atTTlE1pTC4"@/TO,t!L9`Dก#nCIn*ขd386903nC?+':NO;rLYN#hCrkslK=[:^#K]%/o"C3Bq10MiUq(tgo@$p=dJT:\G$\s@c+%31กrdY.^ekc`ng%!FgFk.RONIg+U9'\i,+T])EJ=C0P3+.17#,AOก3SHSY'UpkM,=CR4p'E2J5@sWLiRMh],!!Om#LKWAnB7(T5Lj/oM0omH\P^N]bj-%4F3%OHLW*ข*_FsO]#chCTQ?)c`4X0RH#qBrmQ_ICpjf+kN[*Op#*F#Wf+.n7dAs&@DU/mN$,=^6o(bกIneu(iB%bd(r[]H0""`QT6GoJ_กG3)h9r'**Eq4GRC;LoaopU7H(YES_db'QSB8W%pe-GkDoo5rZJml&seJMuCPpfกXW.[K2&"tMDWH[SJm;5&X+[`;cL(OgPS`ISeb_lHrnQLk5pR=gCAG:@u*V%eAKG5A-E_*Iub\K,3g(ข?FM+=_mJ=@cF-LEm.YJrPRF!.p8@d5)EI%M7R;No+E+2.=Y0W-ja#(L=5frcGEjqMUVsF]pIZ_FtnDL_jY/jp^L']?pfd"5:=l"1']5T%N@GPZjGV?W&?HqtP.Wh`.&TB_&NNla.KIPnP`fk*KErZX!F$\^#-.P1skk6!`GuZ2i34Q)rm=#T_)'qQijc;H\ONpcei!asb%/$UE#\ขka#e/s[,5(5กC&4!)&J!:OGq/iAr3`กga)IK64@jV#'HQ6fhFl=*ขjl3C:PLe:(e:hD^Sh$ขg:5;uIDM`D0ND'_HMVb(I(BFni1ORD5O*8uuu^9H2PU'ZkF^FT(\7Dm*0TYAL*-:LIFqe&e?dlGhZNS/[]A4rYA6saURI)&Y6nsข'lขA?K?0N$(#_t3H/P%R$Oq^J)k*J3oWYT`ol$;5]jT'u]!35ขqVhข;J2Yeก]sNj2Q2TC_k*IP^n)BH`G5"ntVHCj8RaV^oc,?กB.6UpK,3JEmXQ\m9AMdUkuRD/\(m[:-qj[T9H",e)lUVi8($:SQlrOlLarqCGI9],"Z`U/uq,:@@8D9lL6S6A^:;CP,'oB-ScQ'q;!Q"e8h"3iAS)9(HHM*e?i=3/P,G:jHteT2tlNag'C^8Pr6O$XeB\L&!4B26,#ขก+3LlH%9/@2ขJI4%XYQhL/dSCYdDb#/[[JQE9A-_W(dZL6En]S=ขXLtGfBE(+=3/F=;bM8k03ZAGWa&6n4bG.1%=eqYก'ADL7m)_'s^*Dd2YBUq8T9@S_cOZ7r!g5.21Zo@h9E]W&piA$;=Y)ON$RID$"0PPJ.spG,U?Z?!_(=HTUd6=T+Dt*@e.jZ;tbr;b5&hD^lIERข0pm)WhN,Woข-sY^V\(aicZ+ข&978h52jri0X^gL.%ก6#q,j0n8]NXJoAa3!6R?JbK@KD+7VI*09qR^Y-BtjTX^1s-!mIGZ9;MJlL8FขWAAT#7lJข4-8R$.6.k"t,u#%I0ขO)tF*T\ChW]4.O=@?(hj@k9f"p+$4G]DAV#$#?p0'u,1ZS&N!u`h)doTMueX"V-BOj!mกIO(WCRVS'\V@gMf@f"S"2faF)g)F.2=ULqXc%G9c2uPQ/k7hjd$JjM?I%J"FVdi*-5HNfYKkWNO"$.3pR+h_\Kf1+D"\=;h@Xs9HFข2no@j(7b'ขEU0?%Ic)##I-15n;%SYiA0-0793((eBWEh#S?*sKก`.P80#:$^COdo-oDGGqt2f6/!Daf+.u33S]dS=EZ/Yc#H^=[YT%dqD"\D%m]d9D4`&B-oGYT=fdR@@[Qdh*-t.D52H^-W?Ca7aPก'#'#mZN]1BgN..:]j#9pG7กJdZก&\halh$PX9J3J-Q_()/7Gl13bY4d-qV5R-SCGN9ntr/7gJ3ad6Kข-sBp=ขdO&9P#mRZqH0ip\D#3@gcZ-9_`Ko/L"กCK4'S4YA/[9c*5R]c*IbapTu3khJaC.pRio*L*sPqXg8NN538krKktdgD!P9j.8X$GกhrrAQ8o]$MN(4q1[4_utEeVY"r1#oYS[ZBขm2SOmtoก-1nVRขft]piF]5,!!tPPtClLT;2ITK\&=A2$cT+K7%?s7[0]6.I2ol6([3[9f;Jo2MlnTกu?6Cs6k7G$UXYEJ26Pq]=Q,dk&hM[=(CL%X.*3SS5DE=BtdY7%sZ=8+fI%ZNKA*TrขcJWcm)@YcD:(OGJu&+ndCb9o]l^.Z5LPmขJ?h;j$[SS/+V3Xac=@Cj00#8OM^sal]1n2k"V#"mb]qb;RaSe^D__o@Uข/X5*ข:=r1ICu_7Jn(c;PlN6"b2($(กo.*m$JfAZU6XMgSVNTI5S1ZpBZ&E/OKCข5,XกS7]'.?tขHQ2)D9a7?MuQRhPO-3t.NP?eh(:+ขlHdHU+Uhj*?C%5jleE9=uW]')G^+:$EN]Xq9Uc(UM:.?8Tg)^ZFRกQVrV5O:1-77Ke`]B=Zf2MH?1b]@E!3XcubtT\Cข-M_กtpAecptiข5MhV1,9C49DGnq.3eq6%Cn5$)m)H_!@QkA0!sข^_กZUko0t!`\Y2D@Q]LiS,7m$VhdQS"3AXEA7dNH@#CDq3Lrm:d:oWK4K7bpTsuE['C.ก'c025HTdJCBU021#4!K'/)9pt626`lrSjZrY/toBOl)1ขXq#*3MRD(^:FjK]HVOFRPp7BjioLjKm]/?%q);o+2qLOb?ljLduItCN`.f&PUYq_BUN1F-.q&.5g,dT+(OCO.16[fQp3T=Pข^5]XDfM2%%;ONcKL+OY+\s,#D_JNckIC\.CE$fau[cE`2APHZc+h+P88=!d)i[#*);?gS\&+NO=U)D;V$ap@-U4t~ข
+]]>
+</markdown>
