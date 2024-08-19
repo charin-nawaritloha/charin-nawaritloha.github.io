@@ -1,8 +1,7 @@
+/* ------ Quark ---------*/
 @font-face {
 	font-family: 'Quark';
 	src: url('../fonts/Quark-Light.ttf');
-	/*src: url('/fonts/Quark-Light.eot');
-	src: url('/fonts/Quark-Light.woff');*/
 	font-weight: 400;
 	font-style: normal;
 }
@@ -10,13 +9,11 @@
 @font-face {
 	font-family: 'Quark';
 	src: url('../fonts/Quark-Bold.ttf');
-	/*src: url('/fonts/Quark-Bold.eot');
-	src: url('/fonts/Quark-Bold.woff');*/
 	font-weight: 700;
 	font-style: normal;
 }
 
-
+/* ------ BaiJamjuree ---------*/
 @font-face {
 	font-family: 'BaiJamjuree';
 	src: url('../fonts/BaiJamjuree-Medium.ttf');
@@ -45,6 +42,59 @@
 	font-style: italic;
 }
 
+
+/* ------ IBMPlexSansThaiLooped ---------*/
+@font-face {
+	font-family: 'IBMPlexSansThaiLooped';
+	src: url('../fonts/IBMPlexSansThaiLooped-Regular.ttf');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'IBMPlexSansThaiLooped';
+	src: url('../fonts/IBMPlexSansThaiLooped-SemiBold.ttf');
+	font-weight: 700;
+	font-style: normal;
+}
+
+
+
+/* ------ IntelOneMono --------- */
+@font-face {
+	font-family: 'IntelOneMono';
+	src: url('../fonts/IntelOneMono-Regular.ttf');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'IntelOneMono';
+	src: url('../fonts/IntelOneMono-Italic.ttf');
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'IntelOneMono';
+	src: url('../fonts/IntelOneMono-Bold.ttf');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'IntelOneMono';
+	src: url('../fonts/IntelOneMono-BoldItalic.ttf');
+	font-weight: 700;
+	font-style: italic;
+}
+
+
+
+
+
+
+
 /* font size desktop/tablet  */
 html {
   font-size: 75%; //overwrite skeleton.css
@@ -60,15 +110,21 @@ html {
 
 
 html,body {
-  font-family: BaiJamjuree, Leelawadee, Tahoma, sans-serif;
+  /*font-family: BaiJamjuree, Leelawadee, Tahoma, sans-serif;*/
+  font-family: IBMPlexSansThaiLooped, Leelawadee, Tahoma, sans-serif;
   line-height: 2rem;
 }
 
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: Quark, BaiJamjuree, Leelawadee, Tahoma, sans-serif;
+  /*font-family: Quark, BaiJamjuree, Leelawadee, Tahoma, sans-serif;*/
+  font-family: Quark, IBMPlexSansThaiLooped, Leelawadee, Tahoma, sans-serif;
   font-weight: 700;
   letter-spacing: 0;
+}
+
+code {
+	font-family: IntelOneMono, Consolas, monospace ;
 }
 
 .button,

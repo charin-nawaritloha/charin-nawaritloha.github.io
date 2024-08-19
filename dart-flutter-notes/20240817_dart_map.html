@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Collections→Map เบื้องต้น</title>	
+
+	<!--header-->	
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<!-- syntax highlight -->
+	<link rel="stylesheet" href="highlight/styles/vs.css">
+	<script src="highlight/highlight.js"></script>
+	<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+	
+	<!-- web page css -->
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<!-- table of content generater -->
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	
+	<!-- google ads -->
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Collections→Map เบื้องต้น</h1>
+<p><img src="images/20240817/20240817_0000_cover.svg" class="u-max-full-width" /></p>
+<p>Map (<a target="_blank" href="https://api.dart.dev/stable/dart-core/Map-class.html" title="Map class - dart:core library - Dart API">Map class</a>) เป็นข้อมูลที่เก็บในรูปแบบ key-value pair การเข้าถึงข้อมูลจะใช้วิธีการอ้าง key เพื่อให้เข้าถึงข้อมูลที่ต้องการได้อย่างรวดเร็ว ตัว key จะเป็นการจัดเก็บข้อมูลแบบไม่ซ้ำ และเป็นรูปแบบข้อมูลที่ใช้ในฐานข้อมูลประเภท non-relational database</p>
+<h2>การสร้าง Map</h2>
+<p>ข้อมูล Map จะถูกประกาศในเครื่องหมายวงเล็บปีกกา <code>{...}</code> โดยสามารถกำหนดประเภทข้อมูลที่บรรจุอยู่ใน Map ผ่าน  <a target="_blank" href="https://dart.dev/language/generics" title="Generics | Dart">Generics</a></p>
+<pre><code class="language-dart">void main() {
+  var emptyMap1 = {};
+  Map&lt;dynamic, dynamic&gt; emptyMap2 = {}; //same as emptyMap1
+
+  var weekend = &lt;String, String&gt;{'sat': 'Saturday', 'sun': 'Sunday'};
+  print(weekend['sat']); // output → Saturday
+  print(weekend['sun']); // output → Sunday
+  print(weekend['mon']); // output → null
+
+  var oneTwo = &lt;int, String&gt;{1: 'One', 2: 'Two'};
+  print(oneTwo[1]); // output → One
+  print(oneTwo[2]); // output → Two
+  print(oneTwo[3]); // output → null
+  print(oneTwo['x']); // output → null
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง Map จาก elements อื่นที่มีอยู่แล้ว</h3>
+<p>หากต้องการสร้าง Map จาก Map elements อื่น ๆ สามารถใช้ <code>.from()</code> และ <code>.of()</code> constructors ในการสร้างได้โดยมีรายละเอียดการใช้งานดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/Map.from.html" title="Map.from constructor - Map - dart:core library - Dart API"><code>.from()</code></a> ตัว elements ที่จะนำมาใช้ หากมี Generics ที่ไม่ตรงกับที่ประกาศ จะพยายามแปลงให้อัตโนมัติ (casting)</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/Map.of.html" title="Map.of constructor - Map - dart:core library - Dart API"><code>.of()</code></a> ตัว elements ที่จะนำมาใช้ <strong>ต้องมี Generics ที่ตรงกับที่ประกาศเท่านั้น</strong> หากไม่ตรงจะ compile ไม่ผ่าน</li>
+</ul>
+<p>ตัวอย่างการใช้ <code>.from()</code> หากตัว elements ที่นำมาสร้างมี Generics ประเภทไม่ตรงกัน ก็จะพยายาม cast ให้อัตโนมัติ แต่ถ้าไม่สามารถ cast ได้ จะขึ้น exception error เมื่อ run โปรแกรม</p>
+<pre><code class="language-dart">void main() {
+  var planets = &lt;num, String&gt;{1: 'Mercury', 2: 'Venus', 3: 'Earth', 4: 'Mars'};
+  var mapFromNum = Map&lt;int, String&gt;.from(planets); // OK automatic cast key from num → int
+  print(mapFromNum); // {1: Mercury, 2: Venus, 3: Earth, 4: Mars}
+
+  var mapFromString =
+      Map&lt;String, String&gt;.from(planets); // error → type 'int' is not a subtype of type 'String' in type cast
+  print(mapFromString);
+}
+</code></pre>
+<p>สำหรับ <code>.of()</code> นั้น ต้องมี Generics แบบเดียวกันเท่านั้นถึงจะยอมให้สร้างจาก elements ดังกล่าว</p>
+<pre><code class="language-dart">void main() {
+  var planets = &lt;num, String&gt;{1: 'Mercury', 2: 'Venus', 3: 'Earth', 4: 'Mars'};
+  
+  var mapNew1 = Map&lt;num, String&gt;.of(planets); // OK
+  print(mapNew1); // → {1: Mercury, 2: Venus, 3: Earth, 4: Mars}
+
+  var mapNew2 = Map&lt;int, String&gt;.of(planets); // error → The argument type 'Map&lt;num, String&gt;' can't be assigned to the parameter type 'Map&lt;int, String&gt;'. 
+  print(mapNew2);
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง Map แบบแก้ไขไม่ได้ (Unmodifiable Map)</h3>
+<p>Map ที่แก้ไขไม่ได้คือ Map ที่สร้างแล้ว ไม่สามารถเพิ่ม/ลด/แก้ไข สมาชิกใน Map ได้ มีวิธีการสร้าง 2 วิธีคือ ใช้ keyword <code>const</code> หรือใช้  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/Map.unmodifiable.html" title="Map.unmodifiable constructor - Map - dart:core library - Dart API"><code>.unmodifiable()</code></a> constructor</p>
+<p>ตัวอย่างการใช้ <code>const</code></p>
+<pre><code class="language-dart">void main() {
+  var test0 = const {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+  var test1 = const &lt;int, String&gt;{1: 'Mercury', 2: 'Venus', 3: 'Earth'}; // same as test0
+  const test2 = &lt;int, String&gt;{1: 'Mercury', 2: 'Venus', 3: 'Earth'}; // same as test0
+  const Map&lt;int, String&gt; test3 = {1: 'Mercury', 2: 'Venus', 3: 'Earth'}; // same as test0
+  Map&lt;int, String&gt; test4 = const {1: 'Mercury', 2: 'Venus', 3: 'Earth'}; // same as test0
+
+  test0.addAll({4: 'Mars'}); // error → Unsupported operation: Cannot modify unmodifiable map
+  test0.remove(1); // error → Unsupported operation: Cannot modify unmodifiable map
+}
+</code></pre>
+<p>ตัวอย่างการใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/Map.unmodifiable.html" title="Map.unmodifiable constructor - Map - dart:core library - Dart API"><code>.unmodifiable()</code></a> constructor</p>
+<pre><code class="language-dart">void main() {
+  var test0 = Map&lt;int, String&gt;.unmodifiable({1: 'Mercury', 2: 'Venus', 3: 'Earth'});
+  Map&lt;int, String&gt; test1 = Map.unmodifiable({1: 'Mercury', 2: 'Venus', 3: 'Earth'}); // same as test0
+
+  test0.addAll({4: 'Mars'}); // error → Unsupported operation: Cannot modify unmodifiable map
+  test1.remove(1); // error → Unsupported operation: Cannot modify unmodifiable map
+}
+
+</code></pre>
+<h2>การเข้าถึงสมาชิกใน Map</h2>
+<p>เนื่องจาก Map เป็นโครงสร้างข้อมูลที่เป็น key-value pair ผู้ใช้สามารถเข้าถึงส่วนของข้อมูลได้ 3 อย่างคือ</p>
+<ul>
+<li>ข้อมูล value ที่ตรงกับ key ที่ระบุ</li>
+<li>ข้อมูล key elements</li>
+<li>ข้อมูล value elements</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ระบุ key เพื่อให้ได้ value</h3>
+<p>รูปแบบนี้เป็นจุดประสงค์หลักในการใช้ Map นั้นคือ ใช้ key ในการเข้าถึง value ที่ตรงกัน สามารถเขียนโดยใช้เครื่องหมายวงเล็บก้ามปู <code>[key]</code> เพื่อให้ได้ value กลับมา</p>
+<p>หาก key ที่ระบุ ไม่มีอยู่ใน Map ที่ระบุ จะคืนค่า null กลับมา</p>
+<pre><code class="language-dart">void main() {
+  var planets = {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+  print(planets[0]); // output → null
+  print(planets[1]); // output → Mercury
+  print(planets[2]); // output → Venus
+
+  var weekends = {'sat': 'Saturday', 'sun': 'Sunday'};
+  print(weekends['sun']); // output → Sunday
+  print(weekends['sat']); // output → Saturday
+  print(weekends['mon']); // output → null
+}
+</code></pre>
+<h3>การเข้าถึง key elements</h3>
+<p>ใช้สำหรับดึงข้อมูล key ใน Maps ทั้งหมดออกมาว่ามี key อะไรอยู่บ้าง ใช้คำสั่ง <code>.keys</code> เพื่อคืนค่า Iterable keys กลับมา แล้วใช้คำสั่งใน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable-class.html">Iterable class</a> เพื่อไล่อ่านข้อมูลตามความต้องการ</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;int, String&gt; planets = {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+  Iterable&lt;int&gt; keys = planets.keys;
+
+  print(keys); // output → (1, 2, 3)
+
+  for (int index = 0; index &lt; keys.length; ++index) {
+    print('keys at index [$index] is ${keys.elementAt(index)}');
+  }
+
+  for (var key in keys) {
+    print('planets[$key] = ${planets[key]}');
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>(1, 2, 3)<br/>
+keys at index [0] is 1<br/>
+keys at index [1] is 2<br/>
+keys at index [2] is 3<br/>
+planets[1] = Mercury<br/>
+planets[2] = Venus<br/>
+planets[3] = Earth</p>
+</blockquote>
+<h3>การเข้าถึง value elements</h3>
+<p>ใช้สำหรับดึงข้อมูล value ใน Maps ทั้งหมดออกมาว่ามี value อะไรอยู่บ้าง ใช้คำสั่ง <code>.values</code> เพื่อคืนค่า Iterable values กลับมา แล้วใช้คำสั่งใน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable-class.html">Iterable class</a> เพื่อไล่อ่านข้อมูลตามความต้องการ</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;int, String&gt; planets = {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+  Iterable&lt;String&gt; values = planets.values;
+
+  print(values); // output → (Mercury, Venus, Earth)
+
+  for (int index = 0; index &lt; values.length; ++index) {
+    print('values at index [$index] is ${values.elementAt(index)}');
+  }
+
+  for (var value in values) {
+    print('$value is in planets');
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>(Mercury, Venus, Earth)<br/>
+values at index [0] is Mercury<br/>
+values at index [1] is Venus<br/>
+values at index [2] is Earth<br/>
+Mercury is in planets<br/>
+Venus is in planets<br/>
+Earth is in planets</p>
+</blockquote>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การทดสอบว่า Map มี key หรือ value ที่สนใจหรือไม่</h2>
+<p>การทดสอบสามารถทำได้โดยใช้คำสั่ง <code>.containsKey()</code> และ <code>.containsValue()</code> เพื่อทดสอบว่ามีค่าที่สนใจหรือไม่ ถ้ามีจะคืนค่ากลับมาเป็น <code>true</code></p>
+<pre><code class="language-dart">void main() {
+  Map&lt;int, String&gt; planets = {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+
+  print(planets.containsKey(0)); // output → false
+  print(planets.containsKey(1)); // output → true
+  print(planets.containsValue('Mars')); // output → false
+  print(planets.containsValue('Earth')); // output → true
+}
+
+</code></pre>
+<p>จากตัวอย่างข้างบน หากต้องการทดสอบผ่าน Iterable ของ keys กับ values ก็สามารถทำได้เช่นเดียวกัน ผ่านคำสั่ง  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/contains.html" title="contains method - Iterable class - dart:core library - Dart API"><code>.contains()</code></a></p>
+<pre><code class="language-dart">void main() {
+  Map&lt;int, String&gt; planets = {1: 'Mercury', 2: 'Venus', 3: 'Earth'};
+
+  print(planets.keys.contains(0)); // output → false
+  print(planets.keys.contains(1)); // output → true
+  print(planets.values.contains('Mars')); // output → false
+  print(planets.values.contains('Earth')); // output → true
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การ เพิ่ม/ลบ/แก้ไข สมาชิกใน Map</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การเพิ่มสมาชิก</h3>
+<p>สามารถเพิ่มสมาชิกได้ 2 แบบ แบบเพิ่มทีละตัว เพิ่มโดยเอาสมาชิกใน Map อื่นมาใส่</p>
+<ul>
+<li>เพิ่มทีละตัว โดยใช้ operator  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/operator_put.html" title="operator []= method - Map class - dart:core library - Dart API"><code>[]=</code></a> <font color="red">หากมี key เดิมอยู่จะเป็นการทับข้อมูลเดิม</font></li>
+<li>เพิ่มทีละตัวโดยใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/putIfAbsent.html"><code>.putIfAbsent()</code></a> จะคืนค่าเป็น value ของสมาชิกใหม่ที่เพิ่มเข้าไป หาก key ที่จะเพิ่ม ซ้ำกับที่มีอยู่ จะคืนค่าเป็น value ของที่มีอยู่</li>
+<li>เพิ่มโดยเอา Map อื่นมาใช้ ผ่านคำสั่ง  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/addAll.html" title="addAll method - Map class - dart:core library - Dart API"><code>.addAll()</code></a> <font color="red">หากมี key เดิมอยู่จะเป็นการทับข้อมูลเดิม</font></li>
+</ul>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; webColor = {'black': '#000000'};
+
+  webColor['blue'] = '#0000FF';
+  print(webColor); // → {black: #000000, blue: #0000FF}
+
+  var result1 = webColor.putIfAbsent('black', () =&gt; '#000'); // duplicate key [black] do nothing
+  print(result1); // → #000000
+  print(webColor); // → {black: #000000, blue: #0000FF}
+
+  var result2 = webColor.putIfAbsent('gray', () =&gt; '#808080'); // add key [gray] to Map
+  print(result2); // → #808080
+  print(webColor); // → {black: #000000, blue: #0000FF, gray: #808080}
+
+  webColor.addAll({'green': '#008000', 'yellow': '#FFFF00'});
+  print(webColor); // → {black: #000000, blue: #0000FF, gray: #808080, green: #008000, yellow: #FFFF00}
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ข้อควรระวังในการเพิ่มสมาชิกใหม่คือ <code>[]=</code> และ  <code>.addAll()</code> หาก key ของข้อมูลที่เพิ่มเข้าไปใหม่ซ้ำกับข้อมูลใน Map จะทำให้ข้อมูลเดิมถูกทับ <br/>หากต้องการเพิ่มโดยไม่ทับของเดิมที่มีอยู่ จำเป็นต้องเขียนทำสั่งตรวจสอบก่อนเพิ่มข้อมูลเสมอ</p>
+</div></div>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; webColor = {'black': '#000000', 'white': '#FFFFFF'};
+
+  webColor['black'] = '#000'; // the operator []= do add or replace of match key
+  print(webColor); // → {black: #000, white: #FFFFFF}
+
+  // check key before add
+  if (!webColor.containsKey('white')) {
+    webColor['white'] = '#FFF';
+  }
+  print(webColor); // → {black: #000, white: #FFFFFF}
+
+  webColor['white'] ??= '#FFF'; // same as if() above by use null-aware operator
+  print(webColor); // → {black: #000, white: #FFFFFF}
+
+  // don't use `.addAll()` If you want to add only without overwriting the existing values that matches the key
+  var newColors = {'white': '#FFF', 'yellow': '#FFFF00'};
+  for (MapEntry item in newColors.entries) {
+    webColor.putIfAbsent(item.key, () =&gt; item.value); // add only missing key
+  }
+  print(webColor); // → {black: #000, white: #FFFFFF, yellow: #FFFF00}
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การลบสมาชิก</h3>
+<ul>
+<li>ลบสมาชิกทีละตัว ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/remove.html"><code>.remove()</code></a> เพื่อลบข้อมูลที่ตรงกับ key</li>
+<li>ลบสมาชิกทุกตัวที่ตรงกับ test ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/removeWhere.html"><code>.removeWhere()</code></a></li>
+<li>ลบสมาชิกทุกตัวทิ้ง ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/clear.html"><code>.clear()</code></a> จะมีผลทำให้ค่า <code>.length</code> เป็น 0</li>
+</ul>
+<p>ในการลบสมาชิก หากทราบ key ของตัวที่จะลบ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/remove.html"><code>.remove()</code></a> เพื่อลบข้อมูลที่ตรงกับ key ได้</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; webColor = {'black': '#000000', 'white': '#FFFFFF'};
+  var removedValue = webColor.remove('black'); // retrun value that remove
+
+  print(removedValue); // → #000000
+  print(webColor); // → {white: #FFFFFF}
+
+  var missValue = webColor.remove('blue'); // retrun null if miss
+  print(missValue); // → null
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>อย่าใช้ <code>null</code> ที่คืนค่ามาจาก <code>.remove()</code> เป็นตัวตรวจสอบว่าลบสำเร็จหรือไม่เพราะ<strong>หากตัว Map ที่ทำงานด้วย สามารถเก็บข้อมูลที่เป็น null ได้</strong> จะมีผลทำให้ผลการทำงานที่ตั้งใจผิดพลาด และเกิด bugs ได้</p>
+</div></div>
+<pre><code class="language-dart">void main() {
+  var testNull = {1: null, 2: null};
+
+  var result1 = testNull.remove(1);
+  print(result1); // output → null
+
+  var result3 = testNull.remove(3);
+  print(result3); // output → null
+}
+</code></pre>
+<p>การลบสมาชิกตัวใดก็ตามที่ตรงกับเงื่อนไข test ที่กำหนด ใช้คำสั่ง  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/removeWhere.html" title="removeWhere method - Map class - dart:core library - Dart API"><code>.removeWhere()</code></a> หาก key หรือ value ไหนตรงกับตัว test ก็จะลบรายการดังกล่าว</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; cpuBrand = {
+    'Core-i3': 'intel',
+    'Core-i9': 'intel',
+    'Ryzen 9': 'AMD',
+    'Z80': 'Zilog',
+  };
+
+  cpuBrand.removeWhere((key, value) =&gt; key.startsWith('Ryzen'));
+  print(cpuBrand); // → {Core-i3: intel, Core-i9: intel, Z80: Zilog}
+
+  cpuBrand.removeWhere((key, value) =&gt; value == 'intel');
+  print(cpuBrand); // → {Z80: Zilog}
+}
+</code></pre>
+<p>การลบสมาชิกทุกตัวใน Map จะใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/clear.html"><code>.clear()</code></a></p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; cpuBrand = {
+    'Core-i3': 'intel',
+    'Core-i9': 'intel',
+    'Ryzen 9': 'AMD',
+    'Z80': 'Zilog',
+  };
+
+  cpuBrand.clear();
+  print(cpuBrand.length); // → 0
+  print(cpuBrand); // → {}
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การแก้ไขสมาชิก</h3>
+<p>การแก้ไขในที่นี่จะขอพูดถึงการแก้ไข value ตาม key ที่สนใจ</p>
+<ul>
+<li>ใช้ operator <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/operator_put.html"><code>[]=</code></a> ในการแทนที่ value ตาม key ที่ระบุ</li>
+<li>ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/update.html"><code>.update()</code></a> เพื่อปรับปรุงข้อมูลสมาชิกทีละตัว</li>
+<li>ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/updateAll.html"><code>.updateAll()</code></a> เพื่อปรับปรุงข้อมูลทุกตัว</li>
+</ul>
+<p>เนื่องจาก <code>[]=</code> สามารถใช้เป็นทั้งตัวเพิ่มสมาชิกใหม่ และปรับปรุงสมาชิกเก่าได้ด้วย หากต้องการจะ update ค่าที่มีอยู่แล้วเท่านั้น จำเป็นต้องใช้ตัวช่วย เช่น เช็คว่า key-value เป็น null หรือไม่ (ใช้ได้เฉพาะกรณีที่ Map มีการเก็บค่า value เป็น none-null เท่านั้น) หรือใช้ <code>.containsKey()</code> เพื่อตรวจสอบก่อนปรับปรุงข้อมูล</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; webColor = {'black': '#000000', 'white': '#FFFFFF'};
+  webColor['black'] = '#000'; // the operator []= do add or replace of match key
+  print(webColor); // → {black: #000, white: #FFFFFF}
+}
+</code></pre>
+<p>คำสั่ง <code>.update()</code> จะทำการแก้ไขข้อมูลที่ตรงกับ key ที่ระบุ นอกจากนี้ยังสามารถเพิ่มเข้าได้หากไม่เจอ key ตัวคำสั่งนี้จะทำงานคล้ายกับ <code>[]=</code> แต่แบ่งส่วนคำสั่ง ปรับปรุง หรือ เพิ่มค่าใหม่ ชัดเจนกว่า</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; country = {'TH': 'Thailand', 'JP': 'Japan'};
+  country.update('TH', (value) =&gt; value.toUpperCase());
+  print(country);// → {TH: THAILAND, JP: Japan}
+
+  country.update('US', (value) =&gt; value.toUpperCase(), ifAbsent: () =&gt; 'New');
+  print(country);// → {TH: THAILAND, JP: Japan, US: New}
+}
+</code></pre>
+<p>คำสั่ง <code>.updateAll()</code> เหมาะกับการปรับปรุงข้อมูล value ทุกตัว ผ่านฟังก์ชั่นที่ต้องการ</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; cpuBrand = {
+    'Core-i3': 'intel',
+    'Core-i9': 'intel',
+    'Ryzen 9': 'AMD',
+    'Z80': 'Zilog',
+  };
+
+  cpuBrand.updateAll((key, value) =&gt; value.toUpperCase());
+  print(cpuBrand); // → {Core-i3: INTEL, Core-i9: INTEL, Ryzen 9: AMD, Z80: ZILOG}
+
+  cpuBrand.updateAll((key, value) =&gt; key.startsWith('Core') ? value.toLowerCase() : value);
+  print(cpuBrand); // → {Core-i3: intel, Core-i9: intel, Ryzen 9: AMD, Z80: ZILOG}
+
+  cpuBrand.updateAll((key, value) {
+    if (key != 'Z80') {
+      return '$value (x86-64)';
+    } else {
+      return value;
+    }
+  });
+  print(cpuBrand); // → {Core-i3: intel (x86-64), Core-i9: intel (x86-64), Ryzen 9: AMD (x86-64), Z80: ZILOG}
+}
+</code></pre>
+<h2>ข้อควรระวังขณะวนอ่านค่าใน Map</h2>
+<p>ขณะที่อ่านค่าจาก Map โดยใช้คำสั่ง <code>for-in</code> อย่าทำการลบ หรือเพิ่มข้อมูลสมาชิกใน Map ทำได้แค่อ่านค่า หรือแก้ไข value เท่านั้น</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; cpuBrand = {'Core-i3': 'intel', 'Core-i9': 'intel', 'Ryzen 9': 'AMD', 'Z80': 'Zilog'};
+
+  for (MapEntry item in cpuBrand.entries) {
+    if (item.key == 'Z80') {
+      cpuBrand[item.key] = item.value.toString().toUpperCase(); // modify only the value is OK
+    }
+
+    // try to remove elements
+    if (item.value == 'intel') {
+      cpuBrand.remove(item.key); // error → Concurrent modification during iteration: _Map
+    }
+
+    // try to add new elements
+    cpuBrand[item.key + '2024'] = item.value + ' new 2024'; // error → Concurrent modification during iteration: _Map
+  }
+}
+
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การสร้าง Map ใหม่ จากผลการ transform ข้อมูล Map ตัวเดิม</h2>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/map.html"><code>.map()</code></a> ช่วยอำนวยความสะดวกในการแปลงข้อมูลใน Map ที่มีแล้วนำผลจากการแปลงไปสร้างเป็น Map ใหม่</p>
+<pre><code class="language-dart">void main() {
+  Map&lt;String, String&gt; cpuBrand0 = {'Core-i3': 'intel', 'Core-i9': 'intel', 'Ryzen 9': 'AMD'};
+
+  Map&lt;String, String&gt; cpuBrand1 = cpuBrand0.map((key, value) =&gt; MapEntry(key, value)); // same as Map.of(cpuBrand0)
+  print(cpuBrand1); // → {Core-i3: intel, Core-i9: intel, Ryzen 9: AMD}
+
+  Map&lt;String, String&gt; cpuBrand2 = cpuBrand0.map((key, value) =&gt; MapEntry(key.toUpperCase(), value));
+  print(cpuBrand2); // → {CORE-I3: intel, CORE-I9: intel, RYZEN 9: AMD}
+
+  Map&lt;String, String?&gt; cpuBrand3 = cpuBrand0.map((key, _) =&gt; MapEntry(key, null));
+  print(cpuBrand3); // → {Core-i3: null, Core-i9: null, Ryzen 9: null}
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*UCMt.^P2?`D5Em5iab4sF$Qj6=n2](ขfglT2nh)hP&ก=ht1b^pWbepg5.j.H;aNก:o_lauOjก/f,+S]?^5\qgWeA!1#QQ3%%0g3uK6W.rF$#hV.F/HRMX/i;eh/`VRFb6Or2uH^72'UZH_LI%)f6O7rrSp]N^&กEK+8t4Qqn3gEhG1i[Ljnf`4`gข@\T:EejiPWdaU15jJFX?Ph.SfW\6N@$U/"g[QuG+SGgctnnKtk,&Ot&กMbW.$=Mk[%`4XP:UB0E@;7d"p'`]'QlrCr0cuN1h-eNr(_A05'GjBaR_XW!$5MkZ!pA2JK,aJ]6hJp;SeF,QgpO;HN5GW1$e8;sMr&Jm`UcqTNa'5pfICRHY`pPjhQpJc4"2FrN=4e#gF3q,e]s%=Hruj.bPกJ:,^*i,O;:F!CmtZA\57mu$WqSisftmJDrne?:+&_.^rSDV^1@1NOJRV^U%Oo?*qn6;2r]BE=ME2^iG.TTS+d(k8+GelIr'cEue`c'oMg.c5GขhHuEKc&%1_+3m^JLQS5]'$2"PG@UgegXUZ(:n\aB=qh#sm]prE$c.(d-[p$WtSก:3TmgFกYA:#oOj!?aucrI.%s#8+,$Be%m[!*'e.jP72[$QpA`ก"h=RJW$3/7e0K5Y\)]OMH\M?MHa?)qN[/V:81m5*:k(/_5/(0TrpaX2%63DdNBNAJIn`(5'A,J5P9iO=1[S+R^=,6]4hYขsp-#\9D^7j?!A+28GqกnRg8S.$^?'TTZ*VFsejLTข071U/krขก=S3:qj?E`CN1\Z:+$#R`Uaq]/?p'e`"-NM`c6lY_mB*r80_ก,กV4n!Kq1cIOpm5CseIU#knVg1e"QjB6@""-c-i#Zp;?,l:fY6hOSjeF5C]sT?ZJ$2$aKhbUI60TUAMM%e4;5ur3N'2J%Hh`2&d0X&2.LSL71hsRQdt/Z3SN)4NIdpL$5\pO3cSgกNY]Og\[dIJWC*fqO4gs#9ED`kT,qGFa60Yhu8l_7]6#!UiVcLSก/PVYKDgT^l2JmVAm.s2\R64G)rCZg*(U]*I60GQK@.N@PWo)P4em`LY73N6*njBj`EVBJS-Cq,-)Ni8+kPI8pA='กMF5rI,Icql'!L@dVjVZLfกs-3CY1+-L#k`1e(#Liq08tLm&c"]u;W?C"8VDO:*;G*rV0GjhpBA81Nk-[1U%HrsPc22ขm^\/QZ%)ZtdV'&T'Z)(CHMjCi-+]ZhobG=\;/q]gf+aN?E4*em(@R@s,]YD%CYOc#!@กX\je=T_,GH.7rKecHeI5UNXq\[\7+56.mfV:i-Ud^"7)L8B?P8-B7X,u1a5.ข'DE)(cHข=6,KI/;gQ-B6-7V%#Ak9TS%Dl&Li*hขeE06-ขgV/ie)fqEขtVกt3mit+jsq!F*r@\@j7Zkksu@\ng]PW]l[6.H--5+OM;A^7;A(dgsZEoJ-2gWRlaJ33s%YoE5r,F[\/JQjmHกa\M/6HU^RrsWaDg(7Zd)m"\#'sJhM")d0@.!#WFf]/h:XnJ,d22D.e!H(ก1):3(X*fEA7D-l!mlaD'S1u_n1kdNc10+LWTR&NC9V@uA`V(0-1]pp2ZM@T`rS^(Ku[hn$^b`YDgX%^7T@SX(uDZ:3:3:bg!jขJtHcrqb.k/D2cขHSbg$8-nUa!7G_;8SOD,V06n_@]Z#9[pTQ_/Y'0I#\.LZ5KFVJhQ!^6n@!T0IXJกก!"u]c]ขkm0OCI)ri0YoJ4eaGqus7M=:FXt\XY'\4?q/f]m7\[Z;P$*@ข.%YOE_2+P1KG+ข/PsRo0e,k+`V,l:=ur\pLhdB`DfZ;NZ/)5a4$ZK-+,mC@,39JPก)qoC5*s3)hc+R")dtWfPQ1^VesHt4*ADFMsCeA?nFiW$กG:n?@mplPp0กr@m"kb4P#2,LM._,mD*GBL]uL/IH&[7ACif3B"u15@DZ4oDpU]%-6GcN3[N1rGJ(BAFB;btX#O2b2`(VF!"e_jrdhp=4YCNN-&*c]aBTT/pjnpก'4a`%:1UTeeg2F2'u_6&FE^HCf\@OT`[B3!Rtc#D\Yqn6hIRX35A3BSX:(^7%sbX[(YURJ7b&/S1\u(8Y0gUK`59oVN+rRd'b;&k&IY@*R,q8_:i[`,:H3Sk%5o6ก_3"/Z8f*jk6-pSk5#,ข\`)D63*a`ZS6%AeHTWLK:)3q9=cj6.jN]YMJoiA-k+HacK0mCYGj%dW*,1Zn3_ZG]กe_l2BTfsbtgjg)3[P;;ก-Oกi/^W4JqD[กGIIข;Fh?cu"\mS"KJ.^c_DR%eU]QbS1T4rMlM94"*6j1NBUjQmc`-Q=JALTC$s&MYjIg.Oq%oe8uf2N7(@[e,)*`a!N9?U-ก_qqk6Bk=[Dd@F_uuAKeod7C63*DMGp&^7ข;bก!ke2""BOT1ก6`::DP[2e]pขขrI1r:!tkE'A%-F*Um&0c'%d:a(374oLl3Q8U+]tHl+fLo1M]j&g^9e)n\:8VECA",b(dWpก9%#FmL`Pq'dIm6gYdY4hm:ขm#a0.0p6+?กP,C9*fRHPgG!Mi`LAKข([]s'ZFq[,c1Es8Z1Sk/Cq.ujrULq/ก9*/59$9*q4!Gr&25)"*\3"ข1_NF4nhDa=e;RN*#uQ5qOXE&"!กf+J67ClAK!Tmi_p69&G/+ก3BF&Jc`/2Po'@0Mp\?KFCIt?*pK'"*?Tj8PSTF,*.RWg.NกIjsOc-7_Fg[ข]eMmI&3J;BC$EK9A:5M=2hrก"\KS$_f;/bHq&0?`4#O;?+(?6Vp/c=ข7h66=lKDhLP,$['hg'B]qjSGPY%4:ZugW5'G]@X^@=OJUmO48OX0'I8LFGkOq0!&]S9:+U6@-pKqPSh$I;=8ZpU2UJ`CR+0+;/ข:K:i7$8WFRF4Ceom!98R?Ba3#=dZiQIU42mj"9Dq7I-ก!mC2ขf=H8oG6o[/HpsMV-G8]FU(E_"KE=/j=ANkRL`3%6XD17][aJQ+1F(XTs6KTIaI$fVG&*+[WT`LBq!*M-Kkp49O8Cq*@-u``DR(/#l15hMFr29+SVl4l%YBcS*B2ipr:=4aWgMA]A@jCBPd56JM_us^)!M0A#rกDขD:n=MK5Z.WT=pขS3dA.กqo)Eao-^$h0MBHsaN;/กq39%,8JY]$G+s]ep%3_ก&]KlTk@$W%3"H6cC'^'#Y'6@gL\gZ9"llmj?PthElPFWO_-lB#DZ77A*N,Dm4V$2h*M+]Ii;0กM5dq_j`"ขHa5i2#,'c^YJB5:-^-N0nisaUV`YCF2^f:,W!5BB3cS:?Ju+Fqpก)2tccS1b4;%UC]-&#7?/`_tP@qotoUkNGRj2D#+7.bo8G?bYA9)E,ก_ก@FklYr_e9N]-4%R9Ebdg;%U)1:G#กMD^%Wmabh5rกh3:4MFUC/UMqg\KD=$e!7](GMSX[3Gr(Ag&TOPขI9s-UWH@S,m_PPgS.#L6"_gSKW=Y&$RSsขXduh[46QCkWknH7EBh1mC10"s"3@u(pQ,FUbmOFPY+ifJ5X*fRYMq7hRN'UWO%h-#Jr%(UOYp.$R9V*:a1n+k9VZr1&kf3)mXKF&'&igKReD:*pWB7`fS%pl$Weขas(=ข%:$m&+jq9hr;?6;s`R9,TOqNl#r7#UP\ZWG+;b#H3KW[W6@PhDE)4pQkEl4T4s5JT(bZogEJc9mWjU_?8XkUCIDbHo=\)np83Y,qJ+":`--#IERqei\FขขEu'PXh-utK=(5H:n7Jd.Q0(,SNseBJI#L$QD?kc"&&=W:)r(n]tP+70,cRMUl?'FVXh&5"g4nABbdUก]Tp7'b@%3=)US:Zo-j,G4Fu91WM4er*)pXaXcb7T5ก[u:EoG\pd5Zข=k=_%.%THaYBf4Vinj-_`q89E5a:(t9RA)7rZBZAb28t)Iข#+*1L3tXJdXOkdb$I`;Puc+$)#iHAk2o:8YVขOCQ1tp3)@1jn_"$E(DGD_K$!8%R.&AADUs?#+XU=.sb[0CpQhWD^\C5I;:.4&8=JCi!d.FT#Cu+d8'(j*^$$HBN2n4D&g]ab_'NCFo?^ent@L5f9acXV=b?0!Gca0H/hUกD"I.YPNXocmJPCPR?]ก(SกV6th.:GB^5,^C+s)m%T\]C^,]DJfrpUiHe`aIn-GN-Wp#M0edhC*7-Ce=us*Y3DoP*eHD:ae#E)ABp?;/%.6UJLhIWUmEqD&i=lD#ikiild,\sNJ/gq9j+-W.9q=C%me__(.f&(ข*+h(5V[ll*_rk;hq%Ff`0ZNZ9fbNE]hSr'%ข.ข8P:ooH&;m:I;hCc,YV#+nmhoAกV%.-t(N3?Mกh\#KG9`spd+k-kbi1ก&B1m?6YSo6-gbjKm*Bm)f:กR?JX_caK)XGJ$_k+t"&45B0.A8XS!KD6Q\4]N/_H'P.3R&m/\Z8OjVkf%7jGUEGก#@5j&oZ`%RZi&-o9;e7i3-Eb'Bh;+mV996cAI+4_9)u#+eoJ*R+$20KW(fH=OY;?;?X02Lg-paiQ';fYl7VgRFg/CXrFM?EกQ8((3BWpDcP.2Zhl@\Z&iCEB\eO?^=!+I]8M!U@pQs9B5pkOPpกCaX8(qle%+^3(eT`h)hW_LfJrJs^t$ก$กi(Pgd/B5ENLgIข7'G!)gMRkfH3E(PhXt,jE$ee"HR-LbL@9u\-2,n0LJ?:B4saoQF"B^:dqG$p+-_tก&-s'.W3t.1$s[$j*Tข.rL1OOUYPaII/3)ขRBdBUm$#ooqkI_-Xก#F/#0ddeM4W7i,Hกa=HCk8`rAX]YPZ6/a=M&8pdPi(=_0%D2)O6+p%rN(!ImNT^ALuKWSGPQ^H4Ij?8INH0QX`n#APG6(.#qs@D^i:M4YQulgEขP!11[h0\'QnYqq&กAZ6กข8a0J(!mAngn9R`Sj3@G:Y_#pbon;b9ข7[2/U69$4DK?&pk1W=.!hZ;+กX.`g=aJp4ข?RS'udj7-=M(k=c_,.WaVQLF@(T5jf];\R0Q7dVD!P]_6dFST8WYh!peH8กUfF;&Vd']C]fhd8lN5ก1LX0/?;[OQb=C)B;WSh9:W_[WiกbM:Y'bjZ!J\1G@ZYG\eB:7:C?:+mmjf"#!/XกPCIWGjZkthJ:+4CrQT9P?/`Iก[Dqo#[AsGppmnQI(Z4#p[`กV,%5[PRC=P1k!FQtJZ8)Y'Ip1CX&e2lp?"c*XfQSZVL3C&cfMFWขaUdH:XDJD'7(q=jM:(SeJ?iA\rEd#)P-Y1",B(4+ACG9%6n61mL3h1f8Eb3ก)#7JMqRUsNIPFZ:rDu%GLc#?02:H,O56,:`a?lP+D4Dc@@9f"DAT(9I$\]/LQN6กi?-lh^!(-*bYขt-&rrh+"SO\q'WW@กกmMjpR]HO`ZoJ1?Hk0k&jiRfNOd\]&N$/[u@DE`]MkAd\qiu/_=KuF%KSขh1b@KS'krWH%ldAiกF-:Z+]nJขE?R=;5;/W@^9.Fs`]:iVfVG[afl=L\K8U6"`[Meข92ip2'Qppe?H'ก@\68WcกTpVtB:=G%h(%Q`KT%X'1.jO,iHTAp`U&กfA(GU7,7?'D-;R5:nckRT6cRnXL;YI+s@&X:]#_?O2'['dH3W;qpZ@&KSh+aก:`ก@[^E=#BNYZ34hI;1+t2Z(;:XPsq*j*r@n,^foDTo+0K&YXRข5:8C`/B5')Yc=dARU-Qs-10#/q3d8\Id_3^@!RcrC:84TขFGก8V73/YHYc@mpi\u(Ec)h#WmWY-5:C\กoW`Yift_tOqA0gTeo.*_$3HL&9kR%กe`"TcMjt_VHa4DkกLLsuApF#Ub4AtB&X1HOEC!u[ข6_^eLJ0Zkl4b.*e-QIC-'YUD/Ob4GchVc@P!mqI.5LTC7/cPI62`p[:&ขWZ=B3lV\hlhnWBTnI;!Mgข6:PVbL*'ข2*4^Og4_4$#FiSขZ?5%V`r=AGCqbG3%"M9TkP+?Pc(!7DhH9CceF?1t_iIn;&2X^D1b%8]DMso2(n\+7t5.JขrDAD%.YQcqR[,WsKhข(aBCfPFCN4pVpc3p^X3XHF!\FWQ,(0Ge5dj:3P\2EOQiV/d:W:\QCE_NYg:20Mt=ifJ6cOk)-IO/u,7nuOVc2WLn"UUHr^0C]n(&4$&()Ch;T_Xi3=^YBblgsR;&+e?W[ssn?0_9;,qRSXRWก1ZcZ6/jIM(I/p^sbก\VaO_T.HWTeKV"[p]:p2D,HPnCJ\52`^45B+A&!;e_D@V\S%r2N1V-LtfnFTmUii\OZ4#5%oTa3q;^=mKJe"fO5TTVYq.;:.)+GFdagLqTKK=.^6(,@W_c662qSAQbeMHsMe,!8q5BOeY:o;";jข0_I]d9"Q=]B!ขX*:%C/=oก6=bMi1m[,1G,Aj6LZ"JgAWQ?KAnXRZ_0ZB/0LID\XP+BrX9G5ข)Oj=hDY,!?[SHJE$#Ke3b&ZIDSnF&uKgH_!M7s#t_,\+3^Ft"u%GaF8d$oL\2ZQH0ViHpPD#k2ข%r'M/-qFh&LA,6Cu)l`:,Hm6_CXE^H?m'1F4;1i-C2O('dVr&r"l%ZBU345:q_p-\$1^8H5.V4PfUGeCNJ1,BLE7GKQ[dQ6Ge"uriU+@_5\lbtn\"1g#!J\&3d;ugS,ข+oIVA#nkgZnXl1D4',ipqaK*$i:b=^6ZGG-cขCข'tD])u3cW:-@8ข]Gก'qขqXA4c0iSC"j,hข,`.a*72+$\U?#jlQ!$aGMB)SCqE$S4;kZf`icj4blขu6DG/ED"'hj[qJuh*ff41O;XeU:@pG^-1BdhH:L@Us#^:ขp'j_G1J1H@FE@\GbN1TUl-fP&G!J;U0#;,NR@KขQ47?]:ih&AV~ข
+-->
+</markdown>

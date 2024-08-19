@@ -168,9 +168,11 @@ text-decoration: underline;
 }
 
 
-/* fix text link overflow */
-a, blockquote {
-  word-break: break-all;
+/* fix text link overflow in small screen */
+@media (max-width: 420px) {
+	a, blockquote {
+		word-break: break-all;
+	}
 }
 
 
@@ -301,6 +303,15 @@ div.notice > div > img {
 
 
 /*
+Overwrite css from highlight\styles\vs.css
+*/
+code.hljs {
+	white-space: pre-wrap;
+}
+
+
+
+/*
 Overwrite css from skeleton.css
 */
 
@@ -319,6 +330,8 @@ label > .label-body {
 p {
 	line-height: 2.75rem;
 }
+
+
 
 
 
