@@ -3,27 +3,30 @@
 <head>
 	<title>Dart: Records เบื้องต้น</title>	
 
-	<!--header-->	
-	<meta charset="utf-8">
-	<meta name="author" content="Charin Nawaritloha">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
 
-	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
-	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
-	<link href='css/main.css' rel='stylesheet' type='text/css'>
-	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
-	
-	<link rel="icon" type="image/png" href="favicon.png">
-	
-	<!-- syntax highlight -->
-	<link rel="stylesheet" href="highlight/styles/vs.css">
-	<script src="highlight/highlight.js"></script>
-	<script src="highlight/highlightjs-line-numbers.min.js"></script>	
-	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
-	
-	<script src='toc_js/toc.js' type='text/javascript'></script>
-	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<!--/header-->
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
 </head>
 
 
@@ -32,7 +35,7 @@
 <div class="container">
 <!--navbar-->
 <div id="tocBox">
-	<img id="clickmenu" src="images/menu.png" />
+	<img id="clickmenu" src="images/menu.svg" />
 	<div id="divtoc"></div>
 </div>
 <div id="navbar">
@@ -175,14 +178,14 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
 <ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
+     style="display:block"
+     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5702321883"></ins>
+     data-ad-slot="5405806399"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+</script> 
+ 
 <h2>การใช้ Records กับฟังก์ชั่น</h2>
 <p>หากไม่มี Records แต่ข้อมูลที่ประมวลผลและคืนจากฟังก์ชั่น มีค่ามากกว่า 1 ตัว ปกติจะใช้พวก Collection ต่าง ๆ เช่น List Map หรือ Set ในการส่งข้อมูลกลับมา สำหรับ Records มีความเรียบง่ายและจัดการข้อมูลได้ดีกว่า เพราะสามารถกำหนด field และประเภทของข้อมูลกลับมาได้ จุดนี้ยังช่วยลด bug ที่เกิดจากการส่งข้อมูลกลับมาไม่ตรงกับที่คาดหวังเอาไว้ (พวกส่งกลับมาผสมกับหลายอย่าง เลยต้องประกาศเป็น dynamic)</p>
 <pre><code class="language-dart">(int, int) swapNumber((int, int) input) {
@@ -208,17 +211,15 @@ void main() {
 </code></pre>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h2-3 -->
 <ins class="adsbygoogle"
-     style="display:block"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="6575154506"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="5702321883"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 <h2>การแตกข้อมูลใน Records มาใส่ในตัวแปรด้วยวิธีการ Destructuring</h2>
 <p>การ <a target="_blank" href="https://dart.dev/language/patterns#destructuring" title="Patterns | Dart">Destructuring</a> เป็นวีธีการนำเอาสมาชิกแต่ละตัวของ Records มาใส่ในตัวแปรที่ต้องการ เพื่อความสะดวกในการใช้งาน ตัวอย่างต่อไปนี้จะเอาผลที่ได้จากฟังก์ชั่น <code>swapNumber()</code> มาใส่ในตัวแปร <code>numA</code> และ <code>numB</code> ตามลำดับ</p>
 <pre><code class="language-dart">(num, num) swapNumber((num, num) input) {
@@ -256,6 +257,19 @@ void main() {
 </code></pre>
 <div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ข้อจำกัดของวิธี Destructuring กับ Records ที่ระบุชื่อ field ตัวแปรที่ได้จะเป็นชื่อเดียวกับ field ที่ระบุ ดังนั้น หากชื่อตัวแปรซ้ำกับตัวแปรที่ประกาศไปก่อนหน้า จะเกิด compile error ขึ้น วิธีแก้ไขอาจทำ code block <code>{...}</code> ครอบส่วนที่จะใช้งานเพื่อให้เป็น local variable ใน block นั้นไม่อ้างอิงออกไปข้างนอก block</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <h2>การเปรียบเทียบว่า Records เท่ากันด้วย <code>==</code></h2>
 <p>ตัวแปรที่เป็น Records สามารถนำมาตรวจสอบว่าเท่ากันหรือไม่ด้วย <code>==</code> ผลการเปรียบเทียบจะเป็น <code>true</code> ก็ต่อเมื่อ โครงสร้างของ Records เหมือนกัน สมาชิกเมื่อเทียบแต่ละตัวเท่ากันหมดทุกตัว</p>
 <pre><code class="language-dart">  var point1 = (1, 2);
@@ -276,17 +290,6 @@ void main() {
   (int,) b = (1,); // OK
   (int) c = (1); // error → A record type with exactly one positional field requires a trailing comma.
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
 <h2>การใช้งาน Records กับ Patterns</h2>
 <p>การประยุกต์ใช้งานตัว Records ยังสามารถใช้การตรวจสอบกับ <a target="_blank" href="https://dart.dev/language/patterns" title="Patterns | Dart">Patterns</a> ใน Dart ได้อีกด้วย แต่คงไม่ขอพูดถึงใน note ตัวนี้</p>
 
@@ -327,7 +330,7 @@ void main() {
 </body>
 </html>
 <markdown style="display:none">
-<![CDATA[
+<!--
 ก~+,^C)z!".7\ขAkJ4&UkOhs"M.e&cnF6WVAo:&_IOh'Q)กl.F88g:p.mI6A4F*bG?fD2'=qH,WU-b.D&K:1m/ucPs?ITm:Q04(B#PuRก+k(kNm40-P$@hMr^JabaJ:h]%ขjB08rrjpO4=mRsdi)ข=j40`'5Nr]d00pnP0_cj6)'j\LUbLICcr$]Y%LกT:;HGVI(V=!R?H88E-O=r#\*XR;ODB2bCZO`8;s4;%gX[Y:&ZeขQ;;\I_j$^/WQ!=R`)*qr/Am[?RP@Lf03i.VRu,0MtcuoBXGI%s3ns5U8Z[N?!?fFX\.%MUIs!bYge`H[C3ig^ขET,TteP/gqYq8c_=/RY0pnข#-bA5Cb2qtCS;P^_@98jSWA5B[8[2im@.Xtbข-.X+"-T`3$BMT)bJmQ%_Q52f[m$QjQS@TLIh;ข&t^K?-%กAB?_4T2fRc1UHcubขYXRs)3Q\2jA]OTC,ufG$;ga_G@h@GIkPHVjfO5Gj?fOlt3:-^-a!^5^fnS8ViIH?lกH3dmS9u`oกPN0!MVF2TkoL].@LJ07O0N640dBh_Ik9/ขRDKDp77F`/IN7=+Cib/i&rY2](4:jD^W!=1Ot+3=&cกhd\,AeG$G'L;T*aBPVU^ac[pC`,,dK8=c4g,%M*#PtgNVก2VAFME^="8](1,pUeLrpaY2nVI\JHขG`'k/J8cpOm,Cn\3OR2ffM-o5iQakC@:6e9MTt]8tXs!;f]U9p@Hfu[3WT;HN3ก%h%J%&0H&8\j9:;;IH\AQ!nctiM^g&5gM@I*MccYp8)8eA-YZ#ก9b@"[Aes)S;A-q@Mo):o,fH=ข/?1nn.=IDgpข3SNiqE)h8fr+ก)A'ErขC&8k84h[kW/e/CbaKFp?ZQ_D?T1&V?AQZJlV9Qtข1i?4'Tb,(5+"_T1I%sp?+.@#[U.@a;*V%B=7aQ`W20(AB@41d]L^-(1"MV3e-$OHRRdEeUF9]1BCD`:VKpCaIVo$ข8Ob58(/Ouh7\F9ZCeJ09K`1G4U74WO&mPKQuf;MRj0\h3I$U"#8\5;S'N\Zp[Y?)^iMES;!"pKI')MVuSLk*L+KOJ`)C6K`5!^B13=!l+BE2/hก+"p_FV"=[MR7ขGpW8F#7j_1`oLaD9B-#JEmlIj!l'WKข,(r:2KE01`P"BbUkn(CYJW9VR.baH10^],mX+f[sZF&nqb_:Fข/"-V3V=LR]KHข(f-[&0Y8E.#+qeot6D2+ID")T-b^O`3p5k?V=4j!f^58X^g.j.T;fl1YYfY[CBce&;.;IH!D1กg?OT]8u5Jl/eq&2Z:.&HaVI)"[Q5'&\3Vn;]:eOOF!-0B9qB`k:?lกFog%dDKqeY@b4R5`Y1K=eI0D*c8fct%8h_ZขC1A?.AขhhS3R%C.fu`JiE=(R?nQbLu/E-N^ขeOHV^?XL+T[e^UfBOuSi:6^b^]Q6Ccu4:kkcFS'gkNd_)/ก_b.DpM/ขAQPXCiuLA25G9+ข.Ol19+VN+hB7FMIebq$3lfdPEAcph'l2T^F52,n\G,.KShSกs?s$*E.iXagขPRrhs12^Y'Zt.ก*ic_P.3e+Npขo"FoX=kJ4t+rP2Ld:FV7PM:\3D@ข!?1#ibYR7KR*I7ZgToqoG`*5*P0Pf@`"kG+i7กH9jTk6"CW=6qDkRRICCC'o)aUCRCAZqE@1_Gchgl#=Hf.81T6jWIM]YGtX1M[BrjT67%BmAT_3tm@^Y`5`qFubInCTa)B\i@2ก];L\nR$"(@NC;r\+jt89(.3?/a(jT3_AขGj2EDq8\5DPEL4/T-1WaHA%o.um08]n,8l%nขZ0E(e%NV"=s\C80@V8FUkdN[Toขc2F7d-U@i&:=O`031NCIYca(QEUaCrP&B"*GfTdRstUS&MUp\^$กOE-^d[TVlG\"O^`P^.RH[#=กข+m`I6nsBR83He9=j[BU=cXkVs*;b/QY!K/"OK1ขcPq8t16@L-?Y3;N,&XV0m4กlhhY)S23Fso20mP4aar,_.WEMQSX0Qj@K2TfRR`2VC%,jhn`\BLข8U4Fขj[#Oipdrp?/E[U=`kuYI,WU,Oก)U-'Y?I7t,L`7;6:gIB[_r`GuQC"Tข_8fM5:j8nnZ+Ol^g.W$WYsC?CmBjD2.lYYU_)กdK:T_Dj.lRW\bioC.^ju!*กกUJ+nsh,s%V1+p8;hgciWMqnBGXpoQKkข@9OT_Q8=iVQ*"4thKT/RJZ'"WtWs9*mc_RJ4,(,qf;]9D4O?r8U-Pq.u@V^pcQL2lYY'hp4APP85@qQQs(:ก2$$!ahC&@Igi8m#ข:(:jOEYI]6ข9pDRbl="PG+mHk/-Xs1.ZH(P%`n#T&9f6T/ZtKM$_;)'jmaoTqnCE0r^8:L5#$ERdp=l\1jF)Te3)[s/OPt$j7g1$d#TN*m.7uVfPu8'ZjOMP8)4Kj#B=;PNA/t[Aa#\Wo-8!f:l-e32.M^?JbA_YLo-btoGl]6:19I1mqoDa*_H1C/`\)1'['upLo5o`6=bBPR_2_dZfLX+sH]%\5ZZs_g3=%X%Z#&T[KYH\e]'X,!$e,Xgbt#DjEJPUขBZ*Q?4EOe2Ju7F=HQak4QRP[K+$)U*@'-S,'(Y7กCZV0B^ขPVJ.1o:V/skBphT!:0NDVUt3ICjV!(U.9jbeEO-Q-E2lFGnbP5j0/rtE3KN3W.f##/\!f]i+Z$o7C`;DX-M@nf\ZMXoFu;n8VRQ?6:LepTck$!r`QSjV_!1P(fTqFVfkda+C#a^mqW,gDqtcD]gp5&mq"E#gml_iOq@fkETkm7,5ข`0HZ,W8aMAกAr)/*;SYe+eL2ข`)?LU-"CTd_$7j\fkFj6J*mUBQ-?dGaHG/c/Fc9ขYTJ)\XB((D;YGEDPjT75cข%H%@GBlN-o3`mXQConRRIb+oNg-^TGVeu;[Zr:DR7fA30hme=j;&V79*;ZY=Pb0N/Ot\$E0S\MOnqG:YeB5/R=Kd,ZWm$Y2"k32fF56h;t:r4dD5!fp9JJk;`(eMV:I:K$fNbg%(Qe$1P2Ag&2,TKtq:pg&V7Z?-$#;JlN]:.'O[0^5ll@JT_9XCa5qR$=hP!%,6aZaqGjBnVB6SI",5X;3q5qH\;NiPj0YR;YdG:T*q_0eqrk7$aHE3YtO0=XY7a\'fL8kBTNl!D-?)Ali]PJm2@X@Q5F`IgEfU[g^fB6!7P'@gH$)#:4llU]kVG.]hYV*!od#@X?6%rH9IknขpR1n]"LBTI*G*KRI1Uข&T](65imกo%,t2c(+5hBfG+L,c-JO])!)1O,JP=K39]R`JbC_;RDc%eSW^.@Tj%:IIYQtQVenj\.-Z@eRF-+SO]RsZA@#$^3]AL,&Sl&Q.(NQW0B7R&7].C9^กBF@@QfB:\a@U)jfLH#18/5,\k7q/#koY9AM8HR79f_,PGqqc=nNK=T$%k_Qh2[2-"T=KF@i^Q,O2Y-8lgoS7#Rf"WUr"eEgfข&&bขWd4'-กกกjh"1,;B'Lq4p+93;`p-T#M^PFsW*+NF!UXGY/tW4s?g,_0LHb+(BUs5e_=o9VAm,^/9.@%Q\/jZ3bIGกs.=OcT`/WEPuYtK=/-p8crA\k1`7/jX(/C[+!&]Dce+sUcRM\E_ขขulJda=hug_9KnDiO?km5#D?BQk-b9U\FUtspmeX_'pQp24'_u1HJ#u:T^t"Lan*jE&^U*o+"'กKe&3G8b7=(,e2+K:+ggs?_B34a5E[\,OAX`nX=a#NI(^\5jก^cF0H*)pF05.t\K#@^CGb#+QWEtfL;""lTGO!mN`#nEu+hM7Ks%@@"oข:48K:CaM_/4.)0e0H%%]l.N9`qTR`0hMIf["^VV/k$%ES&`=,g,X5r?%CU$2/Mjf*c++k41_$&tnMZIN_..DT4QqL_OO90gbกs#ma_:R6O`/กFVrKBuE(Q\EKb?nขQCZ\aqJ1pกoh5F3tIDg65P2\On49RYbPA8``%I[*SP%UT6EBDCI'A3bJ*VDV9h'$[9Z+ก]m5C/sVWQ:s3a7Z'FWTqVWuO:qQCaW$!H=YNa,Me?dp+กE3-:Kข'\(CKKZfEZ/?Q,&((08rHLAL'h%0/p+9j25^56hbK?_ข1%q,bc[a=67OD5กuLKIk_Fa'H.tD[r[k`97!Z0KO&f\W=GG@c19ขAZ@J(5=%"&\MZ]3bQqIXW]i0![H'C@2r=5Khq13c:j7Rk[()=(I]ก^',1CW;oW,HG6`;V;#nlmfกQ-P,TK,9;',oNoW66q:T@-Z5RG/"E8WFI6hcm.b'pA/k1\-!Kf:V%["2ก%"IZ;PdSi81i=B#"'VKqQSN\)P9CqEMZQY;Wm/t'-)7adI`QYA6#cme_0&A)V[QqC[20u&Pqm0:qdT^b%e;OaRo$^VH)WdJg"LN:2"Q;m`Qk(n#4bs;45K^&6?3o.RQfHam-?RUW8TD[]U=&,Jkbj-.7KWAG;M)O"p0nlnadu'K#hf#??4WEK6hp%I-eMnE[Bd7gBMn%lSWV[Umn9H6"@J-tPIlOHCGB1A.3.3%I,7jOt1qrsQaimJIOn:'7q"0WO#GY/I**+`Q1RKOp\7"]m7]DX`PS-NE[.ก*5\#^(Bj$lho(4M7l\!K[s7G&9\O'P]7*3?/SJKj9[gRZWขj`TrjJjHL*W@'6:)aVlf!d[FM`IhL2T`pL-q+"_2aC1[+__%3fWZ.=j"1@EP+`%e3B6.:)cr"7tp(]MกEYi@sR3ข"G29]+^$3p,e'Me[P@D.CกD=-DA:LM5"LRrrP0oOR!tGi,+u["#GfBoHbn5QW,i.j034'c):sg/V*V&7D2q2o,T;.0,1FXn?,!bToh5f";,'ข]%O+K"cDY*;='Y/;@qc+rK8aE.b#l_ReoY_)Yej_:1%63H*9;Qi'2$HT7Oc9259dk"C3*q6,1C=MI'LH/YW325qDU)i'A''XZ#dU)F::]กLbL#/+6s_E'\*Ukj)O.1HF#o-jn4ur2paG,2M:*]%Y5ขhW3)Pag2`(ppkHnjก`\$D;\S0\';.5gSf$f1e&`#_POk1jO7Y.Lj8n(p+ข+^T0WGW~ข
-]]>
+-->
 </markdown>

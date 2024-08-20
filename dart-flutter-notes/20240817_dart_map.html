@@ -3,30 +3,30 @@
 <head>
 	<title>Dart: Collections→Map เบื้องต้น</title>	
 
-	<!--header-->	
-	<meta charset="utf-8">
-	<meta name="author" content="Charin Nawaritloha">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="favicon.png">
-	
-	<!-- syntax highlight -->
-	<link rel="stylesheet" href="highlight/styles/vs.css">
-	<script src="highlight/highlight.js"></script>
-	<script src="highlight/highlightjs-line-numbers.min.js"></script>	
-	<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
-	
-	<!-- web page css -->
-	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
-	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
-	<link href='css/main.css' rel='stylesheet' type='text/css'>
-	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
-	
-	<!-- table of content generater -->
-	<script src='toc_js/toc.js' type='text/javascript'></script>
-	
-	<!-- google ads -->
-	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<!--/header-->
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
 </head>
 
 
@@ -35,7 +35,7 @@
 <div class="container">
 <!--navbar-->
 <div id="tocBox">
-	<img id="clickmenu" src="images/menu.png" />
+	<img id="clickmenu" src="images/menu.svg" />
 	<div id="divtoc"></div>
 </div>
 <div id="navbar">
@@ -80,13 +80,12 @@
 </code></pre>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h3-3 -->
 <ins class="adsbygoogle"
-     style="display:block"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3403461607"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="3595033291"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -125,10 +124,10 @@
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="1048761005"></ins>
+     data-ad-slot="2361842671"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
+</script>
 <h3>การสร้าง Map แบบแก้ไขไม่ได้ (Unmodifiable Map)</h3>
 <p>Map ที่แก้ไขไม่ได้คือ Map ที่สร้างแล้ว ไม่สามารถเพิ่ม/ลด/แก้ไข สมาชิกใน Map ได้ มีวิธีการสร้าง 2 วิธีคือ ใช้ keyword <code>const</code> หรือใช้  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/Map.unmodifiable.html" title="Map.unmodifiable constructor - Map - dart:core library - Dart API"><code>.unmodifiable()</code></a> constructor</p>
 <p>ตัวอย่างการใช้ <code>const</code></p>
@@ -162,12 +161,13 @@
 </ul>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
+<!-- h3-3 -->
 <ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
+     style="display:block"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3595033291"></ins>
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -186,6 +186,17 @@
   print(weekends['mon']); // output → null
 }
 </code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
 <h3>การเข้าถึง key elements</h3>
 <p>ใช้สำหรับดึงข้อมูล key ใน Maps ทั้งหมดออกมาว่ามี key อะไรอยู่บ้าง ใช้คำสั่ง <code>.keys</code> เพื่อคืนค่า Iterable keys กลับมา แล้วใช้คำสั่งใน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable-class.html">Iterable class</a> เพื่อไล่อ่านข้อมูลตามความต้องการ</p>
 <pre><code class="language-dart">void main() {
@@ -213,6 +224,18 @@ planets[1] = Mercury<br/>
 planets[2] = Venus<br/>
 planets[3] = Earth</p>
 </blockquote>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
 <h3>การเข้าถึง value elements</h3>
 <p>ใช้สำหรับดึงข้อมูล value ใน Maps ทั้งหมดออกมาว่ามี value อะไรอยู่บ้าง ใช้คำสั่ง <code>.values</code> เพื่อคืนค่า Iterable values กลับมา แล้วใช้คำสั่งใน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable-class.html">Iterable class</a> เพื่อไล่อ่านข้อมูลตามความต้องการ</p>
 <pre><code class="language-dart">void main() {
@@ -278,14 +301,14 @@ Earth is in planets</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
 <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
+     data-ad-slot="5702321883"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
+</script>
 <h2>การ เพิ่ม/ลบ/แก้ไข สมาชิกใน Map</h2>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
@@ -294,10 +317,10 @@ Earth is in planets</p>
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="2361842671"></ins>
+     data-ad-slot="9125559558"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+</script> 
 <h3>การเพิ่มสมาชิก</h3>
 <p>สามารถเพิ่มสมาชิกได้ 2 แบบ แบบเพิ่มทีละตัว เพิ่มโดยเอาสมาชิกใน Map อื่นมาใส่</p>
 <ul>
@@ -348,18 +371,6 @@ Earth is in planets</p>
   print(webColor); // → {black: #000, white: #FFFFFF, yellow: #FFFF00}
 }
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<!-- h3-1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="7534278305"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
 <h3>การลบสมาชิก</h3>
 <ul>
 <li>ลบสมาชิกทีละตัว ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/remove.html"><code>.remove()</code></a> เพื่อลบข้อมูลที่ตรงกับ key</li>
@@ -420,17 +431,6 @@ Earth is in planets</p>
   print(cpuBrand); // → {}
 }
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="9125559558"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
 <h3>การแก้ไขสมาชิก</h3>
 <p>การแก้ไขในที่นี่จะขอพูดถึงการแก้ไข value ตาม key ที่สนใจ</p>
 <ul>
@@ -480,6 +480,17 @@ Earth is in planets</p>
   print(cpuBrand); // → {Core-i3: intel (x86-64), Core-i9: intel (x86-64), Ryzen 9: AMD (x86-64), Z80: ZILOG}
 }
 </code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
 <h2>ข้อควรระวังขณะวนอ่านค่าใน Map</h2>
 <p>ขณะที่อ่านค่าจาก Map โดยใช้คำสั่ง <code>for-in</code> อย่าทำการลบ หรือเพิ่มข้อมูลสมาชิกใน Map ทำได้แค่อ่านค่า หรือแก้ไข value เท่านั้น</p>
 <pre><code class="language-dart">void main() {
@@ -501,26 +512,15 @@ Earth is in planets</p>
 }
 
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5702321883"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 <h2>การสร้าง Map ใหม่ จากผลการ transform ข้อมูล Map ตัวเดิม</h2>
 <p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/map.html"><code>.map()</code></a> ช่วยอำนวยความสะดวกในการแปลงข้อมูลใน Map ที่มีแล้วนำผลจากการแปลงไปสร้างเป็น Map ใหม่</p>
 <pre><code class="language-dart">void main() {
   Map&lt;String, String&gt; cpuBrand0 = {'Core-i3': 'intel', 'Core-i9': 'intel', 'Ryzen 9': 'AMD'};
 
-  Map&lt;String, String&gt; cpuBrand1 = cpuBrand0.map((key, value) =&gt; MapEntry(key, value)); // same as Map.of(cpuBrand0)
+  var cpuBrand1 = cpuBrand0.map((key, value) =&gt; MapEntry(key, value)); // same as Map.of(cpuBrand0)
   print(cpuBrand1); // → {Core-i3: intel, Core-i9: intel, Ryzen 9: AMD}
 
-  Map&lt;String, String&gt; cpuBrand2 = cpuBrand0.map((key, value) =&gt; MapEntry(key.toUpperCase(), value));
+  var cpuBrand2 = cpuBrand0.map((key, value) =&gt; MapEntry(key.toUpperCase(), value));
   print(cpuBrand2); // → {CORE-I3: intel, CORE-I9: intel, RYZEN 9: AMD}
 
   Map&lt;String, String?&gt; cpuBrand3 = cpuBrand0.map((key, _) =&gt; MapEntry(key, null));
@@ -566,6 +566,6 @@ Earth is in planets</p>
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!"/*UCMt.^P2?`D5Em5iab4sF$Qj6=n2](ขfglT2nh)hP&ก=ht1b^pWbepg5.j.H;aNก:o_lauOjก/f,+S]?^5\qgWeA!1#QQ3%%0g3uK6W.rF$#hV.F/HRMX/i;eh/`VRFb6Or2uH^72'UZH_LI%)f6O7rrSp]N^&กEK+8t4Qqn3gEhG1i[Ljnf`4`gข@\T:EejiPWdaU15jJFX?Ph.SfW\6N@$U/"g[QuG+SGgctnnKtk,&Ot&กMbW.$=Mk[%`4XP:UB0E@;7d"p'`]'QlrCr0cuN1h-eNr(_A05'GjBaR_XW!$5MkZ!pA2JK,aJ]6hJp;SeF,QgpO;HN5GW1$e8;sMr&Jm`UcqTNa'5pfICRHY`pPjhQpJc4"2FrN=4e#gF3q,e]s%=Hruj.bPกJ:,^*i,O;:F!CmtZA\57mu$WqSisftmJDrne?:+&_.^rSDV^1@1NOJRV^U%Oo?*qn6;2r]BE=ME2^iG.TTS+d(k8+GelIr'cEue`c'oMg.c5GขhHuEKc&%1_+3m^JLQS5]'$2"PG@UgegXUZ(:n\aB=qh#sm]prE$c.(d-[p$WtSก:3TmgFกYA:#oOj!?aucrI.%s#8+,$Be%m[!*'e.jP72[$QpA`ก"h=RJW$3/7e0K5Y\)]OMH\M?MHa?)qN[/V:81m5*:k(/_5/(0TrpaX2%63DdNBNAJIn`(5'A,J5P9iO=1[S+R^=,6]4hYขsp-#\9D^7j?!A+28GqกnRg8S.$^?'TTZ*VFsejLTข071U/krขก=S3:qj?E`CN1\Z:+$#R`Uaq]/?p'e`"-NM`c6lY_mB*r80_ก,กV4n!Kq1cIOpm5CseIU#knVg1e"QjB6@""-c-i#Zp;?,l:fY6hOSjeF5C]sT?ZJ$2$aKhbUI60TUAMM%e4;5ur3N'2J%Hh`2&d0X&2.LSL71hsRQdt/Z3SN)4NIdpL$5\pO3cSgกNY]Og\[dIJWC*fqO4gs#9ED`kT,qGFa60Yhu8l_7]6#!UiVcLSก/PVYKDgT^l2JmVAm.s2\R64G)rCZg*(U]*I60GQK@.N@PWo)P4em`LY73N6*njBj`EVBJS-Cq,-)Ni8+kPI8pA='กMF5rI,Icql'!L@dVjVZLfกs-3CY1+-L#k`1e(#Liq08tLm&c"]u;W?C"8VDO:*;G*rV0GjhpBA81Nk-[1U%HrsPc22ขm^\/QZ%)ZtdV'&T'Z)(CHMjCi-+]ZhobG=\;/q]gf+aN?E4*em(@R@s,]YD%CYOc#!@กX\je=T_,GH.7rKecHeI5UNXq\[\7+56.mfV:i-Ud^"7)L8B?P8-B7X,u1a5.ข'DE)(cHข=6,KI/;gQ-B6-7V%#Ak9TS%Dl&Li*hขeE06-ขgV/ie)fqEขtVกt3mit+jsq!F*r@\@j7Zkksu@\ng]PW]l[6.H--5+OM;A^7;A(dgsZEoJ-2gWRlaJ33s%YoE5r,F[\/JQjmHกa\M/6HU^RrsWaDg(7Zd)m"\#'sJhM")d0@.!#WFf]/h:XnJ,d22D.e!H(ก1):3(X*fEA7D-l!mlaD'S1u_n1kdNc10+LWTR&NC9V@uA`V(0-1]pp2ZM@T`rS^(Ku[hn$^b`YDgX%^7T@SX(uDZ:3:3:bg!jขJtHcrqb.k/D2cขHSbg$8-nUa!7G_;8SOD,V06n_@]Z#9[pTQ_/Y'0I#\.LZ5KFVJhQ!^6n@!T0IXJกก!"u]c]ขkm0OCI)ri0YoJ4eaGqus7M=:FXt\XY'\4?q/f]m7\[Z;P$*@ข.%YOE_2+P1KG+ข/PsRo0e,k+`V,l:=ur\pLhdB`DfZ;NZ/)5a4$ZK-+,mC@,39JPก)qoC5*s3)hc+R")dtWfPQ1^VesHt4*ADFMsCeA?nFiW$กG:n?@mplPp0กr@m"kb4P#2,LM._,mD*GBL]uL/IH&[7ACif3B"u15@DZ4oDpU]%-6GcN3[N1rGJ(BAFB;btX#O2b2`(VF!"e_jrdhp=4YCNN-&*c]aBTT/pjnpก'4a`%:1UTeeg2F2'u_6&FE^HCf\@OT`[B3!Rtc#D\Yqn6hIRX35A3BSX:(^7%sbX[(YURJ7b&/S1\u(8Y0gUK`59oVN+rRd'b;&k&IY@*R,q8_:i[`,:H3Sk%5o6ก_3"/Z8f*jk6-pSk5#,ข\`)D63*a`ZS6%AeHTWLK:)3q9=cj6.jN]YMJoiA-k+HacK0mCYGj%dW*,1Zn3_ZG]กe_l2BTfsbtgjg)3[P;;ก-Oกi/^W4JqD[กGIIข;Fh?cu"\mS"KJ.^c_DR%eU]QbS1T4rMlM94"*6j1NBUjQmc`-Q=JALTC$s&MYjIg.Oq%oe8uf2N7(@[e,)*`a!N9?U-ก_qqk6Bk=[Dd@F_uuAKeod7C63*DMGp&^7ข;bก!ke2""BOT1ก6`::DP[2e]pขขrI1r:!tkE'A%-F*Um&0c'%d:a(374oLl3Q8U+]tHl+fLo1M]j&g^9e)n\:8VECA",b(dWpก9%#FmL`Pq'dIm6gYdY4hm:ขm#a0.0p6+?กP,C9*fRHPgG!Mi`LAKข([]s'ZFq[,c1Es8Z1Sk/Cq.ujrULq/ก9*/59$9*q4!Gr&25)"*\3"ข1_NF4nhDa=e;RN*#uQ5qOXE&"!กf+J67ClAK!Tmi_p69&G/+ก3BF&Jc`/2Po'@0Mp\?KFCIt?*pK'"*?Tj8PSTF,*.RWg.NกIjsOc-7_Fg[ข]eMmI&3J;BC$EK9A:5M=2hrก"\KS$_f;/bHq&0?`4#O;?+(?6Vp/c=ข7h66=lKDhLP,$['hg'B]qjSGPY%4:ZugW5'G]@X^@=OJUmO48OX0'I8LFGkOq0!&]S9:+U6@-pKqPSh$I;=8ZpU2UJ`CR+0+;/ข:K:i7$8WFRF4Ceom!98R?Ba3#=dZiQIU42mj"9Dq7I-ก!mC2ขf=H8oG6o[/HpsMV-G8]FU(E_"KE=/j=ANkRL`3%6XD17][aJQ+1F(XTs6KTIaI$fVG&*+[WT`LBq!*M-Kkp49O8Cq*@-u``DR(/#l15hMFr29+SVl4l%YBcS*B2ipr:=4aWgMA]A@jCBPd56JM_us^)!M0A#rกDขD:n=MK5Z.WT=pขS3dA.กqo)Eao-^$h0MBHsaN;/กq39%,8JY]$G+s]ep%3_ก&]KlTk@$W%3"H6cC'^'#Y'6@gL\gZ9"llmj?PthElPFWO_-lB#DZ77A*N,Dm4V$2h*M+]Ii;0กM5dq_j`"ขHa5i2#,'c^YJB5:-^-N0nisaUV`YCF2^f:,W!5BB3cS:?Ju+Fqpก)2tccS1b4;%UC]-&#7?/`_tP@qotoUkNGRj2D#+7.bo8G?bYA9)E,ก_ก@FklYr_e9N]-4%R9Ebdg;%U)1:G#กMD^%Wmabh5rกh3:4MFUC/UMqg\KD=$e!7](GMSX[3Gr(Ag&TOPขI9s-UWH@S,m_PPgS.#L6"_gSKW=Y&$RSsขXduh[46QCkWknH7EBh1mC10"s"3@u(pQ,FUbmOFPY+ifJ5X*fRYMq7hRN'UWO%h-#Jr%(UOYp.$R9V*:a1n+k9VZr1&kf3)mXKF&'&igKReD:*pWB7`fS%pl$Weขas(=ข%:$m&+jq9hr;?6;s`R9,TOqNl#r7#UP\ZWG+;b#H3KW[W6@PhDE)4pQkEl4T4s5JT(bZogEJc9mWjU_?8XkUCIDbHo=\)np83Y,qJ+":`--#IERqei\FขขEu'PXh-utK=(5H:n7Jd.Q0(,SNseBJI#L$QD?kc"&&=W:)r(n]tP+70,cRMUl?'FVXh&5"g4nABbdUก]Tp7'b@%3=)US:Zo-j,G4Fu91WM4er*)pXaXcb7T5ก[u:EoG\pd5Zข=k=_%.%THaYBf4Vinj-_`q89E5a:(t9RA)7rZBZAb28t)Iข#+*1L3tXJdXOkdb$I`;Puc+$)#iHAk2o:8YVขOCQ1tp3)@1jn_"$E(DGD_K$!8%R.&AADUs?#+XU=.sb[0CpQhWD^\C5I;:.4&8=JCi!d.FT#Cu+d8'(j*^$$HBN2n4D&g]ab_'NCFo?^ent@L5f9acXV=b?0!Gca0H/hUกD"I.YPNXocmJPCPR?]ก(SกV6th.:GB^5,^C+s)m%T\]C^,]DJfrpUiHe`aIn-GN-Wp#M0edhC*7-Ce=us*Y3DoP*eHD:ae#E)ABp?;/%.6UJLhIWUmEqD&i=lD#ikiild,\sNJ/gq9j+-W.9q=C%me__(.f&(ข*+h(5V[ll*_rk;hq%Ff`0ZNZ9fbNE]hSr'%ข.ข8P:ooH&;m:I;hCc,YV#+nmhoAกV%.-t(N3?Mกh\#KG9`spd+k-kbi1ก&B1m?6YSo6-gbjKm*Bm)f:กR?JX_caK)XGJ$_k+t"&45B0.A8XS!KD6Q\4]N/_H'P.3R&m/\Z8OjVkf%7jGUEGก#@5j&oZ`%RZi&-o9;e7i3-Eb'Bh;+mV996cAI+4_9)u#+eoJ*R+$20KW(fH=OY;?;?X02Lg-paiQ';fYl7VgRFg/CXrFM?EกQ8((3BWpDcP.2Zhl@\Z&iCEB\eO?^=!+I]8M!U@pQs9B5pkOPpกCaX8(qle%+^3(eT`h)hW_LfJrJs^t$ก$กi(Pgd/B5ENLgIข7'G!)gMRkfH3E(PhXt,jE$ee"HR-LbL@9u\-2,n0LJ?:B4saoQF"B^:dqG$p+-_tก&-s'.W3t.1$s[$j*Tข.rL1OOUYPaII/3)ขRBdBUm$#ooqkI_-Xก#F/#0ddeM4W7i,Hกa=HCk8`rAX]YPZ6/a=M&8pdPi(=_0%D2)O6+p%rN(!ImNT^ALuKWSGPQ^H4Ij?8INH0QX`n#APG6(.#qs@D^i:M4YQulgEขP!11[h0\'QnYqq&กAZ6กข8a0J(!mAngn9R`Sj3@G:Y_#pbon;b9ข7[2/U69$4DK?&pk1W=.!hZ;+กX.`g=aJp4ข?RS'udj7-=M(k=c_,.WaVQLF@(T5jf];\R0Q7dVD!P]_6dFST8WYh!peH8กUfF;&Vd']C]fhd8lN5ก1LX0/?;[OQb=C)B;WSh9:W_[WiกbM:Y'bjZ!J\1G@ZYG\eB:7:C?:+mmjf"#!/XกPCIWGjZkthJ:+4CrQT9P?/`Iก[Dqo#[AsGppmnQI(Z4#p[`กV,%5[PRC=P1k!FQtJZ8)Y'Ip1CX&e2lp?"c*XfQSZVL3C&cfMFWขaUdH:XDJD'7(q=jM:(SeJ?iA\rEd#)P-Y1",B(4+ACG9%6n61mL3h1f8Eb3ก)#7JMqRUsNIPFZ:rDu%GLc#?02:H,O56,:`a?lP+D4Dc@@9f"DAT(9I$\]/LQN6กi?-lh^!(-*bYขt-&rrh+"SO\q'WW@กกmMjpR]HO`ZoJ1?Hk0k&jiRfNOd\]&N$/[u@DE`]MkAd\qiu/_=KuF%KSขh1b@KS'krWH%ldAiกF-:Z+]nJขE?R=;5;/W@^9.Fs`]:iVfVG[afl=L\K8U6"`[Meข92ip2'Qppe?H'ก@\68WcกTpVtB:=G%h(%Q`KT%X'1.jO,iHTAp`U&กfA(GU7,7?'D-;R5:nckRT6cRnXL;YI+s@&X:]#_?O2'['dH3W;qpZ@&KSh+aก:`ก@[^E=#BNYZ34hI;1+t2Z(;:XPsq*j*r@n,^foDTo+0K&YXRข5:8C`/B5')Yc=dARU-Qs-10#/q3d8\Id_3^@!RcrC:84TขFGก8V73/YHYc@mpi\u(Ec)h#WmWY-5:C\กoW`Yift_tOqA0gTeo.*_$3HL&9kR%กe`"TcMjt_VHa4DkกLLsuApF#Ub4AtB&X1HOEC!u[ข6_^eLJ0Zkl4b.*e-QIC-'YUD/Ob4GchVc@P!mqI.5LTC7/cPI62`p[:&ขWZ=B3lV\hlhnWBTnI;!Mgข6:PVbL*'ข2*4^Og4_4$#FiSขZ?5%V`r=AGCqbG3%"M9TkP+?Pc(!7DhH9CceF?1t_iIn;&2X^D1b%8]DMso2(n\+7t5.JขrDAD%.YQcqR[,WsKhข(aBCfPFCN4pVpc3p^X3XHF!\FWQ,(0Ge5dj:3P\2EOQiV/d:W:\QCE_NYg:20Mt=ifJ6cOk)-IO/u,7nuOVc2WLn"UUHr^0C]n(&4$&()Ch;T_Xi3=^YBblgsR;&+e?W[ssn?0_9;,qRSXRWก1ZcZ6/jIM(I/p^sbก\VaO_T.HWTeKV"[p]:p2D,HPnCJ\52`^45B+A&!;e_D@V\S%r2N1V-LtfnFTmUii\OZ4#5%oTa3q;^=mKJe"fO5TTVYq.;:.)+GFdagLqTKK=.^6(,@W_c662qSAQbeMHsMe,!8q5BOeY:o;";jข0_I]d9"Q=]B!ขX*:%C/=oก6=bMi1m[,1G,Aj6LZ"JgAWQ?KAnXRZ_0ZB/0LID\XP+BrX9G5ข)Oj=hDY,!?[SHJE$#Ke3b&ZIDSnF&uKgH_!M7s#t_,\+3^Ft"u%GaF8d$oL\2ZQH0ViHpPD#k2ข%r'M/-qFh&LA,6Cu)l`:,Hm6_CXE^H?m'1F4;1i-C2O('dVr&r"l%ZBU345:q_p-\$1^8H5.V4PfUGeCNJ1,BLE7GKQ[dQ6Ge"uriU+@_5\lbtn\"1g#!J\&3d;ugS,ข+oIVA#nkgZnXl1D4',ipqaK*$i:b=^6ZGG-cขCข'tD])u3cW:-@8ข]Gก'qขqXA4c0iSC"j,hข,`.a*72+$\U?#jlQ!$aGMB)SCqE$S4;kZf`icj4blขu6DG/ED"'hj[qJuh*ff41O;XeU:@pG^-1BdhH:L@Us#^:ขp'j_G1J1H@FE@\GbN1TUl-fP&G!J;U0#;,NR@KขQ47?]:ih&AV~ข
+ก~+,^C)z!"/*UCMt.^P2?`D5Em5iab4t;_88]H2LLOmEAiu4NP(1/+G:uF,n3Pn&G%U#o*U9d+`am_iNOiQ-TT8ข+p^Bb0G*!\/bO%กr?[6!ISA(0%j-su97Vp4Rkrl+?!U`An"'pVXqO3'\D]B9Xก+pd(]O#a^FhK_kTขก.n*Tjrs6(PSg$cWกpNHDH8+_/sm$Y1mcCJ0G.8EZ7:RCPW#8ENpmsกFh_j04N'XbjDeกJF*-Qขel9fCY;WA&?nRqrG(-gH/rVAข]q":^aRLg!M4Y5l?@@';'RJu6-u3'e?-#ZnP8iN;^J'$'H4s*1I!g["StP?8muHcQ*A;8;k8hts[.r/eL,;7HN'n`SEtOSV*(+)fO6pYdaj:ขBoZ0nZpp#(Qf%YHT)Yk+H)SHXHMos$LกN-[XM7I8A5)U8Fjeh@KSAIj,((ก:ขNoZ\.jhr4aQS5,?3Eqn;1FA^ia%!l_ข3*E%]3pNsOCrHHcY'm2J]lum*/6R']P5S1Vqpko[sX3o%i(@dJIm\Zpti[+t)BH5CcJ"]'0J_H-C$*mbjE(;4F`HM4c+_PAก-Noj`oj@[SA+4ka,%++M3SeC9_hjm`-Y.a$I,T[co=\d)+1Ykh:)gg4Er_aG:,:V,@fdh:(#]'qTSdE!;j6!Zglgh'lkSq%m`c5a4-IO1,.RtF61)MLjQ'n^qT#5e2W0[02"j2orAF7q9jm^o:R27gR;&9So:ข:Umcb`bZLกY3INpjf%q,4Bb[Z3.f1s"?nP.&.O.CDO[4_กkH.a/99ZQsVl0Ofo[9=#pS@Rgp%;7c)="M1?ZY':+3ก??b46eFXm2;:D#Fh(Mon(Z,dcc!PbH7*sr4&afกd7-%RL5T$""-c-i#Zp;*QIM&Y5r]`jeF5C^%F/MJ$2$aKMGLF6K'.:MM$Z4/X2q?`ZDgN4ab)NBEt[V'a:7A)RWJ[Bu,k*Fr\=_^\BกM+LVกUB,a*7=LtthขB_`ก2Nq/:*a@q)\1#seOql5@TlAarKecW-:g!#XWข4ngb;1L7gE&/^กQoขR*T-'=RtkaU?f?J%U,J,ekZeT]R/H`mlM%`;2-Gi_;$b+Nr/g;[gjMGC8S;e$7O5ข9q0pU4fqmuL\add&5P1#O!6[BfEXZ]HCOt@mQข27uK\E6:L2Z@k(Ig\qO8L+'.Ild",XO^-%Xc*J;S4Eoqh![S8)9ET;#4rt9%7,ZpKU,dfK]?JBf#k6$K3]R4oS6p&m\:oq?gY_W&RKHCC3]Z\CtIGMt]aJ'"JaN[I$E"JกE?iE`!b@&^cU,r_!l_C5/g7กsmkiU?O3(pAs[E';GA!Uข_7208[S1,กQLTA+'XNet"L8^%E!D65(/o94iZJ,I5)XF-?=#\'dboO3ZdIQT4]D;EกC%m*N5udWX-GEJPpjrDqZi1=/'-g5DSKYu8J?arUuiT^%+QT2$;Y12#,[N1m(h3H5S*m:Bok5TYNขfT#[t&P_i(^b(s4/$L:(+_;A:Itfj2D$[BCFk0%:$กRl7!B5$0Pdpl^luCL.กdW&mR_sUC!&nAk):37^*fEA7D-l!ila?s4eDm2Po\1IT(Pd]"bZ:EVdg;b.65eXr?;;%=`J4Ft:4#1oขDmJ/k/a:Dก@6U:0dkRK[snWX*;M06EpK50BJ#DRoAUPM/_ขmn"dd$fit54@.,da2&se1riJ8n"-L+idi&JOm^;g0afo4กf_3aTjU(qh*$js-R'u19po-82sN*#8O^F#C0TE;VEIt9+,(;i5!/gndZcd+C]D]\JEXH]'#=CIk-83DW&8aH:&X^T':Gp5NFOขo%F-g]Q?q_RE\@O`cXa,L,Vj6=n6P1lK\ZHeEe8KBDr28bQU%DlPd!B9sfm'atr(#*`L:7X)jdKTe$=HAT3JsEWt(SL2@Ka:`,(_ขGFO#8'N+kf224)e@S@Y$F:T=?Q]felgYlo3]\9R)KV%GFข,j9%tFV^,I9Nnกh@m[B&['aLetL1VP:!C@ja5ข^"/a(9+q`:/E\106pOIc0AS'U]TG;].-rFid.%7BqV"h-JJT2R`pnnVK*a.Zj'F(R6Dd]ก'cWK*KiH\e$@]OEX?DTa_ZNก'ขdiUCYuC)ZBข#/0&NJ\7P_JnSeL@YqVW$3Be1:,Sq*lKS*pe@+1eg%LEZGFFa`5"O4dAA&[^\SdKก-pepu?qW"IRD$Bd]\7E!t7cกo[dV1P@2k.bkM+l3P\N=+7\(c?CYm0u?(/P.5$9&q8odOli(K)g;_N9nM+CHf$*\5OK+gAQO*LUbo/LPPF1M*M`eCmB%MULTkrXoS5A5N:ZH#;]'o,?MKZY0'*CnT9!Y0L*=`3_L;0-(5H_^MM:0Y.YHdK@W/F+_C0!eMกHs+[74?YU/`X5:69$P@h;UกNa\1]/itm49*P;Wpt!8?mi33M$?NA.bSกmG(Xsn+V,g&@&u,FpCd2FHT[)!ddJ\68"W*ENs%DoL00;*Vef+Ah?W7ข=!?lrcbXrNbI*Mg!H(KCข?t[4T_[`@`6Q.)a'A]He(.t5nYfn?4qWYneกGWqeo'U%Yus^:g:ZW\gt0c2Z\Rj,@W/_;_#SNcUPK+C;roS,_1$=E5VGlct3jX;b5Mte#4nM(tKAp(ก"S]l!]]fg!LE4(\=&C/Q$K(`^hcpl6j_&KO\U"_Qd#NiS^NKVA/nDL'mj;O?j2VMq1jLJ51k_WMpn;j=q6=HRWIQr5@sML_hh(MlsXUY7ssoN;\?;C"jj'Wq[CD5j@9A3,TCicY0J:fN+KSbIXBmg.]N#'sW:R,n@.u39[O%J18ICQPI0ก1?ihDQ;0*$U1.?H2dU0['N9cNP/Q-&ai&[5nf`VqY@1D$kTnข_+fMH3_K-ข&mEfEni&Fs$$\Oe(1M*ML@CF+$Y5&)4ขqZ92CU![i#Lf$YcRT-JZH9cPB]Ck\rAMข)bE5^;#Rกj0?bT)2Y$bN%iWC)P:;QV%aN&37\กXV(c&_Drg!o\.cKlNKaBV,i%s)^[JUE)'1k=!`+H,A1S]'.ql'eXZ"g4p2;ciK`AeELFs%Hbj$oM,WROclMX-s]AMC(1;AtuV_NO8"@dk!Bh':cH5GQt,62^!U'l9(mGOp_!615Gpi-\_ขWs-H);OW9N\"ITp3`*]=Y&V"@!,ScRZ+^(7I"S'Fh%22PขZQ'Q'@#QS23%)ข0QodC]7Fก/c(IกnZF;c?mm)2^e_,q/5กEZS9FQ5,,/RXN4ข]S5NWfqt'?B]+MJ2qHL-f$+tk&cFU0hIIข`5MOFFpOjH1LZGcWp,j4,ข[?@1:Qq\X0CBiWLl,E=Y]OcKn*;i0MjaZI4oVG0DljVAkNqNdiT-กhO"m_FrEo,@p;-W\m@quQNDir%5Gh2.Srs"Jsb);C2m^-'.HgSQOJ_UjtoF`Ggq[4$J1G*Li3_55`Iq%(sJข22m\;Z&LT'^k63B$9'ข("*Xo*faY8fWOJW_Y$INOa3CQb$*I5:R_K#@8:;K;cL:!a(;^HFLdt4i+8\?e;Y&YsiEi]PXb"$-MBZ"c("JiHud#dSขcf/IS.h[fdjQUY/ZanG(CขbJกD@@W(lDd`6On2sThกg8g]!Im@#u#EA9#qOc,2/oY_4sVc0?n%hp$j;oGr;"iJ&uk+ZjกioHSmcSR4?if2+ขiE17Ku5kMVG%ขp@_a#C$Hข=6@NFH-!7_[,X[s4U#_KAM,ulUDL)NPr7HWT^Fc;@.&EX)X";9X3stGFdK%KOEMZL'PBXrMTq)N-d]"i+Tb_8-0[t?^iF:t*CmTiY-3T(MoJFABd3e@WVe;;Ja;T)ข"'nRDrn1c175&=#'ก&Z4A%^?:EVSeWbA"5#?BJqX(9Dn:J\L'ข^3\_1sXpMo-MO'LFOsขZl3jqq&lrAr8H7UA;7).9MlRIf]ipaRUX(59rEFV6bXA6ks)!mAZt44C,9H*%"Ib1oCIZ8=I=ก]8pgnT'a2ก-i-=cO5Hbgq"ข#M$PgYd];Wh&Qกeb&ik-"9s$[eC4ghs]G-_g)W/5sS(B_Y[u[c)Pu$$p'@"?V1b)dGWSG6."1"k=puQ_s;6=G#"8E9+:Q$5O[7n8,(aG=BE=O$5S\A\a_6'$t6:QW=$oYTขL\$&5sC,VMNYbF2/?6SIWckN@t#8uLTu$nD%nQq,DfW&L?P$=^Gก/a@iRR[u"i+dbWbm!1'Qjt'*3_01PcOCb/HoWmUEJgPCE@@Ws5*Eg1UYqX/+.17sgL!+E&+fHกs6./-4(*o[b:sก='LQa7=[l&R\n`=7ZP7Gu+YLกPM_]Y/gj@e#*KH_lAPi*r#CeMA5HNk9gWP_m!`L@UAALMXYgk_p31dขmnZT(Y#f`E0@X@ขl$G7C04LQBl]h/qp]/),*=q?D!"W+WCEKTJ0%8uPHY6%+C9mh/R&Z8L-[:8กA7mMZec.;ขJ;q-n1e'o#AI`*ก#"k,$qe4=-.;phSL2"F?&c]2gJ6Zg-FXYhFdjAก]BME&paU&GขZ0C\V"#MVrUXEGH#pILI5%lVGKkH-Is`gh=Td,Ok0,TG+h[X+E6th08+@Ka\&O)c"?GPoc=J?.:qWlO]pUMjn1X*,0h(`D7;?p.[3W:h%@H(_frb-CGYRXqjd?.Q&3#m]TT*oLq4lHAr]oEl/I?,OdneY30PP1YEu,,8is-Hqu:HZ+&jTCnbP8.7kJJ@j.k?`j7f'TUbY,5]GY@ข"d,bd)G\+&[$Lp=JdtHb5\ufJs.dY7WKE;!;@R[cข-gB$DUd!jof1g7q55"O"2]F/^X0k9QS`Pp7mp'&VFe_o%P,+V0Z\BZ+M!aT/A7F?0!sd;-YCH0&J=PLQa^Dc_G]\oo:P::t/T+iกก?e3%h!.(?$P_mK/Sck.UDSU(2*(J&A9hkj!dขL'-q'=W0H'AocL:R!(\[!_I"Jก76k&XbFKQP&fnkdpii!l@Q@3XHV/D$F7+1i*ECSVG]#2GeDTk#%1618FGMnja4Z#B3]r0e:_hB;7f@KAR/UG?2iFYXขQQ]SkQFGh#n]I7JKO3pX`9l:QA-DMi?+D,W^+*#"R0m2tJ2F/`$S1j7Ns]3R4ข;b_rtD*a?ZR;-4ig8@pbH^rmกnQ#DZnSpO&!pR8JiRl,cAjqWZBกQUdT!`oaUIP1%-+7EmbrVRV.8D"qWk3\"e\^6s`@-W(D!u9CVกNC(FHZPq&กn=f=;nfd$kOM_f0$MJ5-g78]#sFGYEo?VeC5_F[h8\"Molg8:JO?&*&125PL**W+G8ก&dlU@mX.&S!_`GGกtpYVขCe8Tip?1n'S9@N\$A%1^+o9]"naB;GG=กnQJgVmhQhdtWc0QManr1b3J'_s;I\Oebb_U0'M^qL//@MoกslM9I5do@NT2TNUen)ก&lขknpV;NiN"0uกrI$ofJขnWOo3^G693/%4f"YV;8XR3&kNqG%pM](B"=S7Go#DdgoU=35SPPZt0FP)A&FDCF/2WK`!r]%P"k;I1N1D+=Bg%:mdWAe@4ขhIN1p&C'!R(sLQN]AZ0ก$@+f`cg6+TPnETE]prKk8H/)!M\n\SU;iaQ.9Z0rljAf0k77!E;YI+s@&X:](kH5B'['dH3W;qpZ@&KSh+aก:K*tNขit@m'@&mBJoVn7kg[%9pZ\h\GNW59VOn9[XKdu@r7tgก@s.%ktZ5D'A_Q'?=BmN(hQaAu\jC^L`qn9blK&o!fWnGfDD.Vj&QemIWn$*1-i7eQกb.2A*WCk?QrNOrIaN*:7B*7a2k[.$Aข/,2p.0ro42Ou/9กJP&h061qMmE&OJกFmLqRc2qH.F8%0MO84?L^O:EgG7E@5%MP#;5_bhU/"P3.A;.6D(,gVH-X0oOX.db8Wg82+mO7^%I3-HD;(mA`2]h$d%r268G/+[LJhIe&McQ)fDV)Ri5kRamid$2D)cF^nJ]L?msg.3hKR\6-eM_sQgBB8b#$;!eWZ,FVqkt$%4ข]*ZuOEIQS(q&?@&d^9CH0$otg=?GK]LTLK1##U`H(qmES3hB.JTb@eกZgEF*1H_F]h;_jujgYfJl#Sh?EF`N;uR#f"u=6D^;DQ",,WED"Deb!Q*!G`I#)o.,Z%3c[!!Dขl3401`$Xp#QC^h#O)กf&G-&%lBnV4:ก^@E.-\Nl!`HFi:_)q*bIT2=^MtX.$WYY6M:Mr,E[\[(jJ)3pln=-4iJBgMU6EcHrj8L@"^BI4HOapMYAe&B&YcกP^#Y2?kZWuA4Ce./A'9SNjVVข9m4?VKข)BnFc$=$6I9/K';u$5-K"0d0ขm"*3Oq&?N)3$i2CNX5I["UH2*[II]isR4HกPgAjG.Vt%EnAS0)ก`@=`;D.=;I0ifBV2S(lP:(5o/EhPก5Y_a[d@"B^D-qF_\4=@6ขnm%npu=b[HV9QXqPO%?j3MAEกขN'h`8_7HZp`nUY`%BLJlD4T)fhl8B48h@\Sb(WdN]Wa,s),Mm!@.RVGniTs&aDYRO$%KcQq'`S_5SN]sQNL7G2k!nXJ'q^:;/hกN,!.1f26.@"n]FBS;FQK&[RVqnhL/Zj+1#,HN6t?#dW`$j(129b@$]"l)$ePกLAc&&$5@(iR/]rZcXGc2oABS\J).7,กD*กZD322)KCH@"r\ZN%'4X9L).kXV"_Ema.R=hQEdVcM]ข)R;OINuVNc&$)&J_,Kb^WWJLU"S6]W?@TmN?lp#5Sข2f(.nY+XijlP;T.efe)."\T*A;q&\m@tกL5KhZjScdN%8CHS@,gPr[*L;*Q?dJ^H$:,6]mrt'`[gqc,DMsk,qu_[V[o-kข*WC`b:&@_-%]dH(IfoO?Y3%;Y!W9')r?NPN3US?N:'~ข
 -->
 </markdown>

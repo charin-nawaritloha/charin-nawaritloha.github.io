@@ -307,6 +307,7 @@ Overwrite css from highlight\styles\vs.css
 */
 code.hljs {
 	white-space: pre-wrap;
+	letter-spacing: -0.02rem;
 }
 
 

@@ -2,29 +2,31 @@
 <html>
 <head>
 	<title>Dart: เขียนฟังก์ชั่น asynchronous เพื่อคืนค่า Future จากผลของ Stream</title>
-	<meta name="tags" contents="[tags]">
 
 	<!--header-->
-	<meta property="fb:app_id" content="306783623357456" />
-	<meta charset="utf-8">
-	<meta name="author" content="Charin Nawaritloha">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
 
-	
-	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
-	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
-	<link href='css/main.css' rel='stylesheet' type='text/css'>
-	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
-	
-	<link rel="icon" type="image/png" href="favicon.png">
-	
-	<link rel="stylesheet" href="highlight/styles/vs.css">
-	<script src="highlight/highlight.js"></script>
-	<script>hljs.highlightAll();</script>
-	
-	<script src='toc_js/toc.js' type='text/javascript'></script>
-	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<!--/header-->
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
 </head>
 
 
@@ -33,7 +35,7 @@
 <div class="container">
 <!--navbar-->
 <div id="tocBox">
-	<img id="clickmenu" src="images/menu.png" />
+	<img id="clickmenu" src="images/menu.svg" />
 	<div id="divtoc"></div>
 </div>
 <div id="navbar">
@@ -159,7 +161,7 @@ D:\My Data\sync.ffs_db<br/></p>
   return completer.future;
 }
 </code></pre>
-<p>จาก [คำแนะนำในการเขียนโปรแกรมให้มีประสิทธิภาพ] (https://dart.dev/effective-dart/usage#avoid-using-completer-directly) ไม่แนะนำให้ใช้ Completer ในงานที่สามารถใช้คำสั่งใน Future หรือ Stream ได้อยู่แล้ว เนื่องจากในการดูแลรักษาโปรแกรม ตัว Future Object จะมีความชัดเจนกว่า และจัดการเรื่อง error ง่ายกว่า</p>
+<p>จาก <a target="_blank" href="https://dart.dev/effective-dart/usage#avoid-using-completer-directly">คำแนะนำในการเขียนโปรแกรมให้มีประสิทธิภาพ</a> ไม่แนะนำให้ใช้ Completer ในงานที่สามารถใช้คำสั่งใน Future หรือ Stream ได้อยู่แล้ว เนื่องจากในการดูแลรักษาโปรแกรม ตัว Future Object จะมีความชัดเจนกว่า และจัดการเรื่อง error ง่ายกว่า</p>
 <p>เมื่อไหร่ควรใช้ Completer</p>
 <ol>
 <li>new asynchronous primitives นั้นคือสามารถนำ Completer มาใช้งานใน
@@ -189,9 +191,9 @@ D:\My Data\sync.ffs_db<br/></p>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<h2>ทิ้งท้าย</h2>
+<h2>ข้อควรทราบ</h2>
 <ul>
-<li><code>async </code>เป็นการบอกว่าจะเขียนงาน asynchronous ให้เหมือนรูปแบบ synchronous โดยการใช้ <code>await</code> / <code>await for</code>  แต่ถ้าสุดท้ายไม่ได้ใช้ ก็ให้เอา <code>async</code> ออกจากการประกาศของฟังก์ชั่น</li>
+<li><code>async</code> เป็นการบอกว่าจะเขียนงาน asynchronous ให้เหมือนรูปแบบ synchronous โดยการใช้ <code>await</code> / <code>await for</code>  แต่ถ้าสุดท้ายไม่ได้ใช้ ก็ให้เอา <code>async</code> ออกจากการประกาศของฟังก์ชั่น</li>
 <li>หากฟังก์ชั่นไหนที่สามารถใช้ <code>await</code> / <code>await for</code> ได้ ก็ให้ใช้ เนื่องจากจะกลับมาแก้ไข code ได้ง่ายกว่าการใช้งาน <code>.then()</code> หรือ <code>.listen()</code></li>
 <li>การดักจับ Exception ด้วย try-catch กับฟังก์ชั่นที่เป็น asynchronous ต้องเขียนเป็น synchronous ด้วย await</li>
 </ul>
@@ -233,7 +235,7 @@ D:\My Data\sync.ffs_db<br/></p>
 </body>
 </html>
 <markdown style="display:none">
-<![CDATA[
-<~+,^C)z!"-tSh/41P'tu:$^;D51&1LSCg&qR'gB%H""q3>2!VNJ$@BOd/il9J#]/u6%"9Cn^/L;^0Oql,j*Jk?Wa:Jp)BsW2VI=sdNER)drSc,=Yg&VQ8o'XfIRIg$@T/iYcCs`U.4H%6!EO6TRs,*S83#]faX#R\LUHommj7,'JZj3epSN%NC.pVi8G2R^r09kd/`mN*lGS*I#n-fH.n]MZZf+YiJZT*Oq+;]GB8#NlM72uchOpJS*b,Ua(X4@Vj_XB87?fM1aj:?=\++5nGXaKWS_oK0q\[f7s[8O-bN^I<sJO-l.&#2*FN2&<kF9RlKrAZiqUSA7d5isgCn'[FfS@'##5N4"Cipd$3PYd?GUEGm_6&?892dp,O6@sVjFW<p7q"#,_45Ri.a74D0iU@_F4cc@fK0$df$l>PUd?!X#V^DTX=<-]QUM"Rg,)6\*ro>T0rX;pk<pW=@_$&]U%&[ASn&-[-@>s(sn8D[7.?;-_aZk=SPgkl`nSYU^Yhq05)'N81'd$%dcgf3"@%n?ADZuA>)@\=$0869J]M5u"7_1nqNBgrTX9Fk?p)-Gp[ll#hmGjW;jS''ISg[(Dg0;A3P-F;Nm(jSN=rmV\EMEs6')+D]294oj#6_\j@ET5_&,*WR,uP$L:)8oj+WY6pJV('iiKjZEH'R;%KKhqh1`<)N726fZrp[Kpc@,t(od=*sO(pD)3,LTWR#)@CH@aZ"<p3/$9UWIM&9V0uI<$HI$.O-ae-/#E;3np>S\cuJ%tAKPaG7#aOrkSXc_qQ[b17i0Q,\!/1i/VR%114'kP2[n1\<*.mbq3b7<CqFT.$1$FC-^HaBT;$+hgS0mNl$=q-P;\^+o?8UlWs2aqL10B[_M\n+oaJ#i*ErG#!KF@*M,!i3r--ogZt27BN`T?5]oL"[WrTV05P:1Lt!fJl0)5P*\Ya<Ck3*93Z0sb"rFtM'JHK5iLTG5%F#CNq@bp9)Q#mouqF[C\[u:\VGNB,3rGu62m!WMjN@^0L81GJH>?cg2'\X!B+erP?t&o23#3Ki(Lk)WF8F@OK:)ns"lMiH;,HGM+)\8\1L`s\K/uNOPOt>*2&B"b:5.B9UTB8NcoEZ'lIYTO^JGo%t<5K+rmWu)80ted1+'s,n[ZDb/+4$g]7$VCDr9'W@h+.qm'C6bZqr6d?*0ro\nchRkR?!lkY[d=q:dD^$>u+X=l7-2\4PXTIQ'FE4Zp>mM_^1/ZTQU3YKdN@C7Wu-C*U?>'7q%@l_4ojr0QGi:f^m&oC5=/,0/F!\SeM-R[cP<k\V=Xnf-;<\;q(V'NI#Q/4"b7&W!X4;:T&*G^'Ln9^bUaD7poI(209kd,E?BF4"BHG(KUgoJtUm0>5bTjk\S\=PAY)P?o0=.=Ns:"9urnio-QML,j)>KGi(?*`:&2R,ACj]ulNV"*)-`9lT8%WZ1\dS>=A=;Kb^M0Rt#<62"K6BN4%J0>XL!8hO&JJfZe=q5-\i*/P8dAN#B4T:;Ir/S[I`nGH82![nl>64=WNj<cK1l$i^L#6aWSm+$&n`AFs>R8qc#og!Ipgg4&3#B4-a.6d!$lR8?3-7jE;*t-9:-.a<,+T;\e^,In/Zb])!K'nu8Tf;9KW<3D@W4:]nd>a.Q0i\SOX9*INpGk<p7GFDr`p>13gFA\BR4c8=R%JnG2ROtl[,_?0Eb8*Y8;H?DnqLAE?;W)bB21u`0Yef$Dj+Iq5$('BWp5KMY#;%U>&N_7$boo+>]?(ai'u0Kb';>j!0E`QO"L89pdqTO%)(,cJ=.o%h\O8Dn8%LbD:F7m_'M6-Klc[*KLG>b>5K,Pg'!&UT:PFjH,6m`L3M=bSCahf13+d@eU$:XQ9q^0/A<3m@Jhn<GEi!+U4),;0'OnqOF0o8Wh/og9X;_9WqiV%]_@F8M5&FX=@um6B8'8#O1r6%^IZN\80dbg:J&!jhbQ<:F1`.8PC"jb.XGL=_Qs`Am%A5Yb(=\80:KqnRTGMNr&d"fDkET3;0/H@5sSDB/8kd6u?)#4fPdBC.#>?RaCq("&"pQ0;tjhNkL%^3;OC4A:*Jcjm4qM#k*R,F^dKhRU*LlP4k%XCf9S-?\'#pen7NhPTX,jmm8,;[$O\2hrOE">qCYpE<+l^AqngAfVI!\0m7D/F)5W3bf6'8,suFG&%]&DW*Su%1')dMNCVeXOjDYu!-2'/B\ASZ78fV:1Q=s&Dmc'NhXo90\LZJD_+k:'GfO1YG.?HrX_rkrrL)bOT'X;akM-is:g\662JeXnl;7PW[Aa]`lS_=,G%T%)4*=!WU<K8<2hN&RZ0I^)]`SoEJ.+<^:h+dt)5c:<l_W8n'k6laA4:iE">7rO<`9Sd2/4K%=h8rFm@U6nBU\UA4#25Ab.$;%@X^W/-@ah&Ji?6J2&UZH1=X5pE$F4rc=59LJftHhU`#W,X3!2@2=_Ye)'j.L"/@mMiZ5AFRMD'0'k#,634YSf-;@j4gbAVlAK$s7^5Beb1>c=.4[.2,Qpp?so4G#?A6oXDQ8p'aSp@7WP_jJhinEcT%DBVO"!'m\;7:epC2G-*iV`$n=LR2X[9;@$EEfqgHj2dZp-NPKhlrc"RH]F.[ka_4RW6^&Sb9SI5Kh63neO#.-irr8n6-"\<iT%kZ=Lej7;7gjr;J3V"P$55EHjl1<Bj<t0PccGs.9b^WcZbh6FpbY34>*LktAUGdeFZI680G`O;(?.^:sD):,g$eKCCA$)AS[C>5;G+HTA(0faZ_:(SHu&#Y_(MbU"$t,aB`T]hP8Xh81tmDl24*^UU=,Gc[$CFkqdAD^aP&1Aar/j2T,qko&Q$(>$d_*@hO;D6_fo92_J>k"`+t5BH5-(KU>'RUgL*:#^Zq4ap+OYU%KTmi0LD":n\%m<U;LR4I!*V;&`%R:ofV3Bdte.D^<RB/8=saN,C&doj-GV_cLsa;t!=TC8]V"I`^P`;\?J_7H&7[8WP9Pe#DqLGnbf1*SZ?/omc7O6kr<2`s=n%pr8gr&$2_eApoC]HGj,G=nn%32orU=]6BFRjGPh7oVqC@SbTkk#GJSEKG(IU`)5Gld59p8O3G2gF8Xe[1pkD+>k=YM'AaZLg4=;:"_LGC9F6G:c_3+H1SNE3ePL,s"l@?9.ugO!2pc,CVn'_2V%eF&,ddm1:e'#3OJo8rHc?k$(&@`PqcOOBf?c#'/q>"W"Vd6o:0aq?B^81H;eS'9Ji*S+hH%V05RfFZK?'XLgYYN[Y3IK`Y#O^jf(;2:'6pAi@lbLJii8WgH^B9[*F.%`8if^"sX*J~>
-]]>
+<!--
+ก~+,^C)z!"-tSh+eq[(;=*#hOtQh0Ol\eZcNrjOWn:.OZ)NjfW2D3:X`UeF?FZOh)0FS'Suj6B2!=P-A*O)0LBT[Oข8f-l$8bIKRJO(3E;ugWdeuD]i$*p]"=t;SY,BKe1%Q*74/`ข/=gUSa]=l.4&(aaA=+^IdU\jprAกc8PAel[(LAJA1`8%rh?_n['F%u)QKqkSaj2qkSgHPg$j:bCb6ขN0(#=\P1k@S.Q[G,H-b.iTRe59rLq'e6VPg;h55='PUY:\H2f@.(%7q'ขdX?a;%j+8TEf_VdE9I?M:O6_qQmRSK-@sB#SNNYr#ก6L\-9pK:0@EE6kขY8P?6dL#S=oXP-X3f/)'Qg;Xu]1=1]06;/P``oiDDWR0Hก9qZ0,il+-7H6cข`;FRf(7pFh0p/Lo&3714#B9a)ZDHjj1Z8N_beF,K5-&'2/BY:3"tknkP^,_C,-W*ก5]=RaU8DSGWI+8kCVfSieMข&GA1P.O2mNRGpTum5]V5),+#hkcMo\9qtR]oqc&[:3K/edRY1QTb0g(Mm]4@`?$61oX6-CV*/(iO8PU/a(*'o=F2!s=;$YkK\^"u;6(?o-#SrU?K+/H[,qXbBqKq-2f(JUi5'kPขU#F5i+2*5T@-Ym)CYCW'7SWTT,/A?622ZM8WuHO'3)dKljp:HjOL0dกIYขZ32771Lsqr,$Zgk!?I.";3so8Za&K$R'2bZmg`m'PQ9]กM8Y+nZ&7t)DdOErQs3jouXqd^3%uCf+HfpV#iFMg@Ng7ก_8/eq\Y_Ihm]JFrlL)G:O??^BขiZ^B.Y)ei:-+;-f&Rs%Bjq(lGDKdn-Jb6,W?JcTHD:(jf=QPก3iNqc70_`I3,Q-q:+?LgOla,`J+)tA8d70nka.cU9F"[sBf)hY'^eOtFl3u@uUJOqW[,e"(Eto8Wf[A@9P;8Bข@,cthp/1TDRE(\AfQ"V1?\s9`FIkP-@')*a+a7peข[2[b.*+KUขk&Gs&LPS$fJc&Z7%8&X(r39nl_G'UD,'&.!r+N)N&ขDXs4R6ho3Z.M7^'q+Efm;V"M_oj/\f2k+1$กCLBA626!6X1T.+\pVTCWaE.Qa];IgUGeUsJPRg@(!.2fa9rR$\FXX+ST_90UroDAmfN,'ขmnขS#R2u@WAMD9/Q"%HdDS'curO)DfS$*d]"C2"n.I._A"I'Krl!8K\G[t1PIHGnWW'`73DT!b(`bj.eb6\O"\7$pqKTP2k%=,[md-CJX/Sql2BCQก($lกh@กp`FM'Nก2-1k4I/)TV1u)pXlM+#;o.P-X,c;nj(-.6c!:&Gcg"BX@-JUn/=a?eY3Qjk9#/e_%n'MHs!R27%4Fh)R+Y),rnr+Y=3m_N.JtbTc_cr*X4EC`N]7dkKWM3@poajSขf/iS'ก8qBก$hขYF%-fH\f0p*7.!sb[0!0ck!1oข;Hp'4IOข/PtEHF6No0ขdKADh4gi'6&T00jEsqIhU\=1UcXR!*b$&5oj&'ก73A-eDVo,']KcNrl\mh,Kj!Q$UC\WHf2D"A5\4^'45?Na]X]G@EV-ขts]E$!cAMjl6bUb\p9\!!,qVK!tHWHpuU7rPeTWj,-'KeY&W["JqY(fbo)'o\$B1@=n_4\*)N]aV?gqe"/I)Q$]lJ$gPE`8kK%1ขmk%L5Y_jk,Rj2;s;kX"4WE'__P74RY5eaOrN`ขd\-(kuH_9^#?n-baSH-*c/48DAf;H8KlIjก!JHgZ7กo=-&461Bh[JQ,1H=CikQBsUT4\W-gf@G-ก7T\;!]@BIf#umU9TSXJE5RVO`,hh/Ed4!Z7UR*h4\B1#9@)m'dJK5U_ROJ@PD.S:fX./Eeo,jGiUE"i,k)CgM?PJ(f\ITกZY]e.39cgfik$ขZV;lL)0Lก*W0cfbCsl`l7P`(STqGDข9hE]/okก6#0Bb+E$DY4ngTJ4_=]I%INdE96ก(LK@cr:JZ298+j=?4P;U4i2KK1C6UFiKUgs!m=6p!3U!HZAGrieHDqb+m(cmh3*@NV9m-DQ=5k!pc$+QOPKGgqTMZ_AW%S%asEBI$!`dQ^"o80I+@Xf$p,\ctIUeE_ข%YDQlR3LHPfIYZd)2X\jg`Q,-+A+P0r*%`$cnO1JF!/`R+#5\ขc#Ze2#Dkn/)U:'tfQEQlFjPU/h7W/nNq;5ddk[5%c1dข^ZP09OT5)ut"Yo4Zg`K1/h3OขDkeqerm3Cu4gNe(fZ5$_\U0KWAl//pL?rgOWB9Y[Z(Fh-^/5]7Ln-bRVdM[B-eXKg8gW"Y!Td8Q)iUF,'Xm$W7gQ#@4t[gpi5Acg:#cPMl=KWkJZV/&KRcrXRW-B&?RDg%UV/m9pmF1_3baA^&Z&TqH&_%Ka%gRV&L4er'u/q]o2.[TขlqP4hW?aKGbcOJ6MGp6=X:9DcMmJ0R+9;5X\S,f$a0W+B%oC$KLK26LsjdAHe1KC$Q=k)FL2Wp2.NOK3AA42["O?^9G$qj6C_R/O`+_r%dS=:ข9qcYAh;ga_pX.`?.0$WWKS,Z(@`THKJWFUI-^m;bq7dVAq*7t+=LH;nYfYnk[3c%0:B*abQ"XVQ,7^WpKNdp+hTกqnNWb*Ue!lj#&Iข,GF5%Gf^9Rk;"A#aVfa+[O4O9SccM:q*Q)0h[]V2]%`rf'3XIS./FZ?&%;Mขughg4i=oqZ3u21,ZhCKDAgkc;p!.`1/Etq1.oGoA.$.t'Lขd$8G`2Jn&XpNUB][WE]#=&*N]4กJINVMDQZG-WXn%0h$%!X+a8tN33a*Me_i:LfPNb'r9cUmn/$Sข7i?K@28ขjT)[eX&b^J:AV""bcH58N2__ncกa,/hGขHE#5P#UeV\_$6กc[@_ZKbH\],2'hZPPAM&J7"E[/?ub`6\G2ci).[;rEt=BogRV9\f5scM7+Xr(\0PQ&Zcpm-3I#%N8/D6SRoii1:unkggcuUq(pc(TG%Mslu-/ND4%k;]=$lj\Z8GQDDP'A,Bข'o,_la,aA.kE_tT'1nMO=l?PกN/IFd!&N500R`TaAfXGM9]XkLhbk!LVrFk*D52Y5M#U.2@K030_RIkPPDT9T!-nkI"^X1N%g"KกILY*:'""8[%C@PCO03-oขBTd7^$PkBB]fDdmoa=mQKDS7Q=T"tE*)+j.W)sSG)"M?l$ก+s?d9Bข3a$FoHk*!R[YI=3ST\a%gb.BmF0:``amWKbX0^Zg;DW_r%UWAQKjN/9oDUq;,#\a%P1J&3ข&NEOjFDOVMVc"`MJjZ"7fEdu;A'](.&e`@U"#"N?trrHGob=D=~ข
+-->
 </markdown>
