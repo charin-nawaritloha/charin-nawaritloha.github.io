@@ -64,11 +64,11 @@
 <h2>การสร้าง Iterable class</h2>
 <p>เนื่องจาก Iterable class เป็น Abstract classes ไม่สามารถ instance โดยตรงได้ <strong>แต่ต้องอาศัยสร้างจาก subtype พวก List หรือ Set</strong> แต่ถ้าหากจะสร้างโดยตรงจะมี constructor มาให้ 2 ตัวคือ</p>
 <ul>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> ใช้สำหรับสร้าง empty iterable</li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.generate.html"><code>Iterable.generate()</code></a> ใช้สำหรับสร้างสมาชิกจากฟังก์ชั่นที่ผู้ใช้กำหนด</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> ใช้สำหรับสร้าง empty iterable</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/Iterable.generate.html"><code>Iterable.generate()</code></a> ใช้สำหรับสร้างสมาชิกจากฟังก์ชั่นที่ผู้ใช้กำหนด</li>
 </ul>
 <h2>สร้าง empty iterable</h2>
-<p>ตัวอย่างการสร้าง empty iterable โดยใช้ <a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> constructor ผลที่ได้จะว่า Iterable ว่าง ๆ มา ซึ่งในการใช้งานในชีวิตจริง ก็ไม่รู้เอาไปใช้ทำอะไรเหมือนกัน 😅 เพราะตัว Iterable class ไม่มีคำสั่งในการ เพิ่ม ลบ หรือแก้ไขสมาชิกมาให้</p>
+<p>ตัวอย่างการสร้าง empty iterable โดยใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> constructor ผลที่ได้จะว่า Iterable ว่าง ๆ มา ซึ่งในการใช้งานในชีวิตจริง ก็ไม่รู้เอาไปใช้ทำอะไรเหมือนกัน 😅 เพราะตัว Iterable class ไม่มีคำสั่งในการ เพิ่ม ลบ หรือแก้ไขสมาชิกมาให้</p>
 <pre><code class="language-dart">void main() {
   var emptyIterable = Iterable.empty();
   print(emptyIterable); // output → ()
@@ -77,17 +77,6 @@
 }
 
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5702321883"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 <h2>การสร้างด้วย Iterable.generate()</h2>
 <p>อีกวิธีในการสร้าง Iterable คือ ผู้ใช้ต้องเขียนฟังก์ชั่น ที่รับค่า index มาแล้วคืนค่าเป็นสมาชิกของ Iterable กลับไป หากไม่เขียนฟังก์ชั่น จะได้ Iterable ที่มีตัวเลขตาม index เป็นสมาชิกแทน</p>
 <pre><code class="language-dart">void main() {
@@ -155,15 +144,17 @@
 </code></pre>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
+<!-- h2-3 -->
 <ins class="adsbygoogle"
      style="display:block"
-     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
+</script>
+
 <h2>การท่องไปใน elements ด้วย Iterator class</h2>
 <p>Iterator class เป็น interface ที่มีคำสั่งที่ใช้สำหรับอ่านค่า elements ทั้งหมดเพียง 1 เที่ยว จุดประสงค์เพื่อความเรียบง่าย ไม่ต้องมี index ในการระบุตำแหน่ง สามารถนำไปใช้ในคำสั่งพวก loop ต่าง ๆ ในการไล่อ่านทีละ element จนครบ มีคำสั่งที่ใช้งานดังนี้</p>
 <ul>
@@ -226,6 +217,17 @@ test2--: 4</p>
 </blockquote>
 <div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>เมื่อทำการสร้าง Iterator ออกมาจาก collection แล้ว หากมีการแก้ไข เพิ่ม ลบ สมาชิกใน collection ระหว่างการ moveNext() จะทำให้เกิด Error exception ขึ้นได้</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
 <h2>คำสั่งที่น่าสนใจใน Iterable class</h2>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
@@ -234,7 +236,7 @@ test2--: 4</p>
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="9125559558"></ins>
+     data-ad-slot="3595033291"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -244,18 +246,6 @@ test2--: 4</p>
 print(numbers.any((element) =&gt; element &gt;= 5)); // true;
 print(numbers.any((element) =&gt; element &gt;= 10)); // false;
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<!-- h3-1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="7534278305"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
 <h3><code>.every()</code> ทดสอบว่า elements ทั้งหมดตรงกับ test หรือไม่</h3>
 <p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/every.html"><code>.every()</code></a> ใช้ทดสอบ elements ทุกตัว ตรงกับเงื่อนไข test ที่ต้องการหรือไม่</p>
 <pre><code class="language-dart">var numbers = &lt;int&gt;[1, 2, 3, 5, 6, 7];
@@ -287,7 +277,7 @@ print(intList.contains(5)); // → false
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3595033291"></ins>
+     data-ad-slot="9125559558"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -301,6 +291,17 @@ print(intList.firstWhere((element) =&gt; element &gt; 5, orElse: () =&gt; -1)); 
 // exception error → Bad state: No element
 print(intList.firstWhere((element) =&gt; element &lt; 1));
 </code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
 <h3><code>.lastWhere()</code> ทำงานเหมือน <code>.firstWhere()</code> แต่กลับทิศค้นหาจากหลังมาหน้า</h3>
 <p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/lastWhere.html"><code>.lastWhere()</code></a> ใช้สำหรับหาสมาชิกที่ตรงกับ test ที่กำหนด หลักการเดียวกัน <code>.firstWhere()</code> แต่จะทำงานในทิศตรงกันข้าม จะค้นหาจากหลังมาหน้า เมื่อเจอจะคืนค่าสมาชิกที่ตรงกับเงื่อนไขกลับมา</p>
 <pre><code class="language-dart">var intList = [1, 2, 3, 4, 5];
@@ -318,10 +319,10 @@ print(intList.lastWhere((element) =&gt; element &lt; 1));
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="1048761005"></ins>
+     data-ad-slot="2361842671"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
+</script>
 <h3>สร้าง iterable ใหม่จากสมาชิกเดิมที่มีอยู่ ตามจำนวน หรือเงื่อนไขที่กำหนด</h3>
 <ul>
 <li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/take.html"><code>.take()</code></a> ใช้สำหรับ<strong>เอาสมาชิกด้านหน้า</strong>ตามจำนวนที่ระบุ มาสร้างเป็น iterable ใหม่</li>
@@ -351,15 +352,16 @@ print(numList.whereType&lt;int?&gt;()); // → (1, 4, null)
 </code></pre>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
+<!-- h3-1 -->
 <ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
+     style="display:block"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="2361842671"></ins>
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+</script> 
 <h3>คำสั่งอรรถประโยชน์ที่น่าสนใจ</h3>
 <ul>
 <li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/join.html"><code>.join()</code></a> สำหรับเอาสมาชิกทุกตัวแปลงเป็น String แล้วเอามาต่อกัน โดยมันตัวคั่นตามที่ระบุ</li>
@@ -432,17 +434,15 @@ returnValue: 45<br/>
 </ol>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h2-3 -->
 <ins class="adsbygoogle"
-     style="display:block"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="6575154506"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="5702321883"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-
 <h2>การแปลง Generic ของ Iterable ด้วย <code>castFrom()</code></h2>
 <p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/castFrom.html"><code>.castFrom()</code></a> เป็น static method ของ Iterable class ใช้สำหรับ cast เปลี่ยนประเภทของ Generic ใหม่ โดยผู้ใช้ต้องทราบเองว่าสิ่งที่ต้องการ cast สามารถทำ type casting ได้เมื่อตอน runtime เช่น</p>
 <ul>
@@ -514,6 +514,6 @@ print(intList); // → [0, 5, 10, 30, 1]
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!".Oemqs(7P5d.bmne"U-#$9l8Vt!JCajกCmqm%ขF,4b\+*7]H,"L5&jGYc4aqb$\Of_h:^3mLjX@QYC.iX3Z('L]Z-VM,^EDNg"E2`(%dlepRZ1ihXJqTTWY-+f(กHWFapUgqWHขt\NUZ(?Kpi83=1-2s1)Eo"/Hp&Bce!#4T..Lec\a)Vplh1-/3r*MI4;\P-8r\k1h7*$'^G,?3ขข$nI[9B\5/kd"W7`0SIdG\b`1)`=s%3OOO_nQbJ5E1DEE$admrH8fA+k")c,9fp"S-PgQ*IP0bER7L!PZEuYXZo$+j/iL8NYa(nNk[d,:QW1+r-Q!q`Vp:SSL.sLX%BL!L8A\bfU]5AAmZ0gLK(NA)Ep[%;ขNG=C6o'M3?#1-S$6EQCYV3E05Y5ZQNTn35DL4@-Ou`1,!PPJ-DUNr\!@Y?#PF.:s$YqJI[J')57,.DhF6WEWSI&'-6e$.p&=8`G;'mJXG7L*D`%BK'X^An[#[HHbg@[ZSfWkd[LGpZe*dUf4#j&B^`rpJ*tbb*?eYcNขo9eQNeS'7_k61Y)!kd35isN[=\YL-ipg^WR-=!XaQ'Xf:::^3-XWY9-kกdMa+/OGLP36c_XaLY7qข]NcL:Tm5ข:pb:7`t!@(V23+Tqlq!H8![2#NJjHncN\k^Gkemqs`%Jf;9=%A*sXJ@+s%?LกhdU`+MOig@j!-UrA4YUcRR\@j1cHj4pjU=_:2RY_FZ3IcRhi#3tnTt&F2AULus9.`H@g)e2;+""*]H(*\4-!-QE8NQ6F[-iG/hapH%aiTITN'9SqmC0KK7;8ข!WOGgO^G&)[fiRm!;^S$,CS;:DGBp`k`*PN6n,,?Oqk4[m&;:##$eo?cpBUh]#o?BZLr/uZR]1_9/OmcKkg+pWa!l9JZi.^\ZE]/Hof^-.'6)V)_iV%sanbP$%J*C-3YK6biARj"@5G$tgiaD*PBbGDcjJ+;SIRJA1B:kWKrJc@pWHjWlM&kmNDh3R[b@h6*@o?m8OnP"F)oS5dS'tkLeU-22[I?$VjP*\LBo^92=Mta:!=g[ajBZf1jgUHM9XW_e7BSKT6s!8R-En]g%P?5@`85mE*&K%SmjDKOY]Sc?3LoYVO#Z3Jrt/!D\rX)1B0m_7jpg.$k1;)Qos(h.NX_=4S]*"2N3CjM6ก&tUZGqOV3No_Jข8k$?BH"I86`9bs4p)(U7B7;0j.k'bK!\F1t$_-GK7(.C^Ik*7,7a+Shl+-TU5N0&)[ข@$jiL::Oc6"Qf[*M'8OMEH8S6M.g`t"I=N#Z@(73I24Gl;(9R-cPRW[NR$qct=uaขslVZ#[Sem'V1435l!a,2+L+17=!i5@-&K@ml6(!mqVWE^i1BZ#I=W8XU5C`G].$ZSlกkEg*1Kh+He?[f3"E?Y7c2B_@IgmWPnDcKcWS[qe#Ps:Dq"*uh,iXNpe6OD8rbก`%q@$j;LJIuYb%$m@9`_Hd#iI$^ZdqB)'XO?`[Ka"`!QTIZKJUก%*hl5E`a_%8_N'+9Xq;?PE9XG0='KEFR,R"u/d[FcBL&j?:lCd\od"#5#Qpj@=W9oSa,EDG7ATmHaRe=eLmp%)WaUssR\p.Xa1ugกoF_K')FM6qZBกP?![Zj-$k%uP7fmVdlhTK3eNb&0`?X,pC)*[KTM^9n$HuMC=b1cIn.-7YY6+`+[OF%^0njqขIF`2:`gUn9[Z$2YAjGQK9lRH@rjj1ก39VskE?AqW6r8@dXkh[8[0u-u`Oก=HFXj.PC3Z'ZJE6!T$In5g:k,qUp%QW)S/8j_ZกR7$8E0k^!purHJ$sA8(@YlMs8%-\,aX^X"#=rX#^%_UKCEJq-'!:Qกk\9#eF?1@O:*%)L*%2LD/m5r/6AKMJPHCH$ER4bAd)3c&6.SGEae5cRRG:a](`55LN%,Qg",d?("0;kfDJ%kQLM+]ขNJZ*P%`^ghNpiaC+Zขe-AG#-Q=&*Ak$ข7g^Q?h`SE;]?5sIYrZ#n8Q=+PG9pn.8j)qsXT$cAi\AnKL$1crSKSjgHD?anLfq%R(/9(fK)[Z&HjS6\eNk?`D^^Iiurr6ก,LiO[VM3^C4gขZ)4@63tGOGL-lOIขG-=eขh'=]IehHA!S6`QS61$c=4H1JtA/;PBP.,QmT7LbmRutdTh@,a=rUehbC#9=t7QL&Ifu,F;fUShAX8obG&(.LZ7DL.9ก+ON5%T52Xko0Ip_`/in]O:1Cก,K@W#WeDSZC:+_`glh9#iUXW5.4b!VAgS]7Fg[roM+;i8TNH6.:rC$mT`7&SnQqข2;g0^'Gq?L\ZmmkC](qf+b2OIOข=]\Fk0WWO3%H6g@+Dqsl]rOaWeoNIEX)ขQm=4ug^80Sq_8:'X]N4n\IP@4d5o(om)eE,cK"[%B&+"=sIB?OTr04G;tD;HOS@Pe;:[ขrdPGkNpZh8#0_gEPkiN?(OOlo)M2(กKQu=Ph4ns':RXJrB'D7]d92G/;h"$e-9V_-0j"*G[L3ckrk6SVXc"ขr7cm8&12k=ijBd]^:eR11dXqMkL`ข,Z7V0+b'kLS"`4(M.lPmnKกbr/`hDJU1%*c;=BQtRe=LVuQ95*nSc;4:TCEX*?Tf"N%nM=7+q^sNrjp.D"J=ขeV"U$hj9+E'ข87'IPGaY4f5Rgef`0!66A*apFY**Nh'cG/4'5,ก?FFN3\RXoqก6*uZRB#EfHHMdT\mkS/(24dq&R_4&-XPcI`8PLUAERP1q/0-VnikZ?\mY&iIdDqDZ-),_LVG-U7KT3a'sHBdข7ข_2=rAcS)Nq'b@fUpUch6h^WWl?;3G&G\r/^'^Nj+oR(-S;$5&ARm?icSges&VIK""B=Qn1RB6[Fq"hP2"Y-Ptl&D'KrakkcB6Heg;&FMP2s'#d&Q^=RpHeRnobnqr=9"t=กmQ,FPg\G#8pnf&[En]"(dSTG"Oo]\`ANก^1rMOtBih')uM#bqMb=^[(eq"l1-MR`JT^Y3"$Y#okก0U4E&bf^mdE?!0C]@_^M$VOO";jN#pF^PjkVe$[+a7D.CrkIIIDG_)0Y$/CW);!"lY?g7uMVH9&D3?F),rLPO]UcImcXl3Be"Gir5V%ข4:X$Kds#nTT^%,lF\l!\J&mF7egMNnmK.,rgFQ=bp/9]ueCB$qHn^$P=MGZmqPdr0mWb5d9:-%s`$6_m\Rข4RSND7G'XN9j,6ข?rUกe`Zns'?c?p1htI+i=hpi?n)Td"#9A8DG6?QH)t9??_RCBP5lX^n%)^'T!o7U&@jกY$\%u3c)`EqH"A5e-p3a."X6)m;H&Oe'*i\ก#UqmD56O-IWUกtlBk*ก9SlH;D_dq1.p.[uFAh!rdr5SqQ_5LCขV6:4X_hjfJh_=?7f$B.]Q*uY%8h$g]#VI(K*T=i`Jdr^OBZq4^CdnUj!]ijIG6B\/5dc=P:3$T"=l1hZGOOm3CMU%ขqI"`VV:RPhT!กl.2Id&FKr]==+F?faA?"bKLtr`"7"8-gJQUC&SOiG$B5BLZ7%OhKg+&B$;;6S.CO_mlfY0Pc`a/*_B!C+6J6JGG`ก:dZWU`Ujc5.c\pTT`gC"Yhm3!:bI[-l,S^N:GfL)9กi[iBEoN;r8poec-kWI/.4(#;0\21aDN]#ENQb26_R,W0J4V.3YbONfNGg_tf*atguojlYAAiH0b)`dcขiLIRR^)[e?ขKj-U3o-=1K!mdq$)p@#3Y9bWRข'qmg9t;'UBOU=O1U5nrกRtSRVR6M_s\H$R1'HO(f8?EbclV\,hZC(mXefoขBVQ+-WLWg3ข/.\2RKJj\3]X-db(CFa5ibd9U$MnOf7p2ขN01M**aO(&h=qsJ*NO(?Pa)K94I*V&"CjhU#Z'3_7djk+bo*NpI.4D(m?Xg!QgXaVJY&pPj\o][ขp8Dhk:?$3Uaqm+LqL5Q'Bn_,uaHlbZ""sUde41UXG]pIW5CWI%,f$YDGกkCV2"ujVJ:KB?`\/4uX!1Ve*Xj`ekUQ@^JtP1%E,k2*tRCqd?'ข5YsEb$CHFNVR)SDKD_ms4กV#+0_'b!c`k2!`SrGX,Bก)V2-4?20\0h_$Q9oo';Iqe[/i%C/:-GWQD?+ขS0G6H&)*V?NTArH64;t_AKHbกnSlXO"C\$[JI4U=Ki4XO'OWqjN.t'/+^m_ZF@'A3ET$\n+8ZHb7q,IjC$X!'กo6R.Mกr(njro^m-UraR4jNก:M++`JK5j(2Q)H[`bW=eoq7SnYB-)nM:cpXW./ORp=1`nกg"U%:1t9ip)&lm?@;.Vuog]n.B#R.uWKP+4jMข&l19to&!Q=BpTPeBX)j=37กk+U\TgZ)]*H\4FkXfE!+BY?(j%;-645bf5kQUoKmT0ONgHi:Va_DgOB%ina':_F[N;ZDF"N-h9d\rRTC($S-EnCjeD96p%[7ขก:B0mf]\f?';a*f3OD[S6ขM5]efZZr%GM%*d7rkG^^.G^kh.bGK8JnHRrOJขZcกo^oMc'a/^]^9K)$P'QIkN&sWf8ud13.q5LG87ข`]YYAY@]8gfK#5n05,!gGRO0กOX*+iJE6io`&cSW9le3A0qqN?6GfiulC/ก*Yred;FMX`//e8$'Ul+#&X'q2s;(/irM`s\5jGO%qo"8eYW2"7f338j7UrN=N'^2?g2cY!Q#T"=&qH#_7nI@E_koAH&SY(6MR@-oKP^jc,#7a:ZU/&%oMZ,.r1Q.&/M4_XUJ.g]@mNiBe"6A7HnFU;&eoq.YXltdh"5BqA,(jmgaDMOdSกI)S!?nFr&m_0gWTDข#^^,0XTL)"sAH*W?8R?BY0m#$`5l*2#A*fIกG4,q!Nf[q#5Ps)7n8G7s_Tข-6*=\oC`ZeขV_`&j44/]mpLQ:S83Q@KMsc9ข:,gX1Q&&9aSf3FKO$Et$08F:Xo,6,VE0)*U^[lkZ`1/Fi_j!a$X-LDdG5i0;9QA9bT0)VNqi7WlJ]/Cก?8".++I$a3m.d9^pgs)hi=m"/a1Z%]r7Fn&NV]กjEucDขL,H[cY!@(OH[Rh_กmed*[+D`?*PKX]^h&PUQLgกOVcUIA^-K:+5O$)0U4&QbEoI4#paGC?fUOกB%?p[)sf]ObqUk,JM'M^*QZ[4bS9,KKP/-N'A2=oeld(D540-c[;%PDbt&0O**PT?b$2Me8k_9^qO4SsaqeKF`?nS0M:iCXli#=^TeL/'GQ3188`@&E;cCGG]ขYkH2EEc)ขu369g@pf5OG$gfO2)^-Z6s9!R7k[*RgC=O1e0Trbk,XQQ\6a^!8VnmX!;1m3ก68+!Z((RL,nQ7@Ic3jm58!DIt'7,$k#E3d9#RW2K]Uaa)n6[@@F]X4Dsgh@S9ot(^3=HQmAEdJ2k3s_fขn9,LiYVNOar12a47X1'RH5(Qb7C=%2'0\k9#+p3=%nC]:QI2N1R@R_HZPQ;nDW2G]RGc*?Spa'SlcQK;%BqG-E*r=jQK2lJ5aBgh3kX6Nk7mUIMCto#o_Z$R5JH.MrDM=?Mph'sIf/_K'tF7rk9#1U*g7qc3arbกC2rgtk#;-@s#3lF=[ui!;:uZP\'EQD54Nd^pBOu_.n(&7/#7i4Yg;QF"nXfPcf'J'+i2"9=VE[Ej9[Wj`HUC&%S3jcNOpf4p-d]#1+2ข#)7?9;=usPGEUc\ขWQ.i;dO7cAข$(Qk+*c0iU/Dop91_00p8oQb:IIcS$V,J!lWURC*LK4Ri@.tI5a._Krf#AOT*b6l(!31qq8"M0f&sQ%.J]1+mC?k9$DS\mQ:Z/nl)[j;r5A7W#._lกกGp]/aZi+Z@nQ[uEข5N\U&;h1eE#(0'4[rrgkNh0d/dL^+GjD=c^:[HjbnD/8,iM^YZS=Paq:kSr53EnLS"fkp5YSt7SK+Y&;U9TH&Dj(01aRAHHa8gg0aRCe%,Jq]J)B-4.Or/r1CReS9HGZe"8Z)#kF=b[@2ImกRd7o$jkJEHth(aMMoJ'ขVp:Ml8:LขojขSVlm[ข3*K83S0JYR1,6e#OHก/*Kp)9[:fXข+i6Jd$NEdm"m7G?3W%8-=;N&"XgVZ+Flnq-kA$k(F(Dr9f)l75D0g2?Aoo,TV$VA`HRXXnj50Leso:5^U:!$r0F=:+MD/Q53q)3pm%(U29ge=//3l86?R;ja#uP`cc&V3LX[.ctQUR/!G8,@&#b$SXMoS=gULmI0g\J"b3"qr94QVY9j+ขuT=@!jr"BrWtfก'!tr:j=i2'\+&8+Dr[ct.T?!R:S"I4PFjnrI9fq:Ytc7FU$!f(;((g:+dkbh\tg[/U7CdTn\4rBข;^r\KfdT+s)Jed@NQYTkm-VD(:*_X3ihU,*Q_H.ขU`/BVQSj^/;5o&l]rPQKG"g4,jข'd-[FA[??Lk4`R;+FMUu(kT\"cpK)k@jag_+ก9hJBk]*#&iPR`gD2L?$&s#+d@^V1qSJ5e5AgKPAWPB&O;nGi-c1Z#J'FZQ@FXkI;)%Bn4]`]`Im5Po(qM'uJi\RjขbAWdMZnGh&$%Fg.Z7jCqDb"`=9Xpก&u?D#H-LaBA2กL6C2#0B=pmY`On7ขji"W"Mp'?e*61mjB[H^.98JTJZ42bU^jT[IRf!/O-WaAtก&Q/t(S,F!pF:l,L_4qMm#:/tk2OchToQ#Q-L?]กCL[d62C6m)B-rd@kuTd.p,?b`ก]/X'2Vd1'Y72'-C2r4N?ข2%.RXA0#pZ=-tgfsmrfข@ขKF=#B=MjknW^gTf!cQ_5Ef$L.pQCKAS;ad2=4URiffDl[ib=Q$EqFBd,.LHC6eP*nYVk3oa.,Sn)BcB)r8cข("Q'd58"-\=)*$?+'2N535HuPo_`8Mn/UaUJ]:bF1=$iKM?WfI0ssn7`9AB3Ol(N@dn6Rm.1L,gPGr=f%Fll#l8+8se9\O%4*DWeU+V:K':[ข?5=Wr(AกpBAn@m*Mc"fo!O2?QuPLKNO=ก1ก&#dWE6"%E2rV*Mlc&7ขJก~ข
+ก~+,^C)z!".Oemqs(7P5e:-mne"U-#$9l8P-I_CajกCmqm%ขF,4b\+*7]H,"L5&jGYc4aqb$\Of_h:^3mLjX@QYC.iX3Z('JFn-VM,^EDNg"E2`(%dlepR[eG@]JqTTWY-+f(กHWFapUgqWHขt\NUZ(?KpgQ(-1-2s1)Eo"/Hp&Bce!#4T..Lec\a)Vplh1-/3r*MI4;\P-8r\k1h7*$'^KขaHXecuuHG*Xg'FVmsBR!ก03ZJT)7`2.!i?K=Qp_T[qVpTGoY!h*KhbJbO7,%BT7-'2ao3c[GK27ds%f4;,nnOขhp#i6N]sXNan`$@qn^j]9$$%taIo!JIfUp0l;oEKh2กf66Y]S,3]CRo;lqข4_O=I\/_riF,9#!kom?1j17RPa7':)='NB=*&V2YoHOs'#ckE(ขZ`5+6-`$aEqA@+SkekuS:T`1)DT8?gt&!K!B-QtIo]*S?ZQ!=7-6mT"MhLFAI%OP\;ooNYMNJ9Z]U:+`up@/B[3LV53e"b=4[Xi.=qE:Nt#H&7:GXS5',9ljBCYKu1$Np*\dI?+.p^=bJK:Qfca?1b3X3&gm4ก=qR'E&p]H(กI5aVI5.jD2+C`?CT2(m'g;OAL-s=Ip5sM!U#Qq-CbuLIkk)a`F9`D"l:.KO=d+i9d.sL-O(I5E:I'\t@@H]3@q7TE[W@Lกg!ก5[&J#YBEGm;N8=8EQhtL';IZ*fG.กdgtn2B5(gNp;/@-Tbs[;ขS3K8DE/bOH:u(6T1-XKJV3W60CCfFW&!PS?4AGF-P,hก3,b9*3ข5(8Smj.#;jQ&a:7N\ขtp=nก6U,5Z!eCuG8?S%:ขp6EขLPR6O9=t#'??!cqHZ.Db'429+WId"]s"CXOb_DYT\4bCIZ_Sm0/U2^+EAnp4กMpX6kqD7*oECq:kCk&[ZCoj=UI8=h:"C*k#0ViK5ErJ17_`SWdNWcS1\;ffafM(T`[iL2$,Taก)[)+V=VZTZ?$p^2.YqRKdI_"drr8(V_1$QX:,Em]hHKO(U':ข3_b^ก,5:cAZu,cB;+l%]Nus-5PW6mcN+raZ:\0H.Yข;o@b]#O8US^JDS;#0^=pLMVข79ekZ,BXfS;,Yo^'nAs9-&$H%i%.d*Uก'a$c\2Qข;-4^&H:.D0LXTK!Ac^6!3Z7-iW:H\FT7l$$Xs+uc!Sข#%?m=gc^G^uQ`cกc\5G"ขC^RCD!?s.N]:'/ก3gEBD3BO#5:31i(.=8o+eeIRMuiQ(BddIRKh#[i`?]%iG@0+eJ\-Q7C(I8L=q(hmDiJM(8nIA:8tBHseoNngp7UcPEYI2M_hB:b3;aXVOZN@6FrYd.;jnข_+Pd"b:_KAn[?T00gF9(U;q&*/$o:BNhqPe'ej;P-mRWs7;$GJoW04AZb9R2j77B6TqLK8eC_1f%e$hp=D"D#="6DR/26hFeG@OM*DNC7NslA(@EqLo@G;id:X:63;aข\4W`'WD$kN97fYJfRC2&=JXขaFZk\?"$96=@,+Rn9oRKX30cn.s&9dt5E^cWiT1`h9ZeE:]_@-qbF\,[D5m*:hJ6Kf8XsXfk7i3'p`S*RT5%Z(W*?smK7%T0k6JQrc:^qcYYri3b4Q:5ATU/2_e/@iMQHbASก@AMn'j+RK4;)o9?I&k[Y6NGE/fr\Hก3JW`$I('Eก+33BF&dIo$NEqVpT!_D'q7P]PpnPqm'BQ52:d`8Zt4&94Uj_2C4`2qnCRUM_Ei+nO8Db/,_F$_C$j3)X^*ms.(7CVN)LTg;T$,B!$p00กhV6PKuU`)BY7EgkIfl@OPSข$,oSEB'50lVs0J!6Y^eBBpt+uP+M"#,*KZ[08#U2p*/$7d.rj(NZKfD1U5iRrK3[ขb1An@!DN!g\@CZa4.Wh]K=(.p42lj/dKqJc[ก/QCABG)a!l/%i^*lขHjA/ipWก%u32ขk8VG'ขfB4D3[=C-_bkkHP\11WO872Go%N1=FNtKRกQX8s.bP=i&%Xb%JgBWN2:UP\LO+R`rEElh9]bh=r9/O1Gb54T\0pkpFHB;rjnYLc)9K?;JoH5ZXmsmiTs`/5PN$ar`/fYj)5u&$J2t/ciM:Ji0'No&4-r:]7YR:mR)q]TO+ZVkA;X^)`%WE]6jq91DJm2&bHKbR'^)s`YขZ]CL.QfPNE3t76YGP:cFqAC8m0?6o9jedV8L@H#!\X02#Vc*_Md:Ufก&r1B.7qg;)T_r-cOW8p;pDcQnU!M7JI3\-37.L8ก@MG:O2G[rMIm.hข@;FrHE:hUVjK9IUm(lZq9fVn'Eu&Y476k3mq9_k:peGfก=O^Vc^ขm_8@2Irกt0o5^ข]Wt&r2lB)?JZuO-]G42SucYH+GAn39cq;กZ&_^+*+3;H4\oL.:MKXDYWA#RP:_o5(&dXK&H'กLsRI5+]\ndqZW94:OK;"j#`GEiTjT!M4ข*g)c9`sl8+GBk5QbQAD:=$bj?:gT&i9k\9op@#A$p6KZdZ7+k,;]DMqQ'P?1j*f`*VtWk?GKNk0no#2)6(%H;MV!$iq"Di^dg.tuRq!\&b-jQIiqc0-.q%-+?*U)8)jG2Q0FfBfO)`cH`ldklU=+^IZV:0Rl"iTTrf"$oq!*^/IR"h,&SYmcpX_PกV=VVh-FKa^,9IIMhkKTfRlm+W]S9oB`Vr)u',mCDX^dL$lpfA@fYLHHpTd6baW4=KUcK:Cai$กfa&DDZdM:eกZ:OกNr'0eK5P'1*-4=0jhE!SSaEO+oQM7pje)cFAoOCs=M,iDu3W(Ik1D9J!Xa&[9hdX)We;?_peก!?*)?]2mHEN=\ก[3^;aข#3LjF9Q^G(e*[Yito4ojNJ2!=Q-M\#(]c(;*o[_IO7))q(3,n/euf5Ii2OBcGG"6Jq5sgZs#KT`^VZPplขLp:Uq]X$-o)Pugr72+Uk3W$K[P_mO.GP2H$?br7i'bbQHpVGA:#D*4b5;YkL^m?SmY6Pq--a`:"\_VYT,;SpZ`rRLWกElGขbJuN:kARกY9O5"ข3hSg70ข?J0กS$MO!X94r"3%_aI4J&J0pAYlbG)H\]GLb./aLG8OFmYX+กQ\?;Bp2f\/u_FกkO#?.IkL'BRKbVS"^81sHXcDsq!VX_mZgQMduCrfQd?'Eh/5k3(e"1[V'@oJ@Bg2A;u9pZMgo/j:5l3`VT_3.ก]q+;Elnt1กX:DebWL8^CMZ%T?mU5V&lNKnYqjf0s7c)g[o\3b%iKhH%6',fKI4oข7cNjg[QLG8ot$@276@P.#O_NfTh,+&HL+G%;Z.eขdU=@Ae%_WmU1S(s7hM7gBn*`=R:^WLV:(I,D]กi.ooh0Wก/3N_-V.b\I?XIP=i""kUm(YXRYF1K^#0กej)RFfBl.)G'o\Pj1=Gข0k*6$ขBS^sRd66WW)a"UR.V?n^K\X.crJe%p)Fn3mkhC9KAW\G[R7-S`-กPt)QPCi2b9ขRDk\Aep1t@WDoeuf'9X-uBVb0rY]F)กW5_dE*+\]bn)pj,LhiขR6Ma2ขU:hWn'R73gk.J0V%กb/eg8?r-*ขX(IGH@@^t([b,sกQ_1;a(pWAL!:7Z.!J)/eE)=qgKouWD[4B,p1m(8n!$$V`#edQ11tU`UsH@1_LJ,'8*=k5hYEกD`gtf=F0)q7\_Iqg@Y)kie3#Q?/]Z=ui^n46HA%9Herpu`S)%c/DWL"?Mf\I?qfYBGCb`,Fl#_!`$JP'p-);ก)ks.qOAJV;PCYO"9NttQ?4ROPVoHOL=C9Hq)%)6;*B/2$2?pH$Y1W'8dP%8Kข\I3jPDqVCKSQ%U;j@GB`gX)sGiกI8R87S"_*KtQ-1/W'W7AA4cDi$7rEc?:p8??birMaiขHsJ9=QGh,`*s1t!a-e$%H];;u%*Lm(Mg5.S-=PC*Ot@ขAgU7hFh\3;1*?Cif6PDq0hMYr2EWO63.BguhVWbX[Vr0-uNM?ข?V)ok!iW@?oD%c9N-L06^o:?Y\?S%))2$4ก`gcX5ZQ3!Hl.q6GRd6\ko`!bbZ#]\hlK7T`s61Km^?jb&Fc?^NAo"33/!MLNfM&1hnL'=G&(2(/uM/,V[\LRJ9Yr4C@d*R$)(`f?S%?PR?d5.E#,]07:'Tl[Gd.XPW,khKW=u`-+o2lEZLJqM*#ST?0ก:Jj"PS3Y`!6a&+1nก#5&iSf:-NjVg#Hk9,Z-T(_,Z^b+[a+5Qot:L"^Fg9U%quG60cF$[ER&Dr/ก]*:N0B[/7)_H(efetQn)_YRo15*uij"n=fnUuig?nd_hBo"lTmjGnf^Q0Q9=(%d5K^2f.jiD1PnXUf#B+n1aMtap&@]Q0L7MI`:/5B'b1/กZAU65qTKC[h:HCWJ_$X`q=/&"5!AEe)0Bi.M^ER@H%_ขq:กo`C%dg#K6i#L`elsCq_)"roR7a7H%ขNg0l_fc#p9กPn,4dt\$'+ubFjk,bYmN^,(ขCbs/6u=TE`TrIWD"+b%s,F]bkr-dc_6-กD4B"7q*0!"c)YZ[:c4lf.D-oA.E2Y'B-_CRSL*ReT)ขr*rX+7nC'ap+\TuM9`$:EkNKK20D1a/8o[8T&=Hfc!#n1VI\f1uA'k73'\;l9+`HYSก.Qh3C?N)u.7?L(uja*iDlcjZMOOQ&/_?FW\AขA*LHf^Ep[JQI3:!Ik@@GD5JYFc/;15"f;Te28o&Mj)`V]0#kW#M6n5"nZ^:CM-KEp=!q2C;*2@nNAI]'i'mlS?ข$ข6,Tm/8]^IF9`:Ls.b%V$9;mHCs3-^=B+'Rl_6`0Ni)?n(47)U@atk[JC.WGcpBBg[_XBขNV.!"OXMD0eP?n*lPh\91=(HtTO0ohu=Hrd:C&ECr`kJCTltL$#Zกs.!r(U/9JjL$@d5FO,hP$*M8`jZm7#D_a"GBlsp9?[7NWukFYiB9ข!?:^C@n=V7Hf.j6)V-7Zn6'@9[rข&LMข+Ip^_5$TbaAข4V`aAm_n1?JaR6JmWd=oU5_nA.ขgg/7]P)R[HdRQHf8[2E$]^du(B2b4`F"ขcdaeshQbl&WrC+q_kpBK$X27Q4:-cXA]9*:B]\Ukn@"LSmG(0$%/L!h,b\Y6i&G8VO\FKdi44.HHl^M15"SosJDi_fsX_ก&:กup4$*8,\;I@oL?3PG_TiSW_J$9/%#Lp2Un3VK\Lขi_E1fs2ChFOl^^1cp+pJqqtJbhRgrI)rAL*9"20Wt&(LqRV,;=l,mก&VVH_&1@Lj1PJIbDs]Dr7bt*YqGD(DL'tlV^9X*qbmขmuMZ(hnI4!"RH=eZ6A_jb'4_Lก\k)tah(H[bWOn@*aC8^I/ZขA=(ก!iKSWGQef@.GNidRGUกP6IQ,N6ALR9`\!.b0+thV%oQ^::nlThfUotMX27GgKWก;4\19X\"gHcQ'nJsn,.&^_M\QKUU]&-WRZfnn0tY$psb4J31;)"N%S,Oli^7T]jOHS'=XX["?5K:ln^+o=,r8WJ8JGDqm*u=,\LกdWgoC,iT8?GVl0i%FAY]*hlj0XnJ/7rQRhc7P^doMj,ZF*_Y)5=s7jLSQo+Wh&Y%FC(+5_k5,FnNIl!phFnDLkPtgdtlV&ข^'48e/J'c0E;A;F-6HYZ"qj^tn6(\h`*%o;K&fck#2,U]$4CL^jplก#7!@d`IES&1NSqrk6js8bAUR'D/94rJp/q1nooba]/)J(@%lUnq`F"WnNก(]N+(J+kQ^3(^iM(#?กi@'b!ขq;5P"*7!q4D!g[BTb1'TกVS\1Z?'J,$?`U5ก.cNqY6@2-%?Q84nm/n@J&U+12/@*Pa.,fT=@)(+BNidb3`Cbq*t^39SqXkNhWp3Pb2'.\pTrX@dLIkgX,^M3e.SS,ghP0))J[`Hnc0#aP["=Q7ขp&3กHXRJ(P5+nFIdJhGFs6LrkegipbhRDmA6m"_jE/O*Pt?qo^%0.eb$;(Igo-LD.:Xs&58To1fI(qGX9l62oก?กgQUYMWWtE6ULH*?Q(e\ihC]*(NVJNNOkU=`iJS`Es`uu#9u#BN6G&ก85VU'Se^gV]nWIก[]MK'OLJPlS=_cIOnQ.YLU)=6UB26ข:4H[lGsVI1JH_E^Dr9f)l75D0g2?Aoo,TV$$dBU"กYdkU(aCJHVaZkXJกC.^XFthnSgbrQN%-Ld(U29g2!/2)eS0X.Vc]ข.P`cc&V3Hs@'lt^+9`.c(&M@Il"dg;t:=+m7p31ni^W1!CrG`Sc;gWqQY(H=P5V2tiJ&78="Duaก3K+?c/\LiNgGnJ`.ocJc;ePC;jJU:J?e:QgXO@AjkkWข8eB.Sg87p83/u]/O.&X^X]Pi;-กXg0oiK!O$^Dqr\fS@LXqE_a*Ke0sFc71nN7rm0$=,PD?W@N3E9-MR#\n/nlTu;R;$$sข]!FBr'=.LIPYr$กUiq6ข3kd;P`+M^'Hnu[@=P7lF4mXQbrV*cMjc!H(M^Wd_ขYO;`B+;IT?p(g*YUf'i0r',VrN;'E!SPH^mYKaข3L=bYiiuW9rTD^RI6kl`EgbS2l1กB`=q#B('%Fg.Z7l+'Tb"`=9Xpก&u?D#H-LaBA2กL6C2#0B=pmY`On7ขji"W"Mp+?e*61mjB[H^.98JTJZ42bU^jT[IRf!/O-WaAtก&Q/t(S,F!pF:l,L_4qMm#:/tk2OchToQ#Q-L?/$J5ud62C6m)B-rd@kuTd.p,?b`ก]/X&c8]1'Y72'-C2r4N?ข2%.RXA0#pZ=-tgfsmrfข@ขKF=#B=MjknW^gTf!cQ_5Ef$L.pQCKAS;ad2=4URiffDl[ib=QMQb!md,.L(ข)i9gnYVk3oa.,SYMbiU)r8cข("Q'd58"-\QYLg*T2J`[35HuPo_`8Mn/UaUJ]:bF1=$iKM?WfI0ssn7`9AB3Ol(N@dn6Rm.1L,gPGr=f%Fll#l8+8se4+:MGO.BU6sUGu-8qL\IuKn/fdsI1i-h"$Rb*^u+,($u-E$g'Yr\]+&S/fL#)`ขn,:*H&ra,X*~ข
 -->
 </markdown>
