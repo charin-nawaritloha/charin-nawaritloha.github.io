@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน Iterable class เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน Iterable class เบื้องต้น</h1>
+<p><img src="images/20240823/20240823_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ข้อมูลประเภท Collections ใน Dart เช่น <a target="_blank" href="https://api.dart.dev/stable/dart-core/List-class.html">List</a> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Set-class.html">Set</a> ต่างสืบทอดมาจาก <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable-class.html" title="title">Iterable class</a> ส่วน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map-class.html">Map class</a> จะมี <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/entries.html">Map.entries</a> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/keys.html">Map.keys</a> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/values.html">Map.values</a> ที่คืนค่ามาเป็น Iterable เพื่อให้ผู้ใช้งานเข้าถึงค่าแต่ละส่วนที่อยู่ใน Map ได้</p>
+<p>Iterable คือ ชุดของค่าหรือ elements ที่สามารถเข้าถึงได้ตามลำดับ การเข้าตามลำดับจากตัว element แรกจนถึงตัวสุดท้าย จะใช้  <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterator-class.html">Iterator class</a> ในการเข้าถึง ผ่านคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterator/current.html"><code>Iterator.current</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterator/moveNext.html"><code>Iterator.moveNext()</code></a></p>
+<h2>การสร้าง Iterable class</h2>
+<p>เนื่องจาก Iterable class เป็น Abstract classes ไม่สามารถ instance โดยตรงได้ <strong>แต่ต้องอาศัยสร้างจาก subtype พวก List หรือ Set</strong> แต่ถ้าหากจะสร้างโดยตรงจะมี constructor มาให้ 2 ตัวคือ</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> ใช้สำหรับสร้าง empty iterable</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.generate.html"><code>Iterable.generate()</code></a> ใช้สำหรับสร้างสมาชิกจากฟังก์ชั่นที่ผู้ใช้กำหนด</li>
+</ul>
+<h2>สร้าง empty iterable</h2>
+<p>ตัวอย่างการสร้าง empty iterable โดยใช้ <a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Iterable/Iterable.empty.html"><code>Iterable.empty()</code></a> constructor ผลที่ได้จะว่า Iterable ว่าง ๆ มา ซึ่งในการใช้งานในชีวิตจริง ก็ไม่รู้เอาไปใช้ทำอะไรเหมือนกัน 😅 เพราะตัว Iterable class ไม่มีคำสั่งในการ เพิ่ม ลบ หรือแก้ไขสมาชิกมาให้</p>
+<pre><code class="language-dart">void main() {
+  var emptyIterable = Iterable.empty();
+  print(emptyIterable); // output → ()
+  print(emptyIterable.length); // output → 0
+  print(emptyIterable.first); // exception error → Bad state: No element
+}
+
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การสร้างด้วย Iterable.generate()</h2>
+<p>อีกวิธีในการสร้าง Iterable คือ ผู้ใช้ต้องเขียนฟังก์ชั่น ที่รับค่า index มาแล้วคืนค่าเป็นสมาชิกของ Iterable กลับไป หากไม่เขียนฟังก์ชั่น จะได้ Iterable ที่มีตัวเลขตาม index เป็นสมาชิกแทน</p>
+<pre><code class="language-dart">void main() {
+  var elements1 = Iterable.generate(10);
+  var elements2 = Iterable.generate(10, (index) =&gt; index); //same as elements1
+  print(elements1); // output → (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+  print(elements2); // output → (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+  print(elements1.length); // output → 10
+  print(elements1.first); // output → 0
+
+  // generate Iterable of even numbers 0 to 18
+  var elements3 = Iterable.generate(10, (index) =&gt; index * 2); 
+  print(elements3); // output → (0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
+
+  // generate Iterable of 'a' to 'j' 
+  int codeOfA = 'a'.codeUnitAt(0);
+  var elements4 = Iterable.generate(10, (index) =&gt; String.fromCharCode(codeOfA + index));
+  print(elements4); // output → (a, b, c, d, e, f, g, h, i, j)
+}
+</code></pre>
+<h2>การเข้าถึงสมาชิกหรือ elements ใน Iterable</h2>
+<p>ใน Set และ List ซึ่งสืบทอดมาจาก Iterable สามารถใช้คำสั่งต่าง ๆ ของ Iterable class ได้ทันที</p>
+<pre><code class="language-dart">void main() {
+  var list1 = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+  print(list1.length); // → 3
+  print(list1.first); // → a
+  print(list1.last); // → c
+  print(list1.elementAt(1)); // → b
+  
+  // exception error → RangeError (index): Invalid value: Not in inclusive range 0..2: 3
+  print(list1.elementAt(3));
+}
+</code></pre>
+<p>ใน Map สามารถเข้าถึง elements ของ key-value pair ได้โดยใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/keys.html"><code>Map.keys</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/values.html"><code>Map.values</code></a></p>
+<pre><code class="language-dart">void main() {
+  var map1 = {'a': 'Ant', 'b': 'Boy', 'c': 'Cat'};
+
+  Iterable&lt;String&gt; k = map1.keys;
+  print(k.length); // → 3
+  print(k.first); // → a
+  print(k.elementAt(1)); // → b
+  print(k.last); // → c
+
+  Iterable&lt;String&gt; v = map1.values;
+  print(v.length); // → 3
+  print(v.first); // → Ant
+  print(v.elementAt(1)); // → Boy
+  print(v.last); // → Cat
+}
+</code></pre>
+<p>หากต้องการเข้าถึง elements แบบ key-value pair เป็นชุด ๆ จะมีคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/entries.html">Map.entries</a> เป็น Iterable ของ <a target="_blank" href="https://api.dart.dev/stable/dart-core/MapEntry-class.html">MapEntry class</a></p>
+<pre><code class="language-dart">void main() {
+  var map1 = {'a': 'Ant', 'b': 'Boy', 'c': 'Cat'};
+
+  Iterable&lt;MapEntry&lt;String, String&gt;&gt; entriesMap1 = map1.entries;
+  print(entriesMap1.length); // → 3
+  print(entriesMap1.first); // → MapEntry(a: Ant)
+  print(entriesMap1.last); // → MapEntry(c: Cat)
+  print(entriesMap1.elementAt(1)); // → MapEntry(b: Boy)
+
+  MapEntry item1 = entriesMap1.first;
+  print(item1.key); // → a
+  print(item1.value); // → Ant
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การท่องไปใน elements ด้วย Iterator class</h2>
+<p>Iterator class เป็น interface ที่มีคำสั่งที่ใช้สำหรับอ่านค่า elements ทั้งหมดเพียง 1 เที่ยว จุดประสงค์เพื่อความเรียบง่าย ไม่ต้องมี index ในการระบุตำแหน่ง สามารถนำไปใช้ในคำสั่งพวก loop ต่าง ๆ ในการไล่อ่านทีละ element จนครบ มีคำสั่งที่ใช้งานดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterator/moveNext.html"><code>.moveNext()</code></a> ใช้สำหรับเลื่อนไปลำดับถัดไป โดยจะคือค่า <code>false</code> เมื่อไม่มีตัวถัดไปแล้ว</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterator/current.html"><code>.current</code></a> ใช้อ่านค่า element ลำดับปัจจุบัน</li>
+</ul>
+<pre><code class="language-dart">void main() {
+  var myList = [1, 2, 3];
+  Iterator&lt;int&gt; myIterator = myList.iterator;
+
+  // you need call moveNext() before read the value
+  print(myIterator.moveNext()); // output → true
+  print(myIterator.current); // output → 1
+  print(myIterator.moveNext()); // output → true
+  print(myIterator.current); // output → 2
+  print(myIterator.moveNext()); // output → true
+  print(myIterator.current); // output → 3
+  print(myIterator.moveNext()); // output → false
+  print(myIterator.current); // error → type 'Null' is not a subtype of type 'int' in type cast
+}
+</code></pre>
+<p>จากตัวอย่าง เมื่อต้องการจะอ่านค่า element จาก elements ตามลำดับ ให้เรียก <code>.moveNext()</code> เพื่อเลื่อนไปลำดับไปเรื่อย ๆ โดยหากค่าที่คืนมาเป็น <code>false</code> แสดงว่าไม่มีค่าให้อ่านแล้ว ถ้าพยายามจะอ่านค่า <code>.current</code> จะคืนค่าเป็น <code>null</code> และอาจเกิด Exception error ขึ้นได้</p>
+<p>โดยทั่วไปการใช้งาน Iterator จะใช้ใน loop เพื่อวนอ่านค่าจนครบทุกตัว</p>
+<pre><code class="language-dart">void main() {
+  var myList = [1, 2, 3];
+  Iterator&lt;int&gt; myIterator = myList.iterator;
+
+  while (myIterator.moveNext()) {
+    print(myIterator.current); // output → 1 2 3 
+  }
+}
+</code></pre>
+<p>จากตัวอย่างการใช้งาน Iterator ที่ไม่เหมือนกับ Iterable คือ มันจะสำเนาตัว Iterator ออกมาทุกครั้งที่ดึงออกมาใช้งาน และจะมีการจำตำแหน่งของแต่ละตัวแยกกันออกไป หากสร้าง Iterator ออกมา 2 ตัว แต่ละตัวจะทำงานแยกอิสระออกจากกัน ลองดูตัวอย่างการเขียนแบบ asynchronous เพื่ออ่านค่าจาก Iterator</p>
+<pre><code class="language-dart">void main() {
+  var myList = [1, 2, 3, 4];
+  Iterator&lt;int&gt; test1 = myList.iterator;
+  Iterator&lt;int&gt; test2 = myList.iterator;
+
+  delayPrint('test1-', test1, 1); // print value every 1 second
+  delayPrint('test2--', test2, 2); // print value every 2 seconds
+}
+
+void delayPrint(String elementsName, Iterator&lt;int&gt; items, int delaySeconds) async {
+  while (items.moveNext()) {
+    await Future.delayed(Duration(seconds: delaySeconds));
+    print(&quot;$elementsName: ${items.current}&quot;);
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>test1-: 1<br/>
+test2--: 1<br/>
+test1-: 2<br/>
+test1-: 3<br/>
+test2--: 2<br/>
+test1-: 4<br/>
+test2--: 3<br/>
+test2--: 4</p>
+</blockquote>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>เมื่อทำการสร้าง Iterator ออกมาจาก collection แล้ว หากมีการแก้ไข เพิ่ม ลบ สมาชิกใน collection ระหว่างการ moveNext() จะทำให้เกิด Error exception ขึ้นได้</p>
+</div></div>
+<h2>คำสั่งที่น่าสนใจใน Iterable class</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3><code>.any()</code> ทดสอบว่ามี element ตัวไหนที่ตรงกับ test หรือไม่</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/any.html"><code>.any()</code></a> ใช้ทดสอบ element ว่ามีอย่างน้อย 1 ตัว ที่ตรงกับเงื่อนไข test ที่ต้องการหรือไม่</p>
+<pre><code class="language-dart">var numbers = &lt;int&gt;[1, 2, 3, 5, 6, 7];
+print(numbers.any((element) =&gt; element &gt;= 5)); // true;
+print(numbers.any((element) =&gt; element &gt;= 10)); // false;
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3><code>.every()</code> ทดสอบว่า elements ทั้งหมดตรงกับ test หรือไม่</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/every.html"><code>.every()</code></a> ใช้ทดสอบ elements ทุกตัว ตรงกับเงื่อนไข test ที่ต้องการหรือไม่</p>
+<pre><code class="language-dart">var numbers = &lt;int&gt;[1, 2, 3, 5, 6, 7];
+print(numbers.every((element) =&gt; element &gt;= 0)); // true;
+print(numbers.every((element) =&gt; element &gt;= 5)); // false;
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3><code>.contains()</code> ตรวจสอบว่ามีค่าที่สนใจอยู่ใน elements หรือไม่</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/contains.html"><code>.contains()</code></a> ใช้ตรวจสอบว่ามีสามาชิกตรงกับค่าที่สนใจหรือไม่ ถ้ามีจะคืนค่า <code>true</code> กลับมา</p>
+<pre><code class="language-dart">var intList = [1, 2];
+print(intList.contains(1)); // → true
+print(intList.contains(5)); // → false
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3><code>.firstWhere()</code> หาสมาชิกที่ตรงกับเงื่อนไข test ตัวแรก</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/firstWhere.html"><code>.firstWhere()</code></a> ใช้สำหรับหาสมาชิกที่ตรงกับ test ที่กำหนด ถ้าพบจะคืนค่าสมาชิกที่พบ หากไม่พบจะคือค่าใน orElse หากไม่กำหนด orElse แล้วไม่เจอสมาชิก จะมีผลทำให้เกิด Exception error ขึ้น</p>
+<pre><code class="language-dart">var intList = [1, 2, 3, 4, 5];
+print(intList.firstWhere((element) =&gt; element &gt; 1)); // output → 2
+print(intList.firstWhere((element) =&gt; element &gt; 5, orElse: () =&gt; -1)); // output → -1
+
+// if not found and missing orElse: will throw error
+// exception error → Bad state: No element
+print(intList.firstWhere((element) =&gt; element &lt; 1));
+</code></pre>
+<h3><code>.lastWhere()</code> ทำงานเหมือน <code>.firstWhere()</code> แต่กลับทิศค้นหาจากหลังมาหน้า</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/lastWhere.html"><code>.lastWhere()</code></a> ใช้สำหรับหาสมาชิกที่ตรงกับ test ที่กำหนด หลักการเดียวกัน <code>.firstWhere()</code> แต่จะทำงานในทิศตรงกันข้าม จะค้นหาจากหลังมาหน้า เมื่อเจอจะคืนค่าสมาชิกที่ตรงกับเงื่อนไขกลับมา</p>
+<pre><code class="language-dart">var intList = [1, 2, 3, 4, 5];
+print(intList.lastWhere((element) =&gt; element &gt; 1)); // output → 5  
+print(intList.lastWhere((element) =&gt; element &gt; 5, orElse: () =&gt; -1)); // output → -1
+
+// if not found and missing orElse: will throw error
+// exception error → Bad state: No element
+print(intList.lastWhere((element) =&gt; element &lt; 1));
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>สร้าง iterable ใหม่จากสมาชิกเดิมที่มีอยู่ ตามจำนวน หรือเงื่อนไขที่กำหนด</h3>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/take.html"><code>.take()</code></a> ใช้สำหรับ<strong>เอาสมาชิกด้านหน้า</strong>ตามจำนวนที่ระบุ มาสร้างเป็น iterable ใหม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/skip.html"><code>.skip()</code></a> ทำงานตรงข้ามกับ .take() <strong>ไม่เอาสมาชิกด้านหน้า</strong>ตามจำนวนที่ระบุ มาสร้างเป็น iterable ใหม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/takeWhile.html"><code>.takeWhile()</code></a> กับ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/skipWhile.html"><code>.skipWhile()</code></a> ใช้เงื่อนไข test ในการเลือกสมาชิก มาสร้างเป็น iterable ใหม่ ส่วนตัวรู้สึกว่าค่อนข้างสับสนใจการใช้งาน เลยไม่อยากแนะนำเท่าไหร่</li>
+</ul>
+<pre><code class="language-dart">var intList = [1, 2, 3, 4, 5];
+print(intList.take(3)); // → (1, 2, 3)
+print(intList.skip(3)); // → (4, 5)
+
+// in case is count &gt; length
+print(intList.take(100)); // → (1, 2, 3, 4, 5)
+print(intList.skip(100)); // → ()
+
+print(intList.takeWhile((value) =&gt; value != 3)); // → (1, 2)
+print(intList.skipWhile((value) =&gt; value != 3)); // → (3, 4, 5)
+</code></pre>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/where.html"><code>.where()</code></a> ใช้เงื่อนไข test ในการเลือก<strong>สมาชิกทั้งหมด</strong> มาสร้างเป็น iterable ใหม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/whereType.html"><code>.whereType()</code></a> ใช้เงื่อนไข <E> ในการเลือก<strong>สมาชิกทั้งหมด</strong> มาสร้างเป็น iterable ใหม่</li>
+</ul>
+<pre><code class="language-dart">List&lt;num?&gt; numList = [1, 2.5, 3.0, 4, null];
+print(numList.where((element) =&gt; element is int &amp;&amp; element &gt; 0)); // → (1, 4)
+print(numList.whereType&lt;int&gt;()); // → (1, 4)
+print(numList.whereType&lt;double&gt;()); // → (2.5, 3.0)
+print(numList.whereType&lt;int?&gt;()); // → (1, 4, null)
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>คำสั่งอรรถประโยชน์ที่น่าสนใจ</h3>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/join.html"><code>.join()</code></a> สำหรับเอาสมาชิกทุกตัวแปลงเป็น String แล้วเอามาต่อกัน โดยมันตัวคั่นตามที่ระบุ</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/map.html"><code>.map()</code></a> สำหรับเอาสมาชิกทุกตัวมาแปลงตามฟังก์ชั่นที่ผู้ใช้กำหนด แล้วคืนเป็น Iterable ใหม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/reduce.html"><code>.reduce()</code></a> สำหรับลดจำนวนสมาชิกให้เหลือแค่ค่าเดียว โดยใช้วิธีการตามฟังก์ชั่นที่ผู้ใช้กำหนด</li>
+</ul>
+<p>ตัวอย่างการใช้งาน <code>.join()</code> สำหรับเอาสมาชิกมาแปลงเป็น String แล้วต่อกันตามตัวคั่นที่กำหนด หากไม่กำหนดตัวคั่น ผลที่ได้จะเป็นเอาสมาชิกทั้งหมดมาต่อกันโดยตรง</p>
+<pre><code class="language-dart">var words = ['Hello', 'World'];
+print(words.join()); // output → HelloWorld
+print(words.join(', ')); // output → Hello, World
+print(words.join(' - ')); // output → Hello - World
+
+</code></pre>
+<p>ตัวอย่างการใช้งาน <code>.map()</code> เพื่อสร้าง Iterable ใหม่ โดยใช้แปลงข้อมูลที่แปลงโดยฟังก์ชั่นที่ผู้ใช้กำหนด</p>
+<pre><code class="language-dart">var words = ['Hello', 'World'];
+print(words.map((element) =&gt; element.toUpperCase())); // output → (HELLO, WORLD)
+print(words.map((element) =&gt; element.length)); // output → (5, 5)
+</code></pre>
+<p>ตัวอย่างการใช้งาน <code>.reduce()</code> เพื่อสร้าง Iterable ใหม่ โดยใช้แปลงข้อมูลที่แปลงโดยฟังก์ชั่นที่ผู้ใช้กำหนด</p>
+<pre><code class="language-dart">var numbers = [0, 5, 10, 30];
+var result = numbers.reduce((lastResult, element) =&gt; lastResult + element);
+print(result); // output → 45
+</code></pre>
+<p>อธิบายการทำงานของ <code>.reduce()</code> ในตัวอย่างจะเห็นว่าฟังก์ชั่นที่ใช้จะรับค่า 2 ตัวคือ lastResult กับ element โดยในแต่ละรอบที่นำสมาชิกมาประมวลผล จะเอาผลที่ได้ในแต่ละรอบไปใช้ในรอบถัดไปคือ lastResult เพื่อให้เห็นภาพการทำงาน จะแสดงค่าของตัวแปรที่รับมาแต่ละรอบดังนี้</p>
+<pre><code class="language-dart">void main() {
+  var numbers = [0, 5, 10, 30];
+  var loopCount = 0;
+  var result = numbers.reduce(
+    (lastResult, element) {
+      ++loopCount;
+      print('loopCount: $loopCount\n');
+      print('lastResult: $lastResult');
+      print('element: $element');
+
+      var returnValue = lastResult + element;
+      print('returnValue: $returnValue');
+      print('------------------------------');
+
+      return returnValue;
+    }
+  );
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>loopCount: 1<br/>
+<br/>
+lastResult: 0<br/>
+element: 5<br/>
+returnValue: 5<br/>
+------------------------------<br/>
+loopCount: 2<br/>
+<br/>
+lastResult: 5<br/>
+element: 10<br/>
+returnValue: 15<br/>
+------------------------------<br/>
+loopCount: 3<br/>
+<br/>
+lastResult: 15<br/>
+element: 30<br/>
+returnValue: 45<br/>
+------------------------------<br/></p>
+</blockquote>
+<p>จากผลที่ได้อธิบายการทำงานได้ดังนี้</p>
+<ol>
+<li>จะเห็นว่าในรอบแรก จะเอา 0 (ตัวแรก) + 5 (ตัวที่สอง) = 5 แล้วเอา 5 ไปใช้คำนวณในรอบถัดไป</li>
+<li>รอบที่สอง เอา 5 จากรอบแรกมา กับสมาชิก 10 (ตัวที่สาม) 5 + 10 = 15 เอาผลที่ได้ไปใช้ในรอบถัดไป</li>
+<li>รอบที่สาม เอา 15 จากรอบแรกมา กับสมาชิก 30 (ตัวที่สี่) 15 + 30 = 45 เอาผลที่ได้ คืนกลับไป เนื่องจากไม่มีสมาชิกเหลือแล้ว</li>
+</ol>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การแปลง Generic ของ Iterable ด้วย <code>castFrom()</code></h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/castFrom.html"><code>.castFrom()</code></a> เป็น static method ของ Iterable class ใช้สำหรับ cast เปลี่ยนประเภทของ Generic ใหม่ โดยผู้ใช้ต้องทราบเองว่าสิ่งที่ต้องการ cast สามารถทำ type casting ได้เมื่อตอน runtime เช่น</p>
+<ul>
+<li>จาก <code>double</code> → <code>num</code></li>
+<li>จาก <code>int</code> → <code>num</code></li>
+</ul>
+<pre><code class="language-dart">List&lt;int&gt; intList = [0, 5, 10, 30];
+List&lt;num&gt; newList = Iterable.castFrom&lt;int, num&gt;(intList).toList();
+newList.add(10.5); // add double is OK for num
+print(newList); // → [0, 5, 10, 30, 10.5]
+
+List&lt;int&gt; intList2 = [0, 5, 10, 30];
+List&lt;int?&gt; newListWithNull = Iterable.castFrom&lt;int, int?&gt;(intList2).toList();
+newListWithNull.add(null);
+print(newListWithNull); // → [0, 5, 10, 30, null]
+</code></pre>
+<p>ถ้าพยายาม cast ในสิ่งที่เป็นไปไม่ได้ ก็จะเกิด Exception error  → type 'xxx' is not a subtype of type 'yyy' in type cast</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ข้อสังเกต ในการเขียนโปรแกรมทั่วไป ผู้ใช้สามารถใช้ <code>...</code> เพื่อนำ List ที่มีอยู่มาสร้าง List ใหม่ โดยกำหนด Generic ก็สามารถทำได้เหมือนกับ <code>.castFrom()</code> บางทีก็ไม่รู้ว่าจะเขียนให้ยาวไปเพื่ออะไร 🙄</p>
+</div></div>
+<pre><code class="language-dart">List&lt;int&gt; intList = [0, 5, 10, 30];
+List&lt;num&gt; newList = &lt;num&gt;[...intList];
+newList.add(10.5); // add double is OK for num
+print(newList); // → [0, 5, 10, 30, 10.5]
+</code></pre>
+<p>หากไม่สามารถใช้การ cast ด้วยวิธีปกติของ Dart ได้ สามารถใช้คำสั่ง <code>.map()</code> แล้วเขียนฟังก์ชั่นระบุเงื่อนไขวิธีการแปลงข้อมูลเองก็เป็นอีกทางเลือกเช่นกัน</p>
+<pre><code class="language-dart">List&lt;num&gt; numList = [0, 5, 10, 30.0, 1.5];
+List&lt;int&gt; intList = numList.map(
+                      (element) =&gt; (element is int) ? element : element.toInt()
+                    ).toList();
+
+print(intList); // → [0, 5, 10, 30, 1]
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".Oemqs(7P5d.bmne"U-#$9l8Vt!JCajกCmqm%ขF,4b\+*7]H,"L5&jGYc4aqb$\Of_h:^3mLjX@QYC.iX3Z('L]Z-VM,^EDNg"E2`(%dlepRZ1ihXJqTTWY-+f(กHWFapUgqWHขt\NUZ(?Kpi83=1-2s1)Eo"/Hp&Bce!#4T..Lec\a)Vplh1-/3r*MI4;\P-8r\k1h7*$'^G,?3ขข$nI[9B\5/kd"W7`0SIdG\b`1)`=s%3OOO_nQbJ5E1DEE$admrH8fA+k")c,9fp"S-PgQ*IP0bER7L!PZEuYXZo$+j/iL8NYa(nNk[d,:QW1+r-Q!q`Vp:SSL.sLX%BL!L8A\bfU]5AAmZ0gLK(NA)Ep[%;ขNG=C6o'M3?#1-S$6EQCYV3E05Y5ZQNTn35DL4@-Ou`1,!PPJ-DUNr\!@Y?#PF.:s$YqJI[J')57,.DhF6WEWSI&'-6e$.p&=8`G;'mJXG7L*D`%BK'X^An[#[HHbg@[ZSfWkd[LGpZe*dUf4#j&B^`rpJ*tbb*?eYcNขo9eQNeS'7_k61Y)!kd35isN[=\YL-ipg^WR-=!XaQ'Xf:::^3-XWY9-kกdMa+/OGLP36c_XaLY7qข]NcL:Tm5ข:pb:7`t!@(V23+Tqlq!H8![2#NJjHncN\k^Gkemqs`%Jf;9=%A*sXJ@+s%?LกhdU`+MOig@j!-UrA4YUcRR\@j1cHj4pjU=_:2RY_FZ3IcRhi#3tnTt&F2AULus9.`H@g)e2;+""*]H(*\4-!-QE8NQ6F[-iG/hapH%aiTITN'9SqmC0KK7;8ข!WOGgO^G&)[fiRm!;^S$,CS;:DGBp`k`*PN6n,,?Oqk4[m&;:##$eo?cpBUh]#o?BZLr/uZR]1_9/OmcKkg+pWa!l9JZi.^\ZE]/Hof^-.'6)V)_iV%sanbP$%J*C-3YK6biARj"@5G$tgiaD*PBbGDcjJ+;SIRJA1B:kWKrJc@pWHjWlM&kmNDh3R[b@h6*@o?m8OnP"F)oS5dS'tkLeU-22[I?$VjP*\LBo^92=Mta:!=g[ajBZf1jgUHM9XW_e7BSKT6s!8R-En]g%P?5@`85mE*&K%SmjDKOY]Sc?3LoYVO#Z3Jrt/!D\rX)1B0m_7jpg.$k1;)Qos(h.NX_=4S]*"2N3CjM6ก&tUZGqOV3No_Jข8k$?BH"I86`9bs4p)(U7B7;0j.k'bK!\F1t$_-GK7(.C^Ik*7,7a+Shl+-TU5N0&)[ข@$jiL::Oc6"Qf[*M'8OMEH8S6M.g`t"I=N#Z@(73I24Gl;(9R-cPRW[NR$qct=uaขslVZ#[Sem'V1435l!a,2+L+17=!i5@-&K@ml6(!mqVWE^i1BZ#I=W8XU5C`G].$ZSlกkEg*1Kh+He?[f3"E?Y7c2B_@IgmWPnDcKcWS[qe#Ps:Dq"*uh,iXNpe6OD8rbก`%q@$j;LJIuYb%$m@9`_Hd#iI$^ZdqB)'XO?`[Ka"`!QTIZKJUก%*hl5E`a_%8_N'+9Xq;?PE9XG0='KEFR,R"u/d[FcBL&j?:lCd\od"#5#Qpj@=W9oSa,EDG7ATmHaRe=eLmp%)WaUssR\p.Xa1ugกoF_K')FM6qZBกP?![Zj-$k%uP7fmVdlhTK3eNb&0`?X,pC)*[KTM^9n$HuMC=b1cIn.-7YY6+`+[OF%^0njqขIF`2:`gUn9[Z$2YAjGQK9lRH@rjj1ก39VskE?AqW6r8@dXkh[8[0u-u`Oก=HFXj.PC3Z'ZJE6!T$In5g:k,qUp%QW)S/8j_ZกR7$8E0k^!purHJ$sA8(@YlMs8%-\,aX^X"#=rX#^%_UKCEJq-'!:Qกk\9#eF?1@O:*%)L*%2LD/m5r/6AKMJPHCH$ER4bAd)3c&6.SGEae5cRRG:a](`55LN%,Qg",d?("0;kfDJ%kQLM+]ขNJZ*P%`^ghNpiaC+Zขe-AG#-Q=&*Ak$ข7g^Q?h`SE;]?5sIYrZ#n8Q=+PG9pn.8j)qsXT$cAi\AnKL$1crSKSjgHD?anLfq%R(/9(fK)[Z&HjS6\eNk?`D^^Iiurr6ก,LiO[VM3^C4gขZ)4@63tGOGL-lOIขG-=eขh'=]IehHA!S6`QS61$c=4H1JtA/;PBP.,QmT7LbmRutdTh@,a=rUehbC#9=t7QL&Ifu,F;fUShAX8obG&(.LZ7DL.9ก+ON5%T52Xko0Ip_`/in]O:1Cก,K@W#WeDSZC:+_`glh9#iUXW5.4b!VAgS]7Fg[roM+;i8TNH6.:rC$mT`7&SnQqข2;g0^'Gq?L\ZmmkC](qf+b2OIOข=]\Fk0WWO3%H6g@+Dqsl]rOaWeoNIEX)ขQm=4ug^80Sq_8:'X]N4n\IP@4d5o(om)eE,cK"[%B&+"=sIB?OTr04G;tD;HOS@Pe;:[ขrdPGkNpZh8#0_gEPkiN?(OOlo)M2(กKQu=Ph4ns':RXJrB'D7]d92G/;h"$e-9V_-0j"*G[L3ckrk6SVXc"ขr7cm8&12k=ijBd]^:eR11dXqMkL`ข,Z7V0+b'kLS"`4(M.lPmnKกbr/`hDJU1%*c;=BQtRe=LVuQ95*nSc;4:TCEX*?Tf"N%nM=7+q^sNrjp.D"J=ขeV"U$hj9+E'ข87'IPGaY4f5Rgef`0!66A*apFY**Nh'cG/4'5,ก?FFN3\RXoqก6*uZRB#EfHHMdT\mkS/(24dq&R_4&-XPcI`8PLUAERP1q/0-VnikZ?\mY&iIdDqDZ-),_LVG-U7KT3a'sHBdข7ข_2=rAcS)Nq'b@fUpUch6h^WWl?;3G&G\r/^'^Nj+oR(-S;$5&ARm?icSges&VIK""B=Qn1RB6[Fq"hP2"Y-Ptl&D'KrakkcB6Heg;&FMP2s'#d&Q^=RpHeRnobnqr=9"t=กmQ,FPg\G#8pnf&[En]"(dSTG"Oo]\`ANก^1rMOtBih')uM#bqMb=^[(eq"l1-MR`JT^Y3"$Y#okก0U4E&bf^mdE?!0C]@_^M$VOO";jN#pF^PjkVe$[+a7D.CrkIIIDG_)0Y$/CW);!"lY?g7uMVH9&D3?F),rLPO]UcImcXl3Be"Gir5V%ข4:X$Kds#nTT^%,lF\l!\J&mF7egMNnmK.,rgFQ=bp/9]ueCB$qHn^$P=MGZmqPdr0mWb5d9:-%s`$6_m\Rข4RSND7G'XN9j,6ข?rUกe`Zns'?c?p1htI+i=hpi?n)Td"#9A8DG6?QH)t9??_RCBP5lX^n%)^'T!o7U&@jกY$\%u3c)`EqH"A5e-p3a."X6)m;H&Oe'*i\ก#UqmD56O-IWUกtlBk*ก9SlH;D_dq1.p.[uFAh!rdr5SqQ_5LCขV6:4X_hjfJh_=?7f$B.]Q*uY%8h$g]#VI(K*T=i`Jdr^OBZq4^CdnUj!]ijIG6B\/5dc=P:3$T"=l1hZGOOm3CMU%ขqI"`VV:RPhT!กl.2Id&FKr]==+F?faA?"bKLtr`"7"8-gJQUC&SOiG$B5BLZ7%OhKg+&B$;;6S.CO_mlfY0Pc`a/*_B!C+6J6JGG`ก:dZWU`Ujc5.c\pTT`gC"Yhm3!:bI[-l,S^N:GfL)9กi[iBEoN;r8poec-kWI/.4(#;0\21aDN]#ENQb26_R,W0J4V.3YbONfNGg_tf*atguojlYAAiH0b)`dcขiLIRR^)[e?ขKj-U3o-=1K!mdq$)p@#3Y9bWRข'qmg9t;'UBOU=O1U5nrกRtSRVR6M_s\H$R1'HO(f8?EbclV\,hZC(mXefoขBVQ+-WLWg3ข/.\2RKJj\3]X-db(CFa5ibd9U$MnOf7p2ขN01M**aO(&h=qsJ*NO(?Pa)K94I*V&"CjhU#Z'3_7djk+bo*NpI.4D(m?Xg!QgXaVJY&pPj\o][ขp8Dhk:?$3Uaqm+LqL5Q'Bn_,uaHlbZ""sUde41UXG]pIW5CWI%,f$YDGกkCV2"ujVJ:KB?`\/4uX!1Ve*Xj`ekUQ@^JtP1%E,k2*tRCqd?'ข5YsEb$CHFNVR)SDKD_ms4กV#+0_'b!c`k2!`SrGX,Bก)V2-4?20\0h_$Q9oo';Iqe[/i%C/:-GWQD?+ขS0G6H&)*V?NTArH64;t_AKHbกnSlXO"C\$[JI4U=Ki4XO'OWqjN.t'/+^m_ZF@'A3ET$\n+8ZHb7q,IjC$X!'กo6R.Mกr(njro^m-UraR4jNก:M++`JK5j(2Q)H[`bW=eoq7SnYB-)nM:cpXW./ORp=1`nกg"U%:1t9ip)&lm?@;.Vuog]n.B#R.uWKP+4jMข&l19to&!Q=BpTPeBX)j=37กk+U\TgZ)]*H\4FkXfE!+BY?(j%;-645bf5kQUoKmT0ONgHi:Va_DgOB%ina':_F[N;ZDF"N-h9d\rRTC($S-EnCjeD96p%[7ขก:B0mf]\f?';a*f3OD[S6ขM5]efZZr%GM%*d7rkG^^.G^kh.bGK8JnHRrOJขZcกo^oMc'a/^]^9K)$P'QIkN&sWf8ud13.q5LG87ข`]YYAY@]8gfK#5n05,!gGRO0กOX*+iJE6io`&cSW9le3A0qqN?6GfiulC/ก*Yred;FMX`//e8$'Ul+#&X'q2s;(/irM`s\5jGO%qo"8eYW2"7f338j7UrN=N'^2?g2cY!Q#T"=&qH#_7nI@E_koAH&SY(6MR@-oKP^jc,#7a:ZU/&%oMZ,.r1Q.&/M4_XUJ.g]@mNiBe"6A7HnFU;&eoq.YXltdh"5BqA,(jmgaDMOdSกI)S!?nFr&m_0gWTDข#^^,0XTL)"sAH*W?8R?BY0m#$`5l*2#A*fIกG4,q!Nf[q#5Ps)7n8G7s_Tข-6*=\oC`ZeขV_`&j44/]mpLQ:S83Q@KMsc9ข:,gX1Q&&9aSf3FKO$Et$08F:Xo,6,VE0)*U^[lkZ`1/Fi_j!a$X-LDdG5i0;9QA9bT0)VNqi7WlJ]/Cก?8".++I$a3m.d9^pgs)hi=m"/a1Z%]r7Fn&NV]กjEucDขL,H[cY!@(OH[Rh_กmed*[+D`?*PKX]^h&PUQLgกOVcUIA^-K:+5O$)0U4&QbEoI4#paGC?fUOกB%?p[)sf]ObqUk,JM'M^*QZ[4bS9,KKP/-N'A2=oeld(D540-c[;%PDbt&0O**PT?b$2Me8k_9^qO4SsaqeKF`?nS0M:iCXli#=^TeL/'GQ3188`@&E;cCGG]ขYkH2EEc)ขu369g@pf5OG$gfO2)^-Z6s9!R7k[*RgC=O1e0Trbk,XQQ\6a^!8VnmX!;1m3ก68+!Z((RL,nQ7@Ic3jm58!DIt'7,$k#E3d9#RW2K]Uaa)n6[@@F]X4Dsgh@S9ot(^3=HQmAEdJ2k3s_fขn9,LiYVNOar12a47X1'RH5(Qb7C=%2'0\k9#+p3=%nC]:QI2N1R@R_HZPQ;nDW2G]RGc*?Spa'SlcQK;%BqG-E*r=jQK2lJ5aBgh3kX6Nk7mUIMCto#o_Z$R5JH.MrDM=?Mph'sIf/_K'tF7rk9#1U*g7qc3arbกC2rgtk#;-@s#3lF=[ui!;:uZP\'EQD54Nd^pBOu_.n(&7/#7i4Yg;QF"nXfPcf'J'+i2"9=VE[Ej9[Wj`HUC&%S3jcNOpf4p-d]#1+2ข#)7?9;=usPGEUc\ขWQ.i;dO7cAข$(Qk+*c0iU/Dop91_00p8oQb:IIcS$V,J!lWURC*LK4Ri@.tI5a._Krf#AOT*b6l(!31qq8"M0f&sQ%.J]1+mC?k9$DS\mQ:Z/nl)[j;r5A7W#._lกกGp]/aZi+Z@nQ[uEข5N\U&;h1eE#(0'4[rrgkNh0d/dL^+GjD=c^:[HjbnD/8,iM^YZS=Paq:kSr53EnLS"fkp5YSt7SK+Y&;U9TH&Dj(01aRAHHa8gg0aRCe%,Jq]J)B-4.Or/r1CReS9HGZe"8Z)#kF=b[@2ImกRd7o$jkJEHth(aMMoJ'ขVp:Ml8:LขojขSVlm[ข3*K83S0JYR1,6e#OHก/*Kp)9[:fXข+i6Jd$NEdm"m7G?3W%8-=;N&"XgVZ+Flnq-kA$k(F(Dr9f)l75D0g2?Aoo,TV$VA`HRXXnj50Leso:5^U:!$r0F=:+MD/Q53q)3pm%(U29ge=//3l86?R;ja#uP`cc&V3LX[.ctQUR/!G8,@&#b$SXMoS=gULmI0g\J"b3"qr94QVY9j+ขuT=@!jr"BrWtfก'!tr:j=i2'\+&8+Dr[ct.T?!R:S"I4PFjnrI9fq:Ytc7FU$!f(;((g:+dkbh\tg[/U7CdTn\4rBข;^r\KfdT+s)Jed@NQYTkm-VD(:*_X3ihU,*Q_H.ขU`/BVQSj^/;5o&l]rPQKG"g4,jข'd-[FA[??Lk4`R;+FMUu(kT\"cpK)k@jag_+ก9hJBk]*#&iPR`gD2L?$&s#+d@^V1qSJ5e5AgKPAWPB&O;nGi-c1Z#J'FZQ@FXkI;)%Bn4]`]`Im5Po(qM'uJi\RjขbAWdMZnGh&$%Fg.Z7jCqDb"`=9Xpก&u?D#H-LaBA2กL6C2#0B=pmY`On7ขji"W"Mp'?e*61mjB[H^.98JTJZ42bU^jT[IRf!/O-WaAtก&Q/t(S,F!pF:l,L_4qMm#:/tk2OchToQ#Q-L?]กCL[d62C6m)B-rd@kuTd.p,?b`ก]/X'2Vd1'Y72'-C2r4N?ข2%.RXA0#pZ=-tgfsmrfข@ขKF=#B=MjknW^gTf!cQ_5Ef$L.pQCKAS;ad2=4URiffDl[ib=Q$EqFBd,.LHC6eP*nYVk3oa.,Sn)BcB)r8cข("Q'd58"-\=)*$?+'2N535HuPo_`8Mn/UaUJ]:bF1=$iKM?WfI0ssn7`9AB3Ol(N@dn6Rm.1L,gPGr=f%Fll#l8+8se9\O%4*DWeU+V:K':[ข?5=Wr(AกpBAn@m*Mc"fo!O2?QuPLKNO=ก1ก&#dWE6"%E2rV*Mlc&7ขJก~ข
+-->
+</markdown>
