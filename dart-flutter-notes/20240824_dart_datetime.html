@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน DateTime class เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน DateTime class เบื้องต้น</h1>
+<p><img src="images/20240824/20240824_0000_cover.svg" class="u-max-full-width" /></p>
+<p>บันทึกวิธีการใช้งาน <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime-class.html">DateTime</a> class ที่ใช้งานกันบ่อย ๆ</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ตัว DateTime เมื่อสร้างขึ้นมาแล้ว จะไม่สามารถเปลี่ยนแปลงค่าภายใน object ที่สร้างขึ้นมาได้อีก</p>
+</div></div>
+<h2>การสร้าง DateTime</h2>
+<p>DateTime มีตัว constructor ที่มีให้ใช้งานจะมีดังนี้</p>
+<ol>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.html"><code>DateTime()</code></a> เวลาที่สร้างขึ้นจะอ้างอิงจาก <strong>local time zone</strong></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.now.html"><code>DateTime.now()</code></a> เวลา ณ ปัจจุบันอ้างอิงจาก <strong>local time zone</strong></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.utc.html"><code>DateTime.utc()</code></a> เวลาที่สร้างขึ้นจะอ้างอิงจาก <strong>UTC time zone</strong></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.fromMicrosecondsSinceEpoch.html"><code>DateTime.fromMicrosecondsSinceEpoch()</code></a> จะใช้ค่าไมโครวินาที (1 ใน ล้านวินาที) ที่นับตั้งแต่ปี ค.ศ.1970</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.fromMillisecondsSinceEpoch.html"><code>DateTime.fromMillisecondsSinceEpoch()</code></a> จะใช้ค่ามิลลิวินาที (1 ใน พันวินาที) ที่นับตั้งแต่ปี ค.ศ.1970</li>
+</ol>
+<p>local time zone = คือเวลาพื้นที่ของเครื่องที่ใช้งาน เช่น ถ้าประเทศไทย จะเป็น <a target="_blank" href="https://th.wikipedia.org/wiki/UTC+07:00">UTC+07:00</a> ส่วน <a target="_blank" href="https://th.wikipedia.org/wiki/%E0%B9%80%E0%B8%A7%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%B2%E0%B8%81%E0%B8%A5%E0%B9%80%E0%B8%8A%E0%B8%B4%E0%B8%87%E0%B8%9E%E0%B8%B4%E0%B8%81%E0%B8%B1%E0%B8%94">UTC time zone</a> หรือ เวลาสากลเชิงพิกัด (Coordinated Universal Time) ที่จุดอ้างอิงของเวลาสากลเชิงพิกัดคือที่ลองจิจูด ที่ 0° ซึ่งจะคือตำแหน่งเมืองลอนดอน ประเทศอังกฤษ</p>
+<pre><code class="language-dart">void main() {
+  var local = DateTime.now();
+  var utc = local.toUtc();
+  print(local);// output → 2024-08-24 16:43:33.011088
+  print(utc);// output → 2024-08-24 09:43:33.011088Z
+}
+</code></pre>
+<p>จากตัวอย่าง เครื่องที่ใช้อยู่ประเทศไทย UTC+07:00 เมื่อทำการขอค่าเวลาเป็น UTC จึงได้เวลาที่น้อยกว่า 7 ชั่วโมง (16:43 กับ 09:43)</p>
+<div class="image"><img src="images/20240824/20240824_0100_time_zone.jpg" class="u-max-full-width" /><div><p>แผนที่ Time zone จาก <a target="_blank" href="https://commons.wikimedia.org/wiki/File:World_Time_Zones_Map.png">Wikipedia</a></p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้างเวลาโดยใช้ตัวเลข วัน เดือน ปี ชั่วโมง นาที วินาที</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.html"><code>DateTime()</code></a> constructor จะต้องระบุตัวเลขของเวลาที่ต้องการสร้าง โดยอย่างน้อยสุดต้องระบุปี ซึ่งผลที่ได้จะเป็นวันและเวลาเริ่มต้นของปีดังกล่าว</p>
+<pre><code class="language-dart">DateTime(
+  int year, [
+  int month = 1,
+  int day = 1,
+  int hour = 0,
+  int minute = 0,
+  int second = 0,
+  int millisecond = 0,
+  int microsecond = 0,
+])
+</code></pre>
+<p>ส่วน <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/DateTime.utc.html"><code>DateTime.utc()</code></a> constructor จะมี parameters เหมือนกัน แต่ตัวเวลาที่ระบุจะเป็นเวลาที่ UTC+0</p>
+<pre><code class="language-dart">void main() {
+  // first date and time in year 2024
+  var year2024 = DateTime(2024); // local time is UTC+7
+  var year2024utc = DateTime.utc(2024);
+  print(year2024); // output → 2024-01-01 00:00:00.000
+  print(year2024.toUtc()); // output → 2023-12-31 17:00:00.000Z 
+  print(year2024utc); // output → 2024-01-01 00:00:00.000Z
+
+  // last day on year 2024
+  var endOf2024 = DateTime(2024, 12, 31);
+  print(endOf2024); // output → 2024-12-31 00:00:00.000
+
+  // before new year
+  var before2025 = DateTime(2024, 12, 31, 23, 59, 59, 999);
+  print(before2025); // output → 2024-12-31 23:59:59.999
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้างจากเวลาวินาที ที่นับจากปี 1970 (Unix Epoch)</h3>
+<p>ในระบบคอมพิวเตอร์จะใช้ <a target="_blank" href="https://en.wikipedia.org/wiki/Unix_time">Unix Epoch</a> เป็นช่วงเวลาในการอ้างอิงจุดเริ่มนับเวลาเป็น 0 คือ วันที่ 1 มกราคา ปี ค.ศ.1970 เวลา 00:00น. โดยในเซิร์ฟเวอร์มันจะใช้ค่าผลต่างเวลาดังกล่าวในการอ้างอิงถึงเวลาปัจจุบัน หรืออ้างอิงเวลา ณ จุดที่ต้องการ โดยหน่วยที่ Dart รองรับคือ มิลลิวินาที (ms.) และ ไมโครวินาที (µs.)</p>
+<pre><code class="language-dart">// first UTC date and time in year 2024 AD
+var year1970utc = DateTime.utc(1970);
+print(year1970utc); // output → 1970-01-01 00:00:00.000Z
+print(year1970utc.millisecondsSinceEpoch); // output → 0
+print(year1970utc.microsecondsSinceEpoch); // output → 0
+
+// 1 day has 24*60*60*1000 = 86400000 ms.
+var day1utc = DateTime.fromMillisecondsSinceEpoch(86400000, isUtc: true);
+print(day1utc); // output → 1970-01-02 00:00:00.000Z
+
+// year 9999 AD
+var year2999utc = DateTime.utc(9999);
+print(year2999utc); // output → 9999-01-01 00:00:00.000Z
+print(year2999utc.millisecondsSinceEpoch); // output → 253370764800000
+print(year2999utc.microsecondsSinceEpoch); // output → 253370764800000000
+</code></pre>
+<p>ปกติในการใช้งานทั่วไป การแสดงและคำนวณเวลาในแอป ไม่ค่อยได้ใช้หน่วย ms. และ µs. ในการสร้างเวลาเพื่อใช้งาน แต่มันจะเป็นการเอาค่าที่คืนมาจากเซิร์ฟเวอร์ ที่มักรองรับการคืนค่ากลับมาเป็น ms.</p>
+<p>สำหรับข้อมูลเวลาหากใช้งานด้วยคอมพิวเตอร์ 64-bit จะสามารถอ้างเวลาได้เกินปี ค.ศ. 9999 ไปอีกเป็นพันล้านปีเลย ซึ่งตัวคนเขียนคงไม่มีโอกาศในใช้งานขนาดนั้น 😂</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้างเวลาจาก String</h3>
+<p>นอกจาก constructor ที่มีให้แล้ว ตัว DateTime ยังมี static method ที่ช่วยแปลง String เป็นข้อมูล DateTime ได้ ข้อความที่เป็นวันที่ ตัว DateTime รองรับรูปแบบย่อยต่าง ๆ ใน <a target="_blank" href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> โดยใช้ผ่านคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/parse.html"><code>DateTime.parse()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/tryParse.html"><code>DateTime.tryParse()</code></a> โดยความแตกต่างของ 2 คำสั่งนี้คือ <code>DateTime.parse()</code> ถ้าทำไม่สำเร็จจะ throw FormatException กลับมา แต่ <code>DateTime.tryParse()</code> ถ้าทำไม่สำเร็จจะคืนค่ากลับมาเป็น <code>null</code></p>
+<p>ตัวอย่างรูปแบบข้อความที่สามารถแปลงเป็น DateTime ได้</p>
+<ul>
+<li>&quot;2012-02-27&quot;</li>
+<li>&quot;2012-02-27 13:27:00&quot;</li>
+<li>&quot;2012-02-27 13:27:00.123456789z&quot;</li>
+<li>&quot;2012-02-27 13:27:00,123456789z&quot;</li>
+<li>&quot;20120227 13:27:00&quot;</li>
+<li>&quot;20120227T132700&quot;</li>
+<li>&quot;20120227&quot;</li>
+<li>&quot;+20120227&quot;</li>
+<li>&quot;2012-02-27T14Z&quot;</li>
+<li>&quot;2012-02-27T14+00:00&quot;</li>
+<li>&quot;-123450101 00:00:00 Z&quot;: in the year -12345.</li>
+<li>&quot;2002-02-27T14:00:00-0500&quot;: Same as &quot;2002-02-27T19:00:00Z&quot;</li>
+</ul>
+<pre><code class="language-dart">// local time
+var onlyDate = DateTime.parse(&quot;20240101&quot;);
+print(onlyDate); // output → 2024-01-01 00:00:00.000
+
+var dateAndTime = DateTime.parse(&quot;20240101 120000&quot;);
+print(dateAndTime); // output → 2024-01-01 12:00:00.000
+
+var dateAndTime2 = DateTime.parse(&quot;2024-01-01 12:00:00&quot;);
+print(dateAndTime2); // output → 2024-01-01 12:00:00.000
+print(dateAndTime2.isUtc); // output → false
+
+// utc+0 time
+var testUtc = DateTime.parse(&quot;2024-01-01 12:00:00Z&quot;); // same as 2024-01-01 12:00:00+00:00
+print(testUtc); // output → 2024-01-01 12:00:00.000Z
+print(testUtc.isUtc); // output → true
+
+// utc+7 time
+var bkkTime = DateTime.parse(&quot;2024-01-01 12:00:00+07:00&quot;);
+print(bkkTime); // output → 2024-01-01 05:00:00.000Z
+print(bkkTime.isUtc); // output → true
+print(bkkTime.toUtc()); // output → 2024-01-01 05:00:00.000Z
+print(bkkTime.toLocal()); // output → 2024-01-01 12:00:00.000
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การตรวจสอบ time zone</h2>
+<p>หากต้องการทราบว่าแอปที่ทำงานอยู่ ใช้ time zone อะไร สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/timeZoneName.html"><code>.timeZoneName</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/timeZoneOffset.html"><code>.timeZoneOffset</code></a> ได้ โดย <code>.timeZoneOffset</code> จะคืนค่ากลับมาเป็น Duration class</p>
+<pre><code class="language-dart">var localTime = DateTime(2000, 1, 5);
+print(localTime.timeZoneName); // output → SE Asia Standard Time
+print(localTime.timeZoneOffset); // output → 7:00:00.000000
+
+var utcTime = localTime.toUtc();
+print(utcTime.timeZoneName); // output → UTC
+print(utcTime.timeZoneOffset); // output → 0:00:00.000000
+</code></pre>
+<h2>การเข้าถึงข้อมูลสมาชิกใน DateTime</h2>
+<p>ข้อมูลวันที่</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/day.html"><code>.day</code></a> วันที่ 1 - 31</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/month.html"><code>.month</code></a> เดือน 1 - 12</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/year.html"><code>.year</code></a> ปี ค.ศ.</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/weekday.html"><code>.weekday</code></a> วันในสัปดาห์ monday - sunday (เป็นค่า int คือ 1 - 7)</li>
+</ul>
+<p>ข้อมูลเวลา</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/hour.html"><code>.hour</code></a> ชั่วโมง 0 - 23</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/minute.html"><code>.minute</code></a> นาที 0 - 59</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/second.html"><code>.second</code></a> วินาที 0 - 59</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/millisecond.html"><code>.millisecond</code></a> มิลลิวินาที 0 - 999</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/microsecond.html"><code>.microsecond</code></a> ไมโครวินาที 0 - 999</li>
+</ul>
+<pre><code class="language-dart">var localTime = DateTime(2000, 1, 5, 10, 30, 0, 500, 100);
+print(localTime); //output → 2000-01-05 10:30:00.500100
+print(localTime.day); //output → 5
+print(localTime.month); //output → 1
+print(localTime.year); //output → 2000
+print(localTime.weekday); //output → 3
+print(localTime.hour); //output → 10
+print(localTime.minute); //output → 30
+print(localTime.second); //output → 0
+print(localTime.millisecond); //output → 500
+print(localTime.microsecond); //output → 100
+</code></pre>
+<h2>การ บวก ลบ วันที่</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การบวก</h3>
+<p>การบวก เพิ่มค่าเข้าไปใน DateTime สามารถทำได้โดยใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/add.html"><code>.add()</code></a> โดยส่งผ่านค่า <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration-class.html">Duration class</a> ที่ต้องการเพิ่มเข้าไป</p>
+<pre><code class="language-dart">var year2000 = DateTime(2000);
+print(year2000); // output → 2000-01-01 00:00:00.000
+print(year2000.add(Duration(days: 10))); // output → 2000-01-11 00:00:00.000
+print(year2000.add(Duration(hours: 12))); // output → 2000-01-01 12:00:00.000
+print(year2000.add(Duration(days: 1, hours: 12, minutes: 30))); // output → 2000-01-02 12:30:00.000
+
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การลบ</h3>
+<p>การลบ เพิ่มค่าเข้าไปใน DateTime สามารถทำได้โดยใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/subtract.html"><code>.subtract()</code></a> โดยส่งผ่านค่า <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration-class.html">Duration class</a> ที่ต้องการเพิ่มเข้าไป</p>
+<pre><code class="language-dart">var year2000 = DateTime(2000);
+print(year2000); // output → 2000-01-01 00:00:00.000
+print(year2000.subtract(Duration(days: 10))); // output → 1999-12-22 00:00:00.000
+print(year2000.subtract(Duration(hours: 12))); // output → 1999-12-31 12:00:00.000
+print(year2000.subtract(Duration(days: 1, hours: 12, minutes: 30))); // output → 1999-12-30 11:30:00.000
+</code></pre>
+<h2>การหาผลต่างของเวลา 2 เวลา</h2>
+<p>ผลต่างของ 2 เวลา สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/difference.html"><code>.difference()</code></a> ผลที่ได้จะออกมาเป็น <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration-class.html">Duration class</a></p>
+<pre><code class="language-dart">var date15 = DateTime(2000, 1, 15);
+var date10 = DateTime(2000, 1, 10);
+
+var diff_15_10 = date15.difference(date10);
+print(diff_15_10.inDays); // output → 5
+print(diff_15_10.inHours); // output → 120
+print(diff_15_10); // output → 120:00:00.000000
+
+var diff_10_15 = date10.difference(date15);
+print(diff_10_15.inDays); // output → -5
+print(diff_10_15.inHours); // output → -120
+print(diff_10_15); // output → -120:00:00.000000
+
+var time15 = DateTime(2000, 1, 1, 15, 0);
+var time10 = DateTime(2000, 1, 1, 10, 0);
+
+var diff2 = time15.difference(time10);
+print(diff2.inDays); // output → 0
+print(diff2.inHours); // output → 5
+print(diff2); // output → 5:00:00.000000
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การเปรียบเทียบเวลาว่าอยู่ก่อน หรือ หลัง</h2>
+<p>การเปรียบเทียบเวลาว่ามากกว่าเวลา หรืออยู่หลังที่กำหนดหรือไม่ ให้ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/isAfter.html"><code>.isAfter()</code></a> ในการตรวจสอบ</p>
+<pre><code class="language-dart">var date10 = DateTime(2000, 1, 10);
+var date15 = date10.add(Duration(days: 5));
+print(date10.isAfter(date15)); // output → false
+print(date15.isAfter(date10)); // output → true
+</code></pre>
+<p>การเปรียบเทียบเวลาว่าอยู่ก่อน หรือน้อยกว่าเวลาที่กำหนดหรือไม่ ให้ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/isBefore.html"><code>.isBefore()</code></a> ในการตรวจสอบ</p>
+<pre><code class="language-dart">var date10 = DateTime(2000, 1, 10);
+var date15 = date10.add(Duration(days: 5));
+print(date10.isBefore(date15)); // output → true
+print(date15.isBefore(date10)); // output → false
+</code></pre>
+<p>หรือหากใครที่ถนัดคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/compareTo.html"><code>.compareTo()</code></a> ก็ใช้คำสั่งนี้เปรียบเทียบได้เหมือนกัน โดยจะให้ผลออกมาเป็น</p>
+<ul>
+<li>a &lt; b  → ค่าลบ</li>
+<li>a == b  → 0</li>
+<li>a &gt; b  → ค่าบวก</li>
+</ul>
+<pre><code class="language-dart">final now = DateTime.now();
+final future = now.add(const Duration(days: 2));
+final past = now.subtract(const Duration(days: 2));
+final newDate = now.toUtc();
+
+print(now.compareTo(future)); // -1
+print(now.compareTo(past)); // 1
+print(now.compareTo(newDate)); // 0
+</code></pre>
+<h2>การเปรียบเทียบว่า เวลาทั้งสอง เป็นเวลาเดียวกันหรือไม่</h2>
+<p>เพื่อไม่ให้สับสน การเปรียบเทียบเวลาในที่นี่คือ <strong>วันและเวลามีค่าเดียวกัน</strong> โดยจะใช้หลักว่าเมื่อเวลาทั้งสองอยู่ใน time zone เดียวกัน จะเท่ากันหรือไม่ ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/isAtSameMomentAs.html"><code>.isAtSameMomentAs()</code></a></p>
+<pre><code class="language-dart">var localTime = DateTime.parse(&quot;2000-01-01 12:00:00&quot;);
+var utcTime = localTime.toUtc();
+print(localTime.isAtSameMomentAs(utcTime)); // output → true
+
+print(localTime.difference(utcTime)); // output → 0:00:00.000000
+print(localTime.compareTo(utcTime)); // output → 0
+print(localTime.isUtc); // output → false
+print(utcTime.isUtc); // output → true
+
+// don't use == to compare time value
+print(localTime == utcTime); // output → false
+var utcTime2 = utcTime.toUtc(); // returns this DateTime if it is already in UTC
+print(utcTime == utcTime2); // output → true
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การแปลงค่าเวลา ออกมาเป็นข้อความตามรูปแบบที่กำหนด</h2>
+<p>เมื่อต้องการแปลงเวลาออกมาเป็นข้อความ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/toString.html"><code>.toString()</code></a> กับ <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime/toIso8601String.html"><code>.toIso8601String()</code></a> โดยรูปแบบจะเป็นแบบตายตัว</p>
+<pre><code class="language-dart">var localTime = DateTime.now();
+print(localTime.toString()); // → 2024-08-24 22:10:43.770278
+print(localTime.toIso8601String()); // → 2024-08-24T22:10:43.770278
+
+</code></pre>
+<p>หากต้องการจัดรูปแบบวันที่และเวลา ในแบบที่ต้องการ วิธีที่ง่ายและสะดวกโดยไม่ต้องมาเขียนเพิ่มเองคือใช้ <a target="_blank" href="https://pub.dev/documentation/intl/latest/intl/DateFormat-class.html">DateFormat class</a> ใน <a target="_blank" href="https://pub.dev/packages/intl">intl package</a></p>
+<pre><code class="language-dart">import 'package:intl/intl.dart';
+
+void main() {
+  final DateTime now = DateTime(2000, 1, 5);
+  final DateFormat formatter = DateFormat('d/M/yyyy');
+  final String formatted = formatter.format(now);
+  print(formatted); // output → 5/1/2000
+}
+</code></pre>
+<p>หรือถ้าจะเขียนเองโดยไม่ใช่ intl package ก็สามารถทำได้ เนื่องจากตัว DateTime มีคำสั่งในการเข้าถึงข้อมูลวันที่และเวลาอยู่แล้ว ก็นำมาแปลงให้อยู่ในรูปแบบที่ต้องการได้ผ่านคำสั่งใน String class เป็นต้น</p>
+<pre><code class="language-dart">var today = DateTime(2000, 1, 5);
+print('${today.day}/${today.month}/${today.year}'); // output → 5/1/2000
+
+// date and month with 2 digit
+var dd = today.day.toString().padLeft(2, '0');
+var mm = today.month.toString().padLeft(2, '0');
+print('$dd/$mm/${today.year}'); // output → 05/01/2000
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*UCMt.^P2?H,5I?\5oS?&`$q3g"c?JbnEก.ta""[j]$\:Gf8(O3P).@,j7Crg:Bn_i3h+tLX]X!1V8Nt$P)$4V%hAq%#?S],uE'N;XeW8sdmNF#?ft@n$3!qZE?!U`AYHFnf#NVa$,qY:VgKFA29:ok[^WFpEg%e]P\qa(AaA"V`QMmCFg0HXt8Tt)EQ9NRA^ECl@_B%Y!UWJ?cQW?ข?Yq4(eSXc(;5e&aUHBb7%ZLlI&aic76+\Vj&V=+W5\]Q;uChขh%2W@cขk&0tENZ0:pNq]If-gpr9=+ft,Fr5K^%UVLGX6W?\43Iqbakp[mqt`EG![[=b!5NVM89Xu:!p!_b-NZpCJกr84E;dheIQHC$Qgb`!grn+d==LNX_;8eegKF@ST=cFP\tขh&Zh%II#NJU"fJ-l(qDD`3"p69qkm8I6'_L?jQLกc([orPLq"FoXF[X+Ds5p^&BskhbgWe.K^5K39YilT]OG#ngOn/PQF+s\'Gก)ST@1Xe`^R^%?9FV%(WNQ;q@4REq%+bOขg;E+BZLb8-6G#ijn*sOnB('#)1rKVG*Q[N4aORbpEK*k@-G;Q0C#6a/DmOPTbft:J[bE)7E9:51i6BM@:,k#jeKEXp0C"1/e$&n:V10U9-#\m6r@CYhrOY&:FbT%.dXEjDqap[_Ac'X@%@-nrL&SJ.m![m&UG2Dq@F0jLqa&uK[1Tk!heQBVB_cD2_@(AHgก31*%QjbdUNZ/u0SRa'KPกข'+&kslJ?uPE*T;H3A]dQo$]N+L^3p31ZZN[FV;G;?k+X^nd4fO=g\$%'/t(&rit@`3+&H!Ei.lkgqN_NdO3=9ขM1To4Ws!Y60.ก'j1k3^)ifQ(V%eGh`8bZDuNkGJ-M(6YX8i&cb5\8jkicpHdT4I21-q[:^EA9AG$T[*38%Q!Rj$RUeAQej&-0s)Us.R3dFaUY:7Ls8'XgYN_j0E_H6%NC@3:TY%,@CC'4I9thQ`iข$03S'Yl125Nrh7.lข^,t,CW.Yo[L+SE=VALXr!CF!]VW=$GcpWKblq5"/&qV]XC-g^+/YVJg!1#M\+kMD#mY#'7MnT85B%:ข6WO9gOVbuSQ[k/J1.I8l6&F!P"l`tojC4J%on#ib5!n[MkrFhT+Gf^Bf-F"=LB_mn6b\j_*G4R1Vuj.Vf%B/m*HQ`o50FOB'FLW_L[]nAmHlJ'cRf$uabbk$p[3TDR!9ขA*R]$-?tP`&H?+V!7rC_n?กnkWC]'"'mO)jlPlasLE!8?8^ข"JA+IU(/ZQI_4,jZltrIk+CDuZ@fQEsDmQ7C/]Z*1MMlE,BGCข$&'[$2*f-g^rPXJRcขcK)n[YQtMHp\ขT08;DqXgf!O%OYn,6Vก?XlP\@DMขWq.q!]u]กBiLaYB9C,)2?fbm\;3B0#4pd!m#I,P68ก4FgglP?BYIop!Sl9]/:@`59t6i[V/4(;^nj])-sYZNกY8ขd)UmJuYPs\hPMF0b_d4u)@Pfo)e^46Lms;*CL/GF$(U2`/'*_cjpChbG\e.&lrG9KZfeMQ?!AU_!XWกYp'5=NBกWh!4/DVHTrC5H&"0NkB,Mn\ข89%hELB95\eDO@:_PtBo8gcN]3UhX"^;^cn-"KB_;fYdW=fL\B.TiV(9U8Pq(b4:CDibs4;rS']oR(,?f_LH=Pni=ขC]Z\e*-/O5Q]?,[#8(^=kqZR;L/%"P(`5J.aHl!Yo44,9m=dj3:9G4VSj2JLขKZ^5YTK".`"ET,IaCkQjUhrl$;_qข.QeO+.!tsH/@T#m;u\:UH]usqJW=QVOk]I?04Oa0=-@dL:Z4\K`+5Rk78Oa4DกFV\W&5lR4Ar:Nf)-qN%8&bB"s"WRp]57]q?ZMWhuS4lI+JdSTD]&"8E$9bj2?kpJ^h(V4$^jLDMj'ES=6di/!`m\X+gSRQ=];*\^NBDW)mf5;R_LrQt*WnFก'Kq7jHq%(boQ2f8ZbsLBcU\60H]S'D(@CmECd*/MfZmRu*eR:q=AT\F6PRO[fIk'1q,ge&RL11s2\f-Vf)]1n+'OB!Wr8P7Ja'OAg'TR]T&cg2&ZMr%Qข(M;U]4?Lข743ld&\"K`u?=iefZi."MkKLHPoGXR_Ejs^KaB;gOAZBH$II#&ก*BBR#_*6H9:N\\'X?=5le"TIS.',hN7(AT[D56\On)fขd,B?F!GkUVOFS$SeขlETodข40"DZXD8SeM\V"MkG!FiขANUข#="[oVbC3R"กt_h]^7/M1=OF"C$pI$"ZV5lJW4oT;dX"fcc?p_ln@P-R1H\N0LZ3)4d@H'$$S0Tn47'L]b[jr5pr%EmfUmK7sGH\BM7ก*1@]-`RS*8Hp8Jlht#BCEHPก&&AfMSi*ข[`aL.M$'AU$KW#0ข449dU)gK"NW=V5mr[]S99Cกr8Fd84$/Z)4=^C$[*!_FAU\m`*1JR(HhD5MNIpEg81]=b(n77=&s=ntG)]f``E*a=HfNoขH\kP'2a/;;]QB`K6AVajGN5X[[N4fk`R3h/Sn.VI=\;bfEGKNrj(&!p$TA@:Mg`*N)cก03X98(7($kAkXH:กก8:p=Zl%t`_W^$'^^Ps%KAgW^$K@q1V#ENNGe'4Vp&K:4MphTi;SAFYQNr(,0J(M];""'*CL&_MHKqqOq\e@P\B2s^mXU`SsI8#9kcKtEu%HUm(*ก-^-o9a9(lF*4)1=2F[biaK3Ua:8FhL^UOqkHCDG;($7Kg@fQ#:ขU0c:++84raKQ;iPk@71(]hf`e.o*i3,P9&GNV8GnJm;HWh"MJ%*7,%!ZขWSu:/4W%F).m;Auafh9LTOdh)CH0Q;d!lZt$#iPJ[,njEข^W45W?:-]I.กF`K%`[-3X7ma$)^k]NciE-HB=U)#k2P5k@,+*T?%V%EHcgI^H2&*W-sEขnVqdAh.XBi6U,_Q%=WJZ$";Eข-)]H=!luG%@\8F!iT*.N*ek+L!89Eb1MQ3K]tX&MFk:EU#J'o0r:Zข_oOYcZ/eo82-$Z:NE3UKjRplAi5=nO)KM?QEF?`YRpTigRm=+\6395.Xf3s+*$Ulb)Ph\HnaGsUNikN&.TEI2JtQ%bXo27YN$hi@g.;nc:N@ONG?&,"L:/#66)^Qขh")k0MgkbขR/(jW)?4eSt-A:pNSt#RO%2r\4M,j7Qi]@om,กH8Gk.a]$8It!&:eD_DขQO:u;ZWhกmG+cK5PA8SAขYMP7^Kl6MH=f9HmQWK8RLZCQm7ก1Lq,_KTJ@ข7RGข8mbP7VnUNfZFJE^ก@Q/)$-%"Eki)';?$@'B&*^P6eZ\dZbP&dn_m9k.Jข4bI8;:\KOWCtgeUg=V=ncSl8R\V-Od./cn.i!4=]6nmg[0:)NE)ขmK`NqUjV(+T/#$He(j*5p0Bกt8$NCe[2LrTB4BCRjUZ[GXLn8kCJdu[Cq*`/E+Gu\PUN&#+d$1spE([$=cGF8d][#^SlXQu?`m?E@\_YnJ-\m0!rm6fd,k9l)76NGkPC.##if9E4(dP%HET.i/;:fof0WnqLE.jC?ZR@EgrkjKnG$Ukc;;DI8HD%c*%-4^6"3FOd#G`tBROJPm!Lbk_K?RMFก\!f-*V*G9[A@M4g(KZi0[r3U2A\fRn?gVB;*kr:+j!@*Eh3ONoC=$Go5BIb0K\;XAC$+S`(MO*/[hSZ*iPข%MqdjCnGUdK6[U&]J%E'(Hcc'Xl$+q8L^SL06+!W4QsTN!5B8J(^h,mC5/7QU"aueY0O%u3P=D\l!`7jZ-@ก4?O__5jP1tg4FPNgIA^GH;FD2X/.:k.MfRD7\PY-a"eQe?QLD.5(I%q+aKHNo28ขNkSHขMHsi=f!SlK:s)ก@Z+O=ka%ก]/f=Gj7GXV'*(#UeU,i,]6/)om'p8o-cqH$Y)p6ขcspMQiY16(\J7lข+9R)I@JD#,\2\dO,o3-nQ5SCNc[.VeB@oJ/4"M,!กX*.u@*+&mha?cEdY8JLp[Q.[H?*L&MH.h^kQ`FcZM*6C#n"*^W1I=C0ec5$`)NqL8;0$G^=?ขI*Fl9mSกuf=2?WeFPG+nR]o/Y`j5^[FTmRJ%*BDD3`*b=UYREYกNqG%`]uXWB1VFVV]7bb"HnkT=9_plVXa*gRk(trk)Yhgf%!E\/TFt7,1`tNr[ahCQ3G_gEJteb/Nk8:2hU%tC:__l)*=ap_7#_\u1q3frf-*FC[&FKOWISai%?P]+MNC;l6I[h=R2.*jL/,"q(D.FBV;'X)Rm&]3H:'lVNก-(ZHq&@D=VN1Dก\3\4BU2QhB;Y/McS!T2Vk-(-Klq:21JTRCmก%tWc=u-N,Nl&)Z!LE4VNGM%UQkWn6[FUsขh,3EctqFAJ41nUYm[BKI%m/ก/5t*$3"ELCกs#4t\4(4Leo\p)q!กps"/Q*Qc2`MDBAA%@c4bbST(Nlก/Q*ZY\)kC^omE5+FJL;gW/mYbก1j0hl4E^Y-^!.Y`mG)VpAYk;FN"gh*^r/,W1r!@`GmMfFHDB!XS!_d;G-3XoL-o7&_kV(`102ขAa\h;2-E7TขRขC9\Oo@-TJ)lEkkJq/?K;:WZ0DขbBHabcRknb#$1LAFK`?kขUP_5\s6PIpe?e]?/qขeGTKoG$%*W'_]5'@n+t,l2F-'jnEg?dขl3B9(X]Ud]L(X'M5mVUiF"A?c"D,ddclptGA-F8Y,J?r"*PfihY;D3BB%eaRnGmG01K"b:LU'X-I@MZ#hb"#'fh*1:(H)tJd1j@ข&;iqgLf;;$WsE;!K#06*Mqo4!LI,necuSbWIV1qF.^]aAHQc`Sf]EpoUV^:Rpd0%4H\ขRnpRLoDBAU(nbbnpNeFp2ก`gd[`$ZขRm"aU8ข)U$กC`,rKกAG#fpg03K)j&eE%ก!3DZ-58hQGg]u[#$Dk`Ahc_3`,puA[5J)@K.W#GE`nAh)UhO'=S`k*b]BEM[ueM5CF:E&i'45กขfY.HnYCbsrBDbICggmq+W"L==NFt\Ee1N\$\lกFEmrAfYCY'fqO0A/*gl\p*VMDHaBK.pf`X$3`$3qIขEnT&hJP#PT&i_Cd[LX(PT]gK?a42RG'V@Qqp7+19E'Lt-cfPlE']OdnFl-Irn=(Wrm:]u;A;I-f)3ขNOs&O:?*^4YfD8''Jn,^'.gMKZ`Z\6A/8$j_YlW\Z'OJ`+6O*eO-7`lL\@aH171Z!P!^MTOJlf5%5X5PV.=klj1*Gj]0Bc?RbrกlOn[l\4Vt\\!Vd^%n!Cur`qTTข!`M22bKq:`iBp&kS.BdBT;B%Z_D.\Mp^/6"317jW=\KSG\fWR0RkBk*5kN7`g+aQ:Ynข8_/ge66ขLN-Yj/Ms4FกD,u@OtTHmOXc']4%"bC'a_6rHkQ.c+Lr8K).4jPW%jK?7`nW]Gnj[Z'MWQX1.m6SJ"s-$%52cGL-0Z$:m[1o7f5[p\MBMH0[W(WbsO("%dfqQKY_asqQU8p3!fndLl0h0\(fLB\,aXm/KmI7%lf/s67^e#(_h6e571k_XS["/,4jEBTข8,q[i9U1B+$bboSTb=JUZ,,@@_SW0`B.Q)RPjBZ'%S`6iKAiขVh.T_Z%[/SW,Y666hsR&/QR2N!ข0$[^D.G3m#B65mk:XNHd[J6g,D9+7omI4b9U$JpquC]V9as,+9*6.&;^P6L/:r9V^$ก\9.1!/_b"leขnLcQF")3)IHm4$-fc1L.V3F2P#7;QKnAsกecQ^ON78'iAP"m;LSaAJF7D1FกY"n35rW;b]Dn!Dp`q^:EUohC0กLVMU.ZA1]Jeขpq\T27bM5hDPM\'7B[B5qqqo;b,bข(d]IXtkXD8=Es-59Rl*tD%,#US&)@J^Ngm_ก&_3t1;qLJTKMb(5)+4kqJj61Idkm[q]Zj*e:16'2(q@r1,==6kXPs0l04L^?j-f.,m??8Tf%/EZ4HB*Fo.b4Qข)]Z5:Crr:(J+e3Sd;@L2-Ra05กL)2YXB/1d+lKMe"!]j-uขCIM7a5oQo(o26DLJ(oli!F5DLDKEHk_j3-,gQ+-"nf1m/KO;4qs7@@K?/n"lXe'@&rJe\rqWT[tsq,a%R;eD\a'JI.ข.UO'dQM4`6q$uQ^+?Odq*Lc54ก?R$OI)15กA?a,kขrsH/q0;\tF*Y!MlPt1Za#+L(I:)q^P+8?/c8:[@kfd%MDh/GHjnCEa?B:_e$dldWro`RDEJf6V#YG]jKrN+Ti7_@3L=d46jg&D*h-RsAm:]LI~ข
+-->
+</markdown>
