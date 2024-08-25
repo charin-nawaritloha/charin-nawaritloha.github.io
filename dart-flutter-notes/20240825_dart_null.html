@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน Null เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน <code>null</code> เบื้องต้น</h1>
+<p><img src="images/20240825/20240825_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ค่า <code>null</code> ที่ใช้ใน Dart เป็นค่าจาก <a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Null-class.html">Null class</a> ซึ่ง class นี้จะพิเศษกว่า class อื่น ๆ คือ มันไม่ได้  implement <a target="_blank" href="https://api.dart.dev/stable/3.5.1/dart-core/Object-class.html">Object class</a> เหมือน class อื่น ๆ และเป็นค่าที่พิเศษตรงที่ตัวแปรที่ไม่ได้ทำการเก็บค่า Instance จะเริ่มต้นเป็นค่า <code>null</code> เสมอ และถ้าหากไปเรียกใช้โดยที่ยังเป็นค่า <code>null</code> ก็จะเกิด Exception error ได้</p>
+<pre><code class="language-dart">DateTime? myBirthday;
+print(myBirthday); // output → null
+print(myBirthday!.add(Duration(days: 1))); // exception error → Null check operator used on a `null` value
+</code></pre>
+<p><code>null</code> ถือว่าเป็นค่าที่ทำให้เกิดความปั่นป่วนในโลกคอมพิวเตอร์ OOP เป็นอย่างมาก เนื่องจากหากผู้เขียนโปรแกรมลืมตรวจสอบค่าตัวแปรว่าเป็น <code>null</code> หรือไม่ และเข้าถึงตัวแปรดังกล่าว ก็จะทำให้แอปหยุดทำงาน เกิด NullPointerException error และในยุคเริ่มต้นของภาษา OOP เช่น Java C++ ต่างก็ไม่มีวิธีในการตรวจสอบค่า <code>null</code> ที่ผู้เขียนโปรแกรมลืมกำหนดค่า Instance ของ Object ที่จะใช้งาน แต่ภาษายุคใหม่ ๆ ได้ทำการแก้ไขปัญหาแล้ว รวมถึง Dart 3.0 ที่บังคับใช้ความปลอดภัยกับค่า <code>null</code> แบบเต็มรูปแบบ</p>
+<ol>
+<li>ค่าปริยายเริ่มต้นไม่เป็น <code>null</code></li>
+<li>ตรวจสอบการใช้งานว่าต้องไม่เป็น <code>null</code> ผ่านตัว compiler optimizations</li>
+</ol>
+<p>สำหรับข้อ 2 นั้น ตัว compiler จะพยายามแจ้งเตือนผู้เขียนโปรแกรมว่าอาจมีจุดไหนบ้างที่อาจไปเรียกใช้งาน <code>null</code> โดยไม่ตั้งใจ และให้เขียนคำสั่งตรวจสอบเพิ่มเติมก่อนใช้งาน ถึงแม้จะไม่สามารถแก้ไขปัญหาได้ 100% แต่ก็แก้ไข bugs ที่เกิดจากความไม่ตั้งใจได้เยอะมาก</p>
+<h2>การกำหนดค่าเริ่มต้น <code>null</code></h2>
+<p>ใน Dart การประกาศ type annotation จะเป็นแบบ non-null คือเก็บค่า <code>null</code> ไม่ได้ ยกเว้นว่าผู้เขียนโปรแกรมจะระบุว่าต้องการเก็บค่า <code>null</code> ด้วย โดยการใส่เครื่องหมาย <code>?</code> ต่อท้าย</p>
+<pre><code class="language-dart">DateTime? nullDate; // nullDate can contain `null` value
+print(nullDate); // output → null
+
+// comiler error: The method 'toLocal' can't be unconditionally invoked because the receiver can be 'null'.
+print(nullDate.toLocal());
+
+DateTime myBirthday; // myBirthday can't contain `null` value
+
+// compiler error: Error: Non-nullable variable 'myBirthday' must be assigned before it can be used.
+print(myBirthday);
+</code></pre>
+<p>จากตัวอย่าง หากพยายามจะใช้งานตัวแปรที่ยังเป็น <code>null</code> เพราะในโปรแกรมไม่มีคำสั่งสร้าง Instance ของ DateTime class ให้กับตัวแปร nullDate จะทำให้ compile error ส่วนตัวแปรรที่ผูู้ใช้งานประกาศ type annotation โดยไม่ใส่ ? ต่อท้าย ตัว compiler จะแจ้งปัญหาก่อนที่จะใช้งานตัวแปรว่าไม่มีการกำหนดค่าก่อนใช้งาน</p>
+<pre><code class="language-dart">DateTime? nullDate; // nullDate can contain `null` value
+print(nullDate); // output → null
+nullDate = DateTime(2024);
+print(nullDate.toLocal());
+
+nullDate = null;
+if(nullDate != null) {
+  print(nullDate.toLocal());
+}
+</code></pre>
+<p>จากตัวอย่าง หากตัวแปรถูกกำหนดค่า <code>null</code> ตัว compiler จะแจ้งปัญหาว่ามีการใช้งาน <code>null</code> แต่หากมีการเขียนตรวจสอบค่า <code>null</code> ก่อน ก็จะปล่อยให้ run ได้เพราะเห็นว่ามีการตรวจสอบและไม่ได้ใช้งาน <code>null</code> แล้ว</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การเปรียบเทียบค่า <code>null</code></h2>
+<p>เนื่องจากค่า <code>null</code> เป็น instance จาก Null class ดังนั้น ค่า <code>null</code> ทุกที่จะมาจาก instance เดียวกัน สามารถใช้ <code>==</code> และ <code>!=</code> ในการตรวจสอบได้</p>
+<pre><code class="language-dart">DateTime? getBirthDay() {
+  return null;
+}
+
+void main() {
+  DateTime? nullDate; // nullDate can contain `null` value
+  nullDate = getBirthDay();
+  if (nullDate == null) {
+    print(&quot;nullDate is null&quot;);
+  } else {
+    print(nullDate);
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การใช้งาน null-aware operator</h2>
+<p>Dart มี operator หลายตัวที่ช่วยจัดการเรื่องการตรวจสอบค่า <code>null</code> ทำให้การเขียนโปรแกรมสั้นลง และอ่านได้รวดเร็วยิ่งขึ้น</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>คืนค่าทางขวามือถ้าทางซ้ายเป็น <code>null</code> ด้วย <code>??</code></h3>
+<p>ทำงานเหมือน <code>?:</code> แต่ย่อรูปให้ลดลง ใช้ตรวจสอบค่าของตัวแปรว่าเป็น <code>null</code> หรือไม่ ถ้าไม่ใช่ <code>null</code> จะคืนค่าตัวมันเองกลับไป แต่ถ้าเป็น <code>null</code> จะคืนค่าที่อยู่ทางขวาให้</p>
+<pre><code class="language-dart">int? getX() {
+  return null;
+}
+
+void main() {
+  int? x = getX();
+  int y = x ?? 0;
+  int z = (x != null) ? x : 0; // same as ??
+
+  print(y); // output → 0
+  print(z); // output → 0
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>หากตัวแปรมีค่าเป็น <code>null</code> ให้กำหนดค่าใหม่เป็นค่าทางขวาแทน ด้วย <code>??=</code></h3>
+<p>ใช้ตรวจสอบค่าของตัวแปรว่าเป็น <code>null</code> หรือไม่ ถ้าเป็น <code>null</code> จะกำหนดค่าใหม่ที่อยู่ทางขวาแทน</p>
+<pre><code class="language-dart">int? getX() {
+  return null;
+}
+
+void main() {
+  int? x = getX();
+  x ??= 0;
+  x = x ?? 0; // same as ??=
+  x = (x != null) ? x : 0; // same as ??=
+
+  print(x);
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>null-aware methods ด้วย <code>?.</code></h3>
+<p><code>?.</code> ใช้ตรวจสอบว่า object ที่จะใช้คำสั่ง properties หรือ methods เป็นค่า <code>null</code> หรือไม่</p>
+<ul>
+<li>ถ้าไม่เป็นค่า <code>null</code> จะทำการเรียกใช้  properties หรือ methods ตามปกติ</li>
+<li>ถ้าเป็น <code>null</code> จะไม่มีการเรียกคำสั่ง properties หรือ methods ดังกล่าว และคืนค่า <code>null</code> กลับไป</li>
+</ul>
+<pre><code class="language-dart">List? getList() {
+  return null;
+}
+
+void main() {
+  List? myList = getList();
+  
+  myList?.add(0); // do nothing because myList == null
+
+  if (myList != null) { // same as ?.
+    myList.add(0);
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>null-aware spreads สำหรับตรวจสอบ List ที่ใช้จะ spreads ว่าเป็น <code>null</code> หรือไม่ด้วย <code>...?</code></h3>
+<p>การใช้ <code>...</code> สำหรับแตก List ใน List อื่น หากต้องการทดสอบว่า List ที่จะแตกเป็น null หรือไม่ ให้เพิ่ม <code>?</code> ต่อท้าย <code>...</code> หาก List เป็น <code>null</code> ก็จะข้ามไป</p>
+<pre><code class="language-dart">List? x, y = [1, 2, 3];
+
+// compile error → A nullable expression can't be used in a spread.
+List z = [...x, ...y];
+
+// use null-aware spreads
+List ok = [...?x, ...?y];
+print(ok); // output → [1, 2, 3]
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การข้ามการตรวจสอบ <code>null</code> ด้วย <code>!.</code> (Casting away nullability)</h3>
+<p><code>!.</code> ใช้สำหรับยืนยันว่า ตัวแปรไม่มีค่าเป็น <code>null</code> แน่ ๆ (Casting away nullability) เป็นการบอก compiler ให้ข้ามการตรวจสอบ <code>null</code> ไป การใช้ <code>!.</code> ต้องเข้าใจว่าเป็นการยืนยันของผู้เขียนโปรแกรมเท่านั้น แต่หากสุดท้ายมันมีค่าเป็น <code>null</code> ก็จะอาจเกิด Exception error หรือกลายเป็น bugs ในแอปก็ได้</p>
+<pre><code class="language-dart">List? getList() {
+  return null;
+}
+
+void main() {
+  List? myList = getList();
+  myList!.add(0); // ignore `null` test, compile pass but runtime error
+}
+</code></pre>
+<p>ในการใช้งานทั่วไป <code>!.</code> จะถูกใช้บ่อยในการอ้างถึง key ใน Map เพราะว่ามันสามารถคืนค่า <code>null</code> กลับมาได้หาก key นั้นไม่มีใน Map</p>
+<pre><code class="language-dart">Map&lt;String, String&gt; test = {'a': 'Ant', 'b': 'Boy'};
+
+// compile error → The method 'toUpperCase' can't be unconditionally invoked because the receiver can be 'null'
+print(test['a'].toUpperCase());
+
+// I'm sure key 'a' exists.
+print(test['a']!.toUpperCase()); // output → ANT
+
+// I'm sure key 'c' exists, but I was wrong
+print(test['c']!.toUpperCase()); // exception error → Null check operator used on a `null` value
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>เนื่องจากข้อจำกัดของ compiler ในบางครั้งถึงเขียนคำสั่งตรวจค่า <code>null</code> ไปแล้ว แต่โปรแกรมอาจมีรูปแบบซับซ้อนจนตัว compiler ไม่สามารถตรวจสอบได้ เพื่อข้ามข้อจำกัดดังกล่าวจึงจำเป็นต้องมี <code>!.</code> ไว้บอก compiler ว่าสามารถข้ามไปได้ โปรดใช้ <code>!.</code> อย่างระมัดระวัง</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>ใครเป็นคนคิดค้นค่า <code>null</code></h2>
+<p>คนที่ออกแบบให้มีการใช้ <code>null</code> เพื่อใช้บอกถึงตัวแปรที่ไม่มีการอ้างไปที่ Instance ใด ๆ คือ <a target="_blank" href="https://en.wikipedia.org/wiki/Tony_Hoare">Sir Charles Antony Richard Hoare</a> โดยในปี ค.ศ.2009 เขาได้ไปพูดในงาน software conference และได้ขอโทษที่การออกแบบของเขา ทำให้เกิดความเสียหายระดับพันล้านดอลลาร์ จากการที่เขาได้ออกแบบในภาษา ALGOL W ให้ใช้ Null และมีการนำเอา Null มาใช้หลังจากนั้นในภาษาอื่น ๆ เรื่อยมา ซึ่งความเสียหายที่เกิดขึ้น ก็น่าจะเป็นปัญหาที่แอปหยุดทำงานเพราะ NullPointerException ที่หลุดจากการตรวจสอบของผู้พัฒนาโปรแกรม รวมถึงต้องเสียเวลามาแก้ไขปัญหาที่เกิดขึ้น การเขียนโปรแกรมที่ต้องมาคอยเขียนคำสั่งตรวจสอบ Null จำนวนมาก</p>
+<p>ส่วนตัวคิดว่าปัญหาจริง ๆ มันน่าจะมาจากการจัดการค่า null ในโปรแกรมที่เขียนขึ้นเป็นหน้าที่ของคนเขียนโปรแกรม แทนที่จะเป็นตัว compiler ที่จะช่วยเหลือตรงนี้ เพราะยิ่งโปรแกรมมีความซับซ้อนมากขึ้น จำนวนการสร้าง class มากขึ้น มันยากมากที่จะให้คนเขียนโปรแกรมจัดการเรื่องตรวจสอบ null ก่อนใช้ได้ครบทุกจุด (คิดดูว่าต้องมีคำสั่ง if เพิ่มขึ้นเยอะแค่ไหน) และการออกแบบภาษาโปรแกรมที่ไม่สามารถระบุเป็น non-null ได้นั้นเอง</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-\L?Z-n(&Uu1DmkBVr:dX4fmBdChWY1=4Zn@k.BO!BE@$E&0/6u!+&U-`L9OPYVLe.?jQU#^d\M,K?JeA@k@bHc;hr`9]ddHJImbZgk,e6MD@%665m`tk.mEGข,ข]ZZN%^L1ข996E$2`pgd9ขA\G^ก"_3r+-#5T\o.F+?Ok9V;#/L)BU$ZoขgWOก39+M;cAU`V]1Ub@toETdU@=)RAIrEFo#s@^1+k!"5&A@T$R.[R[n8*kt!GO;Z?DO/:Pt7G+m`7j7r??8s8i+\U**!q+eti&uXdGX2g(/eFi+q359Jde_.,BgL90nft**Ocก3_ข]/,PF?Y/J_\Glcj&FdbBaN.tZrfEu&ZLfFUoNdc3O+Q%$][26TPenal5กJZ\(rbb*/3SS9h9"+.Cr___qom\5B'E?ขncaQYg?X'c?BDt^c)&1$mGpu$i[aU_0j5+XkgrA[BHj,tlWLgขR'b&+ก+LmE0f'68Du%7[A9/hOI#:^rH;2ELd0n47*jX,Yk\XlWf7Q&&K=2"O$1+Ko,[qE)'8C+q4(k2kq"g,mCAJ(b*i"[Sna%E:_N/r,V.9F#RcPb`2u?Hm4%=*Hb"igI8b1INqก8[-\(:8!M&ur[78XnQ'MPo4Bsh,ก[?YNFina0,]dBfjhY!XSV;i'JX-I#P#Ka@LBkAFOFU7k9YFiVF55tiขdDa_7*4OCb^=J?MG3j=k*Q3#กBkE)QpC)B#52กnR]_5V:HXขb[@0HP]lTc;;9,uf0]7#a&r#bs)9Ks\q'0^H*AYC\0=WaBขQ(63Xp@75b[&N6DE,i?]Ho0h+"#[H@$\s!!N\FR)_aCfU,;cd2iTAAqNS&9iZmggb^nhlVnข-_B$P.,!qC&sIs,j-*7.qi\*DR,+!OK=Z[&P.Bn?oK+pก,X;G^u9%CQ^,mP!tPVa:@_T'KLH-iRX(2gn1fAa.p"e`0N+@'Gh*Kp@C1YWbNPGIu5M1ZS]X,\8,$?aOr__W=M?\8A(nb!g6qjW7Z#JdI!@/\PiE`7t&]':Fc*3&`WfJhK.Z@gM[0HPWD:*A6กกq^-ZtTbgO8$=`PE/5*bE6R*OR8.+V77LNrBU2%BtZ60&C?`(cD"5#:31S8fi$9t$[N/:eT.3D9q0820(;LfC$#VLK8.^fAEU0mhl2g6'Cpe+l(#6`5-tXDNb8[PcbJTAN#-[uc1(+u&U7`F-H@5Appr5N0o#bETiU7Qb6ajH9V6^HE;I`\p?O9M@ก!OVReuข.O"8"@JT5UQf8H,LE)V:'"s2@`:la0snjKT&92b#^_ECl@4CO53AO(J?3LP`5\Rg&R=HXk;d/b/DFn.LIB#p_dp;,3"b[\i/D^q^ZขENclMl"9bC*e/@\2d;[h,0#H]IOhaQ0iq-8W(a!?HMขdnDMUdGM[bYhf@J9bJTYcFCuHDZWmM!LmVH,7J@k.EHS1K&B1**#r[OJD;!p#Ir"-/a'JdJ/D:*-aTiXbEVNEi`bm4YOu@W&a0S=fS^C2AmaW5KH79bk/aUmCG"q&5Mdgl%%;Vmf&mQj8SuZrULsSK:Wกc&;1@9MN0@s'i;8f+:Km.!u.Q?_c:DT"dDgFp^k^KMnIrขb?MJ8EaH3%6Yu:f**16J_W1QCQB!hXaMk.]deci`$jD:o8UY)^2-ViJ*\i!RIQFoh=`uk'L:EG]5hca@*กqAd#ก?Hh5aG`HJ9IuYHC[JV$sJH7k2=gJ#HM1:&pBq6KK$cVgT@`%C'cG:ck"i=d.*Oth/7E:IW-sQlZHUWCV0PtK4MrRaD6/%4YK.eQ9;+N_eP3'P9Y7CSsc!ZU_'^jDJ)qLYC[0E_o,2DBBDAVcNhก&fej?/\WMppC22oMXS-.7d#DOb3C&VmKTQLg6ขS=en(96*กกVl]Et_*g,@o0JD]pi/!$Z!`6ebTjGCOsoY9,92BQXdubnYm&!A4sU`!39กk/:P.#(?_99K&+Aข9PaNP!CXD.=Q9ALh,,UOกQRs`Hcc#/*8g3BkZ6![0-Noq;01AH4E"GO-X*h%/l`_%E``ขo:u=coTB#%8.1m#gpm:*RJG;uKsm.mS?Guk47ZsMikNdSVpu,ขfhN('n$tkU4@+U(T6Lm/M;qกh7-:J]E_@OD`$UXXA#TLKc?;WT7Ut4iT@0j.98rd-l3EE+07#Il,+GMT9]48-#plr0ก6!',,&UQ-Fpua9K;X=9*-Zk4^)Fก8E2fYM@B62$FS9dP3NSOFE\(n3K\Z7;G$e#7XF/Y3aF\S9LG9FMLnfBUas4.L?m/!Q/M+7CQA=$*IQbUA^9f/plm8#XYIT:"iLc7!oV6s7p]6TI^!Q5`Wp9o^cC5%_!%h74:7l/0rB$\3`^2:q:uljo55/Q7rYAl;!5*49jkj&=&)Rp!VJ(#Sข@e0q](b%%P=7hCL_,S&^JLapo]nZW%Ph?^9DFY_jVYDr*&Xo=])bIK?`JC6cgSก8@RoA^d\r:\%DAunUi,@qQGVnข&nEd7idAEbAF^!F&C`VKJ3rCb%ARกW9WuVH$,:Z,HFA4a/"+uUAHWJ@\!kPWn7"\dG%YM5[$l'HfK:JiaกHNVkoOS5a@@.@H/V\foR;Z)W"_i6!&;)`$[KB6MH\`/m+jeR$uM&?กikSZMaO(L,BD48H8/ogLi:b:CD*]aNr1$98G)Ft64bbQj$Da9MB5%b"'C(2BJuP-J,09`@!YP`&@QHd)AobhGEpu=T\3kR:u!IB,9#k+-ane6@(B)D:C,KH2M7M]ข71_:gc;nm@ขLIeVbt9?(50m/T1s[กTq+IRB/MgqK:g'RR)pocRp/fกQoD8RH@!.[0'MH-VQ_d60J,HXdQhX6eS/#6m-dk_(A30pdn9/m4VW2S97i#h`B!T@MTT.\2M7r//m@:@ksjBLeP*&V"Vjc[RRp*%m(!551ru,!X-9]8"uUกAb)'CUQ*JSaXPXc`OZmue]]$od"k\V%GQD0]3ahu.?f4#=$a;kn;%jnW%3@;e+Tu5ZiWmZ45XcVCa:]=[J`:lrGKflก_bhJ)M,#I.]UYnก]uY7lR)N*X`AN`CgM@,[ข2/GW@5%)KNoMtl-)LZ4nR9U10@//4\tG0eMZpfjข_J](MIff-g6O$!(lYLgnRF'K&tขVeCiA+oh$2CgQs=6gljBJD3La.D)m=&bmuVf6`k=9gW*o/D/6nd#GAbaiMj)kr^_Mr28T1^IH#_&#:o`0j`WgfK2Sc`hก:L(o(lOF7XNc@W3!4F+ZgXUhMFHK0Z)Yp42/sWIpu1$1`fS].1dFT!.T7!Jkp=1VSYqtn9ODr&K__Klh]2topg$*%i7J^WU3T&PM8g6\`WBsKMmB"0@[XP*&?R1!jh9Klก#QWE$=Okk?e=R*$=TK0C'#niS/(.Ll[NX_$bUt"T-TQ^('Q,6ep5t"]O7JFX0QbSWC7i+Ba8q0P*^kYW$^\aZAVjD,,@^:OdZWd45R7V7ก1DY+bq(sElQFh_YDGUHM[3!"4i&8]I.$UbfV'V@hkc8I_mRO$*1`a]ก\5Hก,*s!j_kG8ljFaG#.5la]m*CQ/_nWQq/e\ZdTXjO]PuIA:ni3lm1gNP\[!;YI\@O"2Mf1NW1j;]F!O",7l(3;g,.'gn+M5%;%i]@ngs9[Iu@ck"o,Ief&iWK,tMdW:g7D$h[Kgu#Esde^6/,e?I+P4]!;!n1t*jl1ZB0cDXFm-SNp3GH6'0?ก[$m$*_N3if"bM]j!8dTl_hr9N-'%#K3QnYgU-&n)WPtMn&Bก2$A7Iก&a]lpr:^kHeOjDQ=[$s$LgoElJTb?8U]+7W:ufcQYi_WM2o9Xsขf!rT)Jku4Vto9n)(Fsก1LnMDSBSf@gum[L@!..kgLaa6`ZRl(]$cG3OS*EJ8]^Up"MXRSWTci860[;ขX.KG$$u$9GQsiuW.Iq!N2Ou!(2u@K'กb&d^QV-V7X^)OXO?(im@%.R)?UกNl`SWMC.B9&,eq/-JY:sA@;DVJh9A!H8AdaujV+5Qg$;767$Rก`)HU`qhขcข"tCCmfs[u@T[`K0p&Y-,93f8JT[OG(FMroggmgo(=i&)Gก*1Ycกph"U:64g3nX:)GS7fsgg[0Gs]khji)`[@^กCpD#d6ajTXJbDjNFJUCHj&VAkPkXA^_PY1IcGUGfPg^\ru?K?*$oZ#@G5]TO&O-&i!22,`W1,LB+'p2IoVb`c?(":ethAd/Ei[20(Y5aFnkoQgY=0R^HoK=snYกe)*qUJ87/*3U=\%kjYI.YR@hqbpGJ(?8]A;qGM[Bb?l7O)r&(?39U,,7eX4euVla)jJLS+Kg;oo6rr#G&oGs2/d[M-FW(ก"hU8dh0QY_K_กuhj$9p4q_Zs./QiFAr'].Bn#KO]\QM:s2(_K6.1grfuZ"[ข.BiZ,l&jTYf.W_O\VL[4-RJ+d=KaFcUBJ(*7O][ps!Cca`)Oj)pt=92Q18\?r8@=VCt::Rl"Td+l]GRbBY&MpO4t_(OCTel0r.Sa^gJN'VnEe!qNdZ7ก@!Uj._ht25KtB;%q$fH(cRL#76)u$DSWE[6d;PDNF4:npfVSs0#D7T4i(2]5ZiกP\_dP6.h2!TpjLML*Cc(+17iJ!;dhc'#sQG^/qD8+&Yi39I`#+le(ข*U-`L^0iAm#87`Doaก8Kg@9R`//^2Pl5u%6P)QVne;oขK7dLbdP9kr%JoSfB;8ohG-APR66&sTLmU?9UfEb&4m9$_RQQhkVj_O2K[2uip~ข
+-->
+</markdown>
