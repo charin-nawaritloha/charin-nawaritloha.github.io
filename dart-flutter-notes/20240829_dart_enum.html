@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน Enumerated types เบื้องต้น</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน Enumerated types เบื้องต้น</h1>
+<p><img src="images/20240829/20240829_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum-class.html">Enum class</a> เป็นข้อมูลที่ผู้ใช้งานกำหนดชื่อของลำดับตัวเลขขึ้นมา แทนที่จะใช้ String ตรง ๆ มันมีประสิทธิภาพและช่วยให้โปรแกรมอ่านง่ายขึ้น ข้อมูล enums เป็นที่นิยมใช้งานกันในหลายภาษาโปรแกรม</p>
+<p>การใช้งานหลัก ๆ ของ enum เป็นการกำหนด choices สำหรับเลือกสิ่งที่ต้องการจากคำตอบจากสมาชิกทั้งหมด แล้วส่งผ่าน parameter ในฟังก์ชั่นเพื่อสื่อสารกันในโปรแกรม</p>
+<h2>การสร้าง Enum และใช้งาน Enum</h2>
+<p>ทำเหมือนการประกาศ class แต่ตัว enum จะมีเฉพาะการประกาศชื่อที่จะใช้แทน index แต่ละตัวเท่านั้น ในการใช้งานตัว enum เป็นเหมือน static variable แบบหนึ่ง สามารถอ้างถึงด้วยชื่อของ enum ได้เลย</p>
+<p>การตั้งชื่อสมาชิกใน enum จะใช้หลักการเดียวกับการตั้งชื่อตัวแปรแบบ <a target="_blank" href="https://dart.dev/tools/linter-rules/constant_identifier_names">lowerCamelCase</a></p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  print(MyColor.red); // output → MyColor.red
+  print(MyColor.red.index); // output → 0
+  print(MyColor.green); // output → MyColor.green
+  print(MyColor.green.index); // output → 1 
+  print(MyColor.blue); // output → MyColor.blue
+  print(MyColor.blue.index); // output → 2
+}
+</code></pre>
+<p>การใช้งาน Enum จะมองว่าตัวสมาชิกที่กำหนดขึ้นมาใช้อ้างอิงและเปรียบเทียบกันได้</p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  var color1 = MyColor.red;
+  switch (color1) {
+    case MyColor.red:
+      print('color1 is red');
+    case MyColor.green:
+      print('color1 is green');
+    case MyColor.blue:
+      print('color1 is blue');
+    default:
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>color1 is red</p>
+</blockquote>
+<p>ในตัว enum ยังมีคำสั่งต่าง ๆ ที่มีประโยชน์ในการเข้าถึงและใช้งานสมาชิกแต่ละตัวได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเข้าถึง List ของสมาชิกใน Enum</h3>
+<p>สมาชิกของ enum สามารถใช้คำสั่ง <code>.values</code> เพื่อเข้าถึง List ของสมาชิกทั้งหมดของ enum ได้เลย</p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  List&lt;MyColor&gt; colorList = MyColor.values;
+
+  print(colorList.length); // output → 3
+
+  colorList.forEach(print); // output →
+  // MyColor.red
+  // MyColor.green
+  // MyColor.blue
+
+  MyColor color1 = colorList.first;
+  print(color1); // output → MyColor.red
+  print(color1.index); // output → 0
+  print(color1.name); // output → red
+  print(color1.name.toUpperCase()); // output → RED
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเข้าถึง index</h3>
+<p>ทุกสมาชิกของ enum จะมีเลข index ที่ไม่ซ้ำกัน เริ่มต้นที่ 0 สามารถอ่านค่าดังกล่าวด้วยคำสั่ง <code>.index</code> จะได้ค่า <code>int</code> กลับมา</p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  print(MyColor.red.index); // output → 0
+  print(MyColor.green.index); // output → 1 
+  print(MyColor.blue.index); // output → 2
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเข้าถึง name</h3>
+<p>ทุกสมาชิกของ enum จะมีคำสั่ง <code>.name</code> ที่คืนค่าเป็น <code>String</code> ชื่อของสมาชิกเอง</p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  MyColor color1 = MyColor.red;
+  print(color1); // output → MyColor.red
+  print(color1.name); // output → red
+  print(color1.name.toUpperCase()); // output → RED
+  print(&quot;color1 is ${color1.name}&quot;); // output → color1 is red
+}
+</code></pre>
+<h2>การเปรียบเทียบระหว่างสมาชิก ด้วย static method</h2>
+<p>การเปรียบเทียบสมาชิก enum ด้วย static method สามารถทำได้ 2 แบบ คือ</p>
+<ol>
+<li>เปรียบเทียบตาม index ด้วย <a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum/compareByIndex.html"><code>Enum.compareByIndex</code></a></li>
+<li>เปรียบเทียบตามชื่อด้วย <a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum/compareByName.html"><code>Enum.compareByName</code></a></li>
+</ol>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เปรียบเทียบตามค่า index</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum/compareByIndex.html"><code>Enum.compareByIndex</code></a> จะเป็นการเปรียบเทียบสมาชิกของ enum โดยการเอาค่า index มาลบกัน คืนผลต่างที่ได้</p>
+<ul>
+<li>a &gt; b ผลที่ได้ มากกว่า 0</li>
+<li>a == b ผลที่ได้ 0</li>
+<li>a &lt; b ผลที่ได้ น้อยกว่า 0</li>
+</ul>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  MyColor colorRed = MyColor.red;
+  MyColor colorBlue = MyColor.blue;
+  print(colorRed.index - colorBlue.index); // output → -2
+  print(colorRed.index &gt; colorBlue.index); // output → false
+  print(Enum.compareByIndex(colorRed, colorBlue)); // output → -2  
+}
+</code></pre>
+<p>จากตัวอย่าง ผู้ใช้สามารถเลือกได้ว่าจะเอา index มาลบกันด้วยตัวเอง หรือทำผ่าน <a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum/compareByIndex.html"><code>Enum.compareByIndex</code></a> ซึ่งมีผลในการทำความเข้าใจว่าโปรแกรมกำลังทำอะไร</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>เปรียบเทียบตามค่า name</h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Enum/compareByName.html"><code>Enum.compareByName</code></a> จะเปรียบเทียบสมาชิกตามชื่อแทน โดยจะเปรียบเทียบแบบ case sensitive การทำงานไม่ต่างจาก <a target="_blank" href="https://api.dart.dev/stable/dart-core/String/compareTo.html"><code>String.compareTo()</code></a></p>
+<ul>
+<li>a &gt; b ผลที่ได้ มากกว่า 0</li>
+<li>a == b ผลที่ได้ 0</li>
+<li>a &lt; b ผลที่ได้ น้อยกว่า 0</li>
+</ul>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  MyColor colorRed = MyColor.red;
+  MyColor colorBlue = MyColor.blue;
+  print(Enum.compareByName(colorRed, colorBlue)); // output → 1
+  print(colorRed.name.compareTo(colorBlue.name)); // output → 1
+}
+</code></pre>
+<p>ประโยชน์อีกข้อคือ หากต้องการสร้าง List ของสมาชิก enum ที่ให้เรียงตามชื่อ name แทน สามารถใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/List/sort.html"><code>.sort()</code></a> เพื่อการเรียงลำดับได้</p>
+<pre><code class="language-dart">enum MyColor { red, green, blue }
+
+void main() {
+  List&lt;MyColor&gt; colors = [...MyColor.values];
+  print(colors); // output → [MyColor.red, MyColor.green, MyColor.blue]
+
+  // sort by name of enum member
+  colors.sort(Enum.compareByName);
+  print(colors); // output → [MyColor.blue, MyColor.green, MyColor.red]
+
+  // use .. operator when create list
+  List&lt;MyColor&gt; colorAtoZ = [...MyColor.values]..sort(Enum.compareByName);
+  print(colorAtoZ); // output → [MyColor.blue, MyColor.green, MyColor.red]
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้ index เพื่ออ่านค่าสมาชิกใน Enum</h2>
+<p>ตัว Enum จะเก็บลำดับสมาชิกเป็น index ค่าเริ่มต้นที่ 0 หากต้องการใช้ค่า index เพื่อดึงค่าสมาชิกกลับมา สามารถทำได้โดยผ่าน <code>.values[<em>index</em>]</code></p>
+<pre><code class="language-dart">enum SimpleAnimal { cat, bat, rat }
+
+void main() {
+  print(SimpleAnimal.values.length); // output → 3
+  print(SimpleAnimal.values[0]); // output → SimpleAnimal.cat
+  print(SimpleAnimal.values[1]); // output → SimpleAnimal.bat
+  print(SimpleAnimal.values[2]); // output → SimpleAnimal.rat
+  print(SimpleAnimal.values[3]); // RangeError (index): Invalid value: Not in inclusive range 0..2: 3
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การแปลง String เป็น Enum</h2>
+<p>เนื่องจากตัว Enum มีการเก็บชื่อของสมาชิกเป็น String เอาไว้ด้วย ดังนั้นจึงเป็นเรื่องไม่อยากที่จะเอาข้อความ String มาแปลงกลับเป็น Enum</p>
+<pre><code class="language-dart">enum SimpleAnimal { cat, bat, rat }
+
+void main() {
+  String myRat = &quot;rat&quot;;
+  try {
+    SimpleAnimal result = SimpleAnimal.values.firstWhere((element) =&gt; element.name.compareTo(myRat) == 0);
+    print(result); // output → SimpleAnimal.rat
+  } catch (e) {
+    print('Can not conver &quot;$myRat&quot; to SimpleAnimal'); // no output
+  }
+
+  String myAnt = &quot;ant&quot;;
+  try {
+    SimpleAnimal result = SimpleAnimal.values.firstWhere((element) =&gt; element.name.compareTo(myAnt) == 0);
+    print(result); // no output
+  } catch (e) {
+    print('Can not conver &quot;$myAnt&quot; to SimpleAnimal'); // → Can not conver &quot;ant&quot; to SimpleAnimal
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>SimpleAnimal.rat<br/>
+Can not conver &quot;ant&quot; to SimpleAnimal</p>
+</blockquote>
+<p>ในตัวอย่าง จะเป็นการเปรียบเทียบค่าใน List ของ Enum ว่ามีสมาชิกตัวไหนที่ <code>.name</code> มีค่าเท่ากับ String ที่สนใจ โดยผ่านคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Iterable/firstWhere.html"><code>.firstWhere()</code></a> หากไม่พบสมาชิกที่ตรงกับใน enum ก็จะแสดงข้อความแจ้งให้ทราบ</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การสร้าง Enhanced enums</h2>
+<p>ใน Dart ตั้งแต่ 2.17 ขึ้นไป จะสามารถสร้าง enhanced enumsได้ วิธีการสร้างก็คล้าย ๆ กับการประกาศ class แต่มีจุดที่ไม่เหมือนกันคือ Instance ที่ได้จากการสร้างจะเป็น final และ ตัว constructor ต้องเป็น constant ส่วนรายละเอียดอื่น ๆ อ่านได้จาก <a target="_blank" href="https://dart.dev/language/enums#declaring-enhanced-enums" title="Enums | Dart">Declaring enhanced enum</a></p>
+<p>ตัวอย่างสร้าง MyColor ที่เป็น enum เพื่อเก็บค่าสี RGB</p>
+<pre><code class="language-dart">enum MyColor {
+  red(r: 255, g: 0, b: 0),
+  green(r: 0, g: 255, b: 0),
+  blue(r: 0, g: 0, b: 255);
+
+  final int r, g, b;
+
+  const MyColor({required this.r, required this.g, required this.b});
+}
+
+void main() {
+  var blueColor = MyColor.blue;
+  print(blueColor); // output → MyColor.blue
+  print(blueColor.r); // output → 0
+  print(blueColor.g); // output → 0
+  print(blueColor.b); // output → 255
+
+  print(MyColor.red.r); // output → 255
+  print(MyColor.red.g); // output → 0
+  print(MyColor.red.b); // output → 0
+
+  print(MyColor.green.r); // output → 0
+  print(MyColor.green.g); // output → 255
+  print(MyColor.green.b); // output → 0
+}
+</code></pre>
+<p>จากตัวอย่าง ใน enum ประกาศ <code>MyColor()</code> constructor มีสมาชิกเป็น <code>r</code> <code>g</code> <code>b</code> เมื่อเรียกคำสั่ง <code>MyColor.blue</code> ก็จะเหมือนไปเรียก <code>MyColor(r: 0, g: 0, b: 255)</code></p>
+<p>เนื่องจากมันทำงานคล้ายกับการประกาศ class มันจึงสามารถ implement และใส่ method เข้าไปได้ด้วย มาลองใส่การแปลงค่าสี RGB เป็น Web Color กันดู</p>
+<pre><code class="language-dart">enum MyColor {
+  red(r: 255, g: 0, b: 0),
+  green(r: 0, g: 255, b: 0),
+  blue(r: 0, g: 0, b: 255);
+
+  final int r, g, b;
+
+  const MyColor({required this.r, required this.g, required this.b});
+
+  String get webColorCode {
+    String rHex = r.toRadixString(16).padLeft(2, '0');
+    String gHex = g.toRadixString(16).padLeft(2, '0');
+    String bHex = b.toRadixString(16).padLeft(2, '0');
+    return &quot;#$rHex$gHex$bHex&quot;;
+  }
+}
+
+void main() {
+  var blueColor = MyColor.blue;
+  print(blueColor.webColorCode); // output → #0000ff
+  
+  print(MyColor.blue.webColorCode); // output → #0000ff
+  print(MyColor.red.webColorCode); // output → #ff0000
+}
+</code></pre>
+<p>ลอง implement ด้วย <a target="_blank" href="https://api.dart.dev/stable/dart-core/Comparable-class.html"><code>Comparable&lt;T&gt;</code></a> เพื่อให้สามารถใช้คำสั่ง <code>compareTo()</code> ได้ ในการเปรียบเทียบจะใช้วิธีแปลงค่า RGB เป็นเลขจำนวนเต็ม แล้วค่าผลลัพธ์ที่ได้ของทั้ง 2 ตัว เอามาลบกัน</p>
+<pre><code class="language-dart">enum MyColor implements Comparable&lt;MyColor&gt; {
+  red(r: 255, g: 0, b: 0),
+  green(r: 0, g: 255, b: 0),
+  blue(r: 0, g: 0, b: 255);
+
+  final int r, g, b;
+
+  const MyColor({required this.r, required this.g, required this.b});
+
+  @override
+  int compareTo(MyColor other) {
+    int colorThis = (r * 65536) + (g * 256) + b;
+    int colorOther = (other.r * 65536) + (other.g * 256) + other.b;
+    return colorThis - colorOther;
+  }
+}
+
+void main() {
+  var blueColor = MyColor.blue;
+  var redColor = MyColor.red;
+  print(redColor.compareTo(blueColor)); // output → 16711425
+  print(redColor.compareTo(MyColor.red)); // output → 0
+
+  // sort MyColor list
+  List&lt;MyColor&gt; colors = [MyColor.green, MyColor.red, MyColor.blue];
+  colors.sort();
+  print(colors);  // output → [MyColor.blue, MyColor.green, MyColor.red]
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*4rG*D)nTTQ`LP]j:ขq4[$Pfa#T;9(Dn+\b6o#um;IhVFC&E4;m^h32ขRJ`W=k8buAJl:;5!,pCdl#\'W*:B/Se^SK)dO*ts@mกr)3TqrกjeaAoPoB+กlb[#kq4W_p8db@NC(J4'@\boscq_G_[,3eLARfg/6F?ขG.0l')Q@"Un0ขWtc+LIpr)ข'กXkpZ_JR`lHq^CZSm%กiacnj(%+Z.gQU/[MMC,9'^K0&^==VhM,BOGs&7:fOd!u]geJknaEGhaB96$V?ip%*d?=LZ/7L^j\F5c8:$?IY")(P1?kขV]r+HjกHขXขoY/:'QXAh"5f`acl+NbQ4oC2emh254l3sStAhWD^UuUjk_\qij9$88']cY0QC%i!+0"5Ql"+uEcV"^FW!'Z:N+05KO4%X`[OBd5E"T;5lH%h$kO5D7sk=P-7K^3E"p`#@qN4(aC"^f\!B1_QZp38mDI4R,2ZขDpNKP//eiq,=tq:Ie4jI$ก*k]W[/a7[giLo=fgm:J)D#sTFAYขก]?iZ/!6IpL!eT_+@3L$NกugQqc$G=LY*W)[Nt.u385kVl@`OiQJ[M7dPJ_*8RXD0ZG4hAtYCqhD?@/Hf"]PMQti\PESCNVCbQTTHtfPMSF@:$(ข?d+:FBpPWt9&4Z*dXhI*Rn@7(Y1#nqZqc=u5Lq3EsiIกกF#`nT$ORMB+ZY#5;=[eZtm@%H$&GUp7]Kk'*&Zf&sl*_OUYข:9ข8กc*:@'b,Uข5H4-^C,*+E:6H^P:F`@(+LY1#P!7/kIiQG30;iTn((OAcJSpZp6eL'cp#o(4ขlcsV,A^e3IOกK5)Lf"3ขOmpHa2I]9oo0b,6^5coUc]\+,$SC]%A6MqS/-kbH%@%J"VQ[-"P%k)lT]],$.C]349Q$S3`b393\uDBd\(+\!D%[eS0YCO3%=7,5TTLPTC=ข[D&&G6^!R3YgO$M1Oe*EYkDoe@]:0l*[hN9G#WขU6-T*กn$Z@uD2(=jHU7S/hdSnกYPO3-)L*8กQ!o&VXBr(Tn/*24f+2bSm?#4Qi2edBCRhY;&fU-iK.Z0=B'?^sj7u!?$kLD!!&hข/`$G^jiN-%NLM@R@DS4AViEr5W)2rK/J-q-G%]kt'9[jd9Vlp7h"a`p1IQa:1E"Dm1"tA25ApeD&3BY)+8GeV)!b%PDPZB8bE1:7/r0a3#le[Uq9k?@54?J;^H_elF&DTWe+7u2)[?ZVlFWoK23&D4X)AZ%mRE(B9I6VVP6V/hj&-,EX@clB)nQObn%ขiDlOGFk;Gmข#qกX_Kjh2llI@R0jkiEC'JlaC;,]qqQV_E0!r;nO(lข69_'&fbVA1QLKt3DC*/$*X;4\]u4,ln?dP:!8D7W1h*C-M.;oDq=8ข;N]KuC3tk%V9กfn3?ET^iLWdDm+N1กn=phZ(q7:K$X\lecDulj)tKRI4\qB9:p4\]m4O=^OGuk=O'#KU1mIUCR^+)B$PH&=)j-S(SiGjp67_กOb:7?EXMsKc6hcUCSZZ0+q&QZL?6]12Ea2eMAmL&Z7N6F/SM7eQ;OptF$tEM68+Ct]nEJo%P#sfu+3AZh6?C=T#]X9!%Y)*qJZ_(DV/d&^q9JklV\h`8Le&DFp'RPcN3$Xn:!กZ=BP?(m,EhขqBZKSL\JIS^U9]V#SL&&ZW"k#(3ja:/T(gZ`+*.VUo#qU.*"#6teogbaPXFD`\f\k5OB?)$KsYNa)1PRncA5?@L]L&=BOZขl+[NqkD&I?`*td'u8+MขmHfJ^t*!#8u?@W%$&k1Z)58'TkHsJ`7OUWdHgGlicV,q%กWSข2ed(lnDOb:g[#c:.',bfc2-W8)'7\&_Q'JPeM-#jq@YD4\[U`HsL%^?_Y,4&'7,1:BEGgก*V,UceX+!6uT^_$/)$fp"E)K`(10ncJ^_p4"Wfm=7tP1^_LjB&`t7Iข#@Ch=C(CouqhhM8%pY=BUb.cR6q)1at_G,7"kM:e]M]rNhF]%lC6XN0C^NbtกLoPขNZ'V\M^%0FEQMO8kMd&)2ก5ก^t/*\9SZMK/^1O/O?qj[@^POGf%q5in_oroaklqกp;T_\HZSbO.!hQG`8s9AW$8McPLt2:'Igfข:Jo;rAaqAdX*U"p1uSmDqid*MTWT:8Z,'กde]e5fRhS7e'HUnAP#W0ltk?o1=dEdnSjDD7I!*S.?0442`mIJEMM(;+ggb'c+Qn.^qX5L4?&cIk(@=l-8:`P+jกl5OlgRHZ8LmaqT%I6'Or9กW"9WSuZi$j=4bกKNgZtFgc/FB]dV%:3:@*0RpuWTH,X"6mกC7IdCu.aBat/#G`f&Bc*[Q^krO5'u)pB9BDkX,s\LL2"bDZ\$8กSfY"9qBB?!2QBjkooH$q`90ollKsHjFPpg2#/*Xขc2eA'u%$e-"Nb4U5hAK:N;6d(68)9/PAE^mj;jU&B_9f.?U(XQW.oFCJ&O[TfY9JqY4uO?hB$b!bCA35,puBV#O!7\ZPtIl^Q]LQG*I3k_J/(Fh-gf@.Uaก5=7+nJA"loeC*XJ?mX5_tsXOCQ^Q_,Jกj1Joh7j&,I/Yn60ก_?7K@Sj$h\:J,n+c#s\/:]'[?Hf)07r\R]DT1T'gl/9B9g@XIdLiqCRA1BreMtd/S?ns=[hbIaY0BE@in^J^r\-:7i2dBd_LdY`bbE"jb#D_p@?uขDO?\*c4k4p25'X7,1cU[V]W_ub/Mt?\ขEWI#ZG8Lo7+=PgFdDGIก9^G\&!k1tO8R9mS)"GLNn9#@d.HกhB]),1Mu-Pa9L-.&T5&9dW0Q)M*/(`$l,ET59FjD8(kc:/!!5=i_)i:GZ59UI4.M'G8g82@K=essfCiE69BY6N0Es`A5A7L;&V`Ul@A$Z#bfh6.deZXกcUก-S'Kq[!XYIe"pG)1!JK]\.q7K$CerfNjg*p\E)nlNS#V_+0K_U]SDc@CF*+;ffe*-n-:pc*8;ZS8s6.4snKM!&(;q&m)lnC\:!9m=Ck]3O_[1q$-f.60Hgq*)bfu*g2"S^m^ZI(CVT_algข0`j[)je-XNER-jXขA-o-.ZZK(;scdขQX_k%BjHs1ก-=OeSขlY/2eAกrjVBafN`"!Y:@/P\%Mcn0SX0VCbcJ6f4hi'LdMQt%C&V=b+3(0dpgV)J=,@#s&%q6$3i9+VKrqWg^4BkJZR-`G`Lmc+$;`s+e66VKa+_5iJ6CcaYf1O22Jก_fกc2กIr@j2asuX:KeQกJ**'J$?WaHmD*"Vu7-aC:eก1fR8Ss#:+OASCfIf.SXJ=%F;E(Fhpe^p,bW*:.Tloq/JreF:4Y+V)NขXmJYtXข8XSF)Le]#4Y`m,VWG$%:=YU^[;3jZY^:2%J;E(tsTjOV#;a]`/R1)2;X\cll:8N$ESVDA*&=L0EsJ8]P).3BขYHSTA41VGssIXQ'Y3u_;lk_Y`t]HCiUK+RiUXMJCn6Mu#+Q+#lขR(A%S?RcqgXS"1T@Po%a(#กin7H_d-.BNAsf1s@%+cQ\ขjGS5OR#kD^Y6hAo_Ea)pSe84o.ZTL6TQ?stHh8lEpOVD%OU^Bs!\ก`GB%nQ,[-l?s\CUA*[B@!YWcZkE=pf4@!D\JkhMFขd^H[h8:#H;HO^DWmข?7=p\neP-i(#iIR$m?g+dกl:^OkQS^/p[tUNu%(กT8'R1HRZ)CNE=AKZ5"]b*2U[dP:Z'UMmLdrJIRYqG@7กbg)O99SU'$5DXkd_V-7lk10)m&B0N]dR2ก/ht9!)]!)!.Khm=!@P.JOZ%X,2O(]\:icp1=,e[a0&N[VขP)$!HQE:V*XHDtBcd%s]/S6Lt^GRTd/a^0`\M-fEc*b5%%d87_HYK&O-`pj_P6bYขEFกk)E]H,n=]^beY%J/กJXa-'"*bjOCNZR7j?1tTX`HP_fQKt5R*ns[\AOgW-D-JfRM,'cZhhJ=9E4(hY'&LEAe[In@T7VOc8bqpFVsLX-IpLgl__5C&.o0!กnU+!FE?YN`กFTก*,.;mFVm;(;uMA,5Zq-_dFขf++1.(uDR7ขl\Bc(HmWR5l3is!dq6/F`YR%lSLWa#Is%L'X:#@L'2S@TGCc*ii9YudXSeY7="l.h1E")j"(`JF@\B=uA\98la]oMtr7jK9SgNlf4TORI?B9KFVc`:)J&[#LYC09uก(%)UC\r*`G,*$AS0K%)r]XUZR-:[e=+"n(o)5L+)T7WK)L5sMK)G;qLB4/[!N]GtqR9\l5%7Z0@Z3ก6=@/RHLQ\[bc&LG0KV_pu4?O(;O,*H;1XEfPi@eV5l,3uO73]`0d5W\6h8k"csGEFW.[iL$ข^Ud\M?Z)on&T0ALrข%h-\5+S-M?..ucFขKRLc+R]J%Y2ZDl:P4D7DSfqp*GAr!Z25n2AM7dW8n^"7[กuKHPrQ@KVL3#.Sp*Y`2Mko9=gtM?XA'E7W0\\#08W!i(^=L9p^Djir"IVggldgDA`Eขte*\W4H0t1A^X%W7+f&d)e,hk-H'_BE.:th4oH%L\t^UFZTR'~ข
+-->
+</markdown>
