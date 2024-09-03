@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน Duration เพื่อคำนวณระยะเวลา</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน Duration เพื่อคำนวณระยะเวลา</h1>
+<p><img src="images/20240903/20240903_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration-class.html">Duration</a> class ใช้สำหรับเก็บค่าช่วงเวลาที่ต้องการ โดยหน่วยที่ใหญ่ที่สุดคือ <strong>วัน</strong> เล็กที่สุดคือ <strong>ไมโครวินาที</strong> เป็น Class ที่ใช้สำหรับเก็บข้อมูลผลการคำนวณของ <a target="_blank" href="https://api.dart.dev/stable/dart-core/DateTime-class.html">DateTime</a> class รวมถึงการใช้ระบุช่วงเวลา เช่น <a target="_blank" href="https://api.dart.dev/stable/dart-core/Stopwatch-class.html">Stopwatch</a> class และอีกหลาย class ที่ต้องอ้างอิงเกี่ยวกับระยะเวลาอีกด้วย</p>
+<h2>การสร้าง Duration</h2>
+<p>ตัว Duration จะมี <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/Duration.html"><code>Duration()</code></a> constructor เพื่อใช้ในการสร้างช่วงเวลาที่ต้องการ ค่าเริ่มต้นคือ 0 หากผู้ใช้งานกำหนดค่า วัน เวลา และอื่น ๆ จะนำค่าทั้งหมดมารวมกัน</p>
+<p>ตัว constructor จะรับค่าที่เป็นตัวแปรดังนี้</p>
+<pre><code class="language-dart">const Duration({
+  int days = 0,
+  int hours = 0,
+  int minutes = 0,
+  int seconds = 0,
+  int milliseconds = 0,
+  int microseconds = 0,
+})
+</code></pre>
+<p>ตัวอย่างการสร้าง Duration ที่มีค่าเวลา 1 วัน และ 1 วันครึ่ง (1 วันกับอีก 12 ชั่วโมง)</p>
+<pre><code class="language-dart">var oneDay = Duration(days: 1);
+var oneAndHalfDay = Duration(days: 1, hours: 12);
+
+print(oneDay); // output → 24:00:00.000000
+print(oneAndHalfDay); // output → 36:00:00.000000
+</code></pre>
+<p>ในการกำหนดค่าตัวแปรของเวลาเหล่านี้ สามารถกำหนดค่าตัวเลขได้ตามความต้องการ ตัว class จะนำไปคำนวณปัดให้เป็นหน่วยที่ถูกต้องให้อัตโนมัติ เช่น หากกำหนดค่า hours เป็น 36 ชั่วโมง</p>
+<pre><code class="language-dart">var oneAndHalfDay = Duration(hours: 36);
+print(oneAndHalfDay); // output → 36:00:00.000000
+print(oneAndHalfDay.inDays); // output → 1
+print(oneAndHalfDay.inHours); // output → 36
+print(oneAndHalfDay.inMinutes); // output → 2160
+print(oneAndHalfDay.inSeconds); // output → 129600
+</code></pre>
+<p>ในการใช้งานจริง สามารถนำตัว Duration ไปคำนวณ เช่น เอาไปลบกัน ดังนั้นตัว Duration สามารถเก็บค่าติดลบได้</p>
+<pre><code class="language-dart">var overDayAgo = Duration(days: -1, hours: -10);
+print(overDayAgo.inDays); // -1
+print(overDayAgo.inHours); // -34
+print(overDayAgo.inMinutes); // -2040
+
+var halfDay = Duration(days: 1, hours: -12);
+print(halfDay.inDays); // output → 0
+print(halfDay.inHours); // output → 12
+print(halfDay.inMinutes); // output → 720
+</code></pre>
+<h2>การเข้าถึงค่าเวลา</h2>
+<p>ผู้ใช้งานสามารถแสดงค่าเวลาที่เก็บใน Duration ในหน่วยต่าง ๆ ได้ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inDays.html"><code>.inDays</code></a> แสดงในหน่วย วัน</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inHours.html"><code>.inHours</code></a> แสดงในหน่วย ชั่วโมง</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inMinutes.html"><code>.inMinutes</code></a> แสดงในหน่วย นาที</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inSeconds.html"><code>.inSeconds</code></a> แสดงในหน่วย วินาที</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inMilliseconds.html"><code>.inMilliseconds</code></a> แสดงในหน่วย มิลลิวินาที</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/inMicroseconds.html"><code>.inMicroseconds</code></a> แสดงในหน่วย ไมโครวินาที</li>
+</ul>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในการคำนวณค่าเวลาในแต่ละหน่วย หากมีเศษ จะใช้วิธีการ<strong>ปัดลง⬇️</strong> (round down)</p>
+</div></div>
+<pre><code class="language-dart">var d1 = Duration(days: 1, hours: 23);
+print(d1.inDays); // output → 1 
+
+var h1 = Duration(hours: 1, minutes: 59, seconds: 59);
+print(h1.inHours); // output → 1
+print(h1.inMinutes); // output → 119
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>บวก ลบ คูณ หาร ค่า Duration</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การบวก <code>+</code></h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/operator_plus.html"><code>+</code></a> นำค่า Duration จำนวน 2 ตัวมารวมกัน แล้วคืนเป็น Duration ตัวใหม่ที่เป็นผลรวม</p>
+<pre><code class="language-dart">var t1 = Duration(hours: 1);
+var t2 = Duration(days: 1, minutes: 1);
+var result = t1 + t2;
+print(result); // output → 25:01:00.000000
+
+var time1 = Duration(days: 1) + Duration(days: 9) + Duration(hours: 12);
+print(time1); // output → 252:00:00.000000
+print(time1.inDays); // output → 10
+print(time1.inHours); // output → 252
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การลบ <code>-</code></h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/operator_minus.html"><code>-</code></a> นำค่า Duration จำนวน 2 ตัวมาลบกัน แล้วคืนเป็น Duration ตัวใหม่ที่เป็นผลที่ลบได้</p>
+<pre><code class="language-dart">var t1 = Duration(days: 1, hours: 1);
+var t2 = Duration(hours: 1);
+var result = t1 - t2;
+print(result); // output → 24:00:00.000000
+
+var time1 = Duration(days: 1) - Duration(days: 11) - Duration(hours: 12);
+print(time1); // output → -252:00:00.000000
+print(time1.inDays); // output → -10
+print(time1.inHours); // output → -252
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การคูณ <code>*</code></h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/operator_multiply.html"><code>*</code></a> นำค่าตัวเลขมาคูณกับ Duration แล้วคืนเป็น Duration ตัวใหม่ที่เป็นผลที่คูณ หากผลการคูณมีเศษในหน่วยไมโครวินาที จะใช้วิธีการ <a target="_blank" href="https://api.dart.dev/stable/dart-core/double/round.html"><code>.round()</code></a> เพื่อให้เป็นจำนวนเต็ม</p>
+<pre><code class="language-dart">var result = t1 * 3;
+print(result); // output → 30:00:00.000000
+
+var h1 = Duration(hours: 1);
+var h149 = h1 * 1.49;
+var h150 = h1 * 1.50;
+print(h1); // output → 1:00:00.000000
+print(h149); // output → 1:29:24.000000
+print(h150); // output → 1:30:00.000000
+
+var micro10 = Duration(microseconds: 10);
+var micro49 = micro10 * 1.049; // round(10.49) → 10
+var micro50 = micro10 * 1.050; // round(10.5) → 11
+print(micro10); // output → 0:00:00.000010
+print(micro49); // output → 0:00:00.000010
+print(micro50); // output → 0:00:00.000011
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การหาร <code>~/</code></h3>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/operator_truncate_divide.html"><code>~/</code></a> หารแบบปัดเศษทิ้ง ที่เป็นแบบนี้เนื่องจากตัว Duration class ไม่สามารถเก็บข้อมูลที่เล็กกว่า<strong>ไมโครวินาที</strong>ได้ ดังนั้นหากผลลัพธ์จากการหารมีค่าน้อยกว่า 1 ไมโครวินาที จะไม่สามารถเก็บค่าดังกล่าวได้ และปัดเศษทิ้งไป</p>
+<p>หากใช้การหารวัน เวลาในระดับชั่วโมง นาที วินาที ที่ไม่ได้ลงในระดับน้อยกว่าวินาที ไม่จำเป็นต้องกังวลอะไร เนื่องไม่มีผลในการใช้งานจริง</p>
+<pre><code class="language-dart">var h3 = Duration(hours: 3);
+print(h3 ~/ 2); // output → 1:30:00.000000
+
+var d1 = Duration(days: 1);
+print(d1 ~/ 2); //output → 12:00:00.000000
+print(d1 ~/ 3); //output → 8:00:00.000000
+print(d1 ~/ 10); //output → 2:24:00.000000
+
+var s1 = Duration(seconds: 1);
+print(s1 ~/ 60); //output → 0:00:00.016666
+print(s1 ~/ 1000); //output → 0:00:00.001000
+print(s1 ~/ 1000000); //output → 0:00:00.000001
+print(s1 ~/ 1000001); //output → 0:00:00.000000
+</code></pre>
+<p>จากตัวอย่าง ลองสังเกตุผลที่ได้จากการหาร</p>
+<ul>
+<li>หาร 3 ชั่วโมงด้วย 2 จะได้ค่าเป็น 1 ชั่วโมง 30 นาที หรือ 1.5 ชั่วโมง</li>
+<li>หาร 1 วันด้วย 2 จะได้ 12 ชั่วโมง, หาร 3 จะได้ 8 ชั่วโมง, หาร 10 จะได้ 2 ชั่วโมง 24 นาที หรือ 144 นาที เอา 144 * 10 = 1440 นาที = 24 * 60 นาที</li>
+<li>หาร 1 วินาทีด้วย 60 จะได้ 16.666 มิลลิวินาที หรือ 16666 ไมโครวินาที จะเห็นว่าผลที่ได้ปัดเศษทิ้งไป เพราะ 16666 * 60 = 999960 ไมโครวินาที หายไป 40 ไมโครวินาที</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การเปรียบเทียบ Duration</h2>
+<p>เนื่องจาก Duration จัดว่าเป็นข้อมูลประเภท int ชนิดหนึ่ง ดังนั้นมันจึงรองรับการเปรียบเทียบด้วย <code>&lt;</code> <code>&lt;=</code> <code>==</code> <code>&gt;</code> <code>&gt;=</code> เหมือนตัวเลขทั่วไป</p>
+<h2>การสลับค่า <code>+</code> <code>-</code></h2>
+<p>หากต้องการค่าที่ไม่ติดลบของ Duration ให้ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/abs.html"><code>.abs()</code></a></p>
+<pre><code class="language-dart">var t1 = Duration(hours: 1);
+var t10 = Duration(hours: 10);
+var result = t1 - t10;
+print(result); // output → -9:00:00.000000
+
+var positiveResult = result.abs();
+print(positiveResult); // output → 9:00:00.000000
+</code></pre>
+<p>ในกรณีที่ต้องการค่าเป็นลบของ Duration ให้ใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/operator_unary_minus.html"><code>-</code></a></p>
+<pre><code class="language-dart">var t1 = Duration(hours: 1);
+var t2 = -t1;
+print(t2); // output → -1:00:00.000000 
+</code></pre>
+<p>ทดสอบว่าค่า Duration ติดลบหรือไม่ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Duration/isNegative.html"><code>.isNegative</code></a></p>
+<pre><code class="language-dart">var t1 = Duration(hours: -1);
+print(t1); // output → -1:00:00.000000
+print(t1.isNegative); // output → true
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ค่าคงที่ที่น่าสนใจ ช่วยให้ทำงานได้ง่ายขึ้น</h2>
+<p>ในการตั้งเวลาในการเขียนแอปส่วนใหญ่ มักจะกำหนดในหน่วย มิลลิวินาที หากต้องการเปรียบเทียบในหน่วยที่ใหญ่ขึ้น เช่น นาที ชั่วโมง จำเป็นต้องมาใส่ตัวเลขเข้าไปเองเช่น 1 ชั่วโมง = 60 * 60 * 1000 = 3600000 มิลลิวินาที ใน Duration class มีค่าคงที่เหล่านี้ให้ใช้งาน <code>Duration.microsecondsPerHour</code> จะได้ไม่ต้องมาเขียนตัวเลขคูณ หรือตั้งค่า constant เพิ่ม</p>
+<ul>
+<li><code>.hoursPerDay</code>  → จำนวน ชั่วโมง ต่อ วัน</li>
+<li><code>.minutesPerDay</code> → จำนวน นาที ต่อ วัน</li>
+<li><code>.minutesPerHour</code> → จำนวน นาที ต่อ ชั่วโมง</li>
+<li><code>.secondsPerDay</code> → จำนวน วินาที ต่อ วัน</li>
+<li><code>.secondsPerHour</code> → จำนวน วินาที ต่อ ชั่วโมง</li>
+<li><code>.secondsPerMinute</code> → จำนวน วินาที ต่อ นาที</li>
+<li><code>.millisecondsPerDay</code> → จำนวน มิลลิวินาที ต่อ วัน</li>
+<li><code>.millisecondsPerHour</code> → จำนวน มิลลิวินาที ต่อ ชั่วโมง</li>
+<li><code>.millisecondsPerMinute</code> → จำนวน มิลลิวินาที ต่อ นาที</li>
+<li><code>.millisecondsPerSecond</code> → จำนวน มิลลิวินาที ต่อ วินาที</li>
+<li><code>.microsecondsPerDay</code> → จำนวน ไมโครวินาที ต่อ วัน</li>
+<li><code>.microsecondsPerHour</code> → จำนวน ไมโครวินาที ต่อ ชั่วโมง</li>
+<li><code>.microsecondsPerMinute</code> → จำนวน ไมโครวินาที ต่อ นาที</li>
+<li><code>.microsecondsPerSecond</code> → จำนวน ไมโครวินาที ต่อ วินาที</li>
+<li><code>.microsecondsPerMillisecond</code> → จำนวน ไมโครวินาที ต่อ มิลลิวินาที</li>
+</ul>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-CX?#ScCnQg\F_]J6besS9Ba_IVข/VกgB0+!6-Dakก//2\39P73;Z^aON-Hq*0I=qkZ:\2jj\A]&J&fข-(E0ก9T/aก0VQBQs0&]?;Khak$Y3K-GMOBBOVRk:tZrH=76p4=']fi%m-:8ar@noG,1eGV_f.K3f+t\fF29IjFf9Jq#&p"+m]_hC&('K#\"$&Gut@`bu,HV17aP$\H\2^0SlEHF3MDZKo*ib#3++[jgfp^:YJ@48mmeข-QI*1kK%9BJc?bou#^%]=CC\4'UNIF%r`[[b=$^?eขj\[9!o%,DFiET]HNZ\0:W)Oข%s/&Uh[r5k6KX4oj##.ZFQQ'7:=_NW@fk*1ug*Om*q'LN'UNHกuWk1]jFoขS6lMp`sib&rZj1T/$j_UO4*_D[7EIo8K=)5iQ_ee9%ข@$';D&-bLSs%QMd+(YDI_gDKmXYt(QB$_R.2kpHU0JN)K&?_JL;aS-OPd,me/2LjJ-f$#[E^ข:29I_Z9+h\,ifQ%X/fVJNGe=*C8mNj*G3[/!kWhข&N+\$iW+-ipE,2hXo^_"mGM^al*OVt(s2Xh'8MขQ.=X39!9_Mbi:;6S=u6ZVi\F"GB_t&N-f5Ntl`5nii6V8mขWE;4?\Q(Q*Y$"5%?Tn3,Lt`V\a3IpQ'=%t\NO:-\(S[_co8k!c(:l,,K;njP-3ข!@X#UYM_2-Xua.Z8*5I#]Bb=40&:M-I!LHf,qLE?q(LuOYglbkb+q(5B:ก\e#t(,a+-rHW+1^=Dg2GM*l?f=`@RBkN2a$+0kri5\:ooXka=eoS:s?3[%79I+hV5jn&b4P;D./04r&/Lp5qtRr;3ก16EO"=)Sp;5eWIHn?ขOfj4oNX3กbDt%olpAsกk$O3fกs?bqhM:[=9%cF'hXn2#[m;(3:COX.B$iข!L$D]7`a!+"O(GW^(m78/HCjYZM%!21H/Lu'bStI.VmCGlImTgO!$i2ก\NR+#กgT(1cL"lก0(-V3F,#/b564qLRlFT62Pm"FfS1K2ก5K$aAQoRfBS%4%.D@9BPe3$#NกrN6pH+u2cM?[ขdrk,"W./:ก_&XtJ4^OY#Xkt_MqPJnG\e;ข,E$1"oGP:mLZ6I55d\"XR=(K4-]#Gmi9^m_H6eU=_j7chT.ms91ck'g'iV"):1AeF"98pWU-Ll"C4HUn"[0m?[T08f)!K9bpp:8s-N#7*dj(LEee3?HZW&N--roX1WAoK/h;]tdW_esb8;/T[KiVh2f^6^e]qj1#;(=,$-*@373N0GbGa1[S5%F"/:/nK%EF$_hQl0##aoRPuG\#?:(*qlOgSSeAo]_EPYTC7H*;n/[pbL+Ehh[q=aUM]Ifbก]s35m&u7i7Sl2U@l+NF;Lu0=u4Rj[9U%nQ\M2,`JT)Nb;Xj8DYe\X\1KZ4%6XF;O9hogRde**Tg$5g?j"TFQ;]RMWkl9/!Es'(Ia[9=ZtZ;6J3#ก:8Z@'LdiV$8sU-Wp(1OO-K3EP$_\B0po;'B[/%กY)6I%R'Y3:L*o`heT/1fm[$8DsUf9F=NNag]bABO_MsLh%F)5Z8]poA2&rVjf60B@9W\NW7guBul56m`T!d@Zp5$!ib`E3_gcU#k[kW+EJGH'XlWTmsR7I]!PS(/mZ*q%FZ:b47UZ5&jW1Q^itQn'\%9_QP,"&`h?s%e7H,r2:;d4iH:/kT5ก"`99U1l5Z`rUfR+J+-h:H*lAm%QY'Kk^M&b0d93,9CpTN;WOVm?=Nb]UuV2#3K1Es$C;Z7YHEb?L&On8J=#WQ[5CPTh".P-/+EE62กt8c(.Y'YV5`B3P/U%1X&Sa+=tBUV*rh)3PhYi&bcco[SRsM\]=fk@g&n=2HIZc;&ขUY4;%Y7"RD"ImjV6;RกfW6KA5kiJe+]3A4BกD=ข#*ก\=*uqoCI5(l76qY(XZ@bn5VDC\qh''Jl4i+h'GdN'YRg7\EkUU]C6$L3CHZIee9D-[1#H!=G?S:mFp;3;NJlBS)HJ5S7;SAt^PhDH;=ขCF#HI)OTR"fb1ll\V?)X?WqYi_P:6oj5BlKI)]Fskar2M6?P=5f&!e6LK3jEo*bKO/R/ขS"qก]tPf'i?qd57bขmIu#]eg0ncp]k^\ข97MNY*[a7^K%-UkkKlRPILL(qI7BnG]'UsDX?7_+^o*#%7.rW%b`2%@^&TjT(ก%68nJ7&F*8o9XHnn'AC/0%RRUo2ขf4n%R6pd:-[TBW+3aIt??D1VhYLhUoot%1L(NJVS2'e(3ZF!`9(!EkYl`Of5a`86^\pCN*,./"e6``tJ9AsgkL`XMe=(*I'CsO\tX",sD82*$9#.Esb@-\e)AlO/#]])u%'=eWKgcVVh4OR8W12#)6NC_Ip(MhrJ?E?ก*j+P*3B.F7W?Sks4ขE,M%4BJ9ก+$s(VXY^oLm8@0$@td(O]86f\=4m"bXBb=V^ijU@)q&C-M;,7_iJQ'q7.KS3PpUbk3Wos`GKk7&.Doq!2p:]8kHO)qlA_Zjก_d:bcb'd]m!?XS(DIeP/O3otR#t6d96m,&deCIP:)r(CV+I::s4E$fi'udsis3'LAVisnmNW7]NJ=9.JW-@.\09rd(_ZLhcB[tOfZPlIgBJ7b_=8Jr?!9mnnWt9e=pX@$=UZH?aqOs-BqF1a&SngJ[[+I%ก0kmh2,qf`VQH]!ข5q(5[%=$MP-EI_F7jl/Mn'p1;p?4+Rg,F3NQrr.7&9MW?R:G&\mDRกWDrN?*h=rUข46bE[F+hM&F/+h+C6OR.rHS+T4qP',,&m!E!82C&ASn%2!F1.A0$N`MKYScaA]D=&@GqtU?\#rHaWAgZ;8f,$C+lFcIl/'gnoFPp#I`;7&G-!RRUK?L$ขUWBH?BOfg),JK1ac'(!C;=/t64ebmSpA,KQOjEnOi)SYFB(MAp?ข`n7*_3/q:1p`[:BTi.l6mT:C*VuTZVGQp+4goj=oSขกd',EtmacN)?3:(OS,NiLWEQ(Bf7Fc:Cข*,@P:OR4BKขt*Xก]O@"%a7?,h99Yl%)ขslmgq8GIR4U?YiUMs]qZjsX0EM9D3ขRrtlmc)\*$h=E'4G8Ri]cR":alW;ZCY7K3r]:(q&e+7jO`Xg?deuSpE8ng-VUH1&JJ:_+"IOBP*=P^d^_*J6Mm.OUSMFCQ7I:9`/ข&\qA#is@FK.oY4RW,ef_^A1llข;)EdC?1)grjjh7bkRZ_st-9f$JD'7/qกOk.jCZW.VmC0s`oB'ro4pK:B.rjjT@^rJDOJi\BS3`e+5(.\!)NEkj)LขN7ER5#ก]5$YOrZ8?YH;RกdT#Nd:&W`Zk)9S:5:q(5s_WT'Xl$=9%*;OVDj!1&$CN?KU8b:,U$?Uj".LDT89obD'KpG3%]t4l&$DB2IYW$6IVWFU$foOcToh$^'Hl.bFQgjp9hufcK)P/Fr2TNTkOjcfTD'VrJJl9กo:=hQ)F;0`.=ir5m#+tcsกhNfP:VINRNR`#Y,lIO99HiXf5)W]VU)EBAAsff0oNTA4,HdGU9,]te3]"I\RgB""$HI)/IOW_YCcmI8Ca4q&U^Xb.dulij6]2%G8#6R!jUก+eAgข5BRF-*&กB"=fc5*\'pqE9Y/Z;CU:RaN$7JC:กJ/Tb/7d?FVMกS3-=h#VTn"g,=.FNb/1HaXVK=TKN*97pO;1&`"3^*WB2XbjQ1kOOY?gGTKIY$D5$']UlR_mก;`#(HMVM'QB0198@+jXVo#t14[?3"=:;Vข@L6J1s'LN58@`^jaZCsS@p3,OR1`ltbZ,+jhmd[;u=N\bq#Ao-ก9qdRGp^?J+M7?sQ?9,*Z1;a#Mh'N&TAV2B#j*G=joกE/RqDmlU/Of*E.k6tAe0/N't\6L~ข
+-->
+</markdown>
