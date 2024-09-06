@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การเรียกใช้ function แบบ dynamic ด้วยคำสั่ง Function.apply()</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การเรียกใช้ function แบบ dynamic ด้วยคำสั่ง Function.apply()</h1>
+<p><img src="images/20240906/20240906_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ในการเรียกใช้ฟังก์ชั่นที่ผู้ใช้งานเขียนขึ้น จำเป็นต้องระบุตัวแปรที่จะส่งให้ในโปรแกรม แต่หากมีความจำเป็นต้องเขียนฟังก์ชั่นที่อาจรับค่าจากข้อมูลภายนอก ที่ไม่สามารถระบุใจขณะเขียนโปรแกรมได้ ตัว Dart มีคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Function/apply.html"><code>Function.apply()</code></a> ซึ่งเป็น static method ของ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Function-class.html">Function</a> class มาช่วยในงานแบบนี้</p>
+<h2>การส่งตัวแปรให้ฟังก์ชั่น</h2>
+<p>Dart รองรับการส่งตัวแปรทั้งแบบตามลำดับตำแหน่ง(positional parameters) และแบบใช้ชื่อตัวแปร(named parameters) ดูรายละเอียดเพิ่มเติมได้ที่ <a target="_blank" href="https://dart.dev/language/functions">Functions | Dart</a></p>
+<pre><code class="language-dart">num plusOne(num input) {
+  return input + 1;
+}
+
+num plusTwo({required input}) {
+  return input + 2;
+}
+
+num addThem(num input1, {required input2}) {
+  return input1 + input2;
+}
+
+void main() {
+  print(plusOne(1)); // output → 2
+  print(plusTwo(input: 1)); // output → 3
+  print(addThem(1, input2: 2)); // output → 3
+}
+</code></pre>
+<p>จากตัวอย่างจะเห็นว่า การเรียกใช้ฟังก์ชั่น ต้องเขียนระบุลงไปเลยว่าจะเรียกใช้ฟังก์ชั่นโดยส่งผ่านค่าอะไรไปให้บ้าง</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้งาน <code>Function.apply()</code></h2>
+<p>สำหรับคนที่เคยเขียนมาหลายภาษาโปรแกรม การใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Function/apply.html"><code>Function.apply()</code></a> คงเป็นเรื่องธรรมดา ถึงแม้จะไม่ได้ค่อยได้ใช้ก็ตาม รูปแบบวิธีการใช้งานมีดังนี้</p>
+<pre><code class="language-dart">external static apply(
+  Function function, 
+  List&lt;dynamic&gt;? positionalArguments,
+  [Map&lt;Symbol, dynamic&gt;? namedArguments]
+);
+</code></pre>
+<p>จากตัวอย่างแรก หากเขียนด้วย <a target="_blank" href="https://api.dart.dev/stable/dart-core/Function/apply.html"><code>Function.apply()</code></a> สามารถทำได้ดังนี้</p>
+<pre><code class="language-dart">num plusOne(num input) {
+  return input + 1;
+}
+
+num plusTwo({required input}) {
+  return input + 2;
+}
+
+num addThem(num input1, {required input2}) {
+  return input1 + input2;
+}
+
+void main() {
+  print(Function.apply(plusOne, [1])); // output → 2
+  print(Function.apply(plusTwo, [], {#input: 1})); // output → 3
+  print(Function.apply(addThem, [1], {#input2: 2})); // output → 3
+
+  print(Function.apply(plusTwo, [], {Symbol('input'): 1})); // output → 3
+  print(Function.apply(addThem, [1], {Symbol('input2'): 2})); // output → 3
+}
+</code></pre>
+<p>มาถึงตรงนี้ ก็อาจมีคนสงสัยว่า ในเมื่อฟังก์ชั่นใน Dart มันสามารถรับ List เป็น parameters ได้อยู่แล้ว จะมาเขียนแบบนี้ทำไม ถ้าตอบแบบกำปั้นทุบดิน ก็เพราะมันเข้าใจการทำงานง่ายกว่า เช่น หากเขียนฟังก์ชั่นเพื่อรับค่าที่เป็น optional มันสามารถเขียนลงไปตอนประกาศฟังก์ชั่นได้เลย</p>
+<pre><code class="language-dart">String info1(String name, [String nationality = 'Thai', int age = 0]) {
+  return &quot;Name: $name\nNationality:$nationality\nAge:$age&quot;;
+}
+
+String info2(List&lt;dynamic&gt; info) {
+  if (info.isEmpty) {
+    throw Exception('require name');
+  }
+
+  return &quot;Name: ${info[0]}\nNationality:${info.elementAtOrNull(1) ?? 'Thai'}\nAge:${info.elementAtOrNull(2) ?? 0}&quot;;
+}
+
+void main() {
+  print(Function.apply(info1, ['Somchai N.']));
+  print(info2(['Somchai N.']));
+}
+</code></pre>
+<p>จากตัวอย่าง ทั้ง <code>info1()</code> และ <code>info2()</code> ต่างก็ทำงานเหมือนกัน แต่การประกาศค่า parameters นั้น การที่ระบุชื่อตัวแปร ประเภทตัวแปร รวมถึงค่า default ทำให้อ่านง่ายกว่าที่ส่งมาเป็น List ใน info2</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>งานในชีวิตจริง</h2>
+<p>การเรียกแบบ dynamic มันช่วยให้ลดการเขียนโปรแกรมเพื่อเอาค่าที่ได้จากข้อมูลภายนอก มาจัดรูปแบบเพื่อนำส่งให้ฟังก์ชั่นประมวลผลได้ เช่น หากมี Text file ที่เป็นจากตัววัดอุณหภูมิ ที่จะเก็บในรูปแบบต่อไปนี้</p>
+<pre>
+date time degree rh
+2024-01-01 12:00 15.5 30
+2024-01-01 13:00 15.5 45
+2024-01-01 14:00
+2024-01-01 15:00 14 60
+</pre>
+<p>โดยมันจะมีค่าว่างหากตัวข้อมูลวัดไม่ได้ ผู้เขียนก็เขียนฟังก์ชั่นเพื่อเอาข้อมูลดังกล่าวมาประมวลผลได้ดังนี้</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void getTempRh([String? date, String? time, String? degree, String? rh]) {
+  // process data
+  print(&quot;$date $time $degree $rh&quot;);
+}
+
+void main() {
+  // ** example: read data from file **
+  // File textData = File('path/to/datafile.txt');
+  // List&lt;String&gt; lines = textData.readAsLinesSync();
+
+  // ** example: use inline demo data **
+  String textData = &quot;&quot;&quot;
+2024-01-01 12:00 15.5 30
+2024-01-01 13:00 15.5 45
+2024-01-01 14:00
+2024-01-01 15:00 14 60
+&quot;&quot;&quot;;
+  List&lt;String&gt; lines = textData.split(&quot;\n&quot;);
+
+  for (String line in lines) {
+    List&lt;String&gt; param = line.trim().split(' ');
+    Function.apply(getTempRh, param);
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>2024-01-01 12:00 15.5 30<br/>
+2024-01-01 13:00 15.5 45<br/>
+2024-01-01 14:00 null null<br/>
+2024-01-01 15:00 14 60<br/>
+null null null</p>
+</blockquote>
+<p>อีกตัวอย่าง หากได้ข้อมูลจากการอ่านค่าเป็น JSON ในงานที่อ่านข้อมูลมาจาก Server ก็สามารถส่งข้อมูลแบบ dynamic call ได้เช่นเดียวกัน</p>
+<pre><code class="language-dart">import &quot;dart:convert&quot;;
+
+void getTempRh({String? date, String? time, String? degree, String? rh}) {
+  // process data
+  print(&quot;$date $time $degree $rh&quot;);
+}
+
+void main() {  
+  String jsonText = &quot;&quot;&quot;[
+{&quot;date&quot;:&quot;2024-01-01&quot;,&quot;time&quot;:&quot;15:00&quot;,&quot;degree&quot;:&quot;15.5&quot;,&quot;rh&quot;:&quot;40&quot;},
+{&quot;date&quot;:&quot;2024-01-01&quot;,&quot;time&quot;:&quot;16:00&quot;,&quot;degree&quot;:&quot;15&quot;,&quot;rh&quot;:&quot;45&quot;}
+]&quot;&quot;&quot;;
+
+  var data = jsonDecode(jsonText);
+  for (Map line in data) {
+    Function.apply(getTempRh, [], line.map((k, v) =&gt; MapEntry(Symbol(k), v)));
+  }
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p>2024-01-01 15:00 15.5 40<br/>
+2024-01-01 16:00 15 45</p>
+</blockquote>
+<p>จากตัวอย่าง JSON เนื่องจากตัว named arguments ต้องส่งในรูปแบบ <code>Map&lt;Symbol, dynamic&gt;</code> จึงจำเป็นต้องแปลงตัว key ที่เป็น <code>String</code> ให้เป็น <code>Symbol</code> เสียก่อน โดยเรียกใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Map/map.html"><code>.map()</code></a> เพื่อแปลงค่า key ของทุก elements</p>
+<p>สามารถดูวิธีการใช้งาน Map เบื้องต้นได้ที่ <a target="_blank" href="20240817_dart_map.html">note</a> ตัวนี้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>ข้อเสียของการใช้ dynamic call</h2>
+<p>เนื่องจากมันเป็นการทำงานขณะ runtime ทำให้ไม่สามารถตรวจสอบได้ว่าตัวแปรที่ส่งให้ประเภทถูกต้องตามที่ต้องการหรือไม่ <font color="red">อาจทำให้เกิด Exception error ได้</font> และหากใช้งานไม่วางแผนให้ดีพอจะกลายเป็น bugs เพราะมีช่องโหว่ที่ตัว compiler ไม่สามารถช่วยตรวจสอบให้ได้ ดังนั้นถ้ามันเป็นงานที่ไม่ซับซ้อนมาก ผู้เขียนโปรแกรมสามารถควบคุมดูแลความถูกต้องของข้อมูลที่จะใช้ประมวลผลได้ ก็ถือว่าช่วยผ่อนแรงในการเขียนโปรแกรมไปได้เยอะพอสมควรกับการเรียกใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Function/apply.html"><code>Function.apply()</code></a> <strong>โปรดใช้งานด้วยความระมัดระวัง</strong></p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".OcขAr9;'n-sls)=8Y+NgbKil#OS?\/:"4tJSu;#AKlกfAlDfSGlj.*%&m+EEIq8c$rEZR[D:iu!O*(^Au9ZDIO0d9feqR0uM1,s,gb+8/,7LGNSg3HNJi0#K2Yg[P+jKL%7"hM8pE3-[cขK9'I1L(4^m*!Xa+_,FJ#fQH(nC^:9Z0K9ขj"))N'L1SpZ%/.QSdkEbt2;;R/;]*.VKCa&d)[8Cn'jk*#ขdq,7kHgR0^0"RibN3b)T?Un&\4?Qc%`7-GP\..PK7B_MI#EFjr'9Gos0':I5UT(&G*$M^a_hEjIJj+$:?Y%^lr'_FN0iL2#@Hr[]/*]A'F+#&k(&Ij-;IAF0Cb=_HP`TnARZkhVh11_38!6^l,"Jo4Cl%Y`s&B^AhOQ&OiMกกkBhRrb?S;Rb:)T`.ISGok:"t@NjD$k`g59:OD6U3%YNC.MXขF"#!Ibj%^tUa9&cs\)NQXu0r-q3M-XZdHTE!R4\\:7R9CCtc(i70U8MF8ขH5[0XgY;iIG\mC9-qJ5M[dSqM[csmCAZ#g(+IYoX*)H--*a\-$]@a:C?6TISti"G$ข&frJ@9CkAfWG^2k:/G,\P2K+S2Se?EL\qG+3E.s$:ขh)=ERb`LTG$20VM0r"op8;NJD07ก*!TO@dod-9BjqZ5Kh5,K1Ofc!4][C*;]p$R8F@KoI)4iU$r'qe5.UoS#K(WOkp[UrkDqi#81q&YF=84EI$&1a54Do(Zj+n8DauEL(_$YXi8k(?JqSln\H%(ก1VHN,oLOruM@dOR=8UmaF\F7&;t5-I@K3Tt*Xi+O-QjfW-$&Q';EU[e&0GVH0bF)&^%rJ_TIsn(U7.s%V88pj(N9AcOsQGกD?(_3[uda_&-VeA[lqa,[muOmb?.7iH2I2gsqT]$tCM(7W7"[]:)b7V4-0:'JAmD[!O+a)$9;R't;ก]:Na6\r`hQcd+kU"A["8D#EHLItO`Z=]ขGJ=bW*^f:pB=k=Uก3:kbmu"^S.]Mumq70'F1f&`C.90q=j'WPI4$p@dJW3Q?tb/7bg?jVT@],Kr9da#B.bKtC-ขNtbdlE5(tp=+Y$k62ra:^PtQ8*[F&li%J).!au_H(6TN)bofXYK[-]Q*AoHH_7&kn@L?QeG`(co0$7YN^Z]T^?qk(tกsTPqYok489#AtN)#T17(u4ขC:r@TF,7K@K6f`Ak*5nNVYBsLY:?YD/(eNAtขrfPQbT7l[&pd=bZ[PกuN]]K;ขPEe6aj;7%M6-TmUS,i++O_ET9VEขl0G]0KIq,qc=e7=mhh29dDgAB(MqEKj5c63i2;Hl=%I9_:.R5g26!MWขc=ZW'PSMC`0D+K01CBSSLa4Kg?r?q"$Q);f-2IWESNPCVHN#M9JXCnsGQh3L/กขc!.I.`k3sA_i0#6Ta&ML_*"%J4RQPK7\6td-'VfG@8R/Q;1UmB4(O%^![S"et5E7`A*+NI/MJ-pFW,LsFl!/2s+A1HD*CYdqtWIuก(กQl,H/b*XNaJ&3jขl@o(:R25B(*GlX:kB_LBV7กmqDPJGG'ORRSdV:h6IPD@,+^#0*dEM1bกt#JP!;bYoIsmi'NlspกWTqg6R_=0D=Rgl-'@X?OVofg"()#K`#6+A:j5E;(ก1JcohRsZcl[mK@uc/G-4_\2or/O*W8DT?hECก%i_1cb$eJutPQLก,i;Xe?X,LdUqbb.J_=pWM'hitnWTa827YUsqaXข*7l#4?Wj;+5ขRA6aT&&p)M3@HNk".+2WYXfKU.$Y&2]kDP266Z$;^9pS5'?2NL"LKVZ9^+pL%EJ5rjpLขEZ"UT7=K]ETLB7=Mkก+J\lZIeOeoMgก;4Lm?Lกf'ข]SUXข8a.glQb+tqEP+hGKLX$erdF6AVq'3GH+8-`l_2M@8=qnr1Ws(ke%cpKU&[is"imW%%28.EEtlTg"\_?6'=o`H?PpODXWjIY:-W*D8jG9mKk%c`nm30b:ขErnCกnSmRqIdb\(Ze'*h"okmP@5o7&c^"?BXU1XP]a!pu@61Lc2&V^.&_aPE&I4LC2$/Xr:iikd5^K#Ue*q1F:jQ`u0Sก=X6Np'qi?ข)R1กj/rKb0@+LrpL7l?1c$duTqLI,6kX$cP=Hpl?l[U[_NY-tFC)==BL7s\Fqกue*:e$sNCPa'hTR)XB,uX4l)#&;U&o/DGlf1R34@G/KA(UกSBpGM"$k2a38Ci2k0j=cY@6`!W:P:E7BYiRNak%rn@2OAg#XnnHo=Y67%`q=R?Q9(S(/"=9f(I+32Ua@-!kr@\BTQ5T&Fc.AbZ&lQqUKWJC:OD2WG8sPQ0I9bขUp?"\L-3=T,rH&]ipH@S]84liC5hsR4Y\GBhqo5bgHW*K(2\mQP0O@:(s'hข)^gขU:(0#G9%'k1;EUcE$*bXP+0.@#W3_J&i\eXltgLs@Toqpq2h?^กR](7aI'8*r'b)*Iq\+0CขT/?e--CZoZX'XG50Ikf+]sPก!(ZmlD375"H4biBG5&@'50KAgj1ก[VNr;Age&l[S-6-8=Dj$r_';DOM8G/5=Nk%t-i(]ak`\fnrS)G2*'W[KfC57Uh^QrQFFMVEpN\#;Q!!k*7$raqBp1I!8K(%/h6$B0FEh63Y3Ym$(AhTHFkQslS$%JMYoLb+@uKLp$กN[nrR1,.C"eNIm7.N8G$CiICCb5ULpc5e+S%IU`jFDSR3)l8`(18W32PhcVPWH9d2[*76iก*=)HhVCQRS3D3ma*)BV3Pn_^MA+54hJ=nHl5`;Cข9UK&(.Kn0`?NUf7(Mข(Joขd;^Me2Brk]=W9mJ:&;N@GFขA-\Ua`=2ก]P'E;put0-8WtUhG$o3uJRnVQ`=u2ก)^b1g(=2e0@7.OWDr2กXXWiL1^hrmKp*[OXXTLT/=Ka\mqoUce$T1C@h$^Wr%8M.0.?3s4DL2N8s-a9A.Od7YthZ/M\iYTMa-@กC?Z3$6%Y$#E$u661^OKกP)Sg\qQ%Jgdi!กbGVac2RCVhJ9&/3GRTr$ONZCSmPK_P(hRZArdWO=V=W.ขde?7Y12X0:#Zuh^l]2CWQAก"r\8/TuCu=!oH)K_#T"`กrY00U2*hD`i2qS69bKJBggjPceK;b@!pd3Qo"@MfALMmWVEl=3,$ขO:gdi.P2r%'`GF-4]3MduE,%j$jmoK3_#bSFueข]^Li7Rh,dn@)#QcdQ3V;QPus)CZ\R4T!=2AFCFSaYI,KMiFW(WlUof@No^sXgกIP%sYqG#'T3%jC4I3QYNa'P@_rX+ข`SEpN`)Sj\!pDI'ThP4"UEGo"/hขLu0\F7E3AhYm`/+"H3h]JeTi_i=NHG/9m-$WXURp:SV)tr5p+oNfAQ*Yขก2e5d2mK?M9\-kdI7`4a47f+(ce!X(7Xs!fsNDluMZoข*;e@8mtNk,nDYAW$!e+in-HESX/ก\Bc^u%o1HnX-9TjPe8FuSSe)IZF1`p8c'BcoH0+0MMYข/1?)0MWPY7*ขU-:dVg&"9]LGMf^oV*9_eX%A$กnl&He-ข)+&TJ\=C`uIก5SSo,,cNkkCUOM8B[g08AUaKdWs6Jb-FF2CD-GWA9f:Bf&ejg-ขVnsCMj'GCOM0%!ข&(Ae76^EJ&%hWG`"h2qSขlA4:T?Qq7=XกBกicFj-?3J#JขZj06q9p3P^4+KU36^T:6T\]PM.\V;HZ`IhXF`^DMW4n;5T-oOglEb,?mXPhX0alA0_h"5C%#_q[-(ขjcOR,YU:Jp,@G/)o"Sd*nEPW~ข
+-->
+</markdown>
