@@ -59,21 +59,21 @@
 
 <h1>Dart: วิธีการค้นหาและแทนที่ข้อความด้วย RegExp class</h1>
 <p><img src="images/20240913/20240913_0000_cover.svg" class="u-max-full-width" /></p>
-<p>ในการค้นหาและแทนที่ข้อความใน Dart หากใช้งานผ่าน <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String-class.html">String class</a> จะมีคำสั่งที่ช่วยในการทำงานได้แก่</p>
+<p>ในการค้นหาและแทนที่ข้อความใน Dart หากใช้งานผ่าน <a target="_blank" href="https://api.dart.dev/stable/dart-core/String-class.html">String class</a> จะมีคำสั่งที่ช่วยในการทำงานได้แก่</p>
 <p>ใช้ค้นหา</p>
 <ul>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/indexOf.html"><code>.indexOf()</code></a></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/contains.html"><code>.contains()</code></a></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/startsWith.html"><code>.startsWith()</code></a></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/endsWith.html"><code>.endsWith()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/indexOf.html"><code>.indexOf()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/contains.html"><code>.contains()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/startsWith.html"><code>.startsWith()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/endsWith.html"><code>.endsWith()</code></a></li>
 </ul>
 <p>ใช้แทนที่</p>
 <ul>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/replaceAll.html"><code>.replaceAll()</code></a></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/replaceFirst.html"><code>.replaceFirst()</code></a></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/replaceRange.html"><code>.replaceRange()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/replaceAll.html"><code>.replaceAll()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/replaceFirst.html"><code>.replaceFirst()</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/String/replaceRange.html"><code>.replaceRange()</code></a></li>
 </ul>
-<p>คำสั่งเหล่านี้ หากผู้ใช้ต้องการค้นหาหรือแทนที่ด้วยข้อความที่มีรูปแบบแบบข้อความธรรมดา ก็สามารถใช้ข้อความที่สนใจได้ทันที โดยหากดูใน API จะพบว่าตัวข้อความที่ใช้ค้นหา จะเป็น <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Pattern-class.html">Pattern class</a> มันเป็น interface ที่ใช้สำหรับการค้นหาข้อความแบบพื้นฐาน</p>
+<p>คำสั่งเหล่านี้ หากผู้ใช้ต้องการค้นหาหรือแทนที่ด้วยข้อความที่มีรูปแบบแบบข้อความธรรมดา ก็สามารถใช้ข้อความที่สนใจได้ทันที โดยหากดูใน API จะพบว่าตัวข้อความที่ใช้ค้นหา จะเป็น <a target="_blank" href="https://api.dart.dev/stable/dart-core/Pattern-class.html">Pattern class</a> มันเป็น interface ที่ใช้สำหรับการค้นหาข้อความแบบพื้นฐาน</p>
 <pre><code class="language-dart">String animal = &quot;cat bat rat&quot;;
 
 print(animal.indexOf('bat')); // output → 4
@@ -87,7 +87,7 @@ print(animal.replaceAll('t', 'T')); // output → caT baT raT
 print(animal.replaceFirst('t', 'T')); // output → caT bat rat
 print(animal.replaceAll('rat', 'mouse')); // output → cat bat mouse
 </code></pre>
-<p>หากผู้ใช้งานจำเป็นต้องการค้นหาข้อความในรูปแบบที่กำหนด ไม่ใช่เป็นข้อความตรง ๆ ตามตัวอย่างข้างต้น Dart จะมี <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExp-class.html">RegExp class</a> ช่วยในการสร้างรูปแบบตามที่ผู้ใช้ต้องการ รูปแบบข้อความที่ใช้ใน RegExp เรียกกว่า <a target="_blank" href="https://en.wikipedia.org/wiki/Regular_expression">regular expression pattern</a> เป็นรูปแบบโดยการใช้ข้อความ ตัวอักษร สัญญาลักษณ์ต่าง ๆ แทนรูปแบบที่ต้องการ โดยรูปแบบสามารถเขียนได้ตั้งแต่ง่าย ๆ จนถึงซับซ้อน</p>
+<p>หากผู้ใช้งานจำเป็นต้องการค้นหาข้อความในรูปแบบที่กำหนด ไม่ใช่เป็นข้อความตรง ๆ ตามตัวอย่างข้างต้น Dart จะมี <a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExp-class.html">RegExp class</a> ช่วยในการสร้างรูปแบบตามที่ผู้ใช้ต้องการ รูปแบบข้อความที่ใช้ใน RegExp เรียกกว่า <a target="_blank" href="https://en.wikipedia.org/wiki/Regular_expression">regular expression pattern</a> เป็นรูปแบบโดยการใช้ข้อความ ตัวอักษร สัญญาลักษณ์ต่าง ๆ แทนรูปแบบที่ต้องการ โดยรูปแบบสามารถเขียนได้ตั้งแต่ง่าย ๆ จนถึงซับซ้อน</p>
 <p>แนวคิดของ regular expressions เริ่มต้นขึ้นในปี ค.ศ.1950 เมื่อนักคณิตศาสตร์ชาวอเมริกัน Stephen Cole Kleene ได้กำหนดแนวคิดของ regular language ซึ่งเป็นภาษาที่มีแบบแผนในการกำหนดวิธีการสะกดหรือลำดับตัวอักษร เพื่ออธิบายรูปแบบข้อความที่ต้องการ ใน Dart จะใช้รูปแบบเดียวกับมาตรฐานของ <a target="_blank" href="https://ecma-international.org/ecma-262/9.0/#sec-regexp-regular-expression-objects">JavaScript regular expressions</a></p>
 <p>การใช้ RegExp จะช่วยให้งานบางอย่างทำเสร็จเร็วขึ้น แต่อาจต้องแลกกับเวลาที่ใช้ในการประมวลผลรูปแบบของ RegExp ที่เพิ่มเข้ามา โดยหากเป็นรูปแบบที่ซับซ้อน การใช้ RegExp จะช่วยประหยัดเวลาในการทำงานมาก เพราะไม่ต้องเขียนคำสั่งเพื่อจัดการข้อความที่อาจต้องใช้เวลาเขียนเยอะ ตัวอย่าง ลองแปลงคำในข้อความเป็น proper case ด้วย RegExp</p>
 <pre><code class="language-dart">String animal = &quot;cat bat rat&quot;;
@@ -117,6 +117,19 @@ print(test.hasMatch(&quot;The sun is bigger&quot;)); // output → false
 
 RegExp notValid = RegExp('?'); // FormatException: Nothing to repeat ?
 </code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <h2>เครื่องมือช่วยเขียน regular expressions</h2>
 <p>ในชีวิตจริง การเขียน regular expressions ไม่ใช่เรื่องง่าย เนื่องจากเป็นภาษาที่อธิบายรูปแบบของข้อความที่ต้องการ แม้ว่าตัว VSCode จะช่วยเตือนตั้งแต่ก่อน compile แล้วว่าตัว regular expressions ไม่ถูกต้อง ดังนั้นการใช้เครื่องมือช่วยในการเขียน regular expressions น่าจะเป็นทางออกที่ดีกว่า</p>
 <div class="image"><img src="images/20240913/20240913_0100_vscode.png" class="u-max-full-width" /><div><p>การแจ้งเตือน regular expressions ไม่ถูกต้องใน VSCode</p>
@@ -124,6 +137,17 @@ RegExp notValid = RegExp('?'); // FormatException: Nothing to repeat ?
 <p>เครื่องมือช่วยในการเขียน regular expressions แบบ Online ที่ใช้งานง่าย มีคำอธิบาย พร้อมทั้งยั้งสามารถทดสอบการทำงานได้ ส่วนตัวใช้ <a target="_blank" href="https://regex101.com">https://regex101.com</a> ตัว engine ใช้ JavaScript ซึ่ง Dart ก็ใช้งานตัวนี้ด้วยเช่นกัน</p>
 <div class="image"><img src="images/20240913/20240913_0200_regex101.png" class="u-max-full-width" /><div><p>https://regex101.com</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
 <h2>regular expressions เบื้องต้น</h2>
 <p>ก่อนที่จะไปพูดถึง RegExp กันต่อ จะขออธิบายในส่วนของ regular expressions เบื่องต้น ที่ใช้กันบ่อย ๆ</p>
 <h3>ข้อความตัวอักษรธรรมดา</h3>
@@ -142,6 +166,18 @@ print(message.contains(hippo)); // output → true
 <p>เมื่อทำใน regex101.com จะมีคำอธิบาย และผลของการจับคู่คำที่ตรงกับ regular expressions</p>
 <div class="image"><img src="images/20240913/20240913_0300_simple_regexp.png" class="u-max-full-width" /><div><p>ผลการทดสอบใน regex101.com</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
 <h3>ใช้ <code>.</code> เพื่อแทนตัวอักษรใด ๆ</h3>
 <p>ใน regular expressions จะใช้ <code>.</code> แทนตัวอักษรใด ๆ ก็ได้จำนวน 1 ตัวอักษร รวมถึงช่องว่าง และอักษรพิเศษต่าง ๆ</p>
 <pre><code class="language-dart">RegExp anyChar = RegExp('.');
@@ -160,17 +196,6 @@ c<br/>
 3<br/>
 </p>
 </blockquote>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3595033291"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
 <h3>ตัวอักษรว่างและไม่ว่าง <code>\s</code> <code>\S</code></h3>
 <p>ตัว <code>.</code> จะแทนตัวอักษรทุกตัว หากต้องการแยกเป็นตัวอักษรปกติ กับ ตัวอักษรที่เป็นช่องว่าง (white space) สามารถใช้</p>
 <ul>
@@ -192,17 +217,6 @@ c<br/>
 2<br/>
 3</p>
 </blockquote>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="2361842671"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 <h3>ตัวเลข ไม่ใช่ตัวเลข <code>\d</code> <code>\D</code></h3>
 <ul>
 <li><code>\d</code> แทนตัวเลขใด ๆ 0 ถึง 9</li>
@@ -236,11 +250,11 @@ anyChar.allMatches(&quot;abc 123 &quot;).forEach((RegExpMatch m) {
 </div></div>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h3-1 -->
+<!-- h3-3 -->
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="7534278305"
+     data-ad-slot="3403461607"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
 <script>
@@ -265,6 +279,17 @@ anyChar.allMatches(&quot;abc 123 &quot;).forEach((RegExpMatch m) {
 <blockquote>
 <p>123<br/></p>
 </blockquote>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
 <h3>รูปแบบทางเลือก <code>|</code></h3>
 <p>รูปแบบทางเลือกใช้สำหรับจับคู่โดยหากรูปแบบแรกไม่ตรง ให้ดูรูปแบบที่สอง เช่น <code>ant|cat</code> คือเลือกจับคู่ ant หรือ cat</p>
 <pre><code class="language-dart">RegExp regChoose = RegExp('ant|cat');
@@ -279,13 +304,12 @@ cat<br/></p>
 </blockquote>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h3-3 -->
 <ins class="adsbygoogle"
-     style="display:block"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3403461607"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="3595033291"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -357,6 +381,24 @@ Group: 2 → google.com<br/></p>
 <li>sub pattern ที่ไม่นำมารวมใน group ด้วย <code>(?: )</code></li>
 <li>Backreference ด้วย <code>\1</code> <code>\2</code></li>
 </ul>
+<h2>การทดสอบว่ามีส่วนใดที่ตรงกับ pattern หรือไม่ด้วย <code>.hasMatch()</code></h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExp/hasMatch.html"><code>.hasMatch()</code></a> คำสั่งนี้จะคล้ายกับ <a target="_blank" href="https://api.dart.dev/stable/dart-core/String/contains.html"><code>.contains()</code></a> ของ String แต่เปลี่ยนไปทดสอบตาม RegExp ที่กำหนดแทน ตัวอย่างทดสอบว่ามี <a target="_blank" href="https://th.wikipedia.org/wiki/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B9%84%E0%B8%9B%E0%B8%A3%E0%B8%A9%E0%B8%93%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B9%84%E0%B8%97%E0%B8%A2">รหัสไปรณีย์</a> หรือไม่</p>
+<pre><code class="language-dart">RegExp postCode = RegExp(r'[1-9]\d{4}');
+bool result = postCode.hasMatch(&quot;ที่อยู่ 12/13 หาดใหญ่ สงขลา 90110&quot;);
+print(result); // output → true
+</code></pre>
+<p>อธิบายรูปแบบ <code>[1-9]\d{4}</code></p>
+<ol>
+<li><code>[1-9]</code> ตัวเลข 1 ถึง 9 จำนวน 1 ตัว</li>
+<li><code>\d{4}</code> ตัวเลข 0-9 จำนวน 4 ตัว</li>
+</ol>
+<h2>หาข้อความที่เข้าคู่กับ regular expression</h2>
+<p>สามารถเลือกใช้ได้ 2 แบบคือ</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExp/firstMatch.html"><code>.firstMatch()</code></a> ค้นหาการจับคู่แรกของ regular expression กับข้อความที่กำหนด ผลที่ได้เป็น <code>RegExpMatch?</code></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExp/allMatches.html"><code>.allMatches()</code></a> ค้นหาการจับคู่ทั้งหมดของ regular expression กับข้อความที่กำหนด ผลที่ได้เป็น <code>Iterable&lt;RegExpMatch&gt;</code></li>
+</ul>
+<p>การใช้งานก็ตรงไปตรงมา หากต้องการจับคู่เพื่อเอาข้อมูลชุดแรกที่เจอ หรือข้อมูลที่จะนำไปจับคู่มีแค่คู่เดียวหรือไม่มี การใช้ <code>.firstMatch()</code> จะสมเหตุสมผลมากกว่า และมีประสิทธิภาพในการทำงานมากกว่า และหากไม่เจอข้อความที่จับคู่ได้ก็จะได้ค่ากลับมาเป็น <code>null</code> แต่หากต้องการข้อมูลทุกตัวที่จับคู่ได้ก็ใช้ <code>.allMatches()</code></p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
 <ins class="adsbygoogle"
@@ -368,37 +410,8 @@ Group: 2 → google.com<br/></p>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-<h2>การทดสอบว่ามีส่วนใดที่ตรงกับ pattern หรือไม่ด้วย <code>.hasMatch()</code></h2>
-<p><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExp/hasMatch.html"><code>.hasMatch()</code></a> คำสั่งนี้จะคล้ายกับ <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/String/contains.html"><code>.contains()</code></a> ของ String แต่เปลี่ยนไปทดสอบตาม RegExp ที่กำหนดแทน ตัวอย่างทดสอบว่ามี <a target="_blank" href="https://th.wikipedia.org/wiki/%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B9%84%E0%B8%9B%E0%B8%A3%E0%B8%A9%E0%B8%93%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B9%84%E0%B8%97%E0%B8%A2">รหัสไปรณีย์</a> หรือไม่</p>
-<pre><code class="language-dart">RegExp postCode = RegExp(r'[1-9]\d{4}');
-bool result = postCode.hasMatch(&quot;ที่อยู่ 12/13 หาดใหญ่ สงขลา 90110&quot;);
-print(result); // output → true
-</code></pre>
-<p>อธิบายรูปแบบ <code>[1-9]\d{4}</code></p>
-<ol>
-<li><code>[1-9]</code> ตัวเลข 1 ถึง 9 จำนวน 1 ตัว</li>
-<li><code>\d{4}</code> ตัวเลข 0-9 จำนวน 4 ตัว</li>
-</ol>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
-<h2>หาข้อความที่เข้าคู่กับ regular expression</h2>
-<p>สามารถเลือกใช้ได้ 2 แบบคือ</p>
-<ul>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExp/firstMatch.html"><code>.firstMatch()</code></a> ค้นหาการจับคู่แรกของ regular expression กับข้อความที่กำหนด ผลที่ได้เป็น <code>RegExpMatch?</code></li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExp/allMatches.html"><code>.allMatches()</code></a> ค้นหาการจับคู่ทั้งหมดของ regular expression กับข้อความที่กำหนด ผลที่ได้เป็น <code>Iterable&lt;RegExpMatch&gt;</code></li>
-</ul>
-<p>การใช้งานก็ตรงไปตรงมา หากต้องการจับคู่เพื่อเอาข้อมูลชุดแรกที่เจอ หรือข้อมูลที่จะนำไปจับคู่มีแค่คู่เดียวหรือไม่มี การใช้ <code>.firstMatch()</code> จะสมเหตุสมผลมากกว่า และมีประสิทธิภาพในการทำงานมากกว่า และหากไม่เจอข้อความที่จับคู่ได้ก็จะได้ค่ากลับมาเป็น <code>null</code> แต่หากต้องการข้อมูลทุกตัวที่จับคู่ได้ก็ใช้ <code>.allMatches()</code></p>
 <h2>ผลที่ได้จากการจับคู่ RegExpMatch class</h2>
-<p><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExpMatch-class.html">RegExpMatch class</a> เป็น class ที่จะเก็บผลการจับคู่ สามารถประยุกต์ใช้งานได้หลายแบบ ตามข้อมูลที่ได้จากข้อความที่จับคู่ได้ โดยตัว RexExpMatch เป็นการ implement <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Match-class.html">Match class</a> อีกที</p>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExpMatch-class.html">RegExpMatch class</a> เป็น class ที่จะเก็บผลการจับคู่ สามารถประยุกต์ใช้งานได้หลายแบบ ตามข้อมูลที่ได้จากข้อความที่จับคู่ได้ โดยตัว RexExpMatch เป็นการ implement <a target="_blank" href="https://api.dart.dev/stable/dart-core/Match-class.html">Match class</a> อีกที</p>
 <div class="image"><img src="images/20240913/20240913_0600_regexpmatch_class.png" class="u-max-full-width" /><div><p>RegExpMatch class</p>
 </div></div>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
@@ -408,10 +421,10 @@ print(result); // output → true
      data-ad-layout="in-article"
      data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="1048761005"></ins>
+     data-ad-slot="2361842671"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
+</script>
 <h3>ตำแหน่งที่พบ <code>.start</code> <code>.end</code></h3>
 <p>คืนค่าตำแหน่งที่พบตรงกับ regular expression ที่กำหนด สามารถนำค่านี้ไปใช้เพื่อแทนที่ข้อความดังกล่าวได้</p>
 <pre><code class="language-dart">String animal = &quot;cat bat rat&quot;;
@@ -427,8 +440,8 @@ if (match != null) {
 <h3>การทำงานกับ sub pattern</h3>
 <p>ใน regular expression ที่มีการกำหนด sub pattern หรือ group สามารถเข้าถึงข้อมูลของ group ที่พบได้ดังนี้</p>
 <ul>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Match/groupCount.html"><code>.groupCount</code></a> จำนวน group ที่พบ</li>
-<li><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Match/group.html"><code>.group()</code></a> คืนค่าข้อความที่ตรงกับ sub pattern แต่ละตำแหน่ง โดย <code>.group(0)</code> จะเป็นข้อความทั้งหมดที่ตรงกับ regular expression</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Match/groupCount.html"><code>.groupCount</code></a> จำนวน group ที่พบ</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Match/group.html"><code>.group()</code></a> คืนค่าข้อความที่ตรงกับ sub pattern แต่ละตำแหน่ง โดย <code>.group(0)</code> จะเป็นข้อความทั้งหมดที่ตรงกับ regular expression</li>
 </ul>
 <pre><code class="language-dart">String allEmail = &quot;contact@simple.zzz info@simple.zzz&quot;;
 RegExp email = RegExp(r'([^@]+)@(\S+)'); // match email address with 2 sub patterns
@@ -456,7 +469,7 @@ if (match != null) {
 }
 </code></pre>
 <h3>การเข้าถึง group ด้วย <code>[]</code></h3>
-<p>ในกรณีที่ต้องการเข้าถึง group ด้วยการเขียนที่สั้นกว่า สามารถใช้ <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Match/operator_get.html"><code>[]</code></a> แทนได้</p>
+<p>ในกรณีที่ต้องการเข้าถึง group ด้วยการเขียนที่สั้นกว่า สามารถใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-core/Match/operator_get.html"><code>[]</code></a> แทนได้</p>
 <pre><code class="language-dart">String allEmail = &quot;contact@simple.zzz info@simple.zzz&quot;;
 RegExp email = RegExp(r'([^@]+)@(\S+)'); 
 RegExpMatch? match = email.firstMatch(allEmail);
@@ -467,7 +480,7 @@ if (match != null) {
 }
 </code></pre>
 <h3>การดึง group ที่สนใจออกมาเป็น List ด้วยคำสั่ง <code>.groups()</code></h3>
-<p>หากต้องการดึงข้อมูล group ที่จับคู่ได้ออกมาเป็น List โดยกำหนดตัวหมายเลข group ที่สนใจ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/Match/groups.html"><code>.groups()</code></a> มีรูปแบบการใช้งานดังนี้</p>
+<p>หากต้องการดึงข้อมูล group ที่จับคู่ได้ออกมาเป็น List โดยกำหนดตัวหมายเลข group ที่สนใจ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Match/groups.html"><code>.groups()</code></a> มีรูปแบบการใช้งานดังนี้</p>
 <pre><code class="language-dart">List&lt;String?&gt; groups( 
   List&lt;int&gt; groupIndices 
 )
@@ -482,21 +495,8 @@ if (match != null) {
   print(result.join('@')); // output → contact@simple.zzz
 }
 </code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<!-- h2-3 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="6575154506"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
 <h2>การตั้งชื่อ sub pattern หรือ group name</h2>
-<p>นอกจากการใช้เลขลำดับเพื่อเข้าถึงข้อความที่ตรงกับ sub pattern ที่กำหนดแล้ว ยังสามารถใส่ชื่อเพื่ออ้างถึง group ได้ผ่านคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExpMatch/namedGroup.html"><code>.namedGroup()</code></a> วิธีการกำหนดชื่อใน sub pattern <code>(?&lt;name&gt;)</code></p>
+<p>นอกจากการใช้เลขลำดับเพื่อเข้าถึงข้อความที่ตรงกับ sub pattern ที่กำหนดแล้ว ยังสามารถใส่ชื่อเพื่ออ้างถึง group ได้ผ่านคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExpMatch/namedGroup.html"><code>.namedGroup()</code></a> วิธีการกำหนดชื่อใน sub pattern <code>(?&lt;name&gt;)</code></p>
 <div class="image"><img src="images/20240913/20240913_0700_namedgroup.png" class="u-max-full-width" /><div><p>การกำหนดชื่อให้กับ sub pattern</p>
 </div></div>
 <pre><code class="language-dart">String allEmail = &quot;contact@simple.zzz info@simple.zzz&quot;;
@@ -512,7 +512,7 @@ if (match != null) {
   print(match.group(2)); // output → simple.zzz
 }
 </code></pre>
-<p>หากต้องการตรวจสอบว่ามี group name อะไรบ้างที่จับคู่ได้ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-core/RegExpMatch/groupNames.html"><code>.groupNames()</code></a> เพื่อคืนค่า Iterable ของ group name ทั้งหมดมาให้</p>
+<p>หากต้องการตรวจสอบว่ามี group name อะไรบ้างที่จับคู่ได้ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/RegExpMatch/groupNames.html"><code>.groupNames()</code></a> เพื่อคืนค่า Iterable ของ group name ทั้งหมดมาให้</p>
 <pre><code class="language-dart">String allEmail = &quot;contact@simple.zzz info@simple.zzz&quot;;
 RegExp email = RegExp(r'(?&lt;account&gt;[^@]+)@(?&lt;domain&gt;\S+)');
 RegExpMatch? match = email.firstMatch(allEmail);
@@ -585,6 +585,6 @@ function share_twitter()
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!".gnHZ.]jQ2b3A^Vd=HXCc!WAgBAI^L(u=m.LT5RftiN8ns*DfZoQ\%Vก7l"A"PM.8C3a?)b!n^f]9*W0O"uG*4HMD$Kl/2YZ"Y\`ข&L1lg$L(,,k$ann-n4FZI5ku7)C)o_!5QgFC.DgTT5Hc^KFAA+ขBlm9u(ao1)DBข%iRQQ34k8*dkLGq\t30-9-OL[=u7c!GE$h`PFD=B@/&a_icb_OGncj=/mVQขYLB5bmFa]-g'CSug8)C:.6IHt)0T8FPb@m-Frq(43rAJ`n7[a.!V/jUJl/dn@En*nW@"BB.&DQMC+79?Vข1l(4qVh2YiV\ku^HHFKp1fNi09eX=QaQ0Bd144slaYKC'E@`uo7ghrCNQY`tl1(&Da1]+&9m.ZYZ38Ok-rก)u@k`[1+6Yn(3H?กL*PEB7dGI4?j`n+`4N'3Y`\l8-OVK_3iMl!^8b`]!#\QBR7Z4R;GlNc6SqipJnVnCขnlpc!h5Q#bOfNr\2`alcUq+BJcp0t=liYbcr7$"uUbADK*ขHM=heNH_YM7Z"BUMg!e4_#S"^2LU!P4si^@iq.I=meLX6SกeiKFdขA)%kE[b?f4B6rs6!/]E)^=%fd4c[*\tfP;6kTiFsMY#91YWI;eKO?COc*jL4[_VY3of]8GsHc\oG3ShKIo/HH?s$Bad4HFn)r(i_9;ก#on^/,2ihU+J+m3s48((q-Xi722JYB8/*SGJhQqDS&Rf4PRR$:]3][dl.*EX1mEEoYf1JmhWWBU[AC]4.a]'L.DeB[L[A@%64@nf$\D(V&กa?Eoq.[DขWU)i==h`0ljHpP@ihCsjQF=L`qขG$Ant7N64R$Z6B8)ipS'YBD*SLeIXLV2!#+gj#o*4qH0nKI_%T-&2Hu_k5m]l?,H2cV2,9'/4Usl3EW@CtNN)5@DB@#$$P,/@(9S7k7oG$.6Y#NFก`2[l.E3ขMXBOV3qR\*RUotn^mu'fdZIm/@^W_+5!'(p"?O$R$0@NHoC3q(i+mWขq]ht==กm6E=H["!qiE5aX6%U_XN1l^0D4[;.EeEX@m9\kp9Pa3bF`"e##,9X.It`!B-TpoEW0=l8D]rLPTcV`n?H%n8#`j"k,;9Ji\UCa&=7rAP/!tJ?41m=3iกgXR1sI*lp6jXfoPt/_Ad0"LnW]clP?hcI\กgLO/#5XgHjh]K;\*lZW4\J.ขYVRV6#(\aBFBms%RaXbข)"Q2P0&@P*))ขF*+\mB#tZL.2fZd#กOt"ข@"4h`56Z$RC5?IkMDeX2k7n48K!b.ThE]QFขoZghbdM4mQq-XBf.B9+eNXOING,M^`GU/V+ข&jAWnnRlJ=#oTK6j3IEGRd-#FY42=/Z3ki+ZjSBYTGE5NขZ9-c?/F]d[-JMGln$/S][G^AkL^B7AQ!X$jb1,+RC:s3lR^5^P#taO]N7r+Gm9]?BขfaX@B=7sSn.'?-kQ.Ts)D[cjZa&+bp&_`F[QOขoQKJDm&;h@*AWRY9ggFj8?".FEF'P#_MM`_[$`EW@r+fb!"/:38kb7(mSก)LVh+%pm!ขL*JN'G(nRkLR,Yd--UlOuVK6QG#gD"BE;"cMoCSYJDD.nqUN=eT-=M0"^6PIpQ[E]r%2J!.61mRd@ah-9;`,P!q$N?a:#Bsc\f6tCifqdJEk:rVA[l*mRkB.LCTWNOj?N4^J*:1mIH2Q8d-$l=BY2ก&MAMag1F-p9!F6VกUcR)\`[eDi!ao2$?*Y3n4[;6S+-4Xs#g,lA5.RiกM;&aPmOXJ7qkq(ba8'./'bJ%;E9XhM`g2W!B(TdZT1k):Y[!S:MlL@$0EcT26K\m;Y49kbV`=7cP)nE11DImTmh0Sa&[FX9f/nFtNQS/@`(.Vu_t8S)p@9Lo\$/:gh3:g6RoPqj@qG]DA/^4na,"P?[.eRSNf+Vl6"AAr]0)sTh"a,?VLG+%@6"P\sqZ%sF^*FกCWขniioU9W/%m;cq/p?D-M)4__o=la^,=ts98$pag&gZ`t-dYSPY4\c"S?2D)N2jU.CL5VC+oSpKMqUGGb8f[hW8%_kPYHkdho;eW67`rZ;iko?3p3#L"\M;lMJ=T'p;l:`Kj!i,)D6kmlLkatG#eU^)C/Np7rdAKกCm`ก.L+?-=F&Kk+GLLI.กU=c9k=H(BPDOY*Ti7&-CI?'D#ZHNgB%nNกPYZ6"m]q0I@G$2*8h9Ubjp-hgd#jeoNu6WrH9p/DrEJVCo@`cbQ,%กk9hVg)(gh-faSjXES'h!%,&;IYkiB?BgoZeF=#c7e8R`ucg97apข3N8I;Z%$#N3@กH!^@!d[N",6e*oEBfRXi-@0G))A4R*5f8[0`NO?YX5T/Q$c(7t%h(FRQC%R$h&(hiJ%:R([)D1Z?/WI@m!VfsOG0,Xnc%RCFUcf"D&)EQ/,W!(q``o8THObK:`ljก.iXdก;j1-mL-ITotFC/E&_4MYJGHu"![LGrFgBsJ]G_#8M8X-e860JN\8U^KZo5%?h2=UM^N_^a8g+93กOq%]o7(:&V^i`o,BA$Z6HoQJDM4ข#,Xl3LaO?S3FV--m2"WCg]j0q.MItV7P$s62@jpW9hbk4;#)X2t*กZ/+3(bB65^d0r3C!TLfgqPa+ocZV`LY+28+Uaขs&;&$Pacgj&p,Z[+cQr;4,ThV;!pfGPSM/Njก4;.9P"%2Ur%_q?[;Uu0.a:V?`lNข"K`D7E'5Qข;JS``e;f\FKbLr@hGlQ,!l.Rq((gmmXf[8VM@Fkn8HU4Q?W]!jkK^DDNVL]O7iOW"siXSiSก'"H$parjMYYQ*B,6bo,K(%0KEiK:%g#b5#W_JE-5BSG?9^kTmXUf-%NB:1ps//\K,OกC[4%DhS&\t'T7V!Kl=/=?h4hI=:G`HZ.htY29PEf]qd)LEI3fdeR%)?i1S:^Z(V8[5rAo0L]*7.V[2n$T7i]pV'eMWL5).2LMM.eDb["dL8==h9ai%P`$JC@e4Ih;tS,'[:T/@aY@'B;M)?HFScVf4LlM/KI*$ti:[iR3;rg?:6tDfT4]U&N^m9Cl9L9?)?ข@8r]Gc[%t%I]!jr72WAZB^@j3no`Ym\')We(L^9R0848XDi3&Q$ug(,32l=4YuF#".JZO#;BE;L`(bo"%V;'GHLL%u%tN(^UsV-pqkBGT)1-XCGdTl"/B\rC5TF0rqk)[+I"a^J7TSPSIp_c@@btsq(Jk8^Or%HIJ0BuRD$]ขV[U79h?YTW`qqX`$r.X3^De5$g?H/ขgj6กpcPsaf$Y,=BA!jQZi9,b_-Y*pL1VRN@pZIm;^FDVN=p"Q%'#J01$g0VE32J)?O1S&CCUKdV]M4er]กk02`Od45$กfpq[WcAYข,Y?BgEPnX^lJ+m1fT^e]VL9e\YW(sJขX4i5AH5CA@:Gb5X-bQjAsDCก7BELfEABgY*U(hsfก"Y2ก;1^G4Dui0fYG0NX0,tDUB2Wq]`V2%l&Bข#GF,*,*Y?et+S5lo\s-4SiOq)Wbl9hi&';DNDXdPhbAK`G\-fg8idSjX+dojFlubsrmQq#QVIs;DขZhK1)fB/rก8t#ZAEGKTg`V)JQD/ขp;lZ*cJ#hoHqWa4SW0=oKd=k6O?กE#`Qe9i?\n\/o:fgT\C0FofW2kCS(:p(.-UrbhcSOLJSg7:0ljoeu1Y6cbR@D1;9กกnr+aBh*GHe!%1ca3WUi^HVข1V`_N6dmC]=)=E"gN#%=eq1tBVjJ,IdBA0j#4QU%กk?'@22I,Vno;dn-$&YCO@lN&A&;`J:ขM4k;AqIGdlA0ncUf)..WeJNP'K^$79.8N8"'X"PiRBfPe8Oest'3G+^j"&ORm)0EA:rQoIX*q`1@%`S%%hkdbfn36-E$HJkW6L!rU@`T^"\jD@2C^hRc,*กG.7U`@i(ก.TpBp.1ก3asNnnc2\2%)Om32Tr0fK+W#_an:5KGCJe_XPDก4OกY_K;&`nE2h7[G/7:fhHk*etB^$"mJ6MtP+DYZINข;ae,gKED,^#KFj!7ORM1กA$);d8#KQi-Wdm:W\H.^D*Uhmah$FN2"]C8=`กS9h#0RกMV^+m%XY'%+`?aD,=O,\KLCa9-R/U%.Zc5[+ข('c.XY!?XZ0lJ_^8P4cq'o$oJ+`mgUขSmLtfs$กe_rjk"5p)%:E,pW=+BJ/1Qh;Y,fJh:aIeuNYa25*UaLN7-"KsQl#%:jLdc::c^e3B*)E.%I'S/FL7gb?Z+6ZC%8RPfg:0Zข@O4กBPR:0oOi],8MV+e-pj39(M.;กP6K/_`RE_7_eqof.)]=4id-O+jd9i\q+*J"CC;?pKh'XE@?G9J^GsMV!,%KB0=q![C3iEjZ796"jDPn4eoe/LYoWb)cj:2ขeXu*=q6ข:GWJ/m8c^9dPEE%`lOR7*C)Mกquj!OdVM$Pn?T'L0U!!1a=jou!F+BN=`j^V;DYgE1U65l]7Y8bn[ก*YjlL@5o0C+Lm`_\^%;%RXke7rpGQi1CS]1`^C71DD_4r_H31i2(fWkDR_Qri.aMq-@D`sbD@RY-lXNsns;KtกsW!6pB-L)!CjTb6&%6%lK8(KYqeruLY\3Xs%IY60aV"l5*QEDlr+Yข\l';JtI6TmA2+lN#D%6&`Q:sf_]NVQk/SQ97YFW55=ULgR\JlY6+*ZJ6mpIa!+%;:'n=VNLก[X)bJYO9UphkN=ขSF8%iF4UG*กEgr[ข+[e4ข]@Khj:G'r(]1Kup:กc"$nl1ขH:RlIa+AJW``,dCb9QLgj^XnJD:fhkH7S^%;l*^OOtji'cM71E6gt/oCBjR_f`b7M0act$j+&c`%qZ3`B*TdmAN68^L?%=S-Uua(Pk/%e_hRUOfH%0S@j.3\^0Wf_2fFZ$ขa`b4M%T:O%l9.C@Q-J7Y/Ch7An^8nb(;0cVe%":1*O/9VB0HW1DL([qขE-S:`043,oJ]S;;d0q/1X=g$(T:A.KrGL&;0Zกd^&Paข&7/Kfofkdr)?fO(/*&"E0m=&ARQ^Qa_\Y50กB'XR]*][R_gmHQE[B;osd?j5!LDU1L72VMH`\ขe)2``Wp"5ReCB]sf0?i%J%C$(ก&n5RIqu%c1+K`1NBS:N)e`\Jm;"DQoข#GMaPuEW)กZlEZ+:RGl%8_5CjtomdKE..&l=`p2kIN6##%7Cกc`mH`2F1)กaeX4TE[qIS\^Oh)JS\OhMnu0;p@6npMc@2WV9mU@`OBZ&@H\กlbkD\UtllL`"*X$.naก\e7/6hp*_M!jc(cB03F*u1YKSnXdXqR`P35.R$C*`BJ&$Z=01#kPos9F43cVf$mR1VE[1)4,1Onj%i7WpV!30o:S0O%p?5ก*_fP=%O'TG=QS^/ej],R;CขZh+/^ข\hY$o@"Ei!-3;D4l=9]M=19;\9q)]hO.ก$CbDn9:`\_."j,:/tL'k("lt0F_.f6\(UD(Y';]h[KtVC9N7^c_4;ก_BZMm2ก_jqjmqgg6c&[XH\dIZR5Z*ข?VFT+/-Y1X)Nq[ZdS'RDk#Bo'6&_o@i@-Z@ขJutNKqM1E4m#*B"DGWขA!JWe&c36J5;e3Rc^:h6Ub+NX!Qa&.$,'9KHk+กOmkqTE]?"4K+tmW*$LOCp.5q/^lMbneH)bgXYp*!-P:ac[ISiFกYDOBAกstc:dY/1d+OuH5_]5SUb4b*gAbM#t-I??X4P)k7[ขZ4*q[oLsCf\+R1@g[UC71WT`B'En2G*TbgI#lSnf3ac4bl(9hขoOjQZH$#mSA1"?YGnHbI3V(Dr.G+H0sEHYKhr^CX_j7]QeWMo4TIlED=.l?bUh$0@%ก-mMU$-m'TNfZgs4sr@N*_ZZ!R)4k%_=lCG5OJ$Xm@'6`F%r:#7-:[1lBBBSHHGL*@";uhslW"USb!@`i6U(3QZY"m6?`;PuQ=8F-P6153ZN9+ขa[Pg!C)qC3A3กrB*farHe_F*NcrXFloMo:SPQ=J)U:(88+rZ:Dd]N\T1[E37V1M/`goiM-\E^Pg:5@0c"r:6Po-uMdJ9\&]/"$uDXR]6n#+=_[``MRu)Wm*M+T+;9.[&p"4'aOjhpก$9Gnak*74YGe,^j+NE1a.*c8=J``N_^ก-D#`\G`sUiIqa".Y\'6^IIEGlS"*ds\8Ymก#YH(`aAX[F0%l!+L7JMcJSaZr"Hp6;=l'68@,M&"513J2;=7=QTe"af]gp,&KRqI;K.@Ve][4`%E*[!lbEC]Am-.+u/-:^eqI-JAHio/UW+2rL\i;(g60iUlS6IpbNrV/1\irkP:'??iILขS5ld__b%Vm6aI%TZabLRq'ijuY(D(c?*LQnmขh6`VUs0t^![eCPGSfdB8SRCg?b0PkWU!JHUM+'9a(lS9sกVjb_2\?FQUW?sSTE6bBu9dWb,Y)i[`mEQM`$`/Vh:,!1p?mbE@G=QM%2.@%4rb-XE%/$=gb-FZ$[`TpLU-09XW4bpkM:oPV5lr+K;dK#PmhกWDr$+W]C#K4i@0&?VfHI!A^ScWTV/tGt/)tT@ก6[`*;-[BGLZ,=WdeuAE-jkRMY^d54*;=h?];)]S$R.r.JVXY=/\!OC!k`.e'(ZojLTo^t7:7UjLd0S,K#L)R\;M"EK]NB^_7ki8$=9e!d1OBM0S[Pc-"t0ZJfBd1,$+C$n[&u0NI_T7^6;Yd5p\SRKjF:k,=N2gOtr;bM4Cd"#RIRG!a2WKd?j4@AE]cI0a*_%;KtkpM;)@ec0;,\M$%4X(=9mY%:mT%1h)T1p3nB-;fZdกAsขH-/hขขtRR=,VE)[1gZ.8pกbp84CO)ndJ,2B;dN.$ar(o7gOiN_al`uffTj0AGขOa8Yq0cs=+o=8$%."kข5nlOXZPKa/HqscF8;qcA8Zj!looS&\!+ก"aOE4G"8bXnZh7trYiVGk$"mI*h`hkriCb4kua338`"g(?E+*tnbq?e&%PH`L0t)l8Gp-mljthR0:3Q,q;4-h6P30bR1M]$`@S9AmQ[Ak$+@1,jP`0QQ6^_cr_3i;X*GขC13LM^J*$qg-4Apsกl[GjId/i!0gu#No2IWecB+24p2f+k)P,m$0Hr?ข%4kKqAFg9-4\kI;[krOUJ!m,u@oWIM!dRfqaBX;XE-tDB)-\=n7f.ก8^Nodขt6HLZ.k+pq0q&5กd]MVfE`Qhji!+RF/0Oขdp!X&_grBกJa8t2?0*%NDl@4cAG0CbammF^ACqPKZhZF^iSs'@AA.$(7ERu:K]?P,0'jD.Zt/I8a:sU6_c^&'ข_+Q2&Cu@Z8bpC(Sf=\/n:5$JX@d5ZjNH#5qMHก+#NqNf7ak_ilacd]JBAPU4':g_(hsU,+#hกe/OiGF[X"N/ขWU9s*Z]0Wa*i'I[S/_.9Zkก?@_hT/:BY&q@URb$NSSji&jjdQ(9!m)ubrAd,ZdD[j(ORขH1In!7PI^]B*Rnl=-:t7*EiQข?-+kqE\i^MTn;mW*Y0C9eArN'1AmaqRESWg\.#SgEEE0WGb#JaMr:hF!KSqZp`+G]\O`Y\=stHptub*:Di5B`LVq\"*9oZMYกjUBUu:*)[a3oACPGpF=:4X0Q:$9UXZ3ld7ข,Z\iS=QP_r6#ncdV5V6]f$#41Q(8j)K_^/TGL7/1)\W*d9s2B!!J?]ma*q*HlR]7+_`2+[aegsg'RgdZpAcaS;RO=.@V_A-Qi/bu,IeกhoDdagfueLLJ\ข_.VK=Q[*@?LT.p_m&^l\]]C5e[DRMfuu%hd,aกYB5U;5T`S,D4%L?ข-kQ"Y[lni)QG=[1L?:Oq#"f-75\กG.*?#VkYQg[YRM8Zss&1O+mipF@n!:oi-\,")/@bBQ!,\L@95&~ข
+ก~+,^C)z!".gnHZ.]jQ2b3A^Vd=HXCc!W1m4AahljOY\p_E;Aqขu,P+&'i[PQup6eQขs!KpqlMN\*1=/mc40NQU?C*YcpQ"3O9S&'Q:brtfD/pYR,;ก%5/!f"K6H!fa+a6u,CI0SPJU\Fn4PPoCi9fMlP2u0nOXEB`%DR.kg*d3T/kpG0@jH/1X?L&ra]?+-!nJL^ZB($g[FHZt)jpTanF`l2.G.PdBhV@QH]5ZM/]QLCeoqpL.S/OG:\i*WiกiadAWM*6Xh;aR$ZQEj_lj_PMU5*7gDa)%)fC@.02u+G?@+S5EM'G5ejO9SK/]D_AF(&OpDขTTQ)o\(sGA!W`]CSa8K)HaoLQOO3gPfX3b#7#0QD'daY_fZnIuACE\sj[]PF"8W3go^er6$LP=o;cG-"hN$:lpekI][t0Ta8Yข@uuR2)i'k\nUlR?moKmnZ8:-B-:C5+*8Xg]$t@g!3eR/RขOq3,Dk5O?im*&Mn^?@ol*eS7]qBA^%V89f5t]f=ZROm'?G#IQ^$Er*hui8QPUขDX:]..)T=@[5Dก^`%)_?:_mM/rAnmm%BGSPMm\Ip6begElXP0^b^0p5LUm?SI@oj"J/J+pOr5M0`e_:P\58,&r@\Ld0R3@%D*X!d8+]!+-n)`H@_C+M@HPeM9F3e)cXqQFF0`Uc&SEW2?)#US!ektAEกkT2t(dก5id2N`6_d]WWH?):u$iRITJe[McTrขp%$;&cfข[ZsX.OkW_0[2[.m'F^iO7AH)Bg_#I?rVJnI714"h"5EGXONTTg]Yp)tEJ`3GW3(Kf(eD=ขB?m)BN/&Cn@?V`FCขTKuQJ7)90O/g3R!3%rgj&TกHaOmi6!WD&.())kn&?U6njSq5J8dMd0?กR3J,B\E9ข,3Ki41ReCCE[Mข^t)JOpucuqKm&2bb.T,N^VGqj(R+=2'G#(UjeIr2m&&Tgh%qi9'P43B1MUW83AX3,BesW#P0RCaF!XCขZpdc+Qaro*M6&P$q=FZElZAV(Y/mVB3^'MYX#HBE3[5=QnWo;3\M;p=;7.R/8J-e[_'X.TQ]!3o!DiN_l=lgE.E)p*rciAQb(GlapUTeขh?(#557!BQNCD1!'uTr^4'&fDj/Tl"`W^VrRJ6rP%cGAMขOSK@-ajXmE2iE=?I4G%rKZGG.sj'2UiphEOk='i8&0=?Dlh=!OTBEe`?:Qb$G&AIbSZ5DC(5W-eL(A-J%as\n)c'IEl"YAR$MN$;Dข(g]%nUIDI@bp-8?dr]กGgXrdUEp\6NiW*gCd;VH^=n?I*PoW5ANZaP+D/Oe$TJ7lS//tfกAQ38jgP.Qข72fOM$m3_jkF8/]QT24Re[Xl?b210Bcan6+gmfB%?A9YDU=Pt-T8%,5C5@?kKCVeUu&I0Ql/)B:TQ-&W9ก-ddM1h7PQ&sCrZ)7A/mขM\B/\ก$e9a_Vข+iขp]9d0!-p2.Y8TAn%sWj99KYCjPUข:!X20+;?Vr8j=hD]#!C3]ขtEWVmn8]%i%b:2brTFr+k:J"."@1kb7(mSก)K34[@i@5neg1N'G(sRkLU-Yd--UlSClk(HB2hf]FT;"cG+-SYJDEX%P%"=eT-?M0"^6Qb2u[E]r%/J!O,*mRceYmN$MK*r53U`fW["e6D?#@^3_.r@i2[W+,8ie=0AMk:ข)ข1EEY_*dN\#^%Su"Cg;0B*mXf2X2gbd(QFAk;0l&@L6O/P1sP.rWQ.pAkHQkAขhuS.MI)S"qc&`/8GER/Df146-`h#cZB"YKk#%^.-VX4Js)K(!ขCDN]D7m]/6W$,Abo'7@"0T%b%GO06Sok0nFh;6GS'i3g=7cP)n`NQ0ImTmhJ;%CT2'l"Eq"lQN98q+L't2r3Ub]J(-DZDMQ9Zr*W3)ns8st]ข]Qhgu^4JHe"P?[.ePlCV/f#V/A4:UY%r+UCgP_`mG*q:5"O%)ขกQ'pg%WAZP/rNIsd7A!FDRhTNpMข,NN,FX=/FkjFbnr'#"rdNYD7@2Jl-p9+*lig00)`YHlV#SS_rWC&r7_*MD0#&d,nBsM/RBrm=4l?.\Wu,P6Y57Hn_l5Oq^1o`g_aobW6R^&R59q[nJ#Q%[Q0FI7"]7mls5Db[4#u!s.Qeก2GE1R_W@`a3@SC&]4nbR.Xnpco-B'\ai&hkn0^cE[BกshKIOhDZY^:YasT.QpY!7U0Pj'k\Jb9/pB/DHke`=Y7uZhI]V+ก*rZ1^"H#*9@EoขQeL8A#tN3ข10jShcขc02cbOgXO!3r-2qG:TN+(!`"\P#t;Gp1WfG(:rk;'Yd!aj(fX@^e_hGji4dte\*jsG2Ped(]cK8):CkกF^cpo,HWX.:kgr"Z_s'7[tขl%)LcVH"82q@6C@K`LPu+ข9B4กก!.K^2?1]=6F5_^$Bb/)UICJH"a:,84n5cO-?@ZC;nIjlD3/#@gHYs6nM6nuu4VX8TnE7BuSa;f6D*q7U[R,cA+5qSD&uBJ:&@tVR;Uข@5I+m(\%6VC_j3u$f2G7e=V#:กYdHsL:i#8c\PAC40hOh@#7*^OQกq3;A80ขY4d]=nR!qieJp7%Z'5JjX8"tV)[F,#]pk'A1"NV$+`X,L+?!)&^uYTJm5g2fV"pTMe8I8!Ju$ga1tNJ5Cq#f1'9o][83HO[7A-PCf?P+R8(!pfGPSL[\fกQ=?)P"%2Ur$lA8[;Uu-.a:V?`lMA\K`D7E'5Qข7_/%HO0"K9;jm:5d]`5hWk1Xl^(gmmXf[etR@Fn0#HU4Q?Z8u-fLTN'FVL]O7ijr+tiXSiSก'"H$parjMYYQ*B,ON9iK(%0sEiK:%g#b4pW_SE,5BA/99^kGขXC'?4)L&9is%fกu8(LIUGE.g2,(Mt1NQกj\Y=PXZ#Bi=5n/U8;T(.df-7d9กTT/]qFIpPX(kCS@3กT(#8rM;mc.$]?fVbX=DJY#L`IY6-X(rtJEjs2\'6.(DBGJ@WYZQLL^gSA&!N39JrZVp/61D62=`E3%-F\nb]95tN:Z6&c;V#(l(s\T@_PIDn[*_ebhW2ECA,W`(IcdWVQ]1`\_Pf:ITCmr)r,t/Tb:mD%dE"`Vjm0:d:5=P$0#Op7=:3g^ckNH2);s53EDYVH@_%'29_+=sUc`P#Lmn\#]TArsCYe#@49/!kO@J-[n&oVข([U8)n7mY"=dCqhJ2k=upHQ45q%A%'MQFh.rh8CA`OoDA0;&YG,VL.ZJ0BuRXUFขD[U7;ข5\^?AqqXSur0cVrDe+sf6,o8JkD?R&#nEeu4.c$$#fOIE/SY]P]4uragYSZZb$lmmd'Yl9a)AAT*pข'XBR0,GfTกe)c?,Y;O)FขhVL[)ก=lj[s792J,=q?e(X3*^BOX*A:`=3bAW:LR'@70`WRกD@a@;jjs\UZ`5b5dnb_SeEH=#!dV:+OM1L0.HRiadYก3maLoY?C0cWUBFmH/;e@YeGHcกaEfg7Kl0kHQ+;idMmOXGDDsq*YHku+S7_N\s-4SiOr5"b^YbsLLf472u(;8,r[#sขQrqWEPLM=OA&ndniEUUGJ4QN;q!F*Xt57R/[rGn.e-Oh139&mDNMU`Mc%"ข/lg)r^D6GIIกEX:eB-Rcke\'R0?m!#=4l'9\uMe]:fikGC._c+X/g^Xju_sgVhTk)cSOLJSg7:0ljoeu1YZobR@V199กกnr+aBh"GHe!%1ca3W,]dhu=k;VN`b3N]?!B,3Jlk"#/CMUJ[*mbV5PCc!G3`JfL-)3$YSng`;h*ก\HNMke1d7ก^Lu%k]5X/bpo,:F4]Y!N3GmrtU'`#u67UE_I"_4bJ7P0"'%.8@;m+:&?CX2**e(:+lL`mEOk_%JH9^F.CrL?^#ibVLDoNXFrS7=`K4`Fq8iH3LขEOsRZH!?@TYaV&$7tขgf.E?NLกM8??I8XC5Z3b5tdtbet7V6:$kc'8NaFt`F4กU0k9%4a4jHD)MWs[=YLiP]TmQRk/U9ZF4ZONe2hJmef+TA`%[sXg8XX\#am6#=ac="NEa7N8^oWtrbeCHPU76c64qcRa+MQDin2f;/!ST-ก[)QD!aVcKcrjrBXo83(po7.d,S=j;ngjD:b:H(aกFf0ขc=BWDZGikdh-iBo"Y4hTZiZ8UQ6^)We]9^O:skpBd2*p!1mDlVj\#8lJ^)ก!MขF870K((Y8HC0@U@^ขDsp':P_E.&UBN3"+El5UK"eHm&)Pm/tH1K?JcEbjYYlL(fMe!m^R+Zc3:U9X0EWO+ZuDl)Ott(Sc42A96ก&B@K40lกJJ;ANP]%\G+"V*iB3`$G4aMZ1&K.r8piHc`Y7i"p@NB=pO0.1p\O&Gb$KuOBbg`@-#C*Y#YQY#V@Pก^กTTO"[t(2)=eoOL0paVj0กu?2rfG:DIk(G4gQขLN1ข1D!G!Fm:QRUcc,QL^0ก9C)1[-TRr'GbqZdo$='aJ,-21teT@k/&&gM^_7Di/^9?J_J@pB:un:TkVf@%(SXcM%DGhZFlmV6PQYข38@&GVj";k9J"g41;n2=KnA'fiW"dXbRNcXJfuuQ+กnu$BGก(eGpW27%L$Eg`ZTpm`%r^a;Ti`H8:Zg2i(2bYHo.,1g`Z-im";RUa7B5@PeL&W95KX"MB2[m`)F=._7pI0u(o8dqTก(:ขKc6[&c,hct[78JWWBEYขcNLT;F!*7H$RMX2MIAlHZL&*SPSMq9ItZpDn3R[&$*iooT@%,mTqj%cK6fE?L`\YPTTgE$XJmgZ#+j$FHQaVLl)o*e?7#+7i`U_rd'1ขI!@^.c&75N"Mq17RorhJenu)1VfX./r85B@2L"*"agW$0O+$04#14m_pPhH*$$%_28igrSBnc0C$8กQh=g+t(4tf0CR)64F2n"!Q)Vuu)A6ug0XKspG,(h-9'hXWL.:S^cc\(f=pD8Z'8#O^lB*DT;c.M%hbUQ^L%2c)aiK$h!]Lg&=]'K;i,lD*.8YnU(p#Z_QE;Oc@\Y-jQ6^8G-cpD6=Gk,s],W+F$NmX]Zh;n_Ye%*?UขAd_$I\uX_Q*=[islCjr1)upFM3,QDCGldKกK[%U9AE3=%cS!qr$2`g%)OKj_Ph5XiUpkW7\gBqJ7!cTSX,cYJHUO,L[)EMke=(S8/VRl:RSD$Kbj'q8F"?'-pjU5Y5_HGiH^[0`=gOc#p`3UH4'4Kh[h`l6GD4%T?,:Uqr7?[p#q12;^+D_dTF=hMo4)*A"cieCkY?'0C0$G%3cM5?J2p/V`4nPN;mN_mFZR2m,!N?nl!1A-XKiC)/iEs'?INกYjข-[ก-=lZ/,nUK5=EO'RP$IN1b:5NPL=m:q[,uขS92_VAI'5He-Qr_`q]C0ขM?eG4jR;d\Prj=)_Fq4ThUj31K-BMB/V9Q%!FF]p*t$KhjHURกhnMGUV6AKu!;shjLbQMl!(,กG`bD"/]JA'P%da!GZ@Sก*Pก2f.EMn]acMT0;JX\*kกSq5nDg#QZldS$KePF6UVX0]]Ob?@`g0..54QKOOWBuDXp"IVm8c!@V!^o:U-ข@,1_u/"Ei/X.3H,S5RYjgX)+2`fUnQ0WB.,+`b_IqD7LMm5isstkag/P$W+ilDn,Jt8)Ah6GsOSnB^a/?ZLOhhpSTOf;h]"E'mW-กCb\EKM\ขT,กV0\2=rกfl/p-"UWFjp'llbDCCoP]XB"prH6ขZA4EueRa$hsb;"9Ft#Au'2bUJ:RNQ.ZULTT_BCP@P3-4m(กJcflk3B;jdD*FdJ"3ขY]P^=tgM9N*0BZCTQorDrUa)fNK?I9Kn2R$)[S`S6TE8(3la)tG$Fo(DกnEW5X?c\XaHDe*%BQ]KY[Dj[;lJ,Sc(R==!jn!*3%Rl/LYYS5pT#6pDg;O\Xj5ก%?,Ir5E7!I/uWSN;lB8.iKLBu&fZ`8n9teo/\DV*FLSo7=^$=OIB9X-8at@9l$\F6J:D$DAgl]Rh1Nhr*_+8=[bข3OV'/AH+sZmf8rs]กuc\*R?W.B?%/QBBขa.2cR9Wh3D]u0,_ojgu_#@ก;l5!&C`ขjW;:lK,,#Z"1Yn@q1ZJUd4p4]e[=VR_+SNP%#ข:Vucbh+%E0*HFiDiBEK:pPAWM/&V:(8.)s6!8!$J-กqJPoCกbqj0!b$0c+F]gUoV%]Y#X&k;BQu#KX0X\,V3/\-4nGR#?521eUI;sKVerecDF]+Z0l-^Hu,JmK/Z,=nQB*"eWO")/m+:fqC,"3/b8*m*!Tg/W)7n;hal%,qeiขS"(\Tuch3RYPpก:."Yd":DnpbTPB"FB['`M.[5hioG7_K-itY726WQCCU(Sin^g4"Dfu[:o_:RI$fE:R#]U\`X+FV\MYQVhSrS]7[(8ChS:XK+\hข=CW"[1@EPb?HHBขY8D:]PF@ajB,$7N&?-=E3.OtHk6nYN`[ข:i0TQ`PY4/lD:QaNQ'*eqb[(IN9g'MrEZ9LBfb,-^63ขONO^.E*ofo3[8dN-IDขP+`Z1W3;kdmGZ0iก9[aof6dข-KกXhVnUกHF56sLbA_r0bs?YJขX]S:h5iK\]fqK*MLA0b?\`"n4oกLlkR?7ZaM(O(Tu'_!DG2oPn!SsCquu$;.6)_nQs):T9=AbCnaI1Zig:!IGsS4?Y?e8\fBda(KTRC9@3Jkc)DF;B`l#กB'n%i"m@\rG+9K:G,`Y\tAPRMZa8D/m;)Fiข6Y4ajk=[W5C9(`lกaSD9,s*k"\u7:kiM2D7p'i'__^BOnqWUW3@TXu\FP$To.iFPj+]8s0lQg=ข[`r'8ZFeFoAQ`2@BLN8g8ngก:Rbk]FA.eDU-SR(Qh/(59p+V4llL?_QS$%/6iJ0P0Wdb[RpJMUm&JYข=S\^@LkS,.heSR.q/E!ZQ0ขS@!ขpi-0?op_GLro@c-2IpdขMd==@p3)Ik[JHkRG66jr`&Tข3lHo7%:I&iqRN;:Z.&JN5bRXF/K`M%Wn"CPMV*\ข1-FhBMgA9Xq+SL7cOq!ก^(db$bq`Bfr`(^0o('3ARBqL-,Hhj=nP#eY:Z0pk/)sbhUUSn--n`=4DKFK@+*IWKJ;?@u^p6U%/DRก%Pg&ig`m\OpXE!kN.ul%UZq"F`\ก$'!lSsjY-N2);ncn]D$DGHd4d^M(?b(1:0`(12Vi7@%E`.Lก6k+SX*q+a!CXou3q6`,KgF3$_ก;+Rq?;73)bnPBS5+8O04gNB-ci$V/ii.$c6Rl[8(AICF2tI#RG(p17H*7MnFVqJjN#$EUb$Pko/tc((6s)uX,;_C]Ou#;kC\u%j;กTWjB;Jujg0EXcFnH)t$0$`กn;/7*ipOEE_lnD-3&Mtq5"&!gZ_&-s&;q=:U?WnBakBCaTfH(`r^P6_4\5$[PaRfqE\@"M.L%]V6C.6Fbcb.5,=^5p$#Ws4LCWt=#uR\gr-3PWLK&mQDlGi5Z)O9lD/p&P%b#_U-\GA3lPq/GD(aYEo"36Z8gDr(DQlRo.b&1t8+Nc(ข$9@m/IgL$a)p,q.ITuZ^O\j.T$&)lq,X@=)ID@PT"o7pb1VZ5(4lAl@G]Vf\S+2_VqIj7:5Xt\f)!.6YcCAcc,NNaFF4D\:?W1Pij?93.:YWpL"_++cRE/5`;7/Ff"ObK*?A$\Vk)+uWc*_2hQ%=\X-_UfSYขC#;V\H^C4n1j&$EPH\KAa=SX9Dd?ข%"C*T&_"am=fP_h_Df^5s-gk0(3?2::'p"T0EJL:S=+k-s-7pEGF2Yk$g7a$!;LQE8Kea=XO@jQ-tcDF=.podGsi-UrP/i:BUNFb77VJO%igc!XAMP7DP_b]6$2lmLA&%5;eg.-1&.;^+$d,2"d@QGi^AJ5กd.q"4Re'ขD`-jCeMn~ข
 -->
 </markdown>
