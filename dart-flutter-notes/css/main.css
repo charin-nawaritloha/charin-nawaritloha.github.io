@@ -328,7 +328,7 @@ label > .label-body {
   display: inline;
 }
 
-p {
+p, li {
 	line-height: 2.75rem;
 }
 
