@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน URI class เพื่อตีความและแก้ไข URI ต่าง ๆ</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน Uri class เพื่อตีความและแก้ไข URI ต่าง ๆ</h1>
+<p><img src="images/20240915/20240915_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri-class.html">Uri class</a> เป็น class ที่ออกแบบมาเพื่อช่วยตีความ URI รองรับการ encode และ decode ตัว String สำหรับ URI แบบต่าง ๆ เช่น</p>
+<ul>
+<li>https://example.org/api?foo=some_message</li>
+<li>https://john.doe@www.example.com:1234</li>
+<li>ftp://someserver.moc/folder/file.ext</li>
+<li>file:///D:/My%20Data/charin-nawaritloha.github.io/index.html</li>
+<li>ws://127.0.0.1/scoreboard</li>
+<li>mailto:John.Doe@example.com</li>
+<li>tel:+1-816-555-1212</li>
+</ul>
+<div class="image"><img src="images/20240915/20240915_0100_uri_syntax_diagram.svg" class="u-max-full-width" /><div><p>syntax diagram เพื่อใช้แยกส่วนประกอบของ URI จาก <a target="_blank" href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax">Wikipedia</a></p>
+</div></div>
+<h2>การสร้าง Uri class</h2>
+<p>มี constructor ที่สามารถใช้งานได้ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.html"><code>Uri()</code></a> ใช้สำหรับสร้าง Uri ตาม scheme ที่กำหนด</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.http.html"><code>.http()</code></a> สำหรับสร้าง Uri สำหรับ scheme → http</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.https.html"><code>.https()</code></a> สำหรับสร้าง Uri สำหรับ scheme → https</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.file.html"><code>.file()</code></a> สำหรับสร้าง Uri สำหรับ scheme → file</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.directory.html"><code>.directory()</code></a> สำหรับสร้าง Uri สำหรับ scheme → folder</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.dataFromBytes.html"><code>.dataFromBytes()</code></a> สำหรับการเข้ารหัสข้อมูล binary เพื่อสร้าง <code>data:</code> โดยค่าปริยายของตัวเข้ารหัสจะเป็น <a target="_blank" href="https://en.wikipedia.org/wiki/Base64">Base64</a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.dataFromString.html"><code>.dataFromString()</code></a> สำหรับการเข้ารหัสข้อความเพื่อสร้าง <code>data:</code> โดยค่าปริยายของตัวเข้ารหัสจะเป็น <a target="_blank" href="https://en.wikipedia.org/wiki/Percent-encoding">percent-encoding</a></li>
+</ul>
+<p>สำหรับ <code>Uri()</code> รองรับ parameter ดังนี้</p>
+<pre><code class="language-dart">Uri({
+  String? scheme,
+  String? userInfo,
+  String? host,
+  int? port,
+  String? path,
+  Iterable&lt;String&gt;? pathSegments,
+  String? query,
+  Map&lt;String, dynamic&gt;? queryParameters,
+  String? fragment,
+})
+</code></pre>
+<p>parameter ที่ระบุจะมีความหมายแต่ละ scheme ต่างกันไป ตัวอย่าง URI</p>
+<div class="image"><img src="images/20240915/20240915_0200_example_uri.png" class="u-max-full-width" /><div><p>ตัวอย่าง URIs จาก <a target="_blank" href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Example_URIs">Wikipedia</a></p>
+</div></div>
+<p>ในการใช้งานจริง หากสร้าง Uri สำหรับ http https file directory อาจใช้ตัว constructor อื่น ๆ ที่ออกแบบมาสำหรับ scheme นั้น ๆ น่าจะสะดวกกว่า เนื่องจากจะมี parameter ที่ตรงกับข้อมูลที่จำเป็นในการสร้าง URI นั้นเลย</p>
+<pre><code class="language-dart">var httpsUri1 = Uri(scheme: 'https', host: 'abc123.com', path: 'images', queryParameters: {'id': 'test 123'});
+print(httpsUri1); // output → https://abc123.com/images?id=test+123
+
+var httpsUri2 = Uri.https('abc123.com', 'images', {'id': 'test 123'});
+print(httpsUri2); // output → https://abc123.com/images?id=test+123
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>สร้าง Uri โดยการ parse จากข้อความด้วย <code>.parse()</code>  <code>.tryParse()</code></h2>
+<p>ทั้งสองคำสั่งเป็น static method ที่ทำงานแปลงข้อความเป็น URI เหมือนกัน สิ่งที่แตกต่างกัน คือ <strong>ในกรณีที่ไม่สามารถแปลงจากข้อความมาเป็น URI ได้</strong> จะมีพฤติกรรมดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/parse.html"><code>.parse()</code></a> จะ throw <a target="_blank" href="https://api.dart.dev/stable/dart-core/FormatException-class.html">FormatException</a> กลับมา</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/tryParse.html"><code>.tryParse()</code></a> จะคืนค่ากลับมาเป็น <code>null</code></li>
+</ul>
+<pre><code class="language-dart">Uri myWeb = Uri.parse('https://myweb.io/documents/doc1.html?id=123#toc1');
+print(myWeb.authority); // output → myweb.io
+print(myWeb.path); // output → /documents/doc1.html
+print(myWeb.queryParameters); // output → {id: 123}
+print(myWeb.fragment); // output → toc1
+
+Uri? unknow = Uri.tryParse('::Not valid URI::');
+print(unknow); // output → null
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การสร้าง Uri ใหม่จากการแก้ไขข้อมูลของ Uri เดิม</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>แทนที่ส่วนของ Uri ด้วย <code>.replace()</code></h3>
+<p>เมื่อสร้าง Uri แล้ว หากต้องการจะแก้ไขเปลี่ยนแปลงข้อมูลบางส่วนของ Uri เพื่อสร้างเป็น Uri ใหม่ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/replace.html"><code>.replace()</code></a> ในการใช้งาน ให้ระบุส่วนของ Uri ที่ต้องการแก้ไข ตัวคำสั่งจะคืน Uri ที่แทนที่ส่วนที่ระบุมาให้</p>
+<pre><code class="language-dart">Uri replace({
+  String? scheme,
+  String? userInfo,
+  String? host,
+  int? port,
+  String? path,
+  Iterable&lt;String&gt;? pathSegments,
+  String? query,
+  Map&lt;String, dynamic&gt;? queryParameters,
+  String? fragment,
+})
+</code></pre>
+<p>ตัวอย่าง สร้าง Uri ใหม่โดยเพิ่ม UserInfo เข้าไป</p>
+<pre><code class="language-dart">Uri myWeb = Uri.parse(&quot;https://web.io/&quot;);
+Uri withUserInfo = myWeb.replace(userInfo: &quot;admin&quot;);
+print(withUserInfo); //output → https://admin@web.io/
+</code></pre>
+<p>ตัวอย่าง สร้าง Uri โดยลบส่วนของ path ออก</p>
+<pre><code class="language-dart">Uri myWeb = Uri.parse(&quot;https://web.io/path1/path2&quot;);
+print(myWeb.path); //output → /path1/path2
+Uri removePath = myWeb.replace(path: &quot;&quot;);
+print(removePath); //output → https://web.io
+</code></pre>
+<h3>ลบส่วนของ fragment ทิ้งไปด้วย <code>.removeFragment()</code></h3>
+<p>ลบส่วนของ fragment ใน URI ทิ้งไป ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/removeFragment.html"><code>.removeFragment()</code></a> โดยจะลบ <code>#</code> ออกไปจาก URI ด้วย</p>
+<pre><code class="language-dart">Uri myWeb = Uri.parse(&quot;https://web.io/doc.html#toc1&quot;);
+print(myWeb.fragment); //output → toc1
+
+Uri removeFragment = myWeb.removeFragment();
+print(removeFragment); //output → https://web.io/doc.html
+
+Uri notOK = myWeb.replace(fragment: &quot;&quot;); // try to use replace()
+print(notOK); //output → https://web.io/doc.html#
+</code></pre>
+<h3>การเปลี่ยน path แบบ relative ด้วย <code>.resolve()</code></h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/resolve.html"><code>.resolve()</code></a> จะช่วยคำนวณ path ใหม่ที่อ้างอิงตำแหน่งจากที่ระบุเข้าไป เช่น ของเดิมอยู่ที่ <code>/path1/path11</code> แต่หากต้องการเปลี่ยนโดยอ้างอิงจาก <code>../path12</code> จะได้ผลดังนี้</p>
+<ol>
+<li><code>/path1/path11</code> + <code>..</code>  → <code>/path1</code></li>
+<li><code>/path1</code> + <code>path12</code> → <code>/path1/path12</code></li>
+</ol>
+<pre><code class="language-dart">Uri myWeb = Uri.parse(&quot;https://web.io/path1/path11/doc.html#toc1&quot;);
+Uri newPath = myWeb.resolve(&quot;../path12/doc2.html&quot;);
+print(newPath);//output → https://web.io/path1/path12/doc2.html
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การแปลง file URI เป็นชื่อไฟล์บน Windows</h3>
+<p>หากต้องชื่อไฟล์ที่มาจาก URI ให้เป็นรูปแบบของ Windows ซึ่งใช้ <code>\</code> ในการคั่นส่วนของ path สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/toFilePath.html"><code>.toFilePath()</code></a> โดยกำหนดค่า <code>windows: true</code></p>
+<pre><code class="language-dart">Uri myFile = Uri.parse(&quot;file:///C:/xxx/yyy&quot;);
+print(myFile.toFilePath(windows: false)); // output → /C:/xxx/yyy
+print(myFile.toFilePath(windows: true)); // output → c:\xxx\yyy
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การสร้าง data URI scheme</h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/Uri.dataFromBytes.html"><code>.dataFromBytes()</code></a> ใช้สำหรับงานแปลงข้อมูล binary เช่น ไฟล์ภาพ ออกมาเป็น data URI ที่ใช้ในการแทรกข้อมูลของภาพลงไปเลย ตัวอย่างเช่น การแทรกข้อมูลใน html ผ่าน <code>&lt;img src=&quot;...&quot;&gt;</code> โดยใช้ภาพ svg มาแสดง</p>
+<p style="font-family:IntelOneMono,Consolas,monospace;word-break:break-all;font-size:80%;line-height:normal;">&lt;img src="<b>data:</b><span style="color:green">image/svg+xml;base64</span>,<span style="color:gray">PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDEyLjcgMTIuNyIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9IkEiIHgxPSI4LjA4MiIgeTE9IjUuNTIiIHgyPSI4LjA4MiIgeTI9IjExLjc2MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0icmVkIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSJyZWQiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0uODg3LjkyaDYuNTM4djYuNjA0SC44ODd6IiBzdHJva2U9IiMwZjAiIHN0cm9rZS13aWR0aD0iLjI2NSIvPjxlbGxpcHNlIGN4PSI4LjA2NiIgY3k9IjguMjYzIiByeD0iNC4xMyIgcnk9IjMuOSIgZmlsbD0idXJsKCNBKSIgc3Ryb2tlPSIjZjlmOWY5IiBzdHJva2Utd2lkdGg9Ii4zMTciLz48L3N2Zz4=</span>" width="200"&gt;</p>
+<p>ผลที่ได้</p>
+<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDEyLjcgMTIuNyIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9IkEiIHgxPSI4LjA4MiIgeTE9IjUuNTIiIHgyPSI4LjA4MiIgeTI9IjExLjc2MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0icmVkIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSJyZWQiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0uODg3LjkyaDYuNTM4djYuNjA0SC44ODd6IiBzdHJva2U9IiMwZjAiIHN0cm9rZS13aWR0aD0iLjI2NSIvPjxlbGxpcHNlIGN4PSI4LjA2NiIgY3k9IjguMjYzIiByeD0iNC4xMyIgcnk9IjMuOSIgZmlsbD0idXJsKCNBKSIgc3Ryb2tlPSIjZjlmOWY5IiBzdHJva2Utd2lkdGg9Ii4zMTciLz48L3N2Zz4=" width="200">
+<p>ใน Dart สามารถเขียนเพื่ออ่านไฟล์ svg แล้วนำมาสร้างเป็น data URI ได้ดังนี้</p>
+<pre><code class="language-dart">File svg = File(r&quot;D:\drawing.svg&quot;); // the file store at D:\drawing.svg
+Uint8List imgData = svg.readAsBytesSync();
+Uri dataUri = Uri.dataFromBytes(imgData, mimeType: &quot;image/svg+xml&quot;);
+print('&lt;img src=&quot;$dataUri&quot; width=&quot;200&quot;&gt;');
+</code></pre>
+<p>สำหรับการใช้งานอื่น ๆ สามารถดูได้จากตัวอย่างใน <a target="_blank" href="https://en.wikipedia.org/wiki/Data_URI_scheme#Examples_of_use">wikipedia</a></p>
+<h2>การ encoding decoding ข้อความที่เป็น URI</h2>
+<p>การ encode ตัว URI ที่เป็นข้อความธรรมดา ให้เป็นรูปแบบตามมาตรฐาน (ไม่มีตัวอักษรพิเศษ เช่น <code>/</code> <code>:</code> <code>&amp;</code> <code>#</code>) ตัว Uri class มี static method ที่ช่วยในการแปลงข้อมูลให้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การ encode URI ในส่วนของ path และ query</h3>
+<p>ข้อความที่เป็น URL หากต้องการ encode ในส่วนของ path และ query สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/encodeFull.html"><code>.encodeFull()</code></a> โดยข้อความจะถูกแปลงด้วยวิธีการ <a target="_blank" href="https://en.wikipedia.org/wiki/Percent-encoding">percent-encoding</a></p>
+<pre><code class="language-dart">String url1 = &quot;https://myweb.io/ฟ20.html&quot;;
+print(Uri.encodeFull(url1)); //? output → https://myweb.io/%E0%B8%9F20.html
+
+String url2 = &quot;https://myweb.io/query?t=a b c&amp;id=10#h1&quot;;
+print(Uri.encodeFull(url2)); //? output → https://myweb.io/query?t=a%20b%20c&amp;id=10#h1
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การ decode URI ในส่วนของ path และ query</h3>
+<p>อันนี้จะเป็นการแปลงข้อความที่ถูกเข้ารหัสด้วย <a target="_blank" href="https://en.wikipedia.org/wiki/Percent-encoding">percent-encoding</a> กลับมาเป็นข้อความที่ใช้ตัวอักษรธรรมดา โดยใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/decodeFull.html"><code>.decodeFull()</code></a></p>
+<pre><code class="language-dart">String url1 = &quot;https://myweb.io/%E0%B8%9F20.html&quot;;
+print(Uri.decodeFull(url1)); //? output → https://myweb.io/ฟ20.html
+
+String url2 = &quot;https://myweb.io/query?t=a%20b%20c&amp;id=10#h1&quot;;
+print(Uri.decodeFull(url2)); //? output → https://myweb.io/query?t=a b c&amp;id=10#h1
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การ encode ทั้งข้อความ</h3>
+<p>หากต้องการ encode ทั้งข้อความ จะใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/encodeComponent.html"><code>.encodeComponent()</code></a></p>
+<pre><code class="language-dart">String url1 = &quot;https://myweb.io/ฟ20.html&quot;;
+String component1 = Uri.encodeComponent(url1);
+print(component1); //output → https%3A%2F%2Fmyweb.io%2F%E0%B8%9F20.html
+print('&lt;a href=&quot;https://go.to/?link=$component1&quot;&gt;'); //output → &lt;a href=&quot;https://go.to/?link=https%3A%2F%2Fmyweb.io%2F%E0%B8%9F20.html&quot;&gt;
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การ decode ทั้งข้อความ</h3>
+<p>การ decode ข้อความที่ถูกเข้ารหัสด้วย <a target="_blank" href="https://en.wikipedia.org/wiki/Percent-encoding">percent-encoding</a> สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-core/Uri/decodeComponent.html"><code>.decodeComponent()</code></a></p>
+<pre><code class="language-dart">String component1 = &quot;https%3A%2F%2Fmyweb.io%2F%E0%B8%9F20.html&quot;;
+String url1 = Uri.decodeComponent(component1);
+print(url1); //output → https://myweb.io/ฟ20.html
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*tHZ.]Z[JsTa^;G%m78b](K9CYbPpOJ:/;]Coก[ขkgj9/dA3SNSPO"JJ%:dG(3f;RK[qo?[Xdo8o$eom&.3\XAlc7S^+M#0arjp["b0"EL7iWกso^g?JmF3^:9cek61O.[f@Ef.s4NdU;TmlgD@s5!F`n5"Q$HcPX:"Dq?mOu:@iOam5SpV-=6^\XjhIIEHiIHc)CqVEISq[UV0ohUWrmtL6/"hkrg2Q)U`mrPkL.3^O;d(St_A)s9]C3XE:k\!,ls2fLLT?g;p?h_I;4rLOa:;\^HE`,9L.[&n((#6sbN`=DFNr5K39ag-m/ThC+Z8G/(-E)UTpnu/#n3C[U.jAOInLG1:aS3E'5ขR+qh5gAR^3o*jc]Tdeกq747*lFขr^a[VP_M2kV(knDD$Dn=ขX4P)[*SPNbeYj\LHg,lAptk`g'?WBL0!6hก2CdGfdFK"@3l2n/DeM+Gข#hก#lhdPขDjre:TOZ`BWgFl42etl`1%ขM9G!!kQAQ(5tK]s@0E8P@DF#cR)A#kกcXDZ1kI8a(KQ.o@tSAcKR`i0k/k&S#/@W(!B(%P"\,N\!TA?!S5+giUhFYpEOAZMh0CK@a@R8XOuGJI%.^.kCP#lg48BCjeCc6i7dR$+;-Qb&u-N`j"hKO$A'#FqIJ[=bmHV8Ca4_Nh+DQS2,LKRsb['=(o]OZH$1V5bj+$'u+WS#H-#R-c1UpBbg[@Z8(;o2f=Qc`*`C]2O%rU&-q:J_Ins.RfqdNGP(I"]LLi\SX^i2_G!E-FV0r-0#6)Jdk6+=0XWg"gUmr:WE![+9Y/'\6(!tnf2*NS03b#1(\j-7jORYm9!*90eM82?O$$;nG-oVXกB9i^lp/(I`J+3+8sYq;s1`!hR:r(M=LY?8H+?p(f&`Nk%W"jk^`H6jVl])^Qp*6J)YfNW+9$TdY24Q)GIqfb*ก7\5f!EseUKq[Eก=f0PfSกo,2%N@,XO.,&d8$BPDHFN"B&2,'2Na(+B:u0/k(Do`e9NqC"Y97S$%As@`]I8+!JNgqiE(i5hbBTju&*q%pqWtT).:Oก)F+HEg,$4^ข(IUTNF\_l/rW+cUc^r$4'@ADrKXoq#$WsYb3K=(?[E:F0;V$^F@k2b04"FO,f[mdOm,#5=)uI_)p$tO'DTYก853SN"'D,:kWR_cVj='fD#YU)A5dejRO#GJf9dul.EhJIO$G[:q9gX`Y]m.4rk\2!IVF!`6fk1W+fa72"o2H_jY:$n3Ak$l_n5q:@**jEbb)/FKe2MIuV0FTWbeCกQBi(a(TqT`0Ld,etkhiIM+*4+mH#ข&A6n.l\a0Zข7tnF*$4rmJuij7Lt=moFXR[ng@r7q:/Gk=:.#`n1pB#l',7VNkR4FnK]0^&?aIoP9`taก+O;75\%O4G0[js!rQaBC/IJd)&EWsb"99`8:s2Z2C_8oD)?n.eeFFqOกp.QE6sa'*TN%Rกd3Dcc)o=_+Ob)^UmWlcกpOjaP1Eh7oZ2gqN%9"uf-VWpW%:6p7'/0c0E_(kI!Am*7E*;6]Zk2[n.+R4h"AqK=q)VX`\A=5_oN^Dข[SXHq!P:f/"4A""pPekb$h0Hm;)ก#mC&uQmF,a+p'[[c1(n61d/tt)"+rขoHK#YhX+\[f-9\#sh-=aW]YDข@_;jFU3)KW.MTRnj\p=[Cขn5.##%;.enEFKFขEl`&XNM[@4),_Nm\T2eLl`)^9=C!B^dprKlhuXWUJ7ERZ,72[@ODlq*LcQE4:N?E5J?\u]6aCNe3(HOj:B=9ขขขeGG!X[!2W17uqeaSd"ri_]SO$Nd2Koa%(?c&kaj9]18Ce&MF)กoeQR0rDG?NF0:?TกXHpB$rYWhGA!h8qik.IsYrp*ก=_ก&nk!@DWmr'(q8_djB[g#Uf9DqjbPgpV#HLAe)@6!bkPV62VYtCHUql`0V0SRbiN9`QQ--^@rudr[efKH!n/MM@+กYR;`]O"ขh:k+d4.KAsmLXJ(_2NagoraEPkXJj1J'taPr0nO7k55LH./PS9)2+KP+gMq3aZI3'ข_SD9N2qUT%s=5&6:ZdbPpK#m-_KG)Qa)]57ti#K;ps!$oXp!_ขVo[NJ8)32TptM\6#/b=YL,Am24p-IMm()';Y;?t*g'XDtPKขaaOขWN$Y(LAEGr`^!4,4BW%hcaKZV7nr$Z0\_.f6G&3lM^?hก/P/kUimbpk[s1N.?q]!EZ-q;G$4+oF=U9aO%DbE50pl#'_N#!XHO)@uf(Ycaa[^$"lmqQDY29iaE+8J0b\?$j-HS)I!pcaI0gD3L]Fc"M\E6F2o.d/"a2tc&i4EMsก6T!g'5=uSY?B`J\Yd*1Q$CUขZ3T[L)="@;,hsW(%2/%/(#KDaLEDqCj:RHbHWubf9hA9*oq"/TSZ%221t9MB$pRD@.aXCpXกsO9Qn&,-GขU^j2_/NQM%CC*SkXdP;m[QY!l_UpY^MDt9N+PKL3[Q2!&ขhAOeHXBWJ-;o.:q`*9_Uu?OVD(Y1/VfIko`9h5sn!15qq?กe.Mi$(I:\E)$7aN.,กMbX9h4"J57?;?1u,j``FmT?o[Xdh/)$Z,"B$Cl"2'U0ocJ4dMeB$W\:0`oNj\%4W:8;K0031Oi[6,k2fu5:&=$^%/DC*20I4W.k//PB%O\JV,!UAbb1Y6d"M&nRQ;[)`9hNC#$=NK8frmNYa[&ก%'p%"8iTEOJYWAZ'OM41.WP-'H-1.กc99*UP8U6=kJMs71,5b$&ldmn/ojXKAAa'__#s`ZkF?`A#k*lm*_IsX6+jK5"Lข6Y3GJpL_23#DXT4m`E%EnV0TQ:80'(8!EmhKni9,$G\3,Z/g*n2j+C=f.of7MPjaGID-2d0\X\:(iH0fJ`76OT[rWVQ8467bTAM-%Z$ข%.5iqgO"FCZ.V=mA%NBU,o,3hK5\lAQ5%ILf-$NmnEhKX@'OY;-/D$f7/(LP0UhN*oS(K@of\+nlc[.1m&@K\Ke#SN:%'ขW!Z=JกEP5!SPCr^Yn()O1ก+a5EFe*QqSHO@8DG3]t?#.F59@#pBL]ars:l4Jp(*\1#"UCV,U7S73)0i;qCT!nnAA.@q%P*kl)%C@q6l3O9,16J,%n#ZJJ4SIo6%%EWR2D=JQOYd^Su^#icqH=k0/N&%ZZi$'V26FtakQiDI-[='\4Se\k$$,n/g/b,u@.(3?$A-g/'YXPOKiIK^npI7^d86uq$&nMpgf,%Qjlขl;+\l$Vj/DU?cmC[4WRLqlS1U5/%cJ"oBMIRi`&]6.g8MIFqm7DU'scaOn.89SL[-$*:fn9ROTQB)f5kOF"*pQe%62@uBF)V2"XGoG+243fc4`HXeGLa;Aกf*Np6;tVWG/U9ODc"8aขr2F&!GbuOo75".-c-QQR-baduN.7s\Crb)qHtM7mSขgp.=#IH8)@k?d(jOjnbfNก&YY@it-[!llm=lnH\[H3$;\][5#=\EXOu."c(te*s/mce`c=s;0VeTข9esrI#3dB@`B&PntR1&,jก`sqTbA4Z2_DSqK),([re4coF[4jKo$dcN2fraP9NipW,i3`2]NXT9^9Vmp-behA78_A*&c;\sJ:&-KH8unG,H-'m)9e4\MH[0qn^"ecn\[ขbYd9^1M4]HN+'j$[?hWguKYpJQ$/;dGAj^)FmW9)]N7Fs@BJ%LE$o'6)2NOH?=b?_0leb-O`ZfI!D]Mbsa`qgFH*mD+)IV$cp(%ufCq;&0rNJ]gPgtfNr''hขTpK$_Ho&7gCb)4d*gKA\YVf12\ก]$pfHrQAS5+32sDQ2W1[Bm+acE,Q7bcIjS(#Q\^/(V2!V7RpskJlD9ZXWl6BกกcojS*!%Dt@:(fCDก7atHAUXHhMO4!j9sE;?(VCo\NJcCqO!gD3k&of](G.Bk_8.SjukjMaI!,'7"/4g3$)]`V-FHข-lsPcmdกW)eR7ขo)i?h/l'X-Lb-l.CCWUZgPiaD0Kp],?:OLS]^TLg9.+1nQk)/g8MJb.I4^TYrI*7\$L:g;=Cl9J$E^F.mspDk+/@6oNM4/Q'QT_V7Z%L8q"0OWo(m9/^DSq=]2Eกr2[;2P-@)"WpB&cq@/fren;+uXhqHPZ^I/Go'0Ca'M;S?rf1#^kqqJOOs[ขrAcb+&,uq&7:*7];okJQ]^3_9.2dKnYdc*r5h%cur6/J_&mqdj24^GBE915\em11"+2a?(!S[fKOd5JGOqHdIVn*KCIk%&NI5s%nDWjAE\F1?[#กn@goY-(KcKYข9kq7r[[W3%OED*B3*o9o?QcJ5g4@tC5กr'#;0`c)ncE#;C_9kj,Qq6,&ก=$6C*`Bu0fBEZ[K8?Muk_FiI[OV=m1m,47L4hh=3-P%;4=lc%7J-CD[cJEp?X!:$[mri/r-NQf%\`OM"3c8MpMB=@7e0[,-lrKBgq.lAc+Df**0TmCi+#Z6gXW#L82:Zl3W`R;2ก]!VIAhขP_2f&J$ขHT-1ZTSq`PPe'NC`MLข*%$fNlM.O:^dXKEjUMdTN^Ytjk5io=KuPJ%f^ข^,?)QbCN5V!;KP?9T:H:j.Ncn"Y-jq$VIf$cZ9o'S+?'5F,&[UdLp&fC96.กge8PG,r2(!W`Rbj3&4e3&RFo6cUBW:kQG'ISo$`W\Y\CกNf(I,ofF8kRaQa&p=i+g;^"TWV64.rH`a1T,n_ZKfG'XSPQd.dO[p\l-;lfD@hQ&B3QI]lH!J.qi9U[.dK\k16ขIBEaก!nVc@;+8ME?$galo5LngG7PYLOGAGmlJ_m_HgQb*\`bCข@"Jg$\Y^#l2`5Hf*F;.$gg$alK!t)r$[+LeขD[8jIg7!phgoi'D7ke-KjisMrX2*Bd`ข.V9]EG8p\l;rBnn+\FX0n+RNf+\gO26PP"j#4oN$G5k1.l4ja\NEPA#7cFaC:PF_ข#I'dUOaNqr8k[6d)TK_(!4Z5j\NPu/\HYoZYW@Bok/EUe!m(#0X:[4cf:oW4ESMke@EHกj5+qU.UaDc6"dS0RnX3XS%!A4iFgDV3FtQC?tกEขoMก\/c\I]%oC7Pak/)NK5L;#)\@m$hkกFYiplH*H]WUX$llgข)F!cCu#TD..#BS,E4@FHG_QD5I]sQ*nW4,.5Mem1NpTgb_1r5-)'FpiMhT7UXM.kL#l0?R8$;&-.4;2V@on3G^hoAZta1n1O!,'NJ%&!7l(08NDJ,lo\ขU?(A]B.F*UQ5k3jiS%L=oT1+qjc?.@(cLV$hKk&d$_gM:]:bK6MI&rFiEBR&bMS2gJs2'kGB]`/L+o'?pt3WK-~ข
+-->
+</markdown>
