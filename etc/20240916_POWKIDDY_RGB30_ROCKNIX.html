@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>การตั้งค่า POWKIDDY RGB30 บน ROCKNIX OS</title>
+	<meta name="tags" contents="[tags]">
+
+	<!--header-->
+	<meta property="fb:app_id" content="306783623357456" />
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
+	<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+	<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+	<link href='css/main.css' rel='stylesheet' type='text/css'>
+	<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+	
+	<link rel="icon" type="image/png" href="favicon.png">
+
+	<script src='toc_js/toc.js' type='text/javascript'></script>
+	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	
+	<!--/header-->
+</head>
+
+
+<body>
+<!--facebook-->
+<!--
+<div id="fb-root"></div>
+<script async defer src="https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v3.2&appId=306783623357456&autoLogAppEvents=1"></script>
+-->
+<!--/facebook-->
+
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.png" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+<h1>การตั้งค่า POWKIDDY RGB30 บน ROCKNIX OS</h1>
+<p>
+<img src="images/20240916/20240916_cover.jpg" class="u-max-full-width" />
+</p>
+<p>มาบันทึกการตั้งค่าต่าง ๆ บน RGB30 เผื่อทำพลาดข้อมูลหาย จะได้มีที่นี่เก็บไว้สำรอง</p>
+
+<h2>ROCKNIX OS</h2>
+<p>ข้อดี: </p>
+<ol>
+<li>ออกแบบมาให้สามารถปรับแต่ง RetroArch จาก Emulation Station ได้เลย สามารถระบุได้เลยว่าแต่ละ Core ใช้การตั้งค่าอย่างไรบ้าง</li>
+<li>สามารถเลือก GPU Driver เป็น <strong>Panfrost</strong> ทำให้ตัว RetroArch สามารถใช้งาน glcore โดยตัว UI ยังสามารถทำงานได้ปกติ ถ้าเป็น ArkOS จะกลายเป็นกล่องสี่เหลี่ยมที่เป็นพื้นสีรุ้ง</li>
+<li>เมื่อใช้ video driver เป็น <strong>glcore</strong> ทำให้เลือกใช้ Shaders ที่เป็น *.slang ได้</li>
+<li>รองรับ SAMBA และ SSH สามารถโอนไฟล์ผ่าน Wi-Fi ด้วย Windows Explorer ได้ หรือจะใช้โปรแกรม Remote SSH FTP ก็ได้</li>
+<li>รองรับ HTTP Server ในตัว โอนไฟล์ผ่านเบราเซอร์ได้</li>
+</ol>
+<p>สำหรับเรื่อง glcore มันมีเรื่องของประสิทธิภาพด้วย สามารถอ่านเพิ่มเติมได้ที่ <a target="_blank" href="https://www.libretro.com/index.php/changing-behavior-of-gl-and-glcore-video-drivers/">libretro.com</a>
+<p>ข้อด้อย:</p>
+<ol>
+<li>ในโหมด Standby ใช้แบตเตอรี่ประมาณ 1-2% ต่อการ sleep 1 ชั่วโมง ก็ยังถือว่าเยอะอยู่ดี</li>
+<li>มีปัญหาในการชาร์จแบตเตอรี่ตอนที่ปิดเครื่อง บางทีไฟเข้า บางทีไฟหาย สรุปต้องเปิดเครื่องแล้วชาร์จ</li>
+</ol>
+
+<p></p>
+<h2>การตั้งค่าสำหรับเกมที่ใช้หน้าจอ 4:3</h2>
+<p>เนื่องจากเกมที่มีขนาด 4:3 จะมีปัญหา pixel เหลื่อมกัน ถ้ากำหนดเป็น bilinear filtering ภาพก็จะเบลอ เป็นคนไม่ชอบภาพแบบนี้ เลยพยายามหา Shaders ที่เบลอไม่เยอะ และตัว pixel เวลาบีบแล้วไม่เหลื่อมกัน เกลี่ยออกมาบนหน้าจอเวลาภาพ scroll แล้วไม่เป็นคลื่นหรือเป็นรอยฉีก ตัว Sharder ที่ใช้คือ <code>crt\shaders\crt-geom-mini.slang</code> Version 450 เคยเอา Version อื่นมาลองภาพออกมาไม่สว่างไป ก็ภาพดูไม่เนียน</p>
+<div class="image"><img src="images/20240916/20240916_pixel_ok_output1.jpg" class="u-max-full-width" />
+	<div>ใช้ Shader crt-geom-mini.slang</div>
+	</div>
+<div class="image"><img src="images/20240916/20240916_pixel_ok_output2.jpg" class="u-max-full-width" />
+	<div>จุดที่ทำให้หา Shader มาแสดงแล้วตัว pixel เวลาเกลี่ยแล้วเสมอกัน ไม่เป็นแถบทับกัน</div>
+	</div>	
+
+<p>source code ของ <strong>crt-geom-mini.slang</strong> Version 450 </p>
+<pre><code>
+#version 450
+
+// This program is free software; you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation; either version 2 of the License, or (at your option)
+// any later version.
+
+layout(push_constant) uniform Push {
+  vec4 SourceSize;
+  vec4 OriginalSize;
+  vec4 OutputSize;
+  uint FrameCount;
+  float CURV;
+  float SCAN;
+  float MASK;
+  float LUM;
+  float INTERL;
+  float SAT, LANC;
+}
+params;
+
+// Parameter lines go here:
+
+#pragma parameter CURV "CRT-Geom Curvature"
+1.0 0.0 1.0 1.0
+#pragma parameter SCAN "CRT-Geom Scanline Weight"
+0.25 0.2 0.6 0.05
+#pragma parameter MASK "CRT-Geom Dotmask Strength"
+0.15 0.0 0.5 0.05
+#pragma parameter LUM "CRT-Geom Luminance"
+0.05 0.0 0.5 0.01
+#pragma parameter INTERL "CRT-Geom Interlacing Simulation"
+1.0 0.0 1.0 1.0
+#pragma parameter SAT "CRT-Geom Saturation"
+1.1 0.0 2.0 0.01
+#pragma parameter LANC "Filter profile: Accurate/Fast"
+0.0 0.0 1.0 1.0
+
+#define PI 3.1415926535897932384626433
+#define SourceSize params.SourceSize
+#define OriginalSize params.OriginalSize
+#define OutputSize params.OutputSize
+#define FrameCount params.FrameCount
+
+#define CURV params.CURV
+#define SCAN params.SCAN
+#define MASK params.MASK
+#define LUM params.LUM
+#define INTERL params.INTERL
+#define SAT params.SAT
+#define LANC params.LANC
+layout(std140, set = 0, binding = 0) uniform UBO {
+  mat4 MVP;
+}
+global;
+
+#pragma stage vertex
+layout(location = 0) in vec4 Position;
+layout(location = 1) in vec2 TexCoord;
+layout(location = 0) out vec2 vTexCoord;
+layout(location = 1) out vec2 scale;
+layout(location = 2) out vec2 warpp;
+layout(location = 3) out vec2 warp;
+layout(location = 4) out float fragpos;
+
+void main() {
+  gl_Position = global.MVP * Position;
+  vTexCoord = TexCoord * 1.0001;
+  scale = SourceSize.xy / OriginalSize.xy;
+  warpp = vTexCoord.xy * scale;
+  fragpos = warpp.x * OutputSize.x * PI;
+  warp = warpp * 2.0 - 1.0;
+}
+
+#pragma stage fragment
+layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) out vec4 FragColor;
+layout(location = 1) in vec2 scale;
+layout(location = 2) in vec2 warpp;
+layout(location = 3) in vec2 warp;
+layout(location = 4) in float fragpos;
+
+layout(set = 0, binding = 1) uniform sampler2D Source;
+
+float scan(float pos, vec3 color) {
+  float wid = SCAN + 0.1 * max(max(color.r, color.g), color.b);
+  float weight = pos / wid;
+  return LUM + (0.1 + SCAN) * exp(-weight * weight) / wid;
+}
+
+vec2 Warp(vec2 pos) {
+  pos = warp;
+  pos *= vec2(1.0 + pos.y * pos.y * 0.031, 1.0 + pos.x * pos.x * 0.05);
+  pos = pos * 0.5 + 0.5;
+  return pos;
+}
+
+void main() {
+  vec2 pos;
+  if (CURV == 1.0) pos = Warp(warpp);
+  else pos = vTexCoord;
+
+  vec2 corn = min(pos, 1.0 - pos); // This is used to mask the rounded
+  corn.x = 0.0001 / corn.x; // corners later on
+
+  if (CURV == 1.0) pos /= scale;
+
+  // Lanczos 2
+  // Source position in fractions of a texel
+  vec2 src_pos = pos * SourceSize.xy;
+  // Source bottom left texel centre
+  vec2 src_centre = floor(src_pos - 0.5) + 0.5;
+  // f is position. f.x runs left to right, y bottom to top, z right to left, w top to bottom
+  vec4 f;
+  f.xy = src_pos - src_centre;
+  f.zw = 1.0 - f.xy;
+  // Calculate weights in x and y in parallel.
+  // These polynomials are piecewise approximation of Lanczos kernel
+  // Calculator here: https://gist.github.com/going-digital/752271db735a07da7617079482394543
+  vec4 l2_w0_o3, l2_w1_o3;
+  if (LANC == 0.0) {
+    l2_w0_o3 = (((1.5672) * f - 2.6445) * f + 0.0837) * f + 0.9976;
+    l2_w1_o3 = (((-0.7389) * f + 1.3652) * f - 0.6295) * f - 0.0004;
+  } else {
+    l2_w0_o3 = (-1.1828) * f + 1.1298;
+    l2_w1_o3 = (0.0858) * f - 0.0792;
+  }
+
+  vec4 w1_2 = l2_w0_o3;
+  vec2 w12 = w1_2.xy + w1_2.zw;
+  vec4 wedge = l2_w1_o3 * vec4(w12.yx, w12.yx);
+
+  // Calculate texture read positions. tc12 uses bilinear interpolation to do 4 reads in 1.
+  vec2 tc12 = SourceSize.zw * (src_centre + w1_2.zw / w12);
+  vec2 tc0 = SourceSize.zw * (src_centre - 1.0);
+  vec2 tc3 = SourceSize.zw * (src_centre + 2.0);
+
+  // Sharpening adjustment
+  float sum = wedge.x + wedge.y + wedge.z + wedge.w + w12.x * w12.y;
+  wedge /= sum;
+
+  vec3 res = vec3(
+    texture(Source, vec2(tc12.x, tc0.y)).rgb * wedge.y +
+    texture(Source, vec2(tc0.x, tc12.y)).rgb * wedge.x +
+    texture(Source, tc12.xy).rgb * (w12.x * w12.y) +
+    texture(Source, vec2(tc3.x, tc12.y)).rgb * wedge.z +
+    texture(Source, vec2(tc12.x, tc3.y)).rgb * wedge.w
+  );
+
+  float fp = fract(src_pos.y - 0.5);
+  if (OriginalSize.y &gt; 400.0) fp = fract(src_pos.y / 2.0 - 0.5);
+
+  if (INTERL == 1.0 && OriginalSize.y &gt; 400.0) {
+    fp = mod(float(FrameCount), 2.0) &lt; 1.0 ? 0.5 + fp : fp;
+  }
+
+  float scn = scan(fp, res) + scan(1.0 - fp, res);
+  float msk = MASK * sin(fragpos) + 1.0 - MASK;
+  res *= sqrt(scn * msk);
+
+  float l = dot(vec3(0.29, 0.6, 0.11), res);
+  res = mix(vec3(l), res, SAT);
+
+  if (corn.y &lt;= corn.x && CURV == 1.0 || corn.x &lt; 0.0001 && CURV == 1.0) res = vec3(0.0);
+
+  FragColor = vec4(res, 1.0);
+}
+</code></pre>
+<p>Shader Parameters สำหรับไฟล์ slangp แต่ละ Core ให้ตั้งค่าดังนี้</p>
+<pre><code>
+shaders = "1"
+# make sure path to slang file is correct
+shader0 = "/tmp/shaders/crt/shaders/crt-geom-mini.slang"
+filter_linear0 = "true"
+wrap_mode0 = "clamp_to_border"
+mipmap_input0 = "false"
+alias0 = ""
+float_framebuffer0 = "false"
+srgb_framebuffer0 = "false"
+scale_type_x0 = "viewport"
+scale_x0 = "1.000000"
+scale_type_y0 = "viewport"
+scale_y0 = "1.000000"
+# Monitor border curve 1 | 0
+CURV = "0.0"
+# Scanline weight 0.0 - 0.6
+SCAN = "0.6"
+# Dotmask Strength 0.0 - 0.5
+MASK = "0.5"
+# Luminance 0.0 - 0.5
+LUM = "0.0"
+# Saturation 0.0 - 2.0
+SAT = "1.0"
+</code></pre>
+<p>เช่น Core ของ FinalBurn Neo ให้สร้างไฟล์ <code>/storage/.config/retroarch/config/FinalBurn Neo/FinalBurn Neo.slangp</code></p>
+<p>หากต้องการให้เอาไปใช้กับทุก Core ให้บันทึกใน Global Preset ที่ <code>/storage/.config/retroarch/config/global.slangp</code></p>
+
+<h2>การเล่น NES SNES แบบเต็มหน้าจอแบบ Pixel Perfect</h2>
+<p>วิธีนี้ใช้กับเกมส่วนมากที่ออกมาแบบมาให้เผื่อขอบหายจากทีวีที่แสดงภาพแบบ CRT ดังนั้น pixel บริเวณขอบซ้ายขวาเลยไม่ค่อยมีปัญหาเวลาเล่นเท่าไหร่ ให้ตั้งค่าตามภาพ</p>
+<div class="image"><img src="images/20240916/20240916_nes_setting.jpg" class="u-max-full-width" />
+	<div>กด Select เลือกรายการล่างสุด ADVANCED SYSTEM OPTIONS</div>
+	</div>
+<p>เวลาแสดงภาพก็จะมีบาง pixel ซ้ายขวาที่หายไป แต่ส่วนใหญ่ก็เล่นได้ไม่มีปัญหา</p>
+<div class="image"><img src="images/20240916/20240916_nes_output1.jpg" class="u-max-full-width" />
+	<div>ภาพจากเกม Mario 3</div>
+	</div>
+	<div class="image"><img src="images/20240916/20240916_nes_output2.jpg" class="u-max-full-width" />
+	<div>ภาพจากเกม Tetris จะเห็นว่ากรอบหายไปนิดนึง</div>
+	</div>
+
+<h2>แสดงแบบจอ Pixel โบราณบน Pico-8</h2>
+<p>Shader ที่เหมาะสมกับเกมที่มีความละเอียดต่ำมาก ๆ เช่น Pico-8 ที่ใช้งานแล้วเหมือนหน้าจอเกมโบราณ คือ <code>handheld/shaders/lcd-cgwg/lcd-grid.slang</code></p>
+	<div class="image"><img src="images/20240916/20240916_pico8_output.jpg" class="u-max-full-width" />
+	<div>Pico-8 ที่แสดงภาพผ่าน Shader</div>
+	</div>
+
+<h2>การเลือกโทนสีสำหรับ GameBoy Color</h2>
+	<div class="image"><img src="images/20240916/20240916_gbc_setting.jpg" class="u-max-full-width" />
+	<div>ตั้งค่าสีสำหรับ GameBoy Color</div>
+	</div>
+	<div class="image"><img src="images/20240916/20240916_gbc_output.jpg" class="u-max-full-width" />
+	<div>สีที่ออกมาที่หน้าจอจะเข้มขึ้น</div>
+	</div>
+
+
+
+
+
+
+<!--/content -->
+</div></div>
+
+
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</div>
+<!--/share button-->
+
+
+
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
