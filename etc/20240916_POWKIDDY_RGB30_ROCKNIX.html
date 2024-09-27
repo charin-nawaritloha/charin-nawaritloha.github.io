@@ -22,6 +22,12 @@
 	<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	
 	<!--/header-->
+	<style>
+	pre, code {
+	 word-break: break-all !important;
+	 white-space: pre-wrap !important;
+	}
+	</style>
 </head>
 
 
@@ -64,10 +70,14 @@
 <p>มาบันทึกการตั้งค่าต่าง ๆ บน RGB30 เผื่อทำพลาดข้อมูลหาย จะได้มีที่นี่เก็บไว้สำรอง</p>
 
 <h2>ROCKNIX OS</h2>
+<p>ขณะที่เขียน OS เป็น version: <code>20240815</code></p>
+<ol>
+<li>ดาวน์โหลด: <a href="https://github.com/ROCKNIX/distribution/releases/#:~:text=RGB30" target="_blank">github.com</a></li>
+<li>คู่มือ RGB30: <a href="https://rocknix.org/devices/powkiddy/rgb30/" target="_blank">rocknix.org</a></li>
 <p>ข้อดี: </p>
 <ol>
 <li>ออกแบบมาให้สามารถปรับแต่ง RetroArch จาก Emulation Station ได้เลย สามารถระบุได้เลยว่าแต่ละ Core ใช้การตั้งค่าอย่างไรบ้าง</li>
-<li>สามารถเลือก GPU Driver เป็น <strong>Panfrost</strong> ทำให้ตัว RetroArch สามารถใช้งาน glcore โดยตัว UI ยังสามารถทำงานได้ปกติ ถ้าเป็น ArkOS จะกลายเป็นกล่องสี่เหลี่ยมที่เป็นพื้นสีรุ้ง</li>
+<li>สามารถเลือก GPU Driver เป็น <strong>Panfrost</strong> ทำให้ตัว RetroArch สามารถใช้งาน video driver เป็น glcore ได้ โดยตัว UI ยังสามารถทำงานได้ปกติ ถ้าเป็น ArkOS จะกลายเป็นกล่องสี่เหลี่ยมที่เป็นพื้นสีรุ้ง</li>
 <li>เมื่อใช้ video driver เป็น <strong>glcore</strong> ทำให้เลือกใช้ Shaders ที่เป็น *.slang ได้</li>
 <li>รองรับ SAMBA และ SSH สามารถโอนไฟล์ผ่าน Wi-Fi ด้วย Windows Explorer ได้ หรือจะใช้โปรแกรม Remote SSH FTP ก็ได้</li>
 <li>รองรับ HTTP Server ในตัว โอนไฟล์ผ่านเบราเซอร์ได้</li>
@@ -75,11 +85,11 @@
 <p>สำหรับเรื่อง glcore มันมีเรื่องของประสิทธิภาพด้วย สามารถอ่านเพิ่มเติมได้ที่ <a target="_blank" href="https://www.libretro.com/index.php/changing-behavior-of-gl-and-glcore-video-drivers/">libretro.com</a>
 <p>ข้อด้อย:</p>
 <ol>
-<li>ในโหมด Standby ใช้แบตเตอรี่ประมาณ 1-2% ต่อการ sleep 1 ชั่วโมง ก็ยังถือว่าเยอะอยู่ดี</li>
-<li>มีปัญหาในการชาร์จแบตเตอรี่ตอนที่ปิดเครื่อง บางทีไฟเข้า บางทีไฟหาย สรุปต้องเปิดเครื่องแล้วชาร์จ</li>
+<li>ในโหมด Standby ใช้แบตเตอรี่ประมาณ 3% ต่อการ sleep 1 ชั่วโมง ก็ยังถือว่าเยอะอยู่ดี และไฟ LED จะดับ ถ้าลืมกลับมา shut down อาจจะทำให้แบตหมดเกลี้ยงได้เลย</li>
+<li>ถ้าชาร์จตอนปิดเครื่อง ไฟ LED จะติดแค่ตอนเสียบ USB แล้วดับไป จะไม่แสดงไฟ LED ขณะชาร์จ ซึ่งไม่แน่ใจว่าเป็นปัญหาจากอะไร แต่ตอนใช้ ArkOS ไม่เป็น</li>
+<li>ไม่สามารถตั้งค่าปุ่ม Power ได้เหมือน ArkOS</li>
 </ol>
 
-<p></p>
 <h2>การตั้งค่าสำหรับเกมที่ใช้หน้าจอ 4:3</h2>
 <p>เนื่องจากเกมที่มีขนาด 4:3 จะมีปัญหา pixel เหลื่อมกัน ถ้ากำหนดเป็น bilinear filtering ภาพก็จะเบลอ เป็นคนไม่ชอบภาพแบบนี้ เลยพยายามหา Shaders ที่เบลอไม่เยอะ และตัว pixel เวลาบีบแล้วไม่เหลื่อมกัน เกลี่ยออกมาบนหน้าจอเวลาภาพ scroll แล้วไม่เป็นคลื่นหรือเป็นรอยฉีก ตัว Sharder ที่ใช้คือ <code>crt\shaders\crt-geom-mini.slang</code> Version 450 เคยเอา Version อื่นมาลองภาพออกมาไม่สว่างไป ก็ภาพดูไม่เนียน</p>
 <div class="image"><img src="images/20240916/20240916_pixel_ok_output1.jpg" class="u-max-full-width" />
@@ -259,7 +269,7 @@ void main() {
   FragColor = vec4(res, 1.0);
 }
 </code></pre>
-<p>Shader Parameters สำหรับไฟล์ slangp แต่ละ Core ให้ตั้งค่าดังนี้</p>
+<p>Shader Parameters สำหรับไฟล์ &lt;core name&gt;.slangp แต่ละ Core ให้ตั้งค่าดังนี้</p>
 <pre><code>
 shaders = "1"
 # make sure path to slang file is correct
