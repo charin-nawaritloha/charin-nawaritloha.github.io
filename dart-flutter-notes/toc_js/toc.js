@@ -168,6 +168,7 @@ var fnCreateTOC = function() {
 			divTOC.style.height = divTOCh + 'px';
 			divTOC.style.display = 'block';
 			divTOC.style.visibility = 'visible';
+			divTOC.style.overflow = 'auto';
 		} else {
 			divTOC.style.height = '0';
 			divTOC.style.visibility = 'hidden';
@@ -198,7 +199,7 @@ var fnCreateTOC = function() {
 
 	//add event click to menu button to show and hide TOC
 	document.getElementById('clickmenu').addEventListener("click", displayTOC);
-	divTOCh = divTOC.clientHeight;
+	divTOCh = 640; //divTOC.clientHeight;
 	divTOC.style.height = '0';
 	divTOC.style.visibility = 'hidden';
 	divTOC.style.display = 'none';	
