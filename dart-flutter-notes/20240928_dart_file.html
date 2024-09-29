@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การจัดการ File และ Directory เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การจัดการ File และ Directory เบื้องต้น</h1>
+<p><img src="images/20240928/20240928_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ในการเขียน native แอป เพื่ออ่าน File และ Directory จากเครื่องที่แอปทำงานอยู่ สามารถใช้งานผ่าน dart:io การใช้งานจะต้องประกาศ <code>import 'dart:io';</code> เพื่อให้สามารถเรียกใช้งาน class <a target="_blank" href="https://api.dart.dev/stable/dart-io/File-class.html"><code>File</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory-class.html"><code>Directory</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Link-class.html"><code>Link</code></a> สำหรับเข้าถึงไฟล์ในดิสก์หรือ network ได้ โดยตัว API จะรองรับทั้งแบบ synchronous และ asynchronous โดยสังเกตได้จากคำสั่งที่ลงท้ายด้วย *Sync จะเป็นการทำงานแบบ synchronous</p>
+<h2>รู้จัก FileSystemEntity class</h2>
+<p>class <a target="_blank" href="https://api.dart.dev/stable/dart-io/File-class.html"><code>File</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory-class.html"><code>Directory</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Link-class.html"><code>Link</code></a> ต่าง implement <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity-class.html"><code>FileSystemEntity</code></a> class ซึี่งเป็น abstract class  จะมีคำสั่งที่ช่วยในการจัดการ File และ Directory ที่เหมือนกัน และยังมี static method ช่วยในการทำงานอีกด้วย</p>
+<div class="image"><img src="images/20240928/20240928_0100_class.png" class="u-max-full-width" /><div><p>FileSystemEntity class</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Parent directory ของ entity ด้วยคำสั่ง <code>.parent</code></h3>
+<p>ไม่ว่าจะเป็น File หรือ Directory จะต้องบรรจุอยู่ใน Directory ที่เป็น parent อีกที หากต้องการใช้งานสามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/parent.html"><code>.parent</code></a> เพื่อคืนค่ากลับมาเป็น <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory-class.html"><code>Directory</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Link-class.html"><code>Link</code></a> class ในกรณีที่ตัว entity ที่อ้างอิงอยู่ใน root directory ทำให้ parent คืนค่ากับมาเป็น root directory</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File iniFile = File(r'C:\Windows\win.ini');
+  Directory parent = iniFile.parent;
+  print(parent); // output → Directory: 'C:\Windows'
+
+  Directory c = Directory(r'C:\');  // root directory
+  print(c.parent); // output → Directory: 'C:\'
+}
+</code></pre>
+<p>อีกวิธีโดยการใช้ static method <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/parentOf.html"><code>.parentOf()</code></a> ของ FileSystemEntity โดยจะคืนมาเป็น String ที่เป็นตัว parent ของ path ที่ต้องการ</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  String parent;
+  
+  parent = FileSystemEntity.parentOf(r'C:\Windows\win.ini');
+  print(parent); // output → C:\Windows
+
+  parent = FileSystemEntity.parentOf(r'C:\Windows\.');
+  print(parent); // output → C:\Windows
+
+  parent = FileSystemEntity.parentOf(r'C:\Windows\');
+  print(parent); // output → C:\
+
+  parent = FileSystemEntity.parentOf(r'C:\');
+  print(parent); // output → C:\
+
+  parent = FileSystemEntity.parentOf(r'\\server1\folder1\.');
+  print(parent); // output → \\server1\folder1
+
+  parent = FileSystemEntity.parentOf(r'\\server1\folder1\');
+  print(parent); // output → \\server1
+
+  parent = FileSystemEntity.parentOf(r'\\server1\folder1');
+  print(parent); // output → \\server1
+}
+</code></pre>
+<h3>อ่าน Path และ Absolute path ของ entity</h3>
+<p>เนื่องจากในการอ้างถึงตำแหน่งของ entity สามารถระบุได้ทั้งแบบ absolute หรือ relative ก็ได้ โดยใช้คำสั่ง <code>.path</code> คืนค่ามาเป็นข้อความของ path ที่ใช้สร้าง entity ดังนั้นในกรณีที่อ่านค่า path ของ entity อาจได้แบบ relative มา หากต้องการค่าของ path แบบ absolute ต้องใช้คำสั่ง <code>.absolute</code> โดยจะคืนค่ากลับมาเป็น entity แบบเดียวกัน</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File iniFile = File(r'C:\Windows\win.ini');
+  Directory parent = iniFile.parent;
+  print(iniFile.path); // output → c:\Windows\win.ini
+  print(parent.path); // output → c:\Windows
+
+  File someFile = File(r'dart_file.dart');
+  File fullPath = someFile.absolute;
+  print(someFile.path); // output → dart_file.dart
+  print(fullPath.path); // output → C:\src\dart\dart_tester\dart_file.dart
+
+  Directory currentPath = Directory('.');
+  Directory currentAbsolute = currentPath.absolute;
+  print(currentPath.path); // output → .
+  print(currentAbsolute.path); // output → c:\src\dart\dart_tester\
+
+  Directory currentAbsolute2 = Directory('.').absolute;
+  print(currentAbsolute2.path); // output → c:\src\dart\dart_tester\
+}
+</code></pre>
+<p>หากต้องการตรวจสอบว่า ตัวข้อความที่ใช้สร้าง entity เป็นการอ้างอิงแบบ absolute หรือไม่ สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isAbsolute.html"><code>.isAbsolute</code></a> ตรวจสอบได้</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File iniFile = File(r'C:\Windows\win.ini');
+  File someFile = File(r'dart_file.dart');
+
+  print(iniFile.isAbsolute); // output → true
+  print(someFile.isAbsolute); // output → false
+}
+</code></pre>
+<h3>ตรวจสอบว่า entity มีอยู่จริงหรือไม่</h3>
+<p>เมื่อระบุข้อความที่เป็นตำแหน่ง path ของ File Directory หรือ Link ในกรณีที่ต้องการระบุถึง entity ที่มีอยู่แล้ว ไม่ใช่ต้องการสร้างใหม่ ก่อนการเข้าถึงจำเป็นต้องทำการตรวจสอบก่อนว่า entity มีอยู่จริงหรือไม่ ด้วยคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/exists.html"><code>.exists()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/existsSync.html"><code>.existsSync()</code></a> หากไม่ตรวจสอบก่อนว่ามีอยู่หรือไม่ จะเกิด error ขึ้นได้เมื่อทำการอ่านข้อมูลจาก entity ดังกล่าว</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File someFile = File(r'C:\Windows\win.ini');
+  if (someFile.existsSync()) {
+    print(someFile.lastModifiedSync()); // output → 2019-12-07 16:12:42.000
+  } else {
+    print(&quot;${someFile.path} not found.&quot;);
+  }
+
+  // try to get information from non-existent file
+  File newFile = File(r'C:\newfile.txt'); // no file on disk
+  print(newFile.lastModified()); // PathNotFoundException: Cannot retrieve modification time
+}
+</code></pre>
+<h3>ตรวจสอบว่า entity เป็น File Directory หรือ Link</h3>
+<p>เมื่อใช้คำสั่งจำพวกอ่านข้อมูล entity จาก Directory เช่น คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/list.html"><code>.list()</code></a> หรือ <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/listSync.html"><code>.listSync()</code></a> ผลที่ได้จากคำสั่งจะเป็น List ของ FileSystemEntity ดังนั้น หากต้องการจะเลือกเฉพาะ File หรือ Directory อย่างใดอย่างหนึ่ง สามารถใช้คำสั่งต่อไปนี้เพื่อตรวจสอบ path ของ FileSystemEntity ได้</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isFile.html"><code>.isFile()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isFileSync.html"><code>.isFileSync()</code></a> สำหรับตรวจสอบว่าเป็น File หรือไม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isDirectory.html"><code>.isDirectory()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isDirectorySync.html"><code>.isDirectoryeSync()</code></a> สำหรับตรวจสอบว่าเป็น Directory หรือไม่</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isLink.html"><code>.isLink()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isLinkSync.html"><code>.isLinkSync()</code></a> สำหรับตรวจสอบว่าเป็น Link หรือไม่</li>
+</ul>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  // test exists file with absolute path
+  File file1 = File(r'C:\Windows\win.ini');
+  print(FileSystemEntity.isFileSync(file1.path)); // output → true
+
+  // test exists file with relative path
+  File file2 = File(r'README.md');
+  print(FileSystemEntity.isFileSync(file2.path)); // output → true
+
+  // test for non-existent file
+  File file3 = File(r'C:\no_file.xxx');
+  print(FileSystemEntity.isFileSync(file3.path)); // output → false
+
+  // test path of directory
+  print(FileSystemEntity.isFileSync(r'C:\Windows')); // output → false
+
+  // don't use [is] operator to test entity like this
+  File windows = File(r'C:\Windows');
+  print(windows is File); // output → true
+}
+</code></pre>
+<p>อีกตัวอย่าง ในกรณีที่คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/list.html"><code>.list()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/listSync.html"><code>.listSync()</code></a> ของ Directory class จะคืนค่ามาเป็น <code>List&lt;FileSystemEntity&gt;</code> โดยเมื่อลองพิมพ์ค่าใน List ที่ได้คืนมาจะพบว่ามันเป็น File class และ Directory class ตามประเภท entity จึงสามารถใช้ <code>is</code> เพื่อทดสอบว่าเป็น File หรือ Directory ได้ หรือจะเอา .path ของ entity ใน List มาทดสอบด้วย <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isFile.html"><code>.isFile()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isFileSync.html"><code>.isFileSync()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isDirectory.html"><code>.isDirectory()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isDirectorySync.html"><code>.isDirectoryeSync()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isLink.html"><code>.isLink()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/isLinkSync.html"><code>.isLinkSync()</code></a>  ก็ได้เช่นเดียวกัน</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  // list file and directory in current directory
+  List&lt;FileSystemEntity&gt; results = Directory.current.listSync();
+
+  print(results); /* output → 
+  [ 
+    Directory: 'C:\src\dart\dart_tester\.dart_tool', 
+    File: 'C:\src\dart\dart_tester\.gitignore', 
+    File: 'C:\src\dart\dart_tester\analysis_options.yaml', 
+    Directory: 'C:\src\dart\dart_tester\bin'
+  ]
+  */
+
+  // It OK to test an entity in List with [is] operator
+  for (FileSystemEntity f in results) {
+    if (f is File) {
+      print(&quot;$f is File&quot;);
+    } else if (f is Directory) {
+      print(&quot;$f is Directory&quot;);
+    }
+  }
+}
+</code></pre>
+<p>อีกวิธีที่ใช้ตรวจสอบประเภทของ entity คือคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/type.html"><code>.type()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/typeSync.html"><code>.typeSync()</code></a> โดยจะคืนค่ามาเป็น <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntityType-class.html">FileSystemEntityType</a> ในตัวอย่างด้านล่างจะเป็นการตรวจสอบว่า path ที่ระบุเป็น entity ประเภทใด</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  String unknowPath = r'./point/to/path/file/link';
+
+  switch (FileSystemEntity.typeSync(unknowPath)) {
+    case FileSystemEntityType.directory:
+      print('$unknowPath is directory');
+      break;
+    case FileSystemEntityType.file:
+      print('$unknowPath is file');
+      break;
+    case FileSystemEntityType.link:
+      print('$unknowPath is link');
+      break;
+    case FileSystemEntityType.notFound:
+      print('$unknowPath is not found'); // output → ./point/to/path/file/link is not found
+      break;
+    default:
+      print('$unknowPath is something wrong');
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การเปลี่ยนชื่อ entity หรือย้ายไปอยู่ directory ใหม่ ด้วย <code>.rename()</code> <code>.renameSync()</code></h3>
+<p>ทั้ง File และ Directory สามารถเปลี่ยนชื่อได้จากคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/rename.html"><code>.rename()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-io/FileSystemEntity/renameSync.html"><code>.renameSync()</code></a> โดยกำหนดชื่อใหม่ที่ต้องการ โดยหากไม่สามารถเปลี่ยนชื่อได้ จะเกิด exception</p>
+<p>ตัวอย่างการเปลี่ยนชื่อแบบ relative หากไม่ระบุ path ใหม่ ระบุแค่ชื่ออย่างเดียว จะเปลี่ยนชื่อโดยยังอยู่ใน Directory เดิม</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  try {
+    File textFile = File('test.txt');
+    File renameFile = textFile.renameSync('test1.txt');
+    print(renameFile); // output → File: 'test1.txt'
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+</code></pre>
+<p>ในกรณีที่ entity ระบุแบบ absolute path แต่ต้องการเปลี่ยนแค่ชื่อ entity ไม่ต้องการเปลี่ยน path สามารถทำได้ดังนี้</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  try {
+    File textFile = File(r'C:\src\dart\dart_tester\test.txt');
+    File renameFile = textFile.renameSync('test1.txt');
+    print(renameFile); // output → File: 'test1.txt'
+    print(renameFile.absolute); // output → File: 'C:\src\dart\dart_tester\test1.txt'
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+</code></pre>
+<p>หากต้องการย้าย entity ไปอยู่ตำแหน่ง path ใหม่ สามารถระบุได้ทั้งแบบ absolute หรือ relative ก็ได้เช่นกัน</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  try {
+    File textFile = File(r'C:\src\dart\dart_tester\test.txt');
+    File renameFile = textFile.renameSync(r'test\test.txt'); // move to sub directory
+    print(renameFile); // output → File: 'test\test.txt'
+    print(renameFile.absolute); // output → File: 'C:\src\dart\dart_tester\test\test.txt'
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>File class</h2>
+<p>ตัว <a target="_blank" href="https://api.dart.dev/stable/dart-io/File-class.html"><code>File</code></a> class จะมีคำสั่งในการช่วยจัดการ file บนดิสก์หรือเซิร์ฟเวอร์ ตั้งแต่ การสร้างไฟล์ การอ่านไฟล์ คัดลอก ลบ ฯลฯ</p>
+<h3>การสร้างไฟล์ใหม่ และการบันทึกข้อมูลลงในไฟล์</h3>
+<p>ในการสร้างไฟล์ใหม่ สามารถทำได้โดยการสร้าง File object ขึ้นมา โดยระบุชื่อไฟล์ที่ต้องการจะสร้าง จากนั้นให้ทำการเปิดไฟล์ เพื่อทำการเขียนข้อมูลลงไป</p>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/create.html"><code>.create()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/createSync.html"><code>.createSync()</code></a> สร้างไฟล์ใหม่ตาม path ที่ระบุ โดยขนาดไฟล์จะเป็น 0 แต่ในกรณีที่ไฟล์ที่ระบุมีอยู่แล้ว จะไม่ทำอะไร</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/writeAsString.html"><code>.writeAsString()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/writeAsStringSync.html"><code>.writeAsStringSync()</code></a> ถ้าไม่มีไฟล์ จะสร้างไฟล์ใหม่ บันทึกข้อความ String ลงในไฟล์โดยตรง</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/writeAsBytes.html"><code>.writeAsBytes()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/writeAsBytesSync.html"><code>.writeAsBytesSync()</code></a> ถ้าไม่มีไฟล์ จะสร้างไฟล์ใหม่ บันทึกข้อมูลที่เป็น <code>List&lt;int&gt;</code> ลงในไฟล์โดยตรง โดยสมาชิกที่อยู่ใน List จะมีค่าตั้งแต่ 0-255 ถ้ามากกว่านี้จะถูกแปลงให้ไม่เกิน 255</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/open.html"><code>.open()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/openSync.html"><code>.openSync()</code></a> เปิดไฟล์เพื่อทำการบันทึกข้อมูล ผ่าน <a target="_blank" href="https://api.dart.dev/stable/dart-io/RandomAccessFile-class.html"><code>RandomAccessFile</code></a> class</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/openWrite.html"><code>.openWrite()</code></a> เปิดไฟล์เพื่อทำการบันทึกข้อมูล ผ่าน <a target="_blank" href="https://api.dart.dev/stable/dart-io/IOSink-class.html"><code>IOSink</code></a> class</li>
+</ul>
+<p>ตัวอย่างการใช้งานคำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/createSync.html"><code>.createSync()</code></a> โดยหากถูกสร้างไฟแล้ว และเรียกทำคำสั่งซ้ำ คำสั่งจะไม่ทำอะไรกับไฟล์</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File testFile = File('test.txt');
+  testFile.createSync(); // create new file if not exist
+  print(testFile.lengthSync()); // output → 0
+
+  testFile.writeAsStringSync('1234');
+  print(testFile.lengthSync()); // output → 4
+
+  testFile.createSync(); // file was created, do nothing
+  print(testFile.lengthSync()); // output → 4
+}
+</code></pre>
+<p>ตัวอย่างการสร้างไฟล์ โดยระบุข้อมูลที่จะเขียนลงไปด้วย ในกรณีที่มีไฟล์อยู่แล้ว จะเป็นการเขียนทับไฟล์เดิม</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File testFile = File('test.txt');
+
+  // create empty file
+  testFile.writeAsBytesSync([]);
+  print(testFile.lengthSync()); // output → 0
+
+  // create with text data
+  testFile.writeAsStringSync('test data');
+  print(testFile.lengthSync()); // output → 9
+  print(testFile.readAsStringSync()); // output → test data
+
+  // create with binary data
+  testFile.writeAsBytesSync([100, 120, 150, 65535]);
+  print(testFile.lengthSync()); // output → 4
+  print(testFile.readAsBytesSync()); // output → [100, 120, 150, 255]
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การลบไฟล์ ด้วยคำสั่ง <code>.delete()</code> <code>.deleteSync()</code></h3>
+<p>ใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/delete.html"><code>.delete()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/deleteSync.html"><code>.deleteSync()</code></a> เพื่อลบไฟล์ที่ระบุ หากไฟล์ไม่มีอยู่หากสั่งลบจะเกิด PathNotFoundException error</p>
+<p>ตัวอย่างการสร้างไฟล์ใหม่ จากนั้นลบทิ้ง และลองพยายามลบไฟล์ที่ไม่มีอยู่แล้ว เพื่อให้เกิด error</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File testFile = File('test.txt');
+  print(testFile.existsSync()); // output → false
+
+  testFile.createSync();
+  print(testFile.existsSync()); // output → true
+
+  testFile.deleteSync();
+  print(testFile.existsSync()); // output → false
+
+  // try to delete non-existent file
+  testFile.deleteSync(); // PathNotFoundException: Cannot delete file, path = 'test.txt'
+}
+</code></pre>
+<h3>การสำเนา file ด้วย <code>.copy()</code> <code>.copySync()</code></h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/copy.html"><code>.copy()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/copySync.html"><code>.copySync()</code></a> จะทำงานเหมือนกับ <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/rename.html"><code>.rename()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/renameSync.html"><code>.renameSync()</code></a> สิ่งที่แตกต่างกันคือ ไฟล์ต้นฉบับจะยังอยู่</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  File testFile = File('test.txt');
+  testFile.createSync();
+  print(testFile.existsSync()); // output → true
+
+  File testFile2 = testFile.copySync('test2.txt');
+  print(testFile.existsSync()); // output → true
+  print(testFile2.existsSync()); // output → true
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การอ่านข้อมูลจากไฟล์</h3>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsBytes.html"><code>.readAsBytes()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsBytesSync.html"><code>.readAsBytesSync()</code></a> อ่านข้อมูลแบบ binary คืนกลับมาเป็น <code>List&lt;int&gt;</code> โดยค่าใน List จะอยู่ในช่วง 0-255</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsString.html"><code>.readAsString()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsStringSync.html"><code>.readAsStringSync()</code></a> อ่านข้อมูลแบบข้อความ String โดยสามารถระบุ <a target="_blank" href="https://api.dart.dev/stable/dart-convert/Encoding-class.html"><code>Encoding</code></a> ของตัวข้อความว่าเป็นแบบใด ค่าปริยายคือ <a target="_blank" href="https://api.dart.dev/stable/dart-convert/utf8-constant.html"><code>utf8</code></a></li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsLines.html"><code>.readAsLines()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/readAsLinesSync.html"><code>.readAsLinesSync()</code></a> อ่านข้อมูลแบบข้อความ String แต่ทำการแยกข้อมูลเป็นบรรทัดกลับมาในรูปของ <code>List&lt;String&gt;</code></li>
+</ul>
+<pre><code class="language-dart">import 'dart:convert';
+import 'dart:io';
+
+void main() {
+  File testFile = File('test.txt');
+
+  // write and read simple text data
+  testFile.writeAsStringSync('12345678');
+  print(testFile.lengthSync()); // output → 8
+  print(testFile.readAsStringSync()); // output → 12345678
+
+  // write and read multi-line text
+  testFile.writeAsStringSync('Line1\nLine2\nLine3');
+  print(testFile.lengthSync()); // output → 17
+  print(testFile.readAsLinesSync()); // output → [Line1, Line2, Line3]
+
+  // write and read binary data
+  testFile.writeAsBytesSync([1, 2, 3, 4]);
+  print(testFile.lengthSync()); // output → 4
+  print(testFile.readAsBytesSync()); // output → [1, 2, 3, 4]
+
+  // write and read UTF-8 encode
+  testFile.writeAsStringSync(&quot;ÀÁÂÃ&quot;, encoding: utf8);
+  print(testFile.lengthSync()); // output → 8
+  print(testFile.readAsStringSync(encoding: utf8)); // output → ÀÁÂÃ
+
+  // write and read ISO Latin-1 encode
+  testFile.writeAsStringSync(&quot;ÀÁÂÃ&quot;, encoding: latin1);
+  print(testFile.lengthSync()); // output → 4
+  print(testFile.readAsStringSync(encoding: latin1)); // output → ÀÁÂÃ
+}
+</code></pre>
+<h3>การเข้าถึงคุณสมบัติต่าง ๆ ของ File</h3>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/lastAccessed.html"><code>.lastAccessed()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/lastAccessedSync.html"><code>.lastAccessedSync()</code></a> วันที่ file ถูกเข้าถึงล่าสุด</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/lastModified.html"><code>.lastModified()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/lastModifiedSync.html"><code>.lastModifiedSync()</code></a> วันที่ file ถูกแก้ไขล่าสุด</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/length.html"><code>.length()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/lastModifiedSync.html"><code>.lengthSync()</code></a> ขนาดของ file ในหน่วย byte
+คำสั่งข้างต้น หากการอ่านค่าล้มเหลว จะเกิด FileSystemException error</li>
+</ul>
+<h3>การแก้ไขคุณสมบัติต่าง ๆ ของ File</h3>
+<ul>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/setLastAccessed.html"><code>.setLastAccessed()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/setLastAccessedSync.html"><code>.setLastAccessedSync()</code></a> แก้ไขวันที่เข้าถึง file</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/dart-io/File/setLastModified.html"><code>.setLastModified()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/File/setLastModifiedSync.html"><code>.setLastModifiedSync()</code></a> แก้ไขวันที่แก้ไขล่าสุดของ file</li>
+</ul>
+<p>คำสั่งข้างต้น หากการแก้ไขล้มเหลมจะเกิด FileSystemException error</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>Directory class</h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory-class.html"><code>Directory</code></a> class ใช้สำหรับสร้างและจัดการ directory ในดิสก์และเซิร์ฟเวอร์ ตัว API จะมีความคล้ายคลึงกับ File class แต่มีข้อจำกัดที่ไม่เหมือนกัน เช่น ไม่สามารถสั่ง copy ได้โดยตรง จากข้อจำกัดของระบบ File system ในแต่ละ OS ที่แตกต่างกัน</p>
+<h3>การสร้าง directory ด้วย <code>.create()</code> <code>.createSync()</code></h3>
+<p>คำสั่ง <code>.create()</code> <code>.createSync()</code> ใช้สำหรับสร้าง directory ใหม่ โดยสามารถกำหนดค่า <code>recursive</code> ค่าปริยายเป็น <code>false</code> หากกำหนดเป็นค่า <code>true</code> จะทำการสร้าง sub directory ให้อัตโนมัต ในกรณีที่ directory นั้นมีอยู่แล้ว จะไม่ทำอะไร</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  print(FileSystemEntity.isDirectorySync(r'.\test')); // output → true
+  print(FileSystemEntity.isDirectorySync(r'.\test\sub1')); // output → false
+
+  // try to create sub directory sub1\sub2 in .\test
+  Directory subDir = Directory(r'.\test\sub1\sub2');
+  subDir.createSync(recursive: true);
+
+  print(FileSystemEntity.isDirectorySync(r'.\test\sub1')); // output → true
+  print(FileSystemEntity.isDirectorySync(r'.\test\sub1\sub2')); // output → true
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง temporary directory เพื่อใช้งานชั่วคราว</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/createTemp.html"><code>.createTemp()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/createTempSync.html"><code>.createTempSync()</code></a> จะเป็นการ directory สำหรับใช้งานชั่วคราวขึ้นมา โดยผู้ใช้สามารถระบุ prefix เพื่อนำไปใช้ในการสร้างได้ ตัว API จะทำการสุ่มตัวอักษรต่อท้าย เพื่อให้ไม่ซ้ำกับ directory อื่น ๆ หากไม่ระบุ prefix จะใช้ empty string เป็น prefix</p>
+<p>หากต้องการสร้าง directory ชั่วคราวใน system temp directory สามารถค่าคงที่ <code>Directory.systemTemp</code> เพื่อใช้งาน Directory ของ Temp ระบบปฏิบัติการได้</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  // This is the system temp directory. ( same as %temp% )
+  print(Directory.systemTemp.path); // output → C:\Users\chari\AppData\Local\Temp
+
+  // create temp directory inside system temp
+  Directory temp = Directory.systemTemp.createTempSync('_test_temp_');
+  print(temp); // output → Directory: 'C:\Users\chari\AppData\Local\Temp\_test_temp_78b5195b'
+
+  // create temp directory with out prefix
+  temp = Directory.systemTemp.createTempSync();
+  print(temp); // output → Directory: 'C:\Users\chari\AppData\Local\Temp\f31e5a31'
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การลบ directory</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/delete.html"><code>.delete()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/deleteSync.html"><code>.deleteSync()</code></a> ใช้สำหรับลบ directory ที่ต้องการ โดยสามารถกำหนดค่า</p>
+<ul>
+<li><code>recursive</code> ค่าปริยายเป็น <code>false</code> โดย directory ที่จะลบต้องเป็น empty directory คือห้ามมีไฟล์หรือ sub directory ใด ๆ</li>
+<li>หากกำหนดเป็นค่า <code>true</code> จะทำการลบ sub directory และ file ต่าง ๆ ที่อยู่ภายในให้อัตโนมัต</li>
+</ul>
+<p>ในกรณีที่ล้มเหลวจะเกิด FileSystemException error กลับมา</p>
+<p>ตัวอย่าง จะเป็นการลองพยายามลบ directory ที่ภายในมีไฟล์หรือ sub directory หากไม่กำหนด <code>recursive = true</code> จะเกิด error</p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  Directory test;
+
+  // Example 1 ------------------------------------------------
+  // create directory [sub1\sub2] in [.\test]
+  test = Directory(r'.\test\sub1\sub2');
+  test.createSync(recursive: true);
+
+  // delete directory [sub1] with out recursive
+  Directory sub1 = Directory(r'.\test\sub1');
+  try {
+    sub1.deleteSync(recursive: false);
+    print('OK');
+  } catch (e) {
+    print(e); // output → FileSystemException: Deletion failed, path = '.\test\sub1'
+  }
+
+  // delete directory sub1 with recursive
+  try {
+    sub1.deleteSync(recursive: true);
+    print('OK'); // output → OK
+  } catch (e) {
+    print(e);
+  }
+
+  // Example 2 ------------------------------------------------
+  // create directory [sub1] in [.\test]
+  test = Directory(r'.\test\sub1');
+  test.createSync();
+  // create text file in [sub1]
+  File(r'.\test\sub1\somefile.txt').createSync();
+
+  // delete directory [sub1] with out recursive
+  try {
+    sub1.deleteSync(recursive: false);
+    print('OK');
+  } catch (e) {
+    print(e); // output → FileSystemException: Deletion failed, path = '.\test\sub1'
+  }
+
+  // delete directory sub1 with recursive
+  try {
+    sub1.deleteSync(recursive: true);
+    print('OK'); // output → OK
+  } catch (e) {
+    print(e);
+  }
+}
+</code></pre>
+<h3>การอ่าน file และ sub directory ทั้งหมดใน directory ด้วย <code>.list()</code> <code>.listSync()</code></h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/list.html"><code>.list()</code></a> <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/listSync.html"><code>.listSync()</code></a> จะไล่อ่านว่าใน directory ที่ระบุบรรจุ file และ directory อะไรบ้าง ผลที่ได้จะเป็น <code>List&lt;FileSystemEntity&gt;</code></p>
+<pre><code class="language-dart">List&lt;FileSystemEntity&gt; listSync({
+  bool recursive = false,
+  bool followLinks = true,
+})
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>การใช้งาน <code>recursive = true</code> หาก directory ที่ระบุว่าจะเข้าไปไล่ดูข้อมูล file ภายในมี file และ sub directory จำนวนมาก ควรใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/list.html"><code>.list()</code></a> เพื่อให้ประสิทธิภาพการทำงานของแอปเป็นไปอย่างราบรื่น และไม่หยุดตอบสนองกับผู้ใช้</p>
+</div></div>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  // list file and directory in current directory
+  List&lt;FileSystemEntity&gt; results = Directory.current.listSync();
+
+  print(results);
+
+  // [recursive = true] for scan all sub directory and files
+  Future&lt;List&lt;FileSystemEntity&gt;&gt; resultBackground = Directory.current.list(recursive: true).toList();
+  resultBackground.then((value) =&gt; print(value));
+
+  print('wait for list of ${Directory.current}');
+}
+</code></pre>
+<p>ผลที่ได้</p>
+<blockquote>
+<p><span style="color:blue">[Directory: 'C:\src\dart\dart_tester.dart_tool', File: 'C:\src\dart\dart_tester.gitignore', File: 'C:\src\dart\dart_tester\analysis_options.yaml', Directory: 'C:\src\dart\dart_tester\bin', File: 'C:\src\dart\dart_tester\CHANGELOG.md', Directory: 'C:\src\dart\dart_tester\lib', File: 'C:\src\dart\dart_tester\pubspec.lock', File: 'C:\src\dart\dart_tester\pubspec.yaml', File: 'C:\src\dart\dart_tester\README.md', Directory: 'C:\src\dart\dart_tester\test', File: 'C:\src\dart\dart_tester\test.txt']</span><br/>
+wait for list of Directory: 'C:\src\dart\dart_tester'<br/>
+<span style="color:blue">[Directory: 'C:\src\dart\dart_tester.dart_tool', File: 'C:\src\dart\dart_tester.dart_tool\package_config.json', File: 'C:\src\dart\dart_tester.gitignore', File: 'C:\src\dart\dart_tester\analysis_options.yaml', Directory: 'C:\src\dart\dart_tester\bin', File: 'C:\src\dart\dart_tester\bin\dart_duration.dart', File: 'C:\src\dart\dart_tester\bin\dart_enum.dart', File: 'C:\src\dart\dart_tester\bin\dart_file.dart', File: 'C:\src\dart\dart_tester\bin\dart_function.dart', File: 'C:\src\dart\dart_tester\bin\dart_regexp.dart', File: 'C:\src\dart\dart_tester\bin\dart_tester.dart', File: 'C:\src\dart\dart_tester\bin\dart_uri.dart', File: 'C:\src\dart\dart_tester\CHANGELOG.md', Directory: 'C:\src\dart\dart_tester\lib', File: 'C:\src\dart\dart_tester\lib\dart_tester.dart', File: 'C:\src\dart\dart_tester\pubspec.lock', File: 'C:\src\dart\dart_tester\pubspec.yaml', File: 'C:\src\dart\dart_tester\README.md', Directory: 'C:\src\dart\dart_tester\test', File: 'C:\src\dart\dart_tester\test.txt']</span><br/>
+<br/>
+Exited.<br/></p>
+</blockquote>
+<h3>อ้างอิงตำแหน่ง current directory ที่กำลังทำงานอยู่</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-io/Directory/current.html"><code>.current</code></a> จะคืนค่าเป็น Directory ที่กำลังทำงานอยู่ เพื่อใช้อ้างกับการระบุ path ที่เป็นแบบ relative</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>current directory ไม่จำเป็นต้องเป็น directory ที่ไฟล์ executable ของแอปอยู่เสมอไป เพราะในกรณีที่สร้าง shortcut เพื่อเรียกใช้แอป อาจระบุเป็น directory อื่นได้</p>
+</div></div>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  print(Directory.current); // output → Directory: 'C:\src\dart\dart_tester'
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Link</h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/dart-io/Link-class.html">Link</a> class เป็นการสร้าง Symbolic Link ถ้าใน Windows คือการใช้คำสั่ง <a target="_blank" href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mklink"><code>mklink</code></a> จากที่ลองทดสอบดู พบว่าหากไม่ได้ให้สิทธิ์ Administrator กับแอป จะไม่สามารถสร้างได้ และเกิด FileSystemException error</p>
+<p>ตัวอย่างการสร้าง Link เทียบกับคำสั่ง <code>mklink /D E:\sub1\source E:\source</code></p>
+<pre><code class="language-dart">import 'dart:io';
+
+void main() {
+  // cmd&gt;mklink /D E:\sub1\source E:\source
+
+  try {
+    Link source = Link(r'E:\sub1\source');
+    source.createSync(r'E:\source');
+    print('Link created.');
+  } catch (e) {
+    print(e);
+  }
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*VCMsngQJX:i5MSM9gPkK:gYb1f@)W7()hf0(+f"j@ขBIEfg9,FขกNE,กgPV(HK*FXdXgA1o_*j[pK\.S;'-LiขTCYQVo1N-Ih"RRMh1eKjRh*Hn?0C!acTV$8n#`AGX;@eXA2N'\%A/]9%nFO,UZ&Q,n@&+HHk:CJ1-4&,%3LRahibก3m'kCkhBeqLX/"YQB__ขL_.TP%e'[[)BQsd^^,nJ84nZf6.r-s4oCMRoi7$oJ&#8)h3=`i2)\$/7L(?bk]-R$si%c86l"G=&,6&RDho)^iiZHM*iG=C+oT;:i^5hds#]ขTU?c%กu2oR3?bmXI63E#ScaZ11Yga&ZR'E%PfB?Zuf$Fau+!oPS#ก?!n86jbRfcef]O^ZA^p1u1O[hfข[q+jH\3O5cDR(rG"KVSs"[r!ajTM7e^q:r_qV1ltbi9+nPY"ข2UaAiA,FT.Doข?9bC+M"S3+\WN]EHIm)NkID^M^nYrV=5Q\uh.'ul.@=ESKm;IiF$9l=8tpi+2/&NY$fD03p_aข^'eข[ขF(!#WH^OQDp!N94+=mb)E&#!g)LdJ"Hgi?!nFt?".1,rp4,UKQ6JW\'Hq$R1f+?j@/0#)iR%4!I6c'Z2+^[f9!smF5`c@0JrR#SV,eIK#1QK=cO=6jhl!K?gSfk$P31W3s(Ij@JE"MISlq%`q7D&X[IUmhN^gS=GL(DA?*BgZPo&=Qขi\Q*NmYq]oB`$92)6S8#[Q]#%i6qq$[V)Ao*cBข_]1M;^c@otomS]IBT))M$]fUW)h]P4ght;ขFR'N]j;m.lL'hfR*ZขDGr*9HuBขAe$*LprtOZ.DV$UI$m-UE[dAP[!o9aG$UdWu(o;=Kg^j\ki&5a7g!5'S%Tm.,@E88Q%2Nข,:ขZRo,[9P%8@oQh[VGDJ".K!k:-E^VJ(@dA'4Ra'K0ielLpQNUCB;;^`Bebsp-_pCTh-bhI9-%],[%L:Oi3"'&oBQnH95m,N_?.ขFjBU5[3!!BqR$N[TjกV^M_p\RH/Gj]JW)95$%k7;ug#a_t!h^ก]J3i&YoH0)T]3ก8f()H'(L["[กK6_)AM3kD,hkT5[NC7c]k(8=oVก.9GOgO9+8/5BL%aUIZ24gah/UOJ:[o?O$+DSC:D8c"7XO3+[@`Yb`sB6(@MZ+IkG]5+S8hก8ก*[_#L%DO#(eCrT2Se"^sLH:0+iVYTAH`mFY!TขY6dsp(RaD!ejGCiuh$.kSM97P"('lK=!j6aZoe"?P:=5;9#R9FXmA+3@-meP%r$4&jU&(R1IrMQQ*4g4`pq\KJ'I`GE6b"rdmcmN4c^[$r&-.dY5ujZ,noQKoRikขf0\_;B_!6+sAD$ข[0t_+P^od*@])sjS4gb0ARnBaBQfbZA^M9'EQ$-irWc:;K=Ta&9C966;a_^3`Q'#$rV,)Cก-o-l0ก$Ca-ZaL@C6bkg[P5@gp+XA)R@eIPDiI\+B0T0;phขsO)Z*F2seb7&p4GYcaT8/_LQ9ข't:"X#E("`n?5ei_h0ขhcS'7ID_M`q%]&27=Y9c6CA5PeOjT(;2"LDM1tO/L].ขก0K\g[%@l[j$kg":VkqmX^53!5"oe%กWB/7u&*:sOeDoOK]ARsZbขs?lP\X$STXe=(TQIM$aa&4Tj0Mu6pbcf+0PMFN_kunc)5*t:LUmY^cb'@iO^76,ขnMX0X4;L6%O3&]15GXe"^2@'uR&ZebNbTW24,J9t4oq&CV%/FoIkfsQOj9WS7ข5_RJ;JDHL_mfdWR0$c.$!'lp&=Ms'":mB"TQ#sqFTtmX!TaB2]K]N%S!esdVกo?:"Z4-!M32??*dL[G*6+ขT&n$LQcD,*N(J#"Mq6*mW"hQt8RR#2ก08N;KE"-TXni0Mh%r@.&ainYOtกXKh)Qf`BTm?M7%Bg?T63T!6,HbbXtqXa-s7[^H!EAEC@+u,);&+b:;rBp1`lE%c&`%Tn[aQqH7ZU9,n(\d:asdC4T:F4\W1fF%aBF@Thueh![0Gก'[s0=bqAQe9sQ28$,lU-&\V\\WO+Dkb7X;LขbU!qVP8l?2)0C&)GAhA//ขtpc5pViกK](WkHH!\9[:brBLXU]Q`+Cg/c\=3\Wpd_h[,H&)*_f3n0.tR4`,`fP38$ก#96'gE!7hWLh.Ig@\B3)+re(Jbe6aK30%GtmGDtDกOe=6(,M7ZF]l\D]+กp(VjN,"n;+%Xe))7.V]K]'Q`2'Z%[$$LขrdYc;K5tq8UhJ_K21@6for;5ขF]&FGA^i/DZ4LYnCI0IipqrFqY^7RTY!PgDW9u\O1b:fk#u%6@?cpM1^Mk/,F$ข$ก'ก/Y,`R"ข)NbIn,sg1?iguJ@;+N`fe0AB9cJ]JQ$O,WE(_Z]"(-b-8)\#'D"8X*YLClk8-m\1&fol3&JSTขio*._Lf2;AFOF(lCjnF=tAb*PO_CT.\NกB3d:O3;tU=?&+D`gs+--C9CYAFEJ9g@*7O@5ss6_กdขRH6bOPe3p+]h@.กV]-mqBuM2K2ZQP%"amกY@jQ8mA(@s1=1CขG0e?7#Zq;1uK-\^d,.bYK_I-=Oo8"3CBEeDlขdiggI.M,$W;_$)%Y`lMq'EH?T^$L(._1VQg.)nC4[eq*lUeKFiK//J;dgqXKtfT12+Kf0gra,2(^_oG(C]23ก_MGn0#$Ldo__=KinlI+a8foURKX=h)ก/hr=X#O?(15iXcXmY8_+=n;Ga0TEGuA6n*/D?8lกV#):t]aee*8;0Te6ขQKA/]'.3hO=U,$9mFT$n+mKL"jกXMs^Cl!q&m28c%/pSY;B9BYOansขn1M;2[Y23qqU2$qiกLkP`EB`กuES^;DB^E:9ZVu^Tiu&Q9fMX"%'l)6กQ0Ij/;4"Rh1f-7@CFL,H5$82T2%oT\fLqtVr%kodก-NP=/YAi.5pA:o9aขXZO2__0ข`dlr)(X[G-&RA7B&E/hd9#D1W1hUIH7I]N.N((o!gAmE[Sk1@n5S7#jl*S8Rl5nh8),cn)C)'Tn-:e*nNgi^SU!K/)l;.Z)5U\U.LpoRL4PY)$[IMXh-@j1IYT0+%ข02k^IQ0p24p/Rm$Y!cBa0FM9aHrn?.ED"T!ข6=W%)#_F\oLhoo,W"``ข^ก6''I,p/CLAIaTjm:W::,97pu4G%`1s7Y?5?U3ข2tgIdZ(&G"&ZDN!;MLW"Wskba3*r3%o$7=/e6=pข&ZiTI4`J1"A'bqp7X.*cQmSUQBhDJb\j!I]5))aPBYKMh*&L%%F4]:/rFV$QYq8U]4Val1B=\K6D]G^9huq0ข=Eit#(/i?McW]o]:T+J``S]d:ou"!Dh@Q:!nu!6*X6P;SFNl3Lข4^QhA1nJf[)Lh)PH'[t6W((WqM/Gg[X1p2!F7tnqH7@Rขo;*;Sกos2a[89aqEkZ!(U3กepNA=K0#&D.@@bB=DhM=d"f^-กZ!!3,\n1U#!hP]ข/@Pข.+&mrKDNF0fFi&!bjZi@(AR@Y)(PESIQ!iDpe4ZeB5#X#KlP&ขkFDC&hNK:m$`T&8p$c&kfZc['aW:67E]`UWglh]Yq;-,f'5ed'Cjk*iluR:_kกS)qXjs,@it2]rdJe,JY!#OM`ก.nH)c!n06nmiXK%:[K*eX3nN_eGLdsQE%\0EI`ECLdt48:s.+%ZoPDQF\5กoBD\:aN,dCO,\q_2W9)&MD*Og^2.V2h,2'9oG%P1&H*9C&O@eD4กi`J,)Yoe9Td"11pVR[iGP'ouKD=Gig3-g]:PD'0'.VKc"Mc+edL=Trt&U(XLhW%0MHKaMBaขh)UlกS[8;\bj/.3"oBcCu./F3pRA9กFNqกbHoJ4U7t*GoN%rVQ,g:j-EFX`(YYrT!*Uc-]_6CA8sdXn&,5G"Ti8nกAf+)V63Uj=%Q;ข-WR3L2=U6?q+ขpk$6"8Q_l+cกE!mR,GGI6pV#Zof.j8U]YN;JBnr7*em2V?bQcY`26^-Wm@&2L3ก`AI0O^33U1(4!)Q#m=e%'c)/E]JO&dBM@dl+$kh[a]?D93/tjขZlk=j+VukOP"NHO"1T(hGbha51EX/75ej(27_(-AR8T"Y*30r^TSF&Nuc3SFs2c@ก`E`DLgG2VLHma8XQqกfC*G(R^&g%=OcQCGNuhกLRYi8ZnEd'E"jT*_BK!7Kk6^N3N?+J=gs82!N&(/grq[1UqC@$dR'iP,I)5\*V53#-I9,cJ/9rG-\GL%5-a%O%Bo[M#i*Z@l2#Jกlof(Wdc5oj?amrQ2JD=d?C=p5Wj7d_\cQgPH"grd(^FU7VQGu*IA[Io#^d[S(pKOWRe\iBc,m(I\cgVก&D$=d(;ulU]'c5`jr;VMP_AANcr=3JกY-fK5Dh,rF'=&DY'K`?2[pn5fX2PPX$7"$/oQ0+BTcrCEWc54*LiQ!\_F%VVCWMIt"u@:u/+\XขPuBAXMh3E;q(8%Oi9O![o)bP]?Tr!nZQ0:MIjUlBQ"liข5ik=H?WUSf$Xข7;T@o[T3?\WL2กEI+3BKDpc,fกYH.^KGEV.El*fbt6FPd"+2ta5ZJi6S!MmN3GfSgQls!5;c/`A`C:.qHMQpR(F1qS`_/#WNaKpljS46:"+P-!TขRrW-?ขdea'DK0A^@2KqtO!W"]:Z"g::AG[-a8qb$4W`VกO;_9q;2YRm?*^uI_uqLRqdHm$"pcY3nขX!lE%(DW]ขIAXR#)G25d\^Mกgpen_KOEjdq\\M;SbjZ_/+Tq@H[)e(KBQ&K"Zข^I!FUZq'5q3@FsR5V31*p(L1+Y_m@4'6;;82Vjc#Z+)m:g\8$i)ghr_]*$JZKRUup:V7`Bbo.nAN*/CaF0?;"\f@Z&P'E%tnX_GEZFข,G0/Q&fS/)\$g\ก1Z@1m$&4b(t;p2VขEk`T&ขQ?D2D,:DfJ$C!b-\04FHdc]WGS'7o6B(k]rC6]lWV"[?n.4PO78QVM[UV:2IkolGJS9KQJBc+0is-6ZaMd]-qP%ps?[Odl`Whs3XpRl0Gu@OAdTQ*oli2K'([Km1UeOLCL%7ก4CกH['KกiI9AZ&GodกGBN:*3^0@'o(=-tin[;^'kT&Acd.c.7JLM0I[7XSZug\0$jNกES;#s'ข#=AFMb?]YRH66K$Q/;A_'MQf^[%f!n4!ACKs1D!Ple7C0qpAM:!uM4N5p%*^=N2Wp'W**UE1ZRXR;+กkGt1q9.B3E%VF=VS4@8VdAq;j6#!O[Q$ct=I0mj=ih_h+;;3*5YhCPtX0XgQ_\_-!aLJG#3e6p=Cq6gk[)662NPBAc=V[WHU))(U69Y^,nrt!1k\eXg%pOFUMr=dqZS_2mMU[l,Y^WTFQ-^?FQBCขmUT0U1ขข]m:l504g.BขPDขl&CSs#0-mh3#hk'ldoก3=R*jข7e-D\(`"28:UDgGt0S1q"l)`;sG*rGBgA`eN2$$pjlE_ขmoHHHK?q(:iW&hWYrQH2gtTeWXZOqeJpaQ(F187ED6&"+/]nWPl]#_nYM9'l2f?R'e/*Vก0\m5./0.k\;Z8A'@km;M$bGJgm%6Ah!8LX`0LfkS:1?8Ra#Z6;FS/_1Jo&`a%ข3hO=!oH:#DDde_$=_J(:iPRAF8rdQAขSU37)cPTd[SKpV`tD/^?PNn%q#7EN;t`,T*L\N1!7*f6%b]Z9IW&5Ea;Ft:g'g3KS'h=*OS85bLU=fD_Iq&gYqY9BPf(AR"$;B^Q$ก@EP!0Zm@A4==Yaกl8Tj_s*L[@Fj)PFT:;?_m"กsXdO'A9$$6DaYGbjV82(1G/TAK+s%$j%[.%!!A5H(6^hZPXgd1*,8u#D]P*[nQo0NQTUQ.,h&rN".%1-,eAขr+s')ก!4$LYh(ขd?,N$@_6:lM0q&fdJAn+^);`$todZXe'A*1nN)?=S45a3:!fDa4&*mN(;ขQ?;83P[ulG_pok&I^o*h+-+QCJ0กWL-D7;DOdm;A=@bD7=`aK0iWXAZ97q2$@?MKppJAA=R#C*s,9%tBQ8sBกp?aom1#;XQ?94iVoc5kbap$h#K0L85#V[b2[s$-P$f'H5`@.[Hda"fKก];i^['2BJQ/W006a@h3PinRL&a(I3+Hp[VA^^.LP,\Y*8:Aq_[4gS"XขXcD?*ZNP[@HKUoN!4E@?`2j45`p^V_hWa\YSh,p0+g6@L?Lk2t`"Xi)eK8^-+lt0ขnb##[`VSS*om`r/m,EkF!ZnA)5GH);EYCPmKB_ihtt[hP1:ZขYa=7lKd_#T]R@r#+/ldgoPVbof8)B71EX?cJrhB#D2Mf0%d6$-D6d_YsmJ'Qm(PbX38"uU3q:PYcbuI0"2WU5T9BG(ccDpK!sAfNKZD(:Sq0=0%5nr]W4K.N/H9X3p3[P"Wqa]_c(ofPขr':-n5hcguRu9SWK*ic[@U(HEgGpaVHa2$HX`BnD;]],:`gu7#LJ;`:%NJ$-Eie"$(#ก9jYข#8uก2YRSpQf($Gs6hQob3Xp8Uf39U)EEg_2H/2-U'*,jj22`G6]22IISZJWl#4_RtJbk!b&NM'\2,%iVCU^ES\^,go&ข1Yc3ข#V%KX*/HApWLFo]^iVAFDAd/d_กe[.HAWf?aP.hB&Zu7gY*\B^?GCGd[4(!_ข6LW2);78_hu`#rrE..=bIIQ'^;uJCN)%259%P\].0&m&XZ#BoNข2fK`j$g'_QeV-D'?Fข[qkW9R?$!SGF?L(t@kAdYsoqd8b=I.uhUIol0OMb.N2(:]+OKN(\"5Yh;JThi2n[NfHB.กOqs)Zu'Qm/?LIUo%WED@^#g[1i7Dj\0(U=@)jnOhrX8)pEZWq_Z]กKVp!`I\oข_B[p!p(LกocN4*rWl#K:,NlrphoA$!L@\dU(CT5r;j/54,Ls2hdges,(H6eco"Sp"+@nq7"l,nขH:gYRlhVhG`F%)@lZ`Q;4m@HXeoV+)[-bWก]Ho':b&U&LoUok65WY5qZe6qOSrpeS8sC2bMil#AB:DD]E^RfQjBQ#?G90%@uO8\CWj]S-1kIejpB-FKR`g6l%(s#0E-A@8i0`PLi-IfHL9HE65(QIfCG0XH2L=H"@rK!n.DDFsข;p"C:;+@@O,n0lp8J@K-#F*mk[[ia^-@Tข_mp,hS5$h#^Mf*Z,EI9P#@'k0qก9]hH$mi5^(Qb;ขd[J]GCojlsRoM%pUIgF:t-8I._cLI/ARกl"%Ooก^'1VNg1,1i6Dl6c-MmsEd??YZกAS:Z&fKbh/[I%qZDY^8m*PH56Qq_kI'R,27tpUDL2BY9%PAK.`sQ0UgBขRg:0^2Uข20ISpHm``jS8QcV:%[bj"QiA8YJj)-&W9=Yh[,);iY-#&TiQuG90(@rXEN7;[;H^%_\)UnขEe2G7r(gD?Eh4euQ!].DAq`;@CV4gh/o8A0C2qT%(NRs\1h6G@BcmPW'gsWae&'4gVo.ItกNR_bTp!fA%&dJ,LnB.A3[a;YK5HGC1-#_0icX]rd"Uข(hLDG$40@กTDm9H.b-$b)Qr.aESDWJi%,rpfก&@gM81o.FLF[TaAM-@*kdRS`Z,83j"7.uWD[A+/39pข1ML?0$=ขKdR6?r8l=PQ3_X&e"lR`\mG^k1ZdDmQr%1O7(peg9%@\65umjL=V"o%go%6hcDWAYSNกqQ-do4-)pJY:hg0CdcA(\C\H@TK_Ou"lD@%r6."IkpDPd1ZMA._)dgRodK)กeNDl8Rh\/1U2DpDL20กnB"M]RVlh$";YJ,FX-H('Soks#jt.:RdseJWY:$TNM-.+==CJY`2_pH@iS"u_!a7NJ$'5rCmh&kt;กReUDOSkl_2&I/Bp1ขlmP"ข?S`SJGSi9sscANbLpdu+UT@uH,ข`9oN)Dj+QcTFF`dLdcSiU2,H/gd\.hVgCQ4rLV,QHRF6SN9\e:Fb,&pข`ZTกnN$ข;o[GY,1`ROKuE;#%FG6'JT,pbqB-fsrd/PJ3-i:.ข$Dq#S6s@5dkW?E1cg[ALh=KA;bo@NE+\7กf,aY,aJmX)C@nhrh:f:Rcn"XKj\^fGq5Hg#'fกp3VWH@qDD_X5SL3eOI4lj;]%cmR*GIsu-sg6K%f@QL="ก+nขB%'4G,&ulZWVMJQG(8HE.I]_j34]VH1(Ta?c&9?b2M^llc",GKCu&/\*DeJ[8m3?2S4R=jf90ข&W?mk6EHofFR?aGaMR39f&Oba&.M:b8dnl:d'$กN`3ZLmYI3J/pm5/]fEjJ$^JCR:ZLFV%bk3*STA+u8he5I9U0&J^%gTeJ0_0(?'jq5SCE31[J&C1.=,!B@X$R9TTHqUZdKeT9IขeL1.qoUca17``p"OW_=h[tmH3:5ข%RA4":u,*ขhg35%J/OrEH6Oo8cq9F%08Dก`YFjLSXp!'s_bt(BF)"`*,DCL-GjVF%3cW3.'mUVToG#4X%c0ik1\^jกlHENaVk+RrGPp"l3DCLMZ.@?CQ+',d(SV5M:_3BVgt]-]PHl(FBkrgaXOSs?OX4F*On(F&XBX'-กS6h7JnA/HX\2Mka_@['e$Sai=4:)eVI?O\*]WW$D'nR3bก!g"me55,DU@B]fb.@_@9Ci^กhrb[m"j5tM0iH4rOSN%n&8_K(UW0MM)o@a(%iJo3&aAHm+k0QM'$*uj+c1R"_!LgeD?'iขข_TeL$b[%0cs=Ug6=qA:qVTbIq?jnJ69#4YqkpVIng-2H5q5""Z[gLj-9r)4Wt!Vk\ข,rmQ(.[[!p"mSX`\u%,`cg^ก2fI]4kVL;0F`9AN+=n-0LSขZ?$SdI/JeM29./C[sIGj`MhJ#H'p3Oo%?sขnC('9e"Ob*XRr8g:T+TD`a-ข:7*KPcWL(\uWYreU!t$:%P;e~ข
+-->
+</markdown>
