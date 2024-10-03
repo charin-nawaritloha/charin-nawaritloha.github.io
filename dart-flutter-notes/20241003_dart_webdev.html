@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: บันทึกการเปิดใช้งาน webdev บน Windows</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: บันทึกการเปิดใช้งาน webdev บน Windows</h1>
+<p><img src="images/20241003/20241003_0000_cover.svg" class="u-max-full-width" /></p>
+<p>บันทึกปัญหาและการใช้งาน webdev เพื่อเขียน dart สำหรับติดต่อกับ web browser ใน Visual Studio Code บน Windows</p>
+<h2>สร้าง dart web project</h2>
+<p>เปิด Visual Studio Code จากนั้นเรียกใช้คำสั่ง</p>
+<ol>
+<li>&gt;Dart: New project</li>
+<li>เลือก Bare-bones Web App</li>
+<li>ตั้งชื่อ Project ที่ต้องการ</li>
+</ol>
+<div class="image"><img src="images/20241003/20241003_0100_create_project.webp" class="u-max-full-width" /><div><p>การสร้าง Project สำหรับ dart เพื่อใช้งาน web application</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>ลองสั่ง Run</h2>
+<p>เมื่อลองคลิก Run ตัว <code>void main()</code> ตัว Visual Studio Code จะแจ้งว่าต้องเปิดใช้งาน webdev ก่อน กดปุ่ม Activate webdev เมื่อดูผลการใน DEBUG CONSOLE ทำงานพบว่ามีปัญหา ลองพยายามหาทางแก้ไขแล้ว แต่หาไม่เจอ😢 แต่ถ้าใครใช้งานแล้วไม่พบปัญหาก็ใช้งานแบบนี้ดีกว่า เพราะสามารถใช้งาน debug ได้สะดวก ไม่ต้องมาตั้งค่าด้วยมือเอง</p>
+<div class="image"><img src="images/20241003/20241003_0200_run.webp" class="u-max-full-width" /><div><p>พบปัญหาเมื่อคลิกคำสั่ง Run โดยตรง</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ตั้งค่า webdev ด้วยมือ</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ตั้งค่า path เพื่อชี้ไปยัง Cache\bin</h3>
+<p>เพื่อให้สามารถเรียกใช้ command line ได้โดยไม่เกิดปัญหาเรื่องหาไฟล์ package ไม่เจอ จำเป็นต้องเพิ่ม Path ชื่อ <code>%LOCALAPPDATA%\Pub\Cache\bin</code> เข้าไปในระบบของ Windows ผ่าน System Properties โดยทำแค่ครั้งเดียว เพื่อให้สามารถเรียกใช้งาน <code>webdev serve</code> ได้ถูกต้อง</p>
+<div class="image"><img src="images/20241003/20241003_0300_add_path.webp" class="u-max-full-width" /><div><p>การเพิ่ม Path เข้าไปในระบบ Windows</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ทำการ Activate</h3>
+<p><a target="_blank" href="https://pub.dev/packages/webdev#installation">คู่มือการ Activate</a> ให้เรียกคำสั่ง <code>dart pub global activate webdev</code> เพื่อเปิดใช้งาน webdev โดยคำสั่งนี้จะไปทำการโหลด package ที่เกี่ยวข้องมาใช้งาน</p>
+<div class="image"><img src="images/20241003/20241003_0400_activate.webp" class="u-max-full-width" /><div><p>การ activate webdev</p>
+</div></div>
+<p>หากไม่ต้องการใช้งาน webdev แล้ว สามารถสั่งยกเลิกการ Activate ด้วยคำสั่ง <code>dart pub global deactivate webdev</code></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เปิด service เพื่อ run โปรแกรม</h3>
+<p>ให้เรียกคำสั่ง <code>webdev serve</code> ในโฟลเดอร์ของ Project ที่ต้องการ เพื่อเปิด <strong>local web development server</strong> โดยตัว webdev จะทำหน้าที่ช่วย compile ไฟล์ dart ที่ใช้งานทั้งหมดให้เป็นไฟล์ JavaScript และ deploy ให้อัตโนมัติ กระบวนการนี้จะเกิดขึ้นเมื่อผู้ใช้งานแก้ไขไฟล์ dart และสั่ง Save</p>
+<p>ในตัวอย่าง Project บรรจุในโฟลเดอร์ <code>C:\src\dart\dart_web_application_1</code> ก็ให้เรียกคำสั่ง <code>webdev serve</code> ที่โฟลเดอร์นี้ หากเปิดใช้งานได้สำเร็จ จะแจ้งผู้ใช้งานให้ทราบว่าจะเรียกใช้งานจาก URL อะไร โดยค่าปริยายจะเป็น <code>http://127.0.0.1:8080</code> หากต้องการเปลี่ยนหมายเลข port หรือค่าอื่น ๆ สามารถดูได้จาก<a target="_blank" href="https://pub.dev/packages/webdev#webdev-serve">คู่มือวิธีใช้งาน</a></p>
+<div class="image"><img src="images/20241003/20241003_0500_webdev_serv.webp" class="u-max-full-width" /><div><p>การเปิด webdev serve</p>
+</div></div>
+<p>ส่วนวิธีการหยุด service สามารถทำได้โดยการกด <code>Ctrl + C</code> แล้วใส่กด <code>y</code> เพื่อยืนยันการหยุดทำงาน</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เปิด service เพื่อ debug โปรแกรม ผ่าน DevTools</h3>
+<p>ในกรณีที่ต้องการ debug โดยการใช้งาน DevTools สามารถเพิ่ม options ดังนี้ <code>webdev serve --debug</code> หากเปิดใช้งานสำเร็จ จะพบว่ามี Serving DevTools เพิ่มขึ้นมา ให้ผู้ใช้เปิด URL ดังกล่าว แต่จากการทดสอบพบว่า ไม่สามารถทำตาม <a target="_blank" href="https://dart.dev/web/debugging">Debugging Dart web apps</a> ได้ 😢 ไม่ว่าจะเรียกผ่าน URL แล้ว connect ก็ขึ้นว่าไม่พบ หรือเรียกจาก Chrome Extension ก็ขึ้นพยายามเชื่อมต่อแล้วก็เงียบไป โดยที่โปรแกรมก็ที่เขียนให้แสดงเวลาปัจจุบันทุก 1 วินาทีก็ยังทำงานอยู่</p>
+<p>สรุปว่า เวลาจะ debug ก็ใช้ผ่าน Developer tools หรือกด <code>Ctrl</code> + <code>Shift</code> + <code>I</code> ก็พอใช้งานได้</p>
+<div class="image"><img src="images/20241003/20241003_0600_webdev_serv_debug.webp" class="u-max-full-width" /><div><p>การเปิด webdev serve แบบ debug</p>
+</div></div>
+<div class="image"><img src="images/20241003/20241003_0610_devtools_error.webp" class="u-max-full-width" /><div><p>เมื่อพยายามเปิดตัว DevTools จะขึ้น error</p>
+</div></div>
+<p>สำหรับวิธีใช้งาน DevTools สามารถดูได้จากวีดีโอด้านล่าง</p>
+<p><center><iframe width="560" height="315" src="https://www.youtube.com/embed/_EYk-E29edo?si=NcUAFzeSNf7kC_XD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="u-max-full-width"></iframe></center></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การ build เพื่อนำไฟล์ไปใช้งานจริง</h2>
+<p>เมื่อทดสอบจนได้ผลที่พอใจแล้ว ขั้นตอนต่อไปคือเอาไฟล์ที่จะใช้งานจริงไปใช้งาน ผู้ใช้งานต้องทำการ build เพื่อทำการ compile ไฟล์ dart ที่เกี่ยวข้องทั้งหมดเป็นไฟล์ JavaScript ด้วยคำสั่ง <code>webdev build</code> โดยหากไม่กำหนด options ใด ๆ เลย ไฟล์ที่ถูก compile จะไปอยู่ในโฟลเดอร์ <code>build</code> ของ Project ที่ทำงานอยู่</p>
+<div class="image"><img src="images/20241003/20241003_0700_build.webp" class="u-max-full-width" /><div><p>การ build เพื่อ compile ไฟล์ dart ทั้งหมด</p>
+</div></div>
+<h2>ความเห็นส่วนตัวกับ webdev</h2>
+<p>โดยทั่วไปใช้ dart ในส่วนของการเขียน command-line console application กับใช้ใน Flutter ในส่วนที่ใช้กับ web อย่างเดียวไม่ได้สนใจเท่าไหร่ แต่ที่ต้องมาศึกษาเนื่องจากหากเขียน Flutter ที่ทำงานบน web จำเป็นต้องคุยกับ JavaScript ที่อยู่บนเบราเซอร์ด้วย เพื่อให้สามารถทำงานได้มีประสิทธิภาพและสามารถรองรับการอ่านค่าจากเบราเซอร์เช่น URL cookies Client-side storage หรือจะใช้งานฟังก์ชั่นที่ได้จาก wasm ในการประมวลผลข้อมูลภาพ เสียง ฯลฯ</p>
+<p>จากที่ลองเขียนก็ถือว่ามีข้อดีในส่วนของการจัดการ data-type และ null safety ที่ JavaScript ไม่มี โดย dart code ที่แปลงแล้วประสิทธิภาพไม่ได้แย่ลง แต่ส่วน development tools ดูเป็นลูกเมียน้อยพอสมควร คือหาข้อมูลจากที่อื่นได้น้อยมาก ๆ ส่วนใหญ่คือใช้กับ Flutter เสียมากกว่า ที่เอามาใช้เดี่ยว ๆ น้อยกว่า 🙄</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!",9"D/[m*(B.Xขs5?`"X9t^Z.4i@fV5u^01R]$[6t'^u:_Ca^D7qp;ANS"U5ESi\;Kh3OL6o7lfJKVขgSu/q?uc1*J&;,:eNNZ_G1*Z/.W&YPoDY9CS9k_t)F8H[-1Q-k+")%]M-hV"J!7AGs%\`%O:7a,nP0_3:Z?7II%&""P2TFS\)H'_Cขu7I)t\Y%qVHBIY8L)19MU!/fn8CcEk,F=:]AKMYQLNqSA^3DXC3W9pQGกR,']n;U=/?Qrg4*U8ULYjDC"b-,i0hC=[isr,X+cYGB!6UjD646F(Rl=S@qH]OfujBW#Bp*&-iL%pก]H!Y\lF6.B6U\LDDu[k88L4*#1:12,BCF9r4'Fr4r1[2Bt%=Tt2rXg^_!P!rj7X=Zq"D^o_?#hUhtK%cGH('"959AuกuEกhie9b?MKuAPZ'+SขP/s,MiK[dFUjกMcJ*B+o36]dCepD:0a5Wi1=HHmUsDKkROp$,52+%Hk)2X_36ER/EAR4.C[AsdW&^c9#ibAprMrQa#8pupข"c/ndJ/DLr(3783-t2Xh2gSIกi,GEYEnO:RlI7mW&iVql%s4C^\c%gRUB4;*H':]=3m8*Nnfo835/rFN,eFE@#u$#ข*L;,`^j45+4DT]4"*0.g4D0DA!JDp_U/-/Ya@j]^b[nDpcGhขข)GDhOq-$-ffpC[hZmZOEXlZW\/`03I/Jkp/q]c6VkL"Jก/Yi1ขF.?8PขQ*]8tk\ข(กpG2p(s7%[]SAq!Hข,?1k05/;K$!S%5brShJE"-KuX?ZtbX]@@NQAjS0M#ncLk63CRKB!8_u/M+3K&qขMQcXqn1kกtQk2KeEqobq;"6DBVGQ[AกXMH"8pQo"]@8RDe]FกmsI?,JX=\JpEZ[1I^GT(/S[%$o^H!?-m,D`9lZcnjTtGEYOapSข.KXD:EpH&ZoUuJ=t6oSjke\e1jg=_(aL1_lCtข3s?RYgs`7djPq[E]ir["/`bP:ก^J+Vf.s_Pข=dขW"%DagP21%!3IaB0@6QSM1!6@U"d+!;,DL'V_A%1+-A!ZRg]:c]&7,,0k3[luS+Cjl/C*.Bs8:iHHM*tN;?aก0am'.Z$(q8Z^ZClu6)F,FL'WgDXQuRVoe=6?K&Ss(+rc;PIK5ZBขกJ@D%,,EOMกlj=qgL0CIp0WuF]DPPKfEc(MHXUF!!c`.(GcLMf;iQR'R.ppก;D\*LNกMpg$o-E-RTsc986E+kejC?QD`ก.a:GJ?8q+H7D;ds@j\&^Mกh?YR0JXUQRbrB9*LCeF[[J_n@/YBdXZBe=E0-d&O\.7"3k\\ก"A"GM@$Gh)ข/-MYi:TH&TrtI+_(f&s;80:C8@"A4aGalu(oJrkSgsbH&5pmeE\[=t,ZO/Gg$I8E5nj$MK":.@V]bU'+Bg`F7ZiNWh'BC:RlDEt'QAlc!@t-=K-]ju9Kd`;V(3+7KcE`_O4O:BM"jP.bh4E+\?nX?/i]G:35ขkQgq\s5fก?2k9nE`h;Z.!eRqPQYPUmgc6/sQB?`5m/i$Sg7Bb.rF0\GMic:/5)X;Oขj^(O0.&/(b=qiq8sHL.8_L9Y7n[N?YI%j;ขXNjl/*4RpiSG\dIMp"ขu-Hc2]SQI._`[34P0RT-oP#+กTofV&q3?N@[G7Z\s^j^n?77lhr-QAc#;:k9$X=`cp]0(1c7Nbj@A"40+NT44b)E:mWVQk,#TnDd@Z=!&l$_kWV,;Jข"gQf^'mUGAD9)C[?r%T@M)pl9&V&u:^Q@ขkMMaHDm[WiF!DKRR09(%WibJ+k8kX!i]5FO4Z5!eM!$`(V;LYTu^RdbM!k8i%9e9UD[#dkb(?.XtI$..51^?g=s\V%ก3C3IrF[WขiqQTHFa_%AOขul$((P\VH@,hfH%@jsCrJAq"XXh?QtdJP'XsS_hกLImlo(o-frhE.h/2DL&70=Z!8`%Sf/])d2B[i2Kh2ru@d_D9MESGn-6,;.UmX*:sDกW$$N8HHJ+=O0*&/"?GfnW4C*ก5ก1d%B$jEข@XPo4l!lc(?,V_LT'(bขG3EH9"OE(p6Ac3-5?Va:Vก#0K75mB%TMYu3+/Ts5)&h5%@M'กQS/Fpg,"URPO-YT7h,Qmdขu@^_J3@Wpb2A@"1^Y;@4IS?2['g2Nb:ett0B';@Lr=I/Dfo_7Ojg,&OO)=,7H1mYY`H!L%,VS,SWX`hL"aJqP/X%W04tU0p(9XR==@0J%a8!GU?T3@m:ajq1ro/cp%=$!BPCThU_hS`YD1Ga+!^-,[ccc[aK04!C!W#ImE;o9ข3;nd5(O8CdG'o3V^=[V&(?6R[8E@*gt!r\\-2p#ntC%FT`'P)g)\cE[7,+0m%6Q`#CDWQ0ql3Aqbm;D$;L`X3MmEp@hขLhI"W7Ub/FขgdVC*KBF#En!K%^,W'*]rC'B$:.SFRN8d)nW-Wg\3ก6kข=,ikA?"qk,lWqQ!_q+K:+aST\CQ^]*ZEaqin["ก62;e1n3*!BS5Us-nTQ!V:fl^hVFF$tq@'0i]1_f15[5oH6^.ขS)ts#'iQ2&!S6%^'0Fกs#.O;:DtJ[CO090?XO+L@*O!BWc;gk&LKVJN6fi0[X\pVq8V.ก3P:qe#SaQXbs7/UDlE[0&F,5#Ae[8%.1T0k5G*ore?bWX^$.anE;N`"VfXPKBES+GkHFV.Rjm%_B/7g@iYdX"S/U"@,YLr:bEm.EP1F=_(\UM?rGAa%VCi#O$*!Q/2A7#YBiZG'q9apiE:hข1KaArC_^aกZAi"o\fQ*il1oQขq6h0k"'i4h,5ZMK,Y'Ro1BLfH!FET.J-4\MCib$-&4V4f7R\u7=)GG!ขf1I,%(n9)T.oA-lAcOH!QH`I*?u!U$M@lQpp!@R07kDVfก:IกA$95iEDMr!lXFMJRqf?K4'%Y$oJe.*K7pO_aYHgf3nlY6r`&p]kRกr`a$n;jp!u]ooGd?RL?/@H?cuก*UaqF!I0Zfir"L$U=,aIpPbi%5g"6"V^4%!Z@/ZcTc*lXK0tDAn)91E0[N,dt^l"$'BsLs4Q5nrFY2iU$ข?skrfp&_!7RW#K$`,qlXd*];Vp1fกgMqS#Z$f0t?0+QF[#h+oYrl%#_Ea_ni$LEh+T*D?2lfl2(s/'?;%#กRV5Z'HQkLYqFntP,1ir"QhL)5+gp0Y%&N90VkD#R\eLNj0'N,2aghqQ#eข#RihกInE9,dKS2mmg"XfI^m]fMh\3*n]ja%PP!SSm(Wa_gHZ62TBNq*k(.p_?+k^HrJp:*oms^P(,^dqbF[S=Xc=5dDTr]FoUeeZ(T8WกITN7Ln3cM[&bL5Em1EXRK$=qPR#KIM[3k"27ZZ%hHF,?iC5T^XdU(WKRSBข!YZs`,R%ขS?b-ก-uL,8,\ขAF\NgG8l$8?3mDslh@lGll[Y7QqGl_2gX&O%;96_]E-/ujU]Zel!:9u(m1r://-กk5Ln5Z+P=PETSIeNmกp4W0RS.9du[8@S:$K(kUq4'uHOV%F_3(ก*MQ$jgB-JHGE:nZ!gi+Y_J6m'ขก@OsG^UDU-1=BUp#FiQeAZ%A`nRC2llกOก4&IKcก?cnajF^@63%YFjPF9QY"^Al+,m^ก8[jกWPOUXmNChoK[,oข./eEDMsVu0h6*NncV9Hก9nV4+!A[)(mniT+ก+Rr3)`^MQ.0I2a4G&MJ@*&NTDกon7t%8n+กtก!9tS-F%hQ(7`^c&"Bks2nY0'\1กiWmVJ\Sn_Dขk&d+Y4*%,QIf~ข
+-->
+</markdown>
