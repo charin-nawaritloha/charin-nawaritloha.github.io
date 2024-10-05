@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: ว่าด้วย Web API ที่จะใช้กับ webdev เบื้องต้น</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: ว่าด้วย Web API ที่จะใช้กับ package:web เบื้องต้น</h1>
+<p><img src="images/20241004/20241004_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ตัว <a target="_blank" href="https://pub.dev/packages/web">web</a> เป็น package ที่รวบรวม Web API ต่าง ๆ ที่ทำงานผ่าน JavaScript โดยตัว webdev ถูกสร้างโดยอ้างอิงจาก <a target="_blank" href="https://webidl.spec.whatwg.org/">Web IDL</a> และไม่มี overhead ในการเชื่อมต่อระหว่าง Dart และ JavaScript ดังนั้นประโยชน์หลัก ๆ ในการใช้งาน web คือ การเรียก <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API">Web API</a> เพื่อสื่อสารกับเว็บเบราเซอร์ เลยจะมาบันทึก API ที่น่าจะใช้บ่อย ๆ</p>
+<h2>อ่านค่า URL</h2>
+<p>ค่า URL ที่ใช้เรียกตัวเว็บ จะสามารถใช้ <a target="_blank" href="20240915_dart_uri.html">Uri</a> class เพื่อประมวลผลแยกส่วนต่าง ๆ ออกมาได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>อ่านค่า URL ของตัวเอกสาร</h3>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  Uri url = Uri.parse(web.document.URL);
+  url.queryParameters.forEach((key, value) =&gt; print(&quot;$key: $value&quot;));
+}
+</code></pre>
+<div class="image"><img src="images/20241004/20241004_0100_query_url.png" class="u-max-full-width" /><div><p>ลองใส่ ?hello=test&amp;demo=1</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>อ่านค่า URL ของ referrer ที่ลิงก์ไปยังปัจจุบัน</h3>
+<p>วิธีการตรวจสอบ referrer ว่าลิงก์มาจากไหน สามารถใช้คำสั่ง <code>document.referrer</code> คืนมาเป็น String ของ URI ที่เป็นตัวลิงก์มาได้</p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  Uri? referrer = Uri.tryParse(web.document.referrer);
+  if (referrer == null) {
+    print('invalid referrer');
+  } else {
+    print(referrer);
+  }
+}
+</code></pre>
+<h2>อ่านและแก้ไข Title</h2>
+<p>Title ของเว็บเพจ สามารถอ่านและแก้ไขค่าได้ด้วยคำสั่ง <code>document.title</code></p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  String pageTitle;
+  pageTitle = web.document.title;
+  print('old title is &quot;$pageTitle&quot;');
+  pageTitle = 'happy web api';
+  web.document.title = pageTitle;
+  print('new title is &quot;$pageTitle&quot;');
+}
+</code></pre>
+<div class="image"><img src="images/20241004/20241004_0200_title.png" class="u-max-full-width" /><div><p>ลองเปลี่ยน Title ของ webpage</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>Document: querySelector() เลือก DOM element ด้วย CSS selectors</h2>
+<p>เป็นคำสั่งที่ช่วยในการเลือก element ที่ตรงกับที่ระบุ ผ่าน <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors">CSS selectors</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เลือกแค่ element ที่ตรงกับเงื่อนไข อันแรกที่เจอ <code>.querySelector()</code></h3>
+<p>ตัวอย่าง หากต้องการเลือก <code>&lt;div id=&quot;output&quot;&gt;&lt;/div&gt;</code> เพื่อแก้ไขข้อความ สามารถเขียนคำสั่ง <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Document/querySelector.html"><code>document.querySelector()</code></a> ดังนี้</p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  web.Element? div1 = web.document.querySelector(&quot;div#output&quot;);
+  div1?.textContent = &quot;this is match element&quot;;
+}
+</code></pre>
+<div class="image"><img src="images/20241004/20241004_0300_query.png" class="u-max-full-width" /><div><p>ผลการแก้ไข div</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เลือกทุก element ที่ตรงกับเงื่อนไข อันแรกที่เจอ <code>.querySelectorAll()</code></h3>
+<p>การทำงานจะเหมือนกับ <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Document/querySelector.html"><code>document.querySelector()</code></a> แต่
+<a target="_blank" href="https://pub.dev/documentation/web/latest/web/Document/querySelectorAll.html"><code>document.querySelectorAll()</code></a> จะคืนค่ามาเป็น <a target="_blank" href="https://pub.dev/documentation/web/latest/web/NodeList-extension-type.html"><code>NodeList</code></a></p>
+<p>ตัวอย่าง หากต้องการเลือก <code>&lt;div&gt;</code> ทุกอันใน document สามารถทำได้ดังนี้</p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  web.NodeList divs = web.document.querySelectorAll(&quot;div&quot;);
+  print(&quot;found div element = ${divs.length}&quot;);
+  for (var i = 0; i &lt; divs.length; i++) {
+    divs.item(i)?.textContent = &quot;This is div number $i&quot;;
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241004/20241004_0400_queryall.png" class="u-max-full-width" /><div><p>มี &lt;div&gt; จำนวน 3 โหนด</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>การเขียน CSS selectors</h3>
+<p>ตัว CSS selectors มีหลาย levels จากที่หาข้อมูล <a target="_blank" href="https://caniuse.com/css-sel3">level 3</a> รองรับที่เว็บเบราเซอร์ในแล้ว วิธีการเขียนมี<a target="_blank" href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors">สอนเขียน CSS selectors</a> เลือกที่น่าสนใจและใช้งานบ่อย ๆ</p>
+<ul>
+<li>เลือก html tag ให้ระบุชื่อ tag ได้โดยตรงในตัวเลือก เช่น <code>h1</code> <code>h2</code> <code>p</code> <code>div</code></li>
+<li>เลือก class ให้ใช้ <code>.</code> นำหน้าชื่อ class เช่น
+<ul>
+<li><code>&lt;xxx class=&quot;demo1&gt;</code> ถ้าไม่สนใจ tag ตัวเลือกคือ <code>.demo1</code></li>
+<li><code>&lt;div class=&quot;demo1&gt;</code> ถ้าสนใจว่าเป็น div เท่านั้น ตัวเลือกคือ <code>div.demo1</code></li>
+<li><code>&lt;xxx class=&quot;a b c&quot;&gt;</code> ถ้าต้องการ tag ที่มีหลาย class ตัวเลือกคือ <code>.a.b.c</code> สามารถสลับตำแหน่งได้</li>
+</ul>
+</li>
+<li>เลือก id ใช้ <code>#</code>
+<ul>
+<li><code>&lt;xxx id=&quot;xx&quot;&gt;</code> ถ้าไม่สนใจ tag ตัวเลือกคือ <code>#xx</code></li>
+<li><code>&lt;div id=&quot;xx&quot;&gt;</code> ถ้าสนใจว่าเป็น div เท่านั้น ตัวเลือกคือ <code>div#xx</code></li>
+</ul>
+</li>
+<li>ใช้ <a target="_blank" href="https://selectors.sandroroth.com/combinator-selector-list"><code>,</code></a> เพื่อเลือกเกิน 1 เงื่อนไข เช่น <code>h1,h2,h3</code> จะตรงกับ html tag → h1 h2 h3 ที่อยู่ใน document</li>
+<li>ใช้ <a target="_blank" href="https://selectors.sandroroth.com/combinator-direct-child"><code>&gt;</code></a> เพื่อเลือกตัวลูกที่อยู่ในลำดับถัดไป เช่น <code>&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;div&gt;&lt;p&gt;2&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</code> ถ้าเขียนตัวเลือก <code>div &gt; p</code> จะเลือก <code>&lt;p&gt;1&lt;/p&gt;</code></li>
+<li>ใช้ <a target="_blank" href="https://selectors.sandroroth.com/combinator-descendant"><code> </code></a> เพื่อเลือกตัวลูกที่อยู่ข้างใน เช่น <code>&lt;div id=&quot;x&quot;&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;p&gt;2&lt;/p&gt;</code> ถ้าเขียนตัวเลือก <code>div#x p</code> จะเลือก <code>&lt;p&gt;1&lt;/p&gt; </code>ที่อยู่ใน div เท่านั้น โดยไม่สนใจลำดับความลึก</li>
+<li>ใช้ <a target="_blank" href="https://selectors.sandroroth.com/combinator-adjacent-sibling"><code>+</code></a> เพื่อเลือกตัวที่อยู่ระดับเดียวกันและอยู่ติดกัน เช่น <code>&lt;p class=&quot;a&quot;&gt;&lt;/p&gt;&lt;p class=&quot;b&quot;&gt;&lt;/p&gt;&lt;p class=&quot;c&quot;&gt;&lt;/p&gt;</code>
+<ul>
+<li>ถ้าเขียน <code>.a + .b</code> จะเลือก <code>&lt;p class=&quot;b&quot;&gt;&lt;/p&gt;</code></li>
+<li>ถ้าเขียน <code>.a + .c</code> จะไม่เลือก ❌ เพราะ <code>&lt;p class=&quot;c&quot;&gt;&lt;/p&gt;</code> ไม่ได้อยู่ติดกับ <code>&lt;p class=&quot;a&quot;&gt;&lt;/p&gt;</code></li>
+</ul>
+</li>
+<li>ใช้ <a target="_blank" href="https://selectors.sandroroth.com/combinator-general-sibling"><code>~</code></a> เพื่อเลือกตัวที่อยู่ระดับเดียวกันและอยู่ถัดไป เช่น <code>&lt;p class=&quot;a&quot;&gt;&lt;/p&gt;&lt;p class=&quot;b&quot;&gt;&lt;/p&gt;&lt;p class=&quot;c&quot;&gt;&lt;/p&gt;</code> ถ้าเขียน <code>.a ~ .c</code> จะเลือก <code>&lt;p class=&quot;c&quot;&gt;&lt;/p&gt;</code> ได้ เพราะอยู่ในระดับเดียวกันแม้จะได้อยู่ติดกันก็ตาม</li>
+<li>ใช้ <code>:not()</code> แทนนิเสธ เช่น <code>&lt;p class=&quot;a&quot;&gt;&lt;/p&gt;&lt;p class=&quot;b&quot;&gt;&lt;/p&gt;&lt;p&gt;&lt;/p&gt;</code> ถ้าเขียน <code>:not(.a)</code> จะได้ <code>&lt;p class=&quot;b&quot;&gt;&lt;/p&gt;</code> และ <code>&lt;p&gt;&lt;/p&gt;</code></li>
+<li>ใช้ <code>:empty</code> เลือก tag ที่ไม่มีข้อมูลข้างใน เช่น <code>&lt;p&gt;&lt;/p&gt;&lt;p&gt;a&lt;/p&gt;&lt;div&gt;&lt;/div&gt;</code>
+<ul>
+<li>ถ้าเขียน <code>:empty</code> จะได้ <code>&lt;p&gt;&lt;/p&gt;</code> และ <code>&lt;div&gt;&lt;/div&gt;</code></li>
+<li>ถ้าเขียน <code>p:empty</code> จะได้ <code>&lt;p&gt;&lt;/p&gt;</code></li>
+</ul>
+</li>
+</ul>
+<p>หากต้องการทดสอบเขียน CSS ที่ต้องการ สามารถ developer tool ของ Chrome ได้</p>
+<div class="image"><img src="images/20241004/20241004_0500_test_css.png" class="u-max-full-width" /><div><p>ลองเพิ่ม CSS เพื่อเปลี่ยนสีของ div ตัวแรกดู</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การอ่านและเขียน cookie</h2>
+<p><a target="_blank" href="https://en.wikipedia.org/wiki/HTTP_cookie">cookie</a> เป็นข้อมูลขนาดเล็กใช้สำหรับเก็บข้อมูลระหว่างใช้งานบนเว็บนั้น ๆ โดยจะมีการส่ง cookie ออกไปที่เซิร์ฟเวอร์ทุกครั้งที่มีการสร้าง request การเข้าถึง cookie ใช้คำสั่ง <code>document.cookie</code></p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  // write cookie
+  // format: key=value;expires=[date];path=[/path/to/store/cookie];
+  web.document.cookie = 'firstname=John;expires=Wed, 18 Dec 2026 12:00:00 GMT';
+  web.document.cookie = 'lastname=Smith;expires=Wed, 18 Dec 2026 12:00:00 GMT';
+
+  // get all cookie
+  var allCookie = web.document.cookie;
+  print(&quot;current cookie: $allCookie&quot;); // output → current cookie: firstname=John; lastname=Smith
+
+  // delete cookie for firstname
+  web.document.cookie = 'firstname=;expires=Wed, 01 Jan 1970 12:00:00 GMT';
+
+  // display remain cookie
+  allCookie = web.document.cookie;
+  print(&quot;current cookie: $allCookie&quot;); // output → current cookie: lastname=Smith
+}
+</code></pre>
+<h2>การเก็บข้อมูลที่ใช้งานลงใน localStorage</h2>
+<p>คำสั่ง <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Window/localStorage.html"><code>window.localStorage</code></a> จะใช้สำหรับเข้าถึง <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Storage-extension-type.html"><code>Storage</code></a> object ที่ใช้สำหรับเก็บข้อมูลในฝั่ง client โดยจะเก็บลงในเว็บเบราเซอร์แบบ key-value pair ข้อมูลที่เก็บจะรับเฉพาะ String และเข้ารหัสแบบ UTF-8</p>
+<pre><code class="language-dart">import 'package:web/web.dart' as web;
+
+void main() {
+  web.Storage storage = web.window.localStorage;
+  print(&quot;Storage length: ${storage.length}&quot;); // output → Storage length: 0
+
+  // add data
+  storage.setItem('font-size', '14');
+  storage.setItem('theme', 'dark');
+  print(&quot;Storage length: ${storage.length}&quot;); // output → Storage length: 2
+
+  // read data
+  String? selectTheme = storage.getItem('theme');
+  print(&quot;Current theme: $selectTheme&quot;); // output → Current theme: dark
+
+  // clear all data
+  storage.clear();
+  print(&quot;Storage length: ${storage.length}&quot;); // output → Storage length: 0
+}
+</code></pre>
+<p>ในกรณีที่ต้องการจะเก็บข้อมูลแค่ชั่วคราว เมื่อปิดเบราเซอร์แล้วให้ลบทิ้ง ให้บันทึกลง <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Window/sessionStorage.html"><code>window.sessionStorage</code></a> แทน</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ข้อมูลที่เก็บใน localStorage และ sessionStorage ไม่ควรเป็นข้อมูลที่มีความอ่อนไหว เช่น password, encrypt key, session token เนื่องจากสามารถใช้ Developer tools เขียนคำสั่งอ่านข้อมูลได้ตลอดเวลา และการใช้งานต้องตรวจสอบความถูกต้องก่อนทุกครั้ง ให้คำนึงเสมอว่าเป็นข้อมูลที่อาจถูกแทรกแซงได้เสมอ และขนาดพื้นที่สูงสุดที่สามารถเก็บข้อมูลทั้งหมดได้ประมาณ 5MB เท่านั้น</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การเก็บข้อมูลที่ใช้งานลงใน IndexedDB</h2>
+<p>หากต้องการเก็บที่เป็นข้อมูลอย่างอื่นที่ไม่ใช่แค่ String หรือมีขนาดใหญ่เกินกว่า 5 MB IndexedDB เป็นขั้นกว่าของ localStorage การทำงานจะเหมือนพวกฐานข้อมูลแบบ NoSQL มันสามารถใส่ Object ที่ต้องการได้เลย การเข้าถึง API สามารถเรียกผ่านคำสั่ง <a target="_blank" href="https://pub.dev/documentation/web/latest/web/Window/indexedDB.html"><code>window.indexedDB</code></a> หากเบราเซอร์รองรับจะได้ <a target="_blank" href="https://pub.dev/documentation/web/latest/web/IDBFactory-extension-type.html"><code>IDBFactory</code></a> กลับมา</p>
+<p>สอนวิธีการใช้ IndexedDB: <a target="_blank" href="https://web.dev/articles/indexeddb">Work with IndexedDB จาก web.dev</a></p>
+<p>เนื่องจากตัว มีคำแนะนำ <a target="_blank" href="https://dart.dev/go/package-web">migration</a> ในการย้ายไปใช้ web package ค่อนข้างจำกัด และไม่มีตัวอย่างการใช้งานกับ IndexedDB โดยตรง ณ ปัจจุบัน การใช้ <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-indexed_db/dart-indexed_db-library.html">dart:indexed_db</a> น่าจะเป็นทางออกที่ดีกว่า รอจนกว่าเอกสารและตัวอย่างมากกว่านี้ค่อย migration ไป web package</p>
+<h2>การใช้งาน Cache</h2>
+<p>ตัว Cache ช่วยให้เว็บแอปสามารถดึงข้อมูลมาเก็บไว้ที่เบราเซอร์แบบ offline ได้ เบราเซอร์ตั้งแต่ปี ค.ศ.2017 เป็นต้นมารองรับหมดแล้ว</p>
+<ul>
+<li><a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Cache">ตัว API บน MDN</a></li>
+<li><a target="_blank" href="https://pub.dev/documentation/web/latest/web/CacheStorage-extension-type.html">CacheStorage extension type</a></li>
+</ul>
+<p>ตัวอย่าง ไฟล์ offline.txt เป็นข้อมูลที่จะดึงมาเก็บไว้ใน Cache ชื่อ <code>offline-cache</code> ในการใช้งานในชีวิตจริง จะใช้กับคำสั่ง <code>[window.fetch()](https://pub.dev/documentation/web/latest/web/Window/fetch.html)</code> หากเกิดปัญหาไม่สามารถติดต่อกับเซิร์ฟเวอร์ได้ ก็จะได้ไปเลือกข้อมูลใน Cache ที่เก็บไว้มาใช้งานแทนเป็นต้น</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
+
+void main() async {
+  web.Cache cache = await web.window.caches.open('offline-cache').toDart;
+  cache.add(web.Request('/offline.txt'.toJS)).toDart.then((_) {
+    print('offline.txt cached');
+  }, onError: (e) {
+    print('Error $e');
+  });
+}
+</code></pre>
+<div class="image"><img src="images/20241004/20241004_0600_cache.png" class="u-max-full-width" /><div><p>เขียนคำสั่งอ่าน offline.txt มาไว้ใน Cache</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-tTHZ'kD[JsTa^Vd$%6mQ6(PT9E@R5/S/mก)g7^6&m)5mZกnG9h(5ggt\"PgmL&Q"re1UVK;Ka-DgbO9EIT$j!UQ2p6-GkU.hAb[Y:/Q^$R26%M!ข\aqe%cL3mXS?j#?c49(q,k6eg^QlaX8\CVd5A+?`Iก\#GE;f2V8E+8Rr!!CB-1U_$s8S8W$QQU;`35ขK(V4d*fj5lOX/$%ns)A\?-Lm-Vi[BXBPP?SUhRP=\@H;&cCFk]b[9B]V^9L1EM&4N@--_-AS'l12?*/9ORMCVMWaaqc\k8E&^@X?UIkuq*jISDT#ข"Wmr33)ii2Jir-7&Q9oL[Alpb`\0SA[K\r2gsK"!?/YHbL6+ขma1';oY8N5:(Qข1`b"s,lTi]qoFX^[P9ilgI@ZPPlAc!nH46uRqt?BdกKHpG'`j^dW?M5&p6dHZJ)bOl;Ao6Q`BEI)bKrI-1E1:pQ3b8,^oh]O+_@Z4+O'Y6"5k:R)_lu9GC^@oq#^4&bข/_,^u_LIM:+jDIYANS`LSa^;E.-4IInu3pa*J\CXL(rsG*@NoN&X]กcT.":;dE+t%iVBT8(g4M_%3'jG!`lh]FA.CU;F,@8_C@AOY8hXruMR77%1qt!f8BLUGVUfkB[pQe(jG8`CMc-NnlKJX0fJPb*dLd#3Vf]Omk"8cHq7@tfIW#L]7a#No1T(lG$s+:oTdA%`(o8H$'8p^1KhjB.']Ej=d/IBcOr%m..kVgm3mAm[Hข1)E'6Ebi#OJHq=lq's"X]C"mrQngu:"?,tX8Qf(b!X2Zl,/e5XgDf_.mqLdUF=GpM%-oQ$Y7\pm/IK"qa+ZBa;9*$S:2OกIiEt\#'aaJ3(J_-"HrQ/eEWiB4d$`+c?กW,`3Lq;M@mขH%71E^RK[1.=CD`\_2]?dB@sB#^ic;[]7-^fT3N36\0&;d&pdAeT.4,.N(=7f#-F.#nS.+a8%6YtCue4PกIVDD_Y(NaBQj_.@8pAก_YกFu]2Vr\l^+8WHRkm#oi^L5Y"q]cA'8D2)TM:@d5"qg&L1Eq:h1oEO\(A6&[&Nuk66!#,5Rกe3^J17Ti@Kqกq_atK9.XI0I3?PeEข7fD(rq@Eqfk#a)/XOpjkM]=M^Tfncdข9$URW=1Qr)'c!)TS,DJC!;e:g09a)er`C(VN17L!$Z"Qa9j+(4@kU'D(0QKZV=e$K=1X3\Ye'RcS2"'0!8695:BSs/`_Gffm&*gกo/EขBXLo`0*jก0IKG7dI3Zo[t4SgTg,!P3:&n(F;uW9)(qe42d:LmV\s`?,D2(7;/PASiPg5"BdD$MRfjOUEE/8(6.mebq+W[u06oMCfO`PlUI7AgfnmUWPV6GmP1-m3R?s7=M4S:^9@"1`aG%&pOoEO5NJ]3i46a$JFVnNOS:mG9&iGh0$d.H%'n7B8PS/q.+Wh:;ZjกN";ogqoVXP5#[r06l?/EXbBYi8m*C+'-p9Sg;S?sOVSDC;H`hE+1]LJ\_l6EiXn'cN8X?jr&dAV??BVoeAnY,21,%NF?9:f_326J\uV:Cc.?PG,T*6กp\7Ai7L[s(kWEA-EcZ]$rHkL*QU.$\P?Pmg_u$FSAofmg:VA!;'#2)B3lQ^ph;5Ea?r\s;Z]%/@7k^;iB=@Y=`#e0&?i\ZXX,bp:f;Xf8/$uoT7q]#+*OdtCjhcqWZ@=ข?ItC'BF&D-D*ogoT%i$2j)Q=UqShkjZO[F!N#!T@!กR580(dCWS=,hขjb[e`BDpHNhYYjk1"C)&Lm7h1EN-V9ta6d.HSE:$0c+-lKAก#FSI*-t=LJccK,A%]P2JoiJ_FAT4$&3Z'A5.^F\@mSom5!CG63K*?`MZ_Ko0i(jcU/7ZED#@gaFj-*#j"3@nP4E/rM_L"k=W)b(IeUGaU`GF]3b4o"]g(ก:r/=eXSJfo@=8tPjL-#TZP"GE9oq5)r5]?F$+etขS:pJl1!H:]^hK0E%KRi?KlIขA6OtUE6V8o?_=T&mWl.Tj9TOl/M[RI4Yi7`\Z;RS]N.&PYX*DQiU?tH[r*g4(WFq"E660esi5/L@LกY8Gm^jrF`!7n@SW[4&=c%LB9!D%gPtmNr0]nB6!MYMq0Pg3=7qWgNpWaDBiกXdiCh39+\BH`]0CbCrKi7;$j!pg^2RV\XQpBbJN!I/mQV!'E(/9%t*Cl2t1/clEZ)-7!*bKbj6Na7%jV6f.gNQ^C;J?ก*C+G/g,2um?\oStpH'""(:7#H%E=*4t1&ca`lW)NFYuกRA7;HNaZd',Lga74.@q]mm`Ut5&?[CAsK%=sASPR.f,3,9:HlPbกgX7;@CgO%g,;PAh&t+RVC+o*ขdnกpg%ES/UQl%.Bf?!4ta:%[$R6&\Q&d^EX#?^@b$`s&d"]j4VbAhl0&TKQf+t6G^'s#31cjo%VJM+6])RWa\7IJ=JB`bB:CMR_`EIF)-pF"@_I4a#@o7JKYq9]G;/5กf\'jT%Iq_2k.\;r71FaM`r!Lo'54O]H(,("PQ@N;kDTgq2R%8CMqRKO?b!-)t3^mss'/t[_QG,8ขU=bVmp:hDh6EM:tilB`.PRp$RM%hVlRDE07#ข)&,A0YFhPHข`;e\@,uT[qP`46EZi=$16d_l]N#?.,.^XCu5PO0VE9#ขD#]"okbV#'6;กMk=.;#iQ^5A*[;7]0H)กIE"&.3nk8AL9C9ogMLr.MBPN"qq:VC54ULL)BOB=&LZ(k\Q\jBP`5nO"p5J0YglSo,7'#^$cABS#Z;c8$.VC3K0sข/9Z\o*=K`G]k^^Q,TTXrjJS\/.ncH7e=p]Wกhl3`m;2rgkAQs0b.R"_^&I4g`tS*#5(B4W?Fข/YW$s'uh7P)UYp3*&eNJ8&9_7VขF"C-7]-HqW=%ขWW,X^`&*[To-#NB9ขL&@48gWj!.S@aia#,1Wmsc5.4\6V\ข3IoNZn1%+6X?)NPfF[9Me%AG$ข0n63iZR/7RlbI/=T'mNgU/XFrNcDEf_ZTkhl&(2$u&jGnXn1I\/6\Lu_j0VIfdNt`'1Md$^Y?r_jA(2EHYOABLTIlhข9gdRAขJM[W[#'u2S.R,A`$_8GrAVN&W$Qj2N!pH_*t2!V7#*3C-D[_ZMgWJ-fs$5G.Qj8X!_fchGn#fP$rd/VZldXmg#กm3B/k9o/\jn:9]Eh""^=c5-LP$AbD'IKVi%i4/YZHimHb]]VbขXDขVKh\X(J1mIh+]qcZJ7LmF49,LOข76:aG06ข]กARjc^JJT"$OOp^GF50HP)33b$M0f#SurmfiM@*n9QnBFoDl)ก5กj$p"NM6?K@Inf;2$abk"D?t6M8&u=J\\e"YleขKขmk&qC3(J;(cBamL@6t%goA4J-UQกeNขUqo9kes#loกHm-`'$'*8IJ0fข5POU%IE724D)]EขAA@`m+iJDn(I6M^r_VHk%l@4i+VGk#$Pp+H'W2.'ก^Z"Gbh1u4]k^+qBB\I@6]q!'#M#7Q7%%9*dsQuV$M-"Bho)ZI6^+A[T85iA68Os'D.ftN#X\*o'b\o!@S7.))IoV.bYo7eq;Cin@TKP6)S2.]']DiG6.iI,1b=j`3]8J3OL;51P,R5VCeขIT\i+EW)ccU08qUkHK90%9rpnT2EOn2i0=kR[IChl3*s?FfXnmQ-QXKBN0Lo;#กL`hF9MS=6C=BR/r8u;กJoYM8TP'2UjuY24T70(Gcm;#pp,qa7/73.=hG(OJ_7k4N[^?a&/4n!V9Z*6d4'J4a47EjkhB0(61X#jj/;coPGXMiDPIbMgWAn`MV)AW%fKN".l5-io9QAjdle1S8&r%*[2a7m]Z@"ขE&9KcJ@V9`;;Q4MYT))A=B\D6)%75Dun;aPSa`,f'SRAk"O$%4RirLc0eX%tj0.3.9S@*$4Db5eQก`k-.T_UกVd@sCBZW_Vd6iJt)A'8qum#nX-`\OMu:7XQ*^dl#\:/.CPK!+Kq0GG)pQJ?WHL\`"H3o5*lQVb]j$ก\ขk5@1%]O_!7^pZmZCSm.aV#R_jHQg7lW*d,/[PB_ps)TFrQe$[n+7fBVkCก@+?NWY;9Dข$s^'+oPKกJe^3"2(-'Sr@$.n]CMnf1KotD3GGขEU7Xi]R8#3:+9@6eg)c&jeB@6MBMX1#uF^1/X`s`1u/kS#TldYR'oขQR`o/_6:F\n,M\LD3/C@&kKSieC+$FWQ\-R_1PR9pU?*S1bj4nUX:9Y&ebXuYM2ni[`THWW9qjkn^iข/3Mo(f]hg$h)Bg6RSXk/$-h7)0UUindC&[Q9QSu"=]d7a,XA?5U8;]D.;VpVYJk"])H7:amX:(#?(;5g(A4#4/"09qX["gVo6d:s4RQ[nk5E4nmF4&uMZ5_EY-o,0WY=?!W[lJT,13TIOo$=1Q\F3Gu^4T&/niMjJWD9GbH'mhbn4h)6_7"7MCWl[NVrGUt[ip)&pJI^9ZZLn)+H'(3'Z72fe$l/8om$*cG#s99McX5tF."*bข2qis\ggก:47sQขC]R;p++WbOUI$F*0)BOO1gCeG.g",5_pQ-IEnXnd_SJq\&dCG2*\V,IAI#"d8BC5toR#s)r.r5pF'4J8Ri7B&ขSNNMH&qk/!h0u@qRข5'4b-g,o[rR.*r5[=P?kEf3#_^#/\8t#!CR4ขZQ&cCA=t[,sVVsRW+4YQj?hjYRกEk2R*sV?:H^hK`]TW)S]Qqขbpto[neRG6:b4$DJ%#/-,q5YKh37m&ppf7L\i%'F13Wข=N8Bk5&"c:SL*jqXe`D"0,XBTa)IVlEmqYFข$94o$t+J_6aq_ABHขbขh2.;j!b/jge()B'-กE#D\^g=C8E?ED!\Re2R5WfVNgUi+@#OlW(^jR$NrI$e^qdTe3(nF*#m@SIihkdX8/Z:+#UYsXDก/d:fO[L)IRS(W25Mu\Xd^;rL;,Iก-moOYKZRVU;K^S648B@"$l^+)%ขLMj%TP_C"23b01BJ/RN9mt3lV+ก-7sdm=0J*UVZI]B`K3h]ceo4]8su\Peh^DGI!+ZJR#l[i*oY\cQ't/M#YO4jsgWVF,'%,#=XsW@qIYqq'0.=JYcข6%%OQOOENpkT86L]+56C+A,'@%N&NY^+T.Ph+bN3-:SdkqZ1^hn1UX.;jZ_X)4KaCขdd(c;W,Yr0;o4m0hu2qFC0:@2*G&HoN\#!.oCpmg!_d,OR9;DqAZ:^PpH?UAZ@ZaMi9lI.\2tgข/hP^8477)A+cก\b"_:.=OJ)Tb^Fa0(DกbsN\[bp+/T!:กYLkN4JVT"=*fd"ข/p0KiK:mกJuI$RH=@2rHpK_\a^@g3i$sGVl?T_S^(W*lbWขRU;*!PBe6D?(Sg#Hcr,&N_##2eGO\_W/KO\=6[+-dohp*b4ABo*Dj,u?3Tp(tg5Dl@."%ข]Bก,GUJ];rEW%kUJN3[ขtYQ=,EEaje%_;ft]5L%eZFlกN=o)9G3^OWG9K_pCJm*'JCl9#@7E'@1T^.^Pmm^Qg.ipaHbY:^;?tG,_&g_Zs$bkRtWeDBNr3ขbM1F5oOf"pf#.T*.7#=,@8/7NE8!6)6_EFKDDgCกhXBiQV%dpDr'YmL9!B+]t6oKq!WuH&5GTLAขeAg(mCAe8(kAYcขo1.กBYbG0rq5\V:s72[IV'4BJ6D92F%6B~ข
+-->
+</markdown>
