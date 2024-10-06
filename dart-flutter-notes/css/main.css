@@ -168,10 +168,11 @@ text-decoration: underline;
 }
 
 
-/* fix text link overflow in small screen */
+/* fix text overflow in small screen */
 @media (max-width: 420px) {
-	a, blockquote, code.hljs{
-		word-break: break-all;
+	* {
+		word-break: break-all !important;
+		white-space: pre-wrap !important;
 	}
 }
 

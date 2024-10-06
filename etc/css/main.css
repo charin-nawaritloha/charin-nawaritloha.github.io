@@ -322,6 +322,14 @@ blockquote p {
   display: inline;
 }
 
+/* fix text overflow in small screen */
+@media (max-width: 420px) {
+	* {
+		word-break: break-all !important;
+		white-space: pre-wrap !important;
+	}
+}
+
 
 /*
 display tag as block and center horizontally
