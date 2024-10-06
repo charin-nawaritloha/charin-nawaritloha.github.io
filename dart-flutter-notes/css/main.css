@@ -311,6 +311,34 @@ code.hljs {
 	letter-spacing: -0.02rem;
 }
 
+code.hljs::before {
+	display: block;
+	text-align: left;
+	font-weight: bold;
+	padding-bottom: 1rem;
+}
+
+code.language-javascript.hljs::before {
+	content: "📄JavaScript";
+}
+
+code.language-dart.hljs::before {
+	content: "📄Dart";
+}
+
+code.language-xml.hljs::before {
+	content: "📄HTML/XML";
+}
+
+code.language-css.hljs::before {
+	content: "📄CSS";
+}
+
+code.language-json.hljs::before {
+	content: "📄JSON";
+}
+
+
 
 
 /*
