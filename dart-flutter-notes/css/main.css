@@ -316,18 +316,24 @@ code.hljs::before {
 	text-align: left;
 	font-weight: bold;
 	padding-bottom: 1rem;
+	border-radius: 4px 4px 0 0;
 }
 
 code.language-javascript.hljs::before {
 	content: "📄JavaScript";
+	background-color: #ffdd00;
 }
 
 code.language-dart.hljs::before {
 	content: "📄Dart";
+	background-color: #2196F3;
+	color: white;
 }
 
 code.language-xml.hljs::before {
 	content: "📄HTML/XML";
+	background: #ff6000;
+	color: white;
 }
 
 code.language-css.hljs::before {
