@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน dart:js_interop เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน dart:js_interop เบื้องต้น</h1>
+<p><img src="images/20241006/20241006_0000_cover.svg" class="u-max-full-width" /></p>
+<p>js_interop ย่อมาจาก JavaScript Interoperability หรือ ความสามารถในการทำงานร่วมกันกับ JavaScript ไม่ว่าจะเป็น web app หรือ flutter ที่ทำงานบนเบราเซอร์ หากต้องการทำได้อย่างราบรื่น หากใช้งาน Dart 3.3 ขึ้นไปจะแนะนำให้ใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/dart-js_interop-library.html">dart:js_interop</a> แทน</p>
+<h2>การอ้างอิงตัวแปรและฟังก์ชั่งระหว่าง Dart และ JavaScript ด้วยคำสั่ง <code>external</code></h2>
+<p>การอ้างถึงตัวแปรและฟังก์ชั่นจาก JavaScript สามารถใช้คำสั่ง <a target="_blank" href="https://dart.dev/interop/js-interop/usage#:~:text=#-,external,-interop%20members%20provide"><code>external</code></a> โดยจะสามารถ import และ export ตัวแปร class function เพื่อให้สามารถทำงานร่วมกันระหว่าง Dart และ JavaScript ได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การ import ตัวแปรจาก JavaScript ด้วย get</h3>
+<p>การอ้างถึงสิ่งที่อยู่ใน JavaScript บนเบราเซอร์ สามารถใช้ get เพื่ออ้างอิงได้ ตัวอย่าง การนำเข้าตัวแปร <code>testGlobalString</code></p>
+<ul>
+<li>ในไฟล์ my_js.js มีประโยค</li>
+</ul>
+<pre><code class="language-javascript">globalThis.testGlobalString = &quot;Hello world&quot;;
+</code></pre>
+<ul>
+<li>ในไฟล์ index.html มีการเรียกใช้ไฟล์ JavaScript</li>
+</ul>
+<pre><code class="language-xml">&lt;script src=&quot;my_js.js&quot;&gt;&lt;/script&gt;
+&lt;script defer src=&quot;main.dart.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<ul>
+<li>ในไฟล์ main.dart จะมีการนำเข้าตัวแปร และพิมพ์ออก Console ของเบราเซอร์</li>
+</ul>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+@JS()
+external String get testGlobalString;
+
+void main() {
+  print(testGlobalString); // Console output → Hello world
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การ export ตัวแปรจาก Dart ไปยัง JavaScript ด้วย set</h3>
+<ul>
+<li>ในไฟล์ index.html จะมีปุ่มดังนี้</li>
+</ul>
+<pre><code class="language-xml">&lt;button onclick=&quot;alert(globalThis.outputString)&quot;&gt;outputString from dart&lt;/button&gt;
+</code></pre>
+<ul>
+<li>ในไฟล์ main.dart จะมีคำสั่ง set <code>outputString</code> ไปยัง JavaScript</li>
+</ul>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+@JS()
+external set outputString(String value);
+
+void main() {
+  outputString = &quot;text from dart&quot;;
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0100_external_set.png" class="u-max-full-width" /><div><p>เมื่อคลิกที่ปุ่ม จะแสดงกล่องข้อความตามที่กำหนดไว้ในไฟล์ main.dart</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ลองติดต่อกับ JavaScript ผ่าน Object และ function</h2>
+<p>เนื่องจากสิ่งที่ต้องการจากการส่วนใหญ่ที่ใช้งานกับ JavaScript ก็คือ การเขียน Dart เพื่อใช้งาน JavaScript library ที่มีอยู่แล้ว สมมติว่ามี variable object function ถ้าจะใช้ Dart เพื่ออ้างอิงและเรียกใช้ ทำอย่างไรได้บ้าง</p>
+<pre><code class="language-javascript">// String variable
+globalThis.testGlobalString = &quot;Hello world&quot;;
+
+// myObject object
+globalThis.myObject = {
+    member1: 100,
+    method1: function() {
+        console.log('this is method1');
+    },
+    method2: () =&gt; {
+        console.log('this is method2');
+    },
+    callMe() {
+        return 'this is myClass.callMe()';
+    }
+};
+
+// myFunction1()
+globalThis.myFunction1 = function (number1) {
+    return number1 * 100;
+}
+
+// myFunction2()
+globalThis.myFunction2 = (number2) =&gt; number2 * 100
+</code></pre>
+<p>ใน main.dart จะทำการสร้าง <code>&lt;div&gt;</code> ขึ้นมา แล้วลองเรียกคำสั่ง JavaScript แล้วเอาผลมาแสดง</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
+
+// globalThis.testGlobalString set and get
+@JS()
+external set outputString(String value);
+
+@JS()
+external String get outputString;
+
+// declare class &lt;MyObject&gt; for globalThis.myObject
+extension type MyObject(JSObject _) implements JSObject {
+  external int get member1;
+  external set member1(int value);
+  external void method1();
+  external void method2();
+  external String callMe();
+}
+
+// get globalThis.myObject with type &lt;MyObject&gt;
+@JS()
+external MyObject get myObject;
+
+// javascript function
+@JS()
+external int myFunction1(int number1);
+
+@JS()
+external int myFunction2(int number2);
+
+void main() async {
+  // create &lt;div&gt; to output result
+  web.Element div = web.document.createElement('div');
+  web.document.body!.appendChild(div);
+
+  StringBuffer result = StringBuffer();
+  // play with myObject
+  result.writeln('myObject.member1 → ${myObject.member1}&lt;br&gt;');
+  myObject.member1 = 200;
+  result.writeln('myObject.member1 → ${myObject.member1}&lt;br&gt;');
+  // see result at Console
+  myObject
+    ..method1()
+    ..method2();
+  result.writeln('myObject.callMe() → ${myObject.callMe()}&lt;br&gt;');
+
+  // call function
+  result.writeln('myFunction1(1) → ${myFunction1(1)}&lt;br&gt;');
+  result.writeln('myFunction2(1) → ${myFunction2(1)}&lt;br&gt;');
+
+  // output result
+  div.innerHTML = result.toString();
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0200_external_object.png" class="u-max-full-width" /><div><p>ผลการเรียก JavaScript ผ่าน Dart</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การแปลงประเภทข้อมูลระหว่าง Dart และ JavaScript</h2>
+<p>เนื่องจากประเภทข้อมูลที่ใช้ใน Dart และ JavaScript <a target="_blank" href="https://dart.dev/interop/js-interop/js-types#type-hierarchy">มีทั้งเหมือนและแตกต่างกัน</a> ในการทำงานร่วมกัน จำเป็นต้องมีการ<a target="_blank" href="https://dart.dev/interop/js-interop/js-types#conversions">แปลงประเภทข้อมูล</a>เพื่อให้สามารถทำงานได้ถูกต้อง ตัวอย่าง <code>testJSArray()</code> รับข้อมูลเป็น Array หากส่งข้อมูลจาก Dart ไป จำเป็นต้องแปลงข้อมูล</p>
+<pre><code class="language-javascript">globalThis.testJSArray = (inputArray) =&gt; {
+    if(Array.isArray(inputArray)) {
+        console.log('your size of Array is ' + inputArray.length);
+    }
+    else {
+        throw new Error('accecpt only Array');
+    }
+};
+</code></pre>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+// javascript function
+@JS()
+external void testJSArray(JSArray inputArray);
+
+void main() async {
+  // convert list to JSArray
+  List listFromDart = [1, 2, 3, 4];
+  testJSArray(listFromDart as JSArray&lt;JSAny?&gt;); // console output → your size of Array is 4
+
+  // create JSArray in Dart
+  JSArray myJSArray = ['x', 'y'] as JSArray&lt;JSAny&gt;;
+  testJSArray(myJSArray); // console output → your size of Array is 2
+}
+</code></pre>
+<p>ในกรณีที่ประกาศประเภทข้อมูลใน external แบบไม่ระบุว่าเป็น JSArray หากส่งข้อมูลไปยัง testJSArray() ตัว Dart จะไม่สามารถดักความผิดพลาดที่จะเกิดขึ้นได้ ทำให้ตัว testJSArray() ทำการ throw error ออกมา</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+// javascript function
+@JS()
+external void testJSArray(JSAny? _); // change from JSArray to JSAny? to ignore Dart type checking
+
+void main() async {
+  // convert list to JSArray
+  List listFromDart = [1, 2, 3, 4];
+  testJSArray(listFromDart as JSArray&lt;JSAny?&gt;); // console output → your size of Array is 4
+
+  // try send JSString to function
+  testJSArray('hello'.toJS); // exception error
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0300_type_convert.png" class="u-max-full-width" /><div><p>เกิด error จากการ throw error เพราะไม่ส่ง Array ให้</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การ cast การตรวจสอบประเภทข้อมูล JavaScript ใน Dart</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การตรวจสอบประเภทข้อมูลของ JavaScript</h3>
+<ul>
+<li>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/JSAnyUtilityExtension/typeofEquals.html"><code>.typeofEquals()</code></a> ใช้สำหรับตรวจสอบประเภทของข้อมูลของ JavaScript ที่เขียนใน Dart</li>
+<li>คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/JSAnyUtilityExtension/isA.html"><code>.isA&lt;J&gt;()</code></a> ใน Dart 3.4 ขึ้นไป สามารถใช้รูปแบบนี้ตรวจสอบประเภทของข้อมูลได้ และง่ายกว่า</li>
+</ul>
+<p>ตัวอย่าง ถ้าฟังก์ชั่นใน JavaScript สามารถคืนค่าข้อมูลกลับมาได้หลายประเภทรวมถึง null ใน Dart คือ JSAny?</p>
+<pre><code class="language-javascript">globalThis.returnAny = function (returnType) {
+    if (typeof (returnType) == 'number') {
+        switch (returnType) {
+            case 1: return true; // return bool
+            case 2: return &quot;I'm String&quot;; // return String
+            case 3: return { me: 'Object memeber' }; // return Object
+            case 4: return [1, 2, 3]; // return Array
+            default: return returnType;
+        }
+    }
+    else {
+        return null;
+    }
+};
+</code></pre>
+<p>ในการตรวจสอบค่าที่ได้มาจาก JavaScript ใน Dart</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+// javascript function declare to accecpt null value
+@JS()
+external JSAny? returnAny(JSAny? returnType);
+
+void main() {
+  JSAny? result;
+  dynamic dartType;
+  List typeString = ['number', 'boolean', 'string', 'object', 'function'];
+  List params = &lt;dynamic&gt;[0, 1, 2, 3, 4, 5, 'x'];
+
+  print('test send paramenter → return as JS → convert to Dart');
+  
+  for (int i = 0; i &lt; params.length; i++) {
+    result = returnAny(params.elementAt(i));
+    dartType = result.dartify();
+    print('returnAny(${params.elementAt(i)}) → $result → $dartType');
+	
+    for (var type in typeString) {
+      // print type of JavaScript and Dart runtime type
+      if (result.typeofEquals(type)) print('typeof():$type\tDart:${dartType.runtimeType}');
+    }
+    print('--------------');
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0400_check_type.png" class="u-max-full-width" /><div><p>ผลการตรวจสอบค่าที่คืนมาจาก JavaScript function ที่ใช้ทดสอบ</p>
+</div></div>
+<p>อีกวิธีในการตรวจสอบข้อมูลของ JavaScript อีกแบบคือใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/JSAnyUtilityExtension/isA.html"><code>.isA&lt;J&gt;()</code></a></p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+// javascript function
+@JS()
+external JSAny? returnAny(JSAny? returnType);
+
+void main() {
+  JSAny? result;
+  List params = &lt;dynamic&gt;[0, 1, 2, 3, 4, 5, 'x'];
+
+  print('call javascript with param → result → type');
+  
+  for (int i = 0; i &lt; params.length; i++) {
+    var param = params.elementAt(i);
+    result = returnAny(param);
+    if (result.isA&lt;JSString&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSString');
+    } else if (result.isA&lt;JSNumber&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSNumber');
+    } else if (result.isA&lt;JSArray&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSArray');
+    } else if (result.isA&lt;JSBoolean&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSBoolean');
+    } else if (result.isA&lt;JSObject&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSObject');
+    } else if (result.isA&lt;JSAny&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSAny');
+    } else if (result.isA&lt;JSAny?&gt;()) {
+      print('returnAny($param) → ${returnAny(param)} → JSAny?');
+    }
+    print('--------------');
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การแปลงข้อมูลระหว่าง JavaScript และ Dart</h3>
+<div class="image"><img src="images/20241006/20241006_0500_js_dart_datatype.png" class="u-max-full-width" /><div><p>การแปลงประเภทข้อมูลจาก JavaScript เป็น Dart</p>
+</div></div>
+<p>ในการแปลงข้อมูลเพื่อส่งกันไปมาระหว่าง JavaScript และ Dart สามารถใช้คำสั่ง</p>
+<ul>
+<li><code>.toJS</code> เพื่อแปลงจาก Dart เป็น JavaScript ผ่าน Extension</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.5.3/dart-js_interop/NullableObjectUtilExtension/jsify.html"><code>.jsify()</code></a> เพื่อแปลงจาก Dart เป็น JavaScript โดยไม่ใช่ Extension ตัวคำสั่งจะพยายามแปลงไปเป็น JavaScript หากทำได้ (ช้ากว่า <code>.toJS</code> แต่สะดวกกว่า)</li>
+<li><code>.toDart</code> เพื่อแปลงจาก JavaScript เป็น Dart ผ่าน Extension</li>
+<li><a target="_blank" href="https://api.dart.dev/stable/3.5.3/dart-js_interop/JSAnyUtilityExtension/dartify.html"><code>.dartify()</code></a> เพื่อแปลงจาก JavaScript เป็น Dart โดยไม่ใช่ Extension ตัวคำสั่งจะพยายามแปลงไปเป็น Dart object หากทำได้ (ช้ากว่า <code>.toDart</code> แต่สะดวกกว่า)</li>
+</ul>
+<p>คำสั่ง <code>.toJS</code> และ <code>.toDart</code> จะอยู่ใน <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/dart-js_interop-library.html#:~:text=Extensions">Extensions</a> ของ dart:js_interop  ตัวอย่างการใช้งาน</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+void main() {
+  // num ⇄ JSNumber
+  num n = 10;
+  JSNumber nJS = n.toJS; // API → https://api.dart.dev/stable/dart-js_interop/NumToJSExtension.html
+  print(&quot;$n → $nJS&quot;); // console output: 10 → 10
+  nJS = (20.5).toJS; // API → https://api.dart.dev/stable/dart-js_interop/DoubleToJSNumber.html
+  n = nJS.toDartDouble; // API → https://api.dart.dev/stable/dart-js_interop/JSNumberToNumber/toDartDouble.html
+
+  // String ⇄ JSString
+  String s = &quot;hi from Dart&quot;;
+  JSString sJS = s.toJS; // API → https://api.dart.dev/stable/dart-js_interop/StringToJSString.html
+  print(&quot;$s → $sJS&quot;); // console output: hi from Dart → hi from Dart
+  sJS = &quot;hi&quot;.toJS; // API → https://api.dart.dev/stable/dart-js_interop/StringToJSString.html
+  s = sJS.toDart; // API → https://api.dart.dev/stable/dart-js_interop/JSStringToString/toDart.html
+
+  // bool ⇄ JSBoolean
+  bool b = true;
+  JSBoolean bJS = b.toJS; // API → https://api.dart.dev/stable/dart-js_interop/BoolToJSBoolean.html
+  print(&quot;$b → $bJS&quot;); // console output: true → true
+  bJS = false.toJS; // API → https://api.dart.dev/stable/dart-js_interop/BoolToJSBoolean.html
+  b = bJS.toDart; // API → https://api.dart.dev/stable/dart-js_interop/JSBooleanToBool/toDart.html
+
+  // List ⇄ JSArray
+  List&lt;num&gt; i = [1, 2, 3];
+  // convert List&lt;num&gt; to List&lt;JSNumber&gt; to match → extension ListToJSArray&lt;T extends JSAny?&gt; on List&lt;T&gt;
+  // more info. visit https://github.com/dart-lang/web/issues/180#issuecomment-1957432531
+  List&lt;JSNumber&gt; ii = i.map((e) =&gt; e.toJS).toList(); // same as [1.toJS, 2.toJS, 3.toJS]
+  JSArray&lt;JSNumber&gt; iiJS = ii.toJS; // API → https://api.dart.dev/stable/dart-js_interop/ListToJSArray.html
+  print(&quot;$ii → $iiJS&quot;); // console output: [1, 2, 3] → [1, 2, 3]
+  i = iiJS.toDart.cast&lt;num&gt;(); // API → https://api.dart.dev/stable/dart-js_interop/JSArrayToList/toDart.html
+  print(i); // console output: [1, 2, 3]
+}
+</code></pre>
+<p>ตัวอย่างการใช้ <a target="_blank" href="https://api.dart.dev/stable/3.5.3/dart-js_interop/NullableObjectUtilExtension/jsify.html"><code>.jsify()</code></a> และ <a target="_blank" href="https://api.dart.dev/stable/3.5.3/dart-js_interop/JSAnyUtilityExtension/dartify.html"><code>.dartify()</code></a></p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+void main() {
+  // num ⇌ JSNumber
+  num n = 10;
+  JSNumber nJS = n.jsify() as JSNumber;
+  n = nJS.dartify() as num;
+  print(&quot;$n → $nJS&quot;); // console output: 10 → 10
+
+  // String ⇌ JSString
+  String s = &quot;hi from Dart&quot;;
+  JSString sJS = s.jsify() as JSString;
+  print(&quot;$s → $sJS&quot;); // console output: hi from Dart → hi from Dart
+  sJS = &quot;hi&quot;.jsify() as JSString;
+  s = sJS.dartify() as String;
+
+  // bool ⇌ JSBoolean
+  bool b = true;
+  JSBoolean bJS = b.jsify() as JSBoolean;
+  print(&quot;$b → $bJS&quot;); // console output: true → true
+  bJS = false.jsify() as JSBoolean;
+  b = bJS.dartify() as bool;
+
+  // List ⇌ JSArray
+  List&lt;num&gt; i = [1, 2, 3];
+  JSArray&lt;JSNumber&gt; iJS = i.jsify() as JSArray&lt;JSNumber&gt;; // easy than .toJS but slower
+  print(&quot;$i → $iJS&quot;); // console output: [1, 2, 3] → [1, 2, 3]
+
+  // .dartify() check type of [iJS] is JSArray&lt;Object?&gt;
+  // need to covert to List&lt;dynamic&gt; and call .map() to cast dynamic to num
+  i = (iJS.dartify() as List&lt;dynamic&gt;).map((v) =&gt; v as num).toList();
+  print(i); // console output: [1, 2, 3]
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".6qCMt04nT+lt5AXj84ขmgD;)[-#,#d[T6qG`-;Eq-IFกjrI3laขUmRWa'ก*6+sgTC@LFcslWdOI`E_M/*3M4;u/+nA:[RG$ENHV)^3.;HZJEGp&EhD77"]YNC.rG[mYUV1[ขHlP9h+9#[grFpY(B,oaEOaYf3)-;G$KH"shla--?NH'&i*.กaOT&R\LnTfV1C3o0AQe"*sข-1gU_`)XBoYpUp2Qf#)d'rOdO0.&%HaW7!I`UBข\_OYu_@ba_NM@kOกV5ZกHHO7Tc#N@]กum6pa6E]qN]obYpL?gi:WLl7RLH"Z2D.503FAc-?]CiX-4](RRkTUE+5U%s5!un'N"9h-;g*DDg&6@4^Fa(0Lข6FOoaข#o_Vm\+9)^u,6$WAbo&Sd)n1K9=NbEiWYW#,di-.u1rBd3&91"l9^W#_k"(Gก:+FCOn=^^:RUN,pEOs,F,TLdp,[%H=?f*L@B9N/1JH:g7WXDSmKKขhTUmY_FbXE=6A)ME:WiDoY:(JdeUT6!ED\,B1#)todW_qdPBC3AKeTqp(7`0I9M3f^q:8dM_MKZbDZ6heUJQ\bT)n.g!7n1L@TIข.SBVEI9nBjomC`ouLjjcH!^"Io^ขr#-;I6=ZM_ข0)-DFuBBa!e`c=?CqkhrEQZX0F!\`#0HNTb?/"Qก(]&MK/rTa#jcDW@Ia)M+hndN?EPs*bpj"*C=:;uข*&D]g^d_ofDก3?'HIZ-r!57d]L%%hi5nBjmj4@GYL,Ui407i%6,9o5DEAQ(97H)GVกLccjifJi,$/_M78R#Ub%YOe-7LJ&I+cIW`O:%OM;gW%Q'_?Jขn&iIkRa?5'.,XuhX_G]&7Cd^G-2-$Sf"g^I?\H`jABfFmu`\e'&O+C&H9Q:ข.1aUqSM&XZ^PCPe\cS1!7;eCA\HIr=+eZGJ0ข4P'Z6Q:#(igL:JG\DDI0`+G(;]Cg.&SfขnL&agTUmOH(-mUa*'T&l-(]pd\ก:dgYpc2Aa-mN0YN$.]Kcl6%rกjWUdQV;lT%neKHgm&G%4"(2Ubp6dWfh:cfjjMm`TmaE672gjoWckWก06%,to1iP(6,WA9b6&;%F/p!PB1_8[QNEpYกQ*3/&6/BZ5j"491VCU`G^u+f;UL9(;G;กNA5FVขLmgJcf"I9,$J!4jcQ9XYRLP4iLO\(N*o_kE_H:[Aji4#%;umZL@ef=(\DKo[GM`1iก#AXt)DXktieHIR-`Ccl3,K%?B%$;fiPi;2"XdJ=`+%a?DYA4,/?p#%?`+b]DO!BRe[%YoW7fQ=1Fp]B%+.e,7@sI'8กNiGt4A1ljDR+skD8VVo4กB%,OKo*ABfก`*6กEt:pl1pieS0B_XnK(oPขJN+K&@:i)G"D,?Hcj,ก']SYe@%I/fDf!1U0O_[*LR8LuuV-8@A=l7\=!rTกLcp7ขeUJF_CpQ0NYก45gMOq"HM02m!mjY,YQ*\bก`GpoAKQRYLt.G);[IbDกTgLdflOW#G_0P0-Lat7HD"lV!ks4'd7aCขt-pLOC;rC&$h02sขnAA&/"lsX@Q;kGm?(]KP;iVUcHZ^Fก=ZSk(lSCTe:OSYI:R`#YY:P&:+$2ขGa*J%dกB_qjOC$$#ขj)bPNp)W2#U7uiab5("#3V%d3`De%H4Elกb4Z#n[pGM1!AB:=5W`GNG2kjgY6ua&CWENlHO]45J63;mjf-&gZN:PEm75eMRc)RJAlZMข+2ข`W7e%[g:s,,iRขG\PS![[uVV?B'a-LE-feJFWRArYr+@-SU`D;0'ej%2@\*Y*Ra`G7uI6Om?uF%Zk[o[Id&S$sY;oAK?USC)7W,?ขf-*?]k(cขluHb^KtJ!uIกWTO,,oSM_,:3c[YQ'กl0c5%UIW%1o=IL67+?8Yomcb8iกRDC//]R(+p#P%&'i;WhlS8`]OK"BbF5GPqrD@ก-2Zkt,BHHJ,d^+55IsEJM$'41p8(Q^AdY3C1dU.!'pkA\/sD-Cc9a*K`1H.hsNShKE_-bCeF;Hd]3gCs2EQNl_lD2ZTre7t&\4$ขX3Q)W_383$()ma5&FWH5JM8UF"\,EKZ'gP^"(a0.`KhaYW'U!%3-$MVlt5mj(,^Go93bki=al*ข*IOesJU'5-%aQQ2IAd*;`5N@\t:KV5@hAG@e7oU.m8=)[kra,f^BaDOZ;UXg5C]mขs-21)ข0c$hej"E'fooWr"-bOEJL'2/oAO[0JBbU%NGXกU,C6FEWLD/[$sVWFGW!h!Mc2'i)g7L`rJ3U``t_Cr,(b2J.reW"`OFb5.,],!!SfaQ0)กN\ก`e\5l27X%;'_V#KBHo^M9hbAU!p1J8XfNh5`FTNA0Fi*6k,L[*5pmS*Vi;UMM7*)QK9LlIED.กO'aN/nUbm5Th9k(/P8E'B"l%[od$0กaOjY:#W/S20B]&]9KF?1,J@pข3E_Tf*3?l1`=]+,=Z;]'fJ@H!rK*#3EjI1H3l-kZ%:&k"`M3E+9md'*FTHeINe7K4u^5/0133:U4IWqkZP^ขg?MS=m;h$(%8**q*Z98!;aEl+C]n*QDo$*=dIJ_.k4j7k.kmข(Z9A;/%BNpmI$ps:/T'0]]!Y46D$A*,cVdK-^ETr$#4hTOS]RmKC\8bP]8nc$"B$1#o"3.Y[k2JHH#XGO]@,]koh'kEn&$DB]&rus6s-]aKjNb;p73r!XXmb+Wa^RPN4u(.GXnF`,B7n/[d2MX,)932l7ก;p*4M6ZU"GK1N,q70*50`YHW7s`Sp6.fIb.#2Z2N/^eM%AfCsHUbBMU.^@1kua_nS5],rfSF[cMFก&Sf?oM1V3Ng"&\(sbq8/$9c&3%j]qikgg8#U/\1#k7On(kV:eI'8กGDm8p1=]V/+$a]3J"qkS:SsX9u$J+djl4nO8C6Rq!m;/=F?RV9##Xuj,9H7dj]Mq83;62G:V/)o1กZ75]1,q*H.-lR77'ก[#Jl@EmH8praVECk2q+r=Z5P2.9ขWFf^/S-c7qfp-3ขtP0E*stV$_O.4&fJ/M.Vs8+*D\@C;C&5-`TJ=Rb1o`h/,n!eHWS5e`kRjEHZY#Eh[I1#.WTN8)UD+=;;h\?mj2=em=t0b-A\(-$-r5/V4,ZD9UK?+R;SBZM]?R=4W$Fbh#EqK8M/Cl93H5s5)!rqoIjj+ขs*l7'r=KFIgL2V5o#MPlM6t`"U==l(:oP(R/$$$%^XhOqXBhJANI&5e^Im&(Jkjo,PBn?]1ptYnqFpP_Bg55C2QYV!X]D$^Sm(R5Rk`9u*JA$[lXTj?K\J^\กP(JPbpU[H3cSB,G3dCHe)Afgk[mLกpRGa(/`R2:TXXUVD[3]a=QRek2ขU0YIN@F=N]0stTPB).4b$a1IB8=Z3eก]ddWF%;#a11YCpMQ+E5%\g,.OqkdQAn#Lu=04"arVq;U56"UKd^.Okp=_YYYe%F5UKnJ`FK%/X:f`I8'nhl=:\hJp"W8poZtZ+$1ENW+NdT%ha1hmY!$'&JahXG5XhJTJ,m2n5,Z4AFH)""34!S-Z0ia=$.t#V98'กGEf&@dcfD`cc^;pb:KrZjQf9fQ)KR=9'!CrNX4CqขYmKS[0+_:(KGT:oEQA,WVkWD4==c-ขq_RjVppnFQl0rg%HT-HcqCRK*a`G(=Te![*X;c!XpN*!GU1(0dU6%Qg+_.Ci"l@Yn1B"FKR-qJPbiWamZ@gh/qH)Z3c0rDf#RSoXcM2PBVd5l!1319djcN/5#"M@bI=1ce9M2)(FuB9HpqWgข"ข^5!:!O4Gขun@1(:Ih1NMlSBOc6co,Y.J:hnh@=]`0sb=\FWgihX2_"[=dm2^FL7$TZข=FJr5HN@odA[u/h]f+'nHtJ[MSn4a6\0UM;QQWc1liR9-i$;nd;WsM2i.+Fr64X5DO)XS1$K,#a's,5d92)R$M2j\P/hun=.n3#tก\S%Gb1W;bUfTlUPgp(;E@ie[_2-_^=_`\e,_gL4H4ISn=^[H*j0Oขs[/ข`Q+Yc@=V^tcVL6)fs!gQg=Q=bDHVUe(0!hH#LE'r%53(GP7kejขeBBBcpV-MSL_,jZ_nKL*o-H(81(U#?:.hXU"n!6klE=$),nP;p6e_+A+0lTIkNC-C5h&:._D!1Um4N0kd)cl?hX=E5F$Q1]C@Jr8?S]&!2R+`t`E?ZNXQ#VHJqoWBnq`K"]rol!%"&%\Z_Us-!=ON%ข@geQmS]YSq5n_fSb;&F]UHON]D\sQg=eก*kQกข$I\eBZ=lgni;]/ZrY`PtGG1pc6ขki:!#a7j01F3KZ3':d7#WRข(gI]lW83gUj5XCM!h]uKZrP!C&6กVN#.l5n8K/2*OBB!7dQข\&lJ7i&?#ขกLSC"jo,sfjQ]uF[mlขF#6LกZ@-ju"e&Ca3LZ?-ก?YX!ก*,o-NDL_6-E$cP2q=lIZ&+aกc0VP_PDE12_Q82%FSKsrJj%[D.ouhsY`=Qk$^Jo#KhNbขJ)EกUROeb3@N5mjY!1I0R07r3?ก=*Os),jkRGFPn:XooDcgegJข^[Y=E$55uE`&0c'0euqQBL9LZO1*]:U^]R,7=/V_*)j[=U?(80VQRKZ@ScขY1)Z7#sCNOOYBQTn=pกb*sioGQZij6,B5$FM.@*qE;$atVV[sN1#PZu1;A*:f/sAbn#&_QV_9doEdX9กo)lP?k3N\pZCก[Rc6TmL.U;:JhqblCo-5*,0pacM4Pa(9YF)r-ar8Jmem]NYb-0[ก:jE[[]g(__Gq5qa)p"g77@q'R;H.g@กbLuL"E5"fB?\s==2`4\f.*-1B1)"pDpWMai'udB`./Tjb,Wr5RWdt%'_F8Dr`2alE_@i"=m@-o`0E*#SIb.tFp7PhhN0\ก=kj\tOข4T)GXAWb-hNW8ก^=M/$AE&#8Dข'c!/^38l&(nt#utA4TZ)*Z_5SI=Y7t5ขA5J)F!gC/S]YMo1CJ`iOUa0กR(6[Q9)smV6.$m1T;JMขYข(oiU`9ขkก&$YaoBPlEt^qUu@J/tc`OGX1Rk.sEf;"27q6:l8TQeas2M$N=U31T8d`m[88^??djN:^p7S-.(,h,TgG"B2XJNS\aYH(8P'3G!Kก.JN*nUK4m/?A/hW+@8g&[KsKtกi,3VLht+T\)HIfกกU-g#M&XBeh5ljgZu]'IW#-tQ[a$iTmh8q?BZ5$.tCGnl.LL.ictKW,R[olVHTc5J_f?_`E]%U\$N.gs"ก6e%HF`^!]]J'&8+q-"Re*L/-Mq,Cf[4Lข*(^BIfh)i^กdd"JUT,,กYBjBm6aS!OF^!Z;eV)!&2gV?9HกhW\.aWiSplKCpZu&,h%O?SP(Q`ขVftdG\CUl$%!U'&3c1%C%d/&^'$_.mlPoTU;a;th9SLt!Mi@!%Ah:TAnlV:3กk_g"^N`cb?H&]C=b-!ข3gSQl1m[449(J3ก/5h\qU5BtM=P1#eL/+#A"sF?oDhk](4%8BI:[SiA70^/E7nC+&f#ขes#$ei=k`NK%กQ-PVo*toข[\rt,a9YcVa1`&7].rH4E@Ta`;ขn2T"05ข&fb/#=-_Q_RE"+O@%AcK3U$KW,pHMg_V\Hg~ข
+-->
+</markdown>
