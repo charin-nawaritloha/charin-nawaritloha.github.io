@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Extension types คืออะไร</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Extension types คืออะไร</h1>
+<p><img src="images/20241009/20241009_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://dart.dev/language/extension-types">Extension type</a> เป็นการสร้าง interface ขึ้นมาสำหรับ type ที่มีอยู่แล้วในตอนที่ compile แอป ช่วยให้คุณสามารถเปลี่ยนวิธีใช้ type ได้โดยไม่ต้องเปลี่ยน type เดิมที่มีอยู่ เมื่อใช้ type ที่ทำการ extension หากเรียกใช้งานไม่ถูกต้อง ตัว compiler จะแจ้งความผิดพลาด ก่อนถูกนำไปใช้งานจริง</p>
+<p>มันเปรียบเหมือนการทำ wrapper classes มีผลให้ไม่ต้องสร้าง Object ใหม่เพิ่มเติม ส่วนที่ประกาศการใช้งานจะเป็นแบบ static ไม่สามารถเปลี่ยนแปลงได้ระหว่างที่แอปกำลังทำงาน ดังนั้นมันจึงไม่มี overhead ในการสร้างและใช้งาน extension type</p>
+<p>ข้อดีอีกอย่างของ extension type คือ สามารถเลือกเก็บคุณสมบัติของ type เดิมได้ จะตัดบางอันออก เปลี่ยนกระบวนการทำงานของคำสั่งเดิมใหม่ และเพิ่มคุณสมบัติใหม่เข้าไปได้ด้วย</p>
+<p>ตัวอย่าง ลองสร้างคำสั่ง <code>.toString8()</code> ให้ทำงานดังนี้ <code>IntEx(1234).toString8()</code> → <code>'00001234'</code></p>
+<pre><code class="language-dart">extension type IntEx(int i) {
+  String toString8() {
+    String iText = i.toString();
+    return iText.padLeft(8, '0');
+  }
+}
+
+void main() {
+  var ex = IntEx(1234);
+  print(ex.toString8()); // output → 00001234
+  print(ex); // output → 1234  
+  print(ex.runtimeType); // output → int
+
+  // access i to use normal int
+  print(ex.i.toDouble()); // output → 1234.0
+
+  print(IntEx(-1234).toString8()); // output → 000-1234
+}
+</code></pre>
+<p>จากตัวอย่าง <code>IntEx</code> คือชื่อของ type ใหม่ ส่วน <code>int i</code> คือการบอกว่าจะ extension <code>int</code> โดย parameter <code>i</code> ในการเก็บค่าเพื่อใช้อ้างอิงในตัวคำสั่ง extension type รวมถึงการสร้าง constructors</p>
+<p>ข้อสังเกต ตัวคำสั่ง <code>.toString8()</code> จะใช้ได้เฉพาะตัวแปรที่ระบุว่าเป็น <code>IntEx</code> เท่านั้น ตัวแปรที่เป็น <code>int</code> ปกติจะไม่สามารถเรียกคำสั่งดังกล่าวได้ ดังนั้นมันจะไม่เหมือนคำสั่ง <a target="_blank" href="https://dart.dev/language/extension-methods"><code>extension on</code></a> ที่จะไปเพิ่มคำสั่งใน type ที่ระบุโดยตรง</p>
+<h2>Extension type syntax พื้นฐาน</h2>
+<p>สร้าง type ใหม่ชื่อ XXXX บนประเภทข้อมูล TTTT เดิม สามารถเข้าถึงข้อมูล TTTT เดิมผ่าน YYYY</p>
+<pre><code class="language-dart">extension type XXXX (TTTT YYYY) {
+	// declare members and methods here
+}
+</code></pre>
+<p>ตัวอย่าง ลองสร้าง type ใหม่ชื่อ <code>IdNumber</code> เพื่อเก็บตัวเลข type <code>int</code> ผ่าน parameter ชื่อ <code>id</code></p>
+<pre><code class="language-dart">extension type IdNumber(int id) {}
+
+void main() {
+  IdNumber myId = IdNumber(12345678), otherId;
+  int x;
+
+  print(myId.toString()); // OK, .toString() from Object.toString()
+
+  otherId = myId; // OK, same type
+
+  x = myId.id; // OK, [id] is int
+
+  // user add value to ID, it doesn't make sense.
+  otherId = myId + 10; // error → The operator '+' isn't defined for the type 'IdNumber'.
+
+  // ID isn't a normal int, not allow to use it.
+  x = myId; // error → A value of type 'IdNumber' can't be assigned to a variable of type 'int'.
+}
+</code></pre>
+<p>ในกรณีที่ผู้ใช้ไม่ประกาศอะไรใน <code>{}</code> เลย ตัว Dart จะทำการสร้างประกาศสิ่งต่อไปนี้ให้อัตโนมัติ</p>
+<ul>
+<li>default constructor → <code>IdNumber(int id) : this.id = id;</code></li>
+<li>อ่านค่า <code>id</code> จาก <code>(int id)</code> → <code>int get id;</code></li>
+</ul>
+<h2>การกำหนด Generics type</h2>
+<p>ใน type จำพวก class ต่าง ๆ จะรองรับการประกาศ type ด้วย Generics ผู้ใช้สามารถกำหนดประเภทของ Generics ที่ต้องการได้ดังนี้</p>
+<pre><code class="language-dart">extension type IntList(List&lt;int&gt; x) {}
+
+void main() {
+  var list1 = IntList([1, 2, 3, 4]); // OK
+  var list2 = IntList([1.0]); // error → The element type 'double' can't be assigned to the list type 'int'
+}
+</code></pre>
+<p>ตัวอย่าง รองรับ Generic <code>&lt;T&gt;</code></p>
+<pre><code class="language-dart">extension type TList&lt;T&gt;(List&lt;T&gt; x) {}
+
+void main() {
+  TList&lt;int&gt; list1 = TList&lt;int&gt;([1, 2, 3, 4]); // OK
+  TList&lt;double&gt; list2 = TList([1.0]); // OK
+  TList&lt;double&gt; list3 = TList([1]); // automatic cast from List&lt;int&gt; to List&lt;double&gt;
+  print(list3); // output → [1.0]
+}
+</code></pre>
+<p>การใช้ <code>extends</code> เพื่อให้รองรับ sub class ที่ต้องการ ในตัวอย่างจะรับเฉพาะ <code>&lt;num&gt;</code> <code>&lt;int&gt;</code> <code>&lt;double&gt;</code> เท่านั้น</p>
+<pre><code class="language-dart">extension type TList&lt;T extends num&gt;(List&lt;T&gt; x) {}
+
+void main() {
+  TList listNum = TList([1, 2.0]); // OK
+  TList&lt;int&gt; listInt = TList&lt;int&gt;([1, 2, 3, 4]); // OK
+  TList&lt;double&gt; listDouble = TList&lt;double&gt;([1.0, 2.0]); // OK
+
+  TList listX = TList(['x']); // error → The element type 'String' can't be assigned to the list type 'num'
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การสร้าง Constructors</h2>
+<p>การสร้าง Constructors ใน extension type จะคล้ายกับที่ประกาศใน class ตัวอย่างการสร้าง double เพื่อเก็บค่าอุณหภูมิในหน่วย C รองรับการใส่ด้วยหน่วย Fahrenheit และ Kelvin ด้วย constructor <code>TempC.f(double degreeF)</code> และ <code>TempC.k(double degreeK)</code> ตามลำดับ</p>
+<pre><code class="language-dart">// create TempC type to store Temperature in Celisius unit
+extension type TempC(double degreeC) {
+  // convert from Fahrenheit to Celsius
+  TempC.f(double degreeF) : degreeC = (degreeF - 32) / 1.8;
+  // convert from Kelvin to  Celsius
+  TempC.k(double degreeK) : degreeC = degreeK - 273.15;
+}
+
+void main() {
+  var t1 = TempC(100);
+  print(t1); // outout → 100.0
+
+  var t2 = TempC.f(32);
+  print(t2); // outout → 0.0
+
+  var t3 = TempC.k(273.15);
+  print(t3); // outout → 0.0
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>unnamed constructor</h3>
+<p>ผู้ใช้สามารถกำหนด unnamed constructor ได้เหมือนกับการสร้าง class ดังนี้</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+extension type TempC._(double degreeC) {
+  // unnamed constructor
+  TempC() : degreeC = 0;
+  // convert from Fahrenheit to Celsius
+  TempC.f(double degreeF) : degreeC = (degreeF - 32) / 1.8;
+  // convert from Kelvin to  Celsius
+  TempC.k(double degreeK) : degreeC = degreeK - 273.15;
+}
+
+void main() {
+  var t0 = TempC();
+  print(t0); // outout → 0.0
+
+  var t1 = TempC._(100);
+  print(t1); // outout → 100.0
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3><code>_</code> constructor</h3>
+<p>ในตัวอย่าง <code>TempC._</code> เป็นการกำหนดชื่อ constructor เป็น <code>_</code> การตั้งชื่อแบบนี้เพื่อหลบให้ผู้ใช้งานสามารถสร้าง unnamed constructor ได้ ผู้ใช้สามารถตั้งชื่อให้ตรงกับที่ต้องการได้หากต้องการใช้งาน เช่น เปลี่ยนให้เป็น <code>c</code> ให้สอดคล้องกับ constructor ตัวอื่น ๆ</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+extension type TempC.c(double degreeC) {
+  // unnamed constructor
+  TempC() : degreeC = 0;
+  // convert from Fahrenheit to Celsius
+  TempC.f(double degreeF) : degreeC = (degreeF - 32) / 1.8;
+  // convert from Kelvin to  Celsius
+  TempC.k(double degreeK) : degreeC = degreeK - 273.15;
+}
+
+void main() {
+  var t0 = TempC();
+  print(t0); // outout → 0.0
+
+  var t1 = TempC.c(100);
+  print(t1); // outout → 100.0
+}
+</code></pre>
+<h2>Members</h2>
+<p>รองรับการประกาศ Members ได้ 3 อย่าง</p>
+<ul>
+<li>Getter ได้แก่ <code>get</code></li>
+<li>Operator เช่น <code>+ - * /</code></li>
+<li>Method ฟังก์ชั่นที่ type สามารถเรียกใช้งานได้</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Getter</h3>
+<p>ตัวอย่างการสร้าง <code>get</code> เพื่ออ่านและแก้ไขค่า ส่วน <code>set</code> ไม่สามารถทำได้ เนื่องจากตัว Extension type ถูกประกาศเป็นแบบ static</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+extension type TempC(double degreeC) {
+  double get fahrenheit =&gt; (degreeC * 1.8) + 32;
+  double get kelvin =&gt; degreeC + 273.15;
+}
+
+void main() {
+  var tempC = TempC(100);
+  print(tempC.fahrenheit); // output → 212.0
+  print(tempC.kelvin); // output → 373.15
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Operator</h3>
+<p>ตัวอย่างการทำ <code>+</code> และ <code>-</code> สำหรับการคำนวณ</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+extension type TempC(double degreeC) {
+  TempC operator +(TempC other) =&gt; TempC(degreeC + other.degreeC);
+  TempC operator -(TempC other) =&gt; TempC(degreeC - other.degreeC);
+}
+
+void main() {
+  var temp100 = TempC(45) + TempC(55);
+  print(temp100); // output → 100.0
+
+  temp100 = TempC(150) - TempC(50);
+  print(temp100); // output → 100.0
+
+  var tempX = temp100 + 35; // error → The argument type 'int' can't be assigned to the parameter type 'TempC'.
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>Method</h3>
+<p>ตัวอย่างการใส่ Method</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+extension type TempC(double degreeC) {
+  // method
+  bool isHot() =&gt; degreeC &gt; 30;
+  bool isCool() =&gt; degreeC &lt; 10;
+
+  // static method
+  static TempC? tryParse(String degreeC) =&gt; double.tryParse(degreeC) as TempC?;
+
+  // static const
+  static const version = '1.0.0';
+}
+
+void main() {
+  print(TempC(35).isHot()); // Output → true
+  print(TempC(5).isCool()); // Output → true
+  print(TempC(25).isHot()); // Output → false
+
+  print(TempC.tryParse('100')); // Output → 100.0
+  print(TempC.tryParse('aaa')); // Output → null
+
+  print(TempC.version); // Output → 1.0.0
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การ implements type อื่น</h2>
+<p>หากต้องการนำคุณสมบัติของ type อื่นที่เกี่ยวข้อง เพิ่มเข้าไปใน type ใหม่ สามารถใช้คำสั่ง implements ต่อท้ายได้ เช่น หาก implements double เข้าไปใน TempC ตัว tempC ก็จะสามารถเรียกคำสั่งต่าง ๆ ของ double ได้ รวมถึงส่วนที่เขียนเพิ่มเข้าไป</p>
+<p>หากผู้ใช้กำหนดประเภทตัวแปรเป็น type ที่ implements ตัว Dart จะทำการแปลง type ให้อัตโนมัติ</p>
+<pre><code class="language-dart">// create TempC to store Temperature of Celisius
+// now [TempC] trasparent on [double]
+extension type TempC(double degreeC) implements double {
+  bool isHot() =&gt; degreeC &gt; 30;
+  bool isCool() =&gt; degreeC &lt; 10;
+}
+
+void main() {
+  var tempC = TempC(-100);
+  print(tempC.abs()); // double.abs()
+  print(tempC.toInt()); // double.toInt()
+  print(tempC.isHot()); // TempC.isHot()
+  print(tempC.isCool()); // TempC.isCool()
+
+  // Transparency allows invoking [double] members on the extension type
+  double degreeC = TempC(35);
+  print(degreeC); // Output → 35.0
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>@redeclare</h2>
+<p>ในกรณีที่ผู้ใช้งานต้องการใช้วิธีการใน extension type ไม่เหมือนกับ type ที่ถูก implements มา สามารถใส่ <a target="_blank" href="https://pub.dev/documentation/meta/latest/meta/redeclare-constant.html">@redeclare</a> เพื่อบอก Dart lint ว่า member ที่เขียนขึ้นต้องการประกาศใหม่แทน ไม่ได้พิมพ์ผิด</p>
+<pre><code class="language-dart">import 'package:meta/meta.dart';
+
+extension type MyString(String _) implements String {
+  // Replaces 'String.operator[]'
+  @redeclare
+  int operator [](int index) =&gt; codeUnitAt(index);
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*4?#L\&n[S`!+"$IZa[dU)0kq-?กZB+O.cdXD=hob7peKmB\sg8VmZr_=_a("7OW="eB^DP#"1PRD\?KBaG3nknD[u^lmEC%:*@X#Ynk^#SA8sUk4$2=U4$!b9r0X+3GBZ"SP9:3`?QZKTZLh1`r\I3ขdD,.UP?V19HtMZfe/Nข-Y#Ut9B![5aกo&1ขeLf&Oan\E$lc6ZpA_W39+)VSe:"E\ZEgBJ!6$Dg%QJTq_p9XBF96[`77@#!-knEu?Ego8\6P+8RDtk=W=h9rr5L;?E=aEKn5KV@BZh,^6H_.).L^;)MDmK"8G&fiUYNQ0$Zh+B%:3Nu9&KuFiSU=22mLm=/h?BIK56uQD#l%PghM3Z\P0c?]7(DV5Tt$AaBpO3:FM(F,*G=WgnnRD67E7bVi,P'sbgO8Sioc!d[\ObnHO"P^m,9UBat6#;HgfBcca%Z-'Wo7A)/XamA;n19J3-*Fin)NIFI8WV&8S+A5RS*Yh(S7:`,n]J+4กZ9$0aj.6gG(dj6;BDg]`N(ca38Kicbf6H9f'MMn_eV[tnmQ]AM'8mUYPaik^O(]`WBKJJ+Y?kRbj+!q)BdL;t8IY'iPe-KNL0AAMZ%Xa@GGก3f1=U/_qR"Jก^5@)-78o_]sXb7RGJQ5!'X8uXdk])KhJ+'FAOga']*p]j?iO=#Fh/#3T`ขq4s0,re3iGDaUo(ja@CnXX0FaSUกt8Iข-:ciK'oacmbWLrFe;eWQZ)A9A.:\qXa,AjknX[.h*4pg+UA,^Jq!+oYq5_/jac+4R8[ข5KJsB(6Z.]:eN(gs\g?JF(@`ajPXF&tq%,8rRtYM7k+_A8C=fHW&U('ZRi'#eiK#qBkQFQc*skFZDt!nm#m^3i_BSPT5p=8^"_5qZWP:'GlJ@hh;XpCfeaLSl.\k)D'Fm;bDLset8&F%[7dYU`!GC9*DEKO1BDiกq`=SVกMb!]H_iRqG:A.F?V^9!ข/.;SAf8o=6J!"GoVL,kGgBMXLOAPKWV\d:^l2QaPYgQcHWiTWjt\"ou1:RX'g1k0.S*6R@ก\/&#8Ag:5&h2+QO*`i5V06!.bA+KOS5:'=?F&LPl`-6`[U`!ข.+ON'dVC+8FY&f`nXORt42ก,!^%;RC\6FgQ$kกo_fn3fXLerfFD-hlVb*"&-jA^Z5rgs[7+ac+ก'geOOIdkกUC5!+9V[`E5oeW#CY1;5%"Q`+QQ'Bi3M8)YU"c"GQbp;5o@Rh^F)8tFNBS;d;Zeข8nc0'lV2q.lk!6h/I8TIHF)UW2c5T%oaYL4*MnBT4Zke2qpIn!]Udd]A46Xj82VAกg/RO?O4kVL?a-%7DFTnWfa&#af^CWqT,?r!?GVif4Hr)[D)e/$d-nFq\+ขbfJkj8f6OLh6n=R`(G=3UHh#=5\Z4houO,"_s`กkUQpCh8/iWA@M(e6pLhIZ1UpG+2QB3BPMmf((D[Z=F!4LS_,G,;/MKb]T,-K*lB8ld;8_)Uck+sB`"@n"$i:jN#,n8@?376bZ0Rn0O_FcYp/F)&Y%-n*3E$8P`VN$:Z`2d*iAB7)5p@`;b8YE-D)(2S$]lขr/$Qc`&NmE!u@/DZpZ1NiD-Y,6g3HH?%*:f\`anRj"BTpMqA(@9e!"*"),ji]pP+.A]1YOZn3;60I(A]0Y&h/9]mXC,#iTd$EiXOD/t[]ขW+Y$AMXATZQK\uUJb!@`j&U="KDlh(+B6(di%=e(!aG!QHF[TL`n&,Ma2q\3(W/)?8AGcESWgMขK69q.Tmch7KFAQfiSN43oT$+aUK\th[2oPP+UPQtFs#Qกs=?&ZC1*sS0f?bUrk2?OQK@e!'Wi\7+]=gZ'_DRก:A&[agu?jก]$fSHก:/4lpSJOZAhMaW3ST(m`2;e1D!q0bC[+KIeP%ข)NTdDLXVi-2f;mIuขD,PB3U)$i3D,F3ut%Xn?qK7npbWu"QeBp`ZKIMTt$9OYED`?6)'f]Q*?Q0AVYKW!!OJrk+`,Dq%j#u[IkpfFG1MH2@O*PRdmbWm"bn9_k4;jC&[]P_(58&[R\6IA:%,jข#ZI@Yq],f(hU`$=b+QOกZ`T!]jM3RVJ\hh9irb(sD-0'QRino),pl"EIbB\GMq_0ItW8csกk+lCf4fHJ\ขK@:Vb,g"#8Sg_pr:Sk8!.e:2$*OZUDB/6_^LT1F[7Ou.J/BZ9\p:)-k7E/RdSb'Y+JtsH\Op'T0%sQLE3eGL272VlHahUh'A1in72AqiPaK8[Uhc9V&bjs_@(:#p`,c41U,0']b59R_K/(t0"GTtqpaVUDja3'OdcB`TdT#V2QกT7[a8p$fkp"aDJ7h_#*ข'RI'g&2ขM&6a4CขPjA]B0H_:?H"!&JrhY%c:Ab-2+K;jpm``oB]&+1%*[$_CBiX!;]a2กSTeK-9aTlA%G#$;(34,:?)e0"==ZED`+p6j[aT4ข.PFrDก:DNIQc@""2KขV-ก0dKEiD82^;6e4oNT?ก(&XQhP4DX+?2@?s*!D?7=aJ1rlOZIs.77]//nH`qV-9`$M67kVOfIYขB[6Q!mh4uกVCDToWIkk9\`]-_mThqQGข!:SYTก#]"Wก0lI&.\S1*dDdLr*Sก,FE2l2-@i`]+R2P+Jjf;%Y\sh`#3JR4X7^*Oj?H[t6rC(1bHFI-o#Jกe?8_peFt+.BX2n*a1Y-Nt=2nG5l#,XnCfQN?pRD4[W_0O0'e45s4[H_WV3UQขUKb50SI$1q$93Vm_=R2rXX`$:VกG9L-/X2=J`กM(I0pSO+U"*(]UกQ#U)dYD;]`i'r`77[/J`กSr.ขM^D`\6\J7_ก!YKcorjn_GH?ED=.A&dB#(7`5b@BR-p+&LXข=2hpE'_XqJ\nข/MUB-pQq4%Io&]3Q?,Wpt')J5;QQpD;#1@#*80MGjk#5h02;A"IQ`3Qaข4=(?D=Y0NG`=!_1ข/X#k;1;e1Y7SQขW6/,-L":V\)DG5W[odg2A1iq9GXR*ec4P(/Amt]+กdejoEEkk-KH.T$ขdJ/="8SI1m#gS:24LVZ7XO=KhYK^L2=G@Q05Pg@[e/-dกC*Lg]iDf&3.eIj$q%eU]!fTb]7939WXKWPD5-%-;D-SE[BcS1(m@o6FLOq\UCF?6jVh@ก3`9T`q'.bql=s#!ก!300oXq0rgekH@.=/#=UOI?+"49O[l7$sZ4]_nfitE-g'กc_W?J]a7JCV2L2;%=I+uY)4Y"E$oSX-[0ก4#7]2\tAGO!nelH!8VNoQs3XmT_OcCNgGX7&+Xol'%[PZLC#k,#ZbMj^กeO7q.aN4uaPP-taThD96mi-`JKYX\pMgcYVlP?9&qr:OVpQ5Jก]Rr85iu9R`l1U\kOJ,hfL?!+2WM+h(Tdf7KMW&hT[K)5fZt$&cE)U'&&&`i3nJM/)*3VVk1d/A)8u!r7Wj`K6pG1G9@gIj3&N9mg`f8#G:D4a3-OZeV6f.m1$YI9]-cA0@e^'f'gA5@pG'"[ขC.DpS'Xgpb!ci#DW^,PlT'$0'?ff$XB6B?C)KKf*.7/5X?FOSn0GUYKM'7;UOl(t670Uhk;ohF&ls_)/O](NV[@#rBก*U^_El,."(LN666rT@("[)B/3go4W"o]V)&#gEL*#pB).,)9,&O8@(qFZr86pH;L-*ZhB3A0JU*2e^#L1JPeApVlOh=Hiขl:OPHnU7,QK/P/S%RZ_u`K/`IU#o!tW;a)กQ&7Z$"=(@q#DQ,o""QuXR8Ci5qLK3กo1TM;=l;rhBQ6t)[Aej;so`/cj4กpp0\Q_PKIjuH("'7%m(`*%s3k^t817F`:&ขCI@,C,G!u,(กXTU)jHZD^&MifiGij/WiauJE83E\I]SH[7NRs8Jc"Nb6=X#=2กk^^\-W?กTO4@V?dbHO`_,-^[i,L]l4DA6ImUX)7E[A%(HS.\U(U=XGkY9Th0i+XbBqa1-i;+N)&nfaR\g'0%_ljr;7E0)h'GKp4K/3;)BdQF3Sกn\4s""W(k"pQY["a]jC4Wag9t=oisl"ก&YB\#GU1EW-E!]A!$qR:$onjlJr%p(3Xo!A(O?P+'Yr?qiDn2-lIiI*i/@j6hu+#-UกA7%#Ye];%Hm`Wi,+D)7k,k%'gJth8qEUKd/9C$(%8QlV]Q=J&LPCiRpp[?diNM`T!gng#0!BJ3กGmก)GnUAVrq@WNUขrd3$""F2q;O,!5I+f,E[leE)orgAf$R2]ก5sTขE(oY5s^_ADkKFUS8ก#KilnQFSJก']((u/rCJf]g!WjH?VcnBPg5n%nmFR`$$d"WY2qqi#MZ\RMNG:8DEDVpbd:kE'MRt#(Pก2WW3I@K_q:eRTI4hX"S`=f)iiKp[4-6@`3EF=PHCข[DCsohn?6=KB7jN?rk\5c`]%,'5Kn)\/O&-PRoWJ$Pl.ขE/=Tl`4AnUQM;+lfB[pACN4BCPlSR_SNB3ก=q)jJM7\=\8dIT@k\G0@uSข?q9%s`S]pNs;WaXJT'Ke)BG["FrกP_+XP0$a9FSC3L#qN.Po[กDrKU!6Qm-$u9hb8sJ'0E:U\E\Ke/&B,V="2Ap%hdkp7hYกk+?WSY"apIO3lZ.kSAn+m_7j/[KY4t(:kkQ6bW/&@'.OS9K.L9LaV3nO9ou?9c(a99uCkoYo-gJ!%KE6RX=2j0neF7qihpi=MIPh**~ข
+-->
+</markdown>
