@@ -59,7 +59,12 @@
 
 <h1>Dart: การใช้งาน dart:js_interop เบื้องต้น</h1>
 <p><img src="images/20241006/20241006_0000_cover.svg" class="u-max-full-width" /></p>
-<p>js_interop ย่อมาจาก JavaScript Interoperability หรือ ความสามารถในการทำงานร่วมกันกับ JavaScript ไม่ว่าจะเป็น web app หรือ flutter ที่ทำงานบนเบราเซอร์ หากต้องการทำได้อย่างราบรื่น หากใช้งาน Dart 3.3 ขึ้นไปจะแนะนำให้ใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/dart-js_interop-library.html">dart:js_interop</a> แทน</p>
+<p>js_interop ย่อมาจาก JavaScript Interoperability หรือ ความสามารถในการทำงานร่วมกันกับ JavaScript ไม่ว่าจะเป็น web app หรือ flutter ที่ทำงานบนเบราเซอร์ หากต้องการทำได้อย่างราบรื่น หากใช้งาน Dart 3.3 ขึ้นไปจะแนะนำให้ใช้ <a target="_blank" href="https://api.dart.dev/stable/dart-js_interop/dart-js_interop-library.html">dart:js_interop</a> แทน พื้นฐานที่ควรทราบ</p>
+<ul>
+<li><a target="_blank" href="https://dart.dev/language/functions#external">External functions</a></li>
+<li><a target="_blank" href="https://dart.dev/language/extension-types">Extension types</a> | <a target="_blank" href="20241009_dart_extension_types.html">Dart: Extension types คืออะไร</a></li>
+<li><a target="_blank" href="https://dart.dev/interop/js-interop/usage">JavaScript Interoperability</a></li>
+</ul>
 <h2>การอ้างอิงตัวแปรและฟังก์ชั่งระหว่าง Dart และ JavaScript ด้วยคำสั่ง <code>external</code></h2>
 <p>การอ้างถึงตัวแปรและฟังก์ชั่นจาก JavaScript สามารถใช้คำสั่ง <a target="_blank" href="https://dart.dev/interop/js-interop/usage#:~:text=#-,external,-interop%20members%20provide"><code>external</code></a> โดยจะสามารถ import และ export ตัวแปร class function เพื่อให้สามารถทำงานร่วมกันระหว่าง Dart และ JavaScript ได้</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
@@ -133,14 +138,14 @@ void main() {
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
 <ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
+     style="display:block"
+     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5702321883"></ins>
+     data-ad-slot="5405806399"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+</script> 
+ 
 <h2>ลองติดต่อกับ JavaScript ผ่าน Object และ function</h2>
 <p>เนื่องจากสิ่งที่ต้องการจากการส่วนใหญ่ที่ใช้งานกับ JavaScript ก็คือ การเขียน Dart เพื่อใช้งาน JavaScript library ที่มีอยู่แล้ว สมมติว่ามี variable object function ถ้าจะใช้ Dart เพื่ออ้างอิงและเรียกใช้ ทำอย่างไรได้บ้าง</p>
 <pre><code class="language-javascript">// String variable
@@ -181,7 +186,7 @@ external set outputString(String value);
 external String get outputString;
 
 // declare class &lt;MyObject&gt; for globalThis.myObject
-extension type MyObject(JSObject _) implements JSObject {
+extension type MyObject._(JSObject _) implements JSObject {
   external int get member1;
   external set member1(int value);
   external void method1();
@@ -226,17 +231,6 @@ void main() async {
 </code></pre>
 <div class="image"><img src="images/20241006/20241006_0200_external_object.png" class="u-max-full-width" /><div><p>ผลการเรียก JavaScript ผ่าน Dart</p>
 </div></div>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
 <h2>การแปลงประเภทข้อมูลระหว่าง Dart และ JavaScript</h2>
 <p>เนื่องจากประเภทข้อมูลที่ใช้ใน Dart และ JavaScript <a target="_blank" href="https://dart.dev/interop/js-interop/js-types#type-hierarchy">มีทั้งเหมือนและแตกต่างกัน</a> ในการทำงานร่วมกัน จำเป็นต้องมีการ<a target="_blank" href="https://dart.dev/interop/js-interop/js-types#conversions">แปลงประเภทข้อมูล</a>เพื่อให้สามารถทำงานได้ถูกต้อง ตัวอย่าง <code>testJSArray()</code> รับข้อมูลเป็น Array หากส่งข้อมูลจาก Dart ไป จำเป็นต้องแปลงข้อมูล</p>
 <pre><code class="language-javascript">globalThis.testJSArray = (inputArray) =&gt; {
@@ -486,6 +480,117 @@ void main() {
   print(i); // console output: [1, 2, 3]
 }
 </code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ตัวอย่างที่ลองเขียน</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>สร้างปุ่มกดจาก Dart</h3>
+<p>ลองใช้ package:web ลองสร้างปุ่มกดที่กดแล้วพิมพ์ข้อความออกมา</p>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
+
+void main() {
+  // create simple button
+  var button = web.document.createElement('button');
+
+  // add onClick to write text &quot;test&quot; to Console
+  button.addEventListener(
+      'click',
+      ((JSObject e) =&gt; print('test')).toJS
+  );
+
+  // text on button
+  button.textContent = &quot;click me&quot;;
+
+  // add to webpage
+  web.document.body!.appendChild(button);
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0600_example1.png" class="u-max-full-width" /><div><p>เมื่อกดปุ่มจะพิมพ์ข้อความออกมาที่ Console</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ลองสร้าง SVG จาก library SVG.js</h3>
+<p>สร้างภาพสี่เหลี่ยมสีเหลืองพร้อมตัวหนังสือง่าย ๆ ด้วย <a target="_blank" href="https://svgjs.dev/docs/3.2">SVG.js</a> ในไฟล์ index.html จะนำเข้า library ส่วน main.dart จะเขียนคำสั่งสร้าง SVG แบบง่าย ๆ ดู</p>
+<pre><code class="language-xml">&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta name=&quot;scaffolded-by&quot; content=&quot;https://github.com/dart-lang/sdk&quot;&gt;
+    &lt;title&gt;dart_js_library&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;
+    &lt;script defer src=&quot;main.dart.js&quot;&gt;&lt;/script&gt;
+    &lt;!--add library--&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+&lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-dart">import 'dart:js_interop';
+
+extension type SvgRect._(JSObject _) implements JSObject {
+  external SvgRect attr(JSObject attr);
+  external SvgRect size(num w, num h);
+  external SvgRect move(num x, num y);
+  external SvgRect fill(String color);
+}
+
+extension type SvgText._(JSObject _) implements JSObject {
+  external SvgRect amove(num x, num y);
+}
+
+extension type SvgDocument._(JSObject _) implements JSObject {
+  external void addTo(String tag);
+  external SvgRect rect(num x, num y);
+  external SvgText text(String text);
+}
+
+@JS()
+external SvgDocument SVG();
+
+void main() {
+  print('draw some yellow square');
+  var svgDoc = SVG();
+  svgDoc.addTo('body');
+  svgDoc.rect(100, 100).fill('yellow').move(10, 10);
+  svgDoc.text('This is SVG');
+}
+</code></pre>
+<div class="image"><img src="images/20241006/20241006_0700_example2.png" class="u-max-full-width" /><div><p>ภาพ SVG ที่ได้จากการสั่งวาดจาก Dart</p>
+</div></div>
 
 
 
@@ -550,6 +655,6 @@ function share_twitter()
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!".6qCMt04nT+lt5AXj84ขmgD;)[-#,#d[T6qG`-;Eq-IFกjrI3laขUmRWa'ก*6+sgTC@LFcslWdOI`E_M/*3M4;u/+nA:[RG$ENHV)^3.;HZJEGp&EhD77"]YNC.rG[mYUV1[ขHlP9h+9#[grFpY(B,oaEOaYf3)-;G$KH"shla--?NH'&i*.กaOT&R\LnTfV1C3o0AQe"*sข-1gU_`)XBoYpUp2Qf#)d'rOdO0.&%HaW7!I`UBข\_OYu_@ba_NM@kOกV5ZกHHO7Tc#N@]กum6pa6E]qN]obYpL?gi:WLl7RLH"Z2D.503FAc-?]CiX-4](RRkTUE+5U%s5!un'N"9h-;g*DDg&6@4^Fa(0Lข6FOoaข#o_Vm\+9)^u,6$WAbo&Sd)n1K9=NbEiWYW#,di-.u1rBd3&91"l9^W#_k"(Gก:+FCOn=^^:RUN,pEOs,F,TLdp,[%H=?f*L@B9N/1JH:g7WXDSmKKขhTUmY_FbXE=6A)ME:WiDoY:(JdeUT6!ED\,B1#)todW_qdPBC3AKeTqp(7`0I9M3f^q:8dM_MKZbDZ6heUJQ\bT)n.g!7n1L@TIข.SBVEI9nBjomC`ouLjjcH!^"Io^ขr#-;I6=ZM_ข0)-DFuBBa!e`c=?CqkhrEQZX0F!\`#0HNTb?/"Qก(]&MK/rTa#jcDW@Ia)M+hndN?EPs*bpj"*C=:;uข*&D]g^d_ofDก3?'HIZ-r!57d]L%%hi5nBjmj4@GYL,Ui407i%6,9o5DEAQ(97H)GVกLccjifJi,$/_M78R#Ub%YOe-7LJ&I+cIW`O:%OM;gW%Q'_?Jขn&iIkRa?5'.,XuhX_G]&7Cd^G-2-$Sf"g^I?\H`jABfFmu`\e'&O+C&H9Q:ข.1aUqSM&XZ^PCPe\cS1!7;eCA\HIr=+eZGJ0ข4P'Z6Q:#(igL:JG\DDI0`+G(;]Cg.&SfขnL&agTUmOH(-mUa*'T&l-(]pd\ก:dgYpc2Aa-mN0YN$.]Kcl6%rกjWUdQV;lT%neKHgm&G%4"(2Ubp6dWfh:cfjjMm`TmaE672gjoWckWก06%,to1iP(6,WA9b6&;%F/p!PB1_8[QNEpYกQ*3/&6/BZ5j"491VCU`G^u+f;UL9(;G;กNA5FVขLmgJcf"I9,$J!4jcQ9XYRLP4iLO\(N*o_kE_H:[Aji4#%;umZL@ef=(\DKo[GM`1iก#AXt)DXktieHIR-`Ccl3,K%?B%$;fiPi;2"XdJ=`+%a?DYA4,/?p#%?`+b]DO!BRe[%YoW7fQ=1Fp]B%+.e,7@sI'8กNiGt4A1ljDR+skD8VVo4กB%,OKo*ABfก`*6กEt:pl1pieS0B_XnK(oPขJN+K&@:i)G"D,?Hcj,ก']SYe@%I/fDf!1U0O_[*LR8LuuV-8@A=l7\=!rTกLcp7ขeUJF_CpQ0NYก45gMOq"HM02m!mjY,YQ*\bก`GpoAKQRYLt.G);[IbDกTgLdflOW#G_0P0-Lat7HD"lV!ks4'd7aCขt-pLOC;rC&$h02sขnAA&/"lsX@Q;kGm?(]KP;iVUcHZ^Fก=ZSk(lSCTe:OSYI:R`#YY:P&:+$2ขGa*J%dกB_qjOC$$#ขj)bPNp)W2#U7uiab5("#3V%d3`De%H4Elกb4Z#n[pGM1!AB:=5W`GNG2kjgY6ua&CWENlHO]45J63;mjf-&gZN:PEm75eMRc)RJAlZMข+2ข`W7e%[g:s,,iRขG\PS![[uVV?B'a-LE-feJFWRArYr+@-SU`D;0'ej%2@\*Y*Ra`G7uI6Om?uF%Zk[o[Id&S$sY;oAK?USC)7W,?ขf-*?]k(cขluHb^KtJ!uIกWTO,,oSM_,:3c[YQ'กl0c5%UIW%1o=IL67+?8Yomcb8iกRDC//]R(+p#P%&'i;WhlS8`]OK"BbF5GPqrD@ก-2Zkt,BHHJ,d^+55IsEJM$'41p8(Q^AdY3C1dU.!'pkA\/sD-Cc9a*K`1H.hsNShKE_-bCeF;Hd]3gCs2EQNl_lD2ZTre7t&\4$ขX3Q)W_383$()ma5&FWH5JM8UF"\,EKZ'gP^"(a0.`KhaYW'U!%3-$MVlt5mj(,^Go93bki=al*ข*IOesJU'5-%aQQ2IAd*;`5N@\t:KV5@hAG@e7oU.m8=)[kra,f^BaDOZ;UXg5C]mขs-21)ข0c$hej"E'fooWr"-bOEJL'2/oAO[0JBbU%NGXกU,C6FEWLD/[$sVWFGW!h!Mc2'i)g7L`rJ3U``t_Cr,(b2J.reW"`OFb5.,],!!SfaQ0)กN\ก`e\5l27X%;'_V#KBHo^M9hbAU!p1J8XfNh5`FTNA0Fi*6k,L[*5pmS*Vi;UMM7*)QK9LlIED.กO'aN/nUbm5Th9k(/P8E'B"l%[od$0กaOjY:#W/S20B]&]9KF?1,J@pข3E_Tf*3?l1`=]+,=Z;]'fJ@H!rK*#3EjI1H3l-kZ%:&k"`M3E+9md'*FTHeINe7K4u^5/0133:U4IWqkZP^ขg?MS=m;h$(%8**q*Z98!;aEl+C]n*QDo$*=dIJ_.k4j7k.kmข(Z9A;/%BNpmI$ps:/T'0]]!Y46D$A*,cVdK-^ETr$#4hTOS]RmKC\8bP]8nc$"B$1#o"3.Y[k2JHH#XGO]@,]koh'kEn&$DB]&rus6s-]aKjNb;p73r!XXmb+Wa^RPN4u(.GXnF`,B7n/[d2MX,)932l7ก;p*4M6ZU"GK1N,q70*50`YHW7s`Sp6.fIb.#2Z2N/^eM%AfCsHUbBMU.^@1kua_nS5],rfSF[cMFก&Sf?oM1V3Ng"&\(sbq8/$9c&3%j]qikgg8#U/\1#k7On(kV:eI'8กGDm8p1=]V/+$a]3J"qkS:SsX9u$J+djl4nO8C6Rq!m;/=F?RV9##Xuj,9H7dj]Mq83;62G:V/)o1กZ75]1,q*H.-lR77'ก[#Jl@EmH8praVECk2q+r=Z5P2.9ขWFf^/S-c7qfp-3ขtP0E*stV$_O.4&fJ/M.Vs8+*D\@C;C&5-`TJ=Rb1o`h/,n!eHWS5e`kRjEHZY#Eh[I1#.WTN8)UD+=;;h\?mj2=em=t0b-A\(-$-r5/V4,ZD9UK?+R;SBZM]?R=4W$Fbh#EqK8M/Cl93H5s5)!rqoIjj+ขs*l7'r=KFIgL2V5o#MPlM6t`"U==l(:oP(R/$$$%^XhOqXBhJANI&5e^Im&(Jkjo,PBn?]1ptYnqFpP_Bg55C2QYV!X]D$^Sm(R5Rk`9u*JA$[lXTj?K\J^\กP(JPbpU[H3cSB,G3dCHe)Afgk[mLกpRGa(/`R2:TXXUVD[3]a=QRek2ขU0YIN@F=N]0stTPB).4b$a1IB8=Z3eก]ddWF%;#a11YCpMQ+E5%\g,.OqkdQAn#Lu=04"arVq;U56"UKd^.Okp=_YYYe%F5UKnJ`FK%/X:f`I8'nhl=:\hJp"W8poZtZ+$1ENW+NdT%ha1hmY!$'&JahXG5XhJTJ,m2n5,Z4AFH)""34!S-Z0ia=$.t#V98'กGEf&@dcfD`cc^;pb:KrZjQf9fQ)KR=9'!CrNX4CqขYmKS[0+_:(KGT:oEQA,WVkWD4==c-ขq_RjVppnFQl0rg%HT-HcqCRK*a`G(=Te![*X;c!XpN*!GU1(0dU6%Qg+_.Ci"l@Yn1B"FKR-qJPbiWamZ@gh/qH)Z3c0rDf#RSoXcM2PBVd5l!1319djcN/5#"M@bI=1ce9M2)(FuB9HpqWgข"ข^5!:!O4Gขun@1(:Ih1NMlSBOc6co,Y.J:hnh@=]`0sb=\FWgihX2_"[=dm2^FL7$TZข=FJr5HN@odA[u/h]f+'nHtJ[MSn4a6\0UM;QQWc1liR9-i$;nd;WsM2i.+Fr64X5DO)XS1$K,#a's,5d92)R$M2j\P/hun=.n3#tก\S%Gb1W;bUfTlUPgp(;E@ie[_2-_^=_`\e,_gL4H4ISn=^[H*j0Oขs[/ข`Q+Yc@=V^tcVL6)fs!gQg=Q=bDHVUe(0!hH#LE'r%53(GP7kejขeBBBcpV-MSL_,jZ_nKL*o-H(81(U#?:.hXU"n!6klE=$),nP;p6e_+A+0lTIkNC-C5h&:._D!1Um4N0kd)cl?hX=E5F$Q1]C@Jr8?S]&!2R+`t`E?ZNXQ#VHJqoWBnq`K"]rol!%"&%\Z_Us-!=ON%ข@geQmS]YSq5n_fSb;&F]UHON]D\sQg=eก*kQกข$I\eBZ=lgni;]/ZrY`PtGG1pc6ขki:!#a7j01F3KZ3':d7#WRข(gI]lW83gUj5XCM!h]uKZrP!C&6กVN#.l5n8K/2*OBB!7dQข\&lJ7i&?#ขกLSC"jo,sfjQ]uF[mlขF#6LกZ@-ju"e&Ca3LZ?-ก?YX!ก*,o-NDL_6-E$cP2q=lIZ&+aกc0VP_PDE12_Q82%FSKsrJj%[D.ouhsY`=Qk$^Jo#KhNbขJ)EกUROeb3@N5mjY!1I0R07r3?ก=*Os),jkRGFPn:XooDcgegJข^[Y=E$55uE`&0c'0euqQBL9LZO1*]:U^]R,7=/V_*)j[=U?(80VQRKZ@ScขY1)Z7#sCNOOYBQTn=pกb*sioGQZij6,B5$FM.@*qE;$atVV[sN1#PZu1;A*:f/sAbn#&_QV_9doEdX9กo)lP?k3N\pZCก[Rc6TmL.U;:JhqblCo-5*,0pacM4Pa(9YF)r-ar8Jmem]NYb-0[ก:jE[[]g(__Gq5qa)p"g77@q'R;H.g@กbLuL"E5"fB?\s==2`4\f.*-1B1)"pDpWMai'udB`./Tjb,Wr5RWdt%'_F8Dr`2alE_@i"=m@-o`0E*#SIb.tFp7PhhN0\ก=kj\tOข4T)GXAWb-hNW8ก^=M/$AE&#8Dข'c!/^38l&(nt#utA4TZ)*Z_5SI=Y7t5ขA5J)F!gC/S]YMo1CJ`iOUa0กR(6[Q9)smV6.$m1T;JMขYข(oiU`9ขkก&$YaoBPlEt^qUu@J/tc`OGX1Rk.sEf;"27q6:l8TQeas2M$N=U31T8d`m[88^??djN:^p7S-.(,h,TgG"B2XJNS\aYH(8P'3G!Kก.JN*nUK4m/?A/hW+@8g&[KsKtกi,3VLht+T\)HIfกกU-g#M&XBeh5ljgZu]'IW#-tQ[a$iTmh8q?BZ5$.tCGnl.LL.ictKW,R[olVHTc5J_f?_`E]%U\$N.gs"ก6e%HF`^!]]J'&8+q-"Re*L/-Mq,Cf[4Lข*(^BIfh)i^กdd"JUT,,กYBjBm6aS!OF^!Z;eV)!&2gV?9HกhW\.aWiSplKCpZu&,h%O?SP(Q`ขVftdG\CUl$%!U'&3c1%C%d/&^'$_.mlPoTU;a;th9SLt!Mi@!%Ah:TAnlV:3กk_g"^N`cb?H&]C=b-!ข3gSQl1m[449(J3ก/5h\qU5BtM=P1#eL/+#A"sF?oDhk](4%8BI:[SiA70^/E7nC+&f#ขes#$ei=k`NK%กQ-PVo*toข[\rt,a9YcVa1`&7].rH4E@Ta`;ขn2T"05ข&fb/#=-_Q_RE"+O@%AcK3U$KW,pHMg_V\Hg~ข
+ก~+,^C)z!".7=rGNWFG!B&YreCfNJBLF[&7tV(,a+#1pขmK'Eed7'ZqppAaW65=/9dNก+XLI[,"di9d^h]k3_กlf^9`g7Kae.0=$upF`;M"LHZ*Mขp4F"NOXn_-V;9gm2t-XWGr)3gm(+3pAMtDJ9ZGs``_RpOs#_2!bN.m9anQ@S*&7bFlp`pข?goc5ZcUTbPO\Unp]p0Y!]tjcc\M+5o5h+JZE\,oC:.4OhTU!"a-38oE5Wt(rก`Hc@&s"J?L*8^?a.#=0+[HYla^KC-KF9ขebFpAp][.GDbnAKER^c*pmHFn]Z6WhlA%)?j"DbขD`&D'gF"uY&bc$(FoH\B^2N!b3P#ZJW:SCa$ItJ6pOgT8*FR#2D_o#_:ZAkN%ขกX__l:DkYpg[\_b\Ch-dW.Fs,&pa1-)p=i4_La4u:i\,RNtPVnPขq.,L't-0QGTrQp(^Pq:"J/QJ+hAGkt.r')Go"TL`LI"5nF`1Pp2M!*,Z_."?4mF\eW6M.&7C=Vaa(&1mNpokYC]C#,ก]U.[(l1_LH[R3+rกP"pfPo.gG"VL9$l.b0-r9oN4R`hKB`#m)(:qe^ข\?R]3kh@05*r$c7#(@7rW3Pr1IqN0XnขbnuM9BlbVSW%i)u**cqYXG4ข]hW.f+RsN[R!BK!^c2M"%r(e1AgcUr++9VfBS\=CUKej"PขXj\=5I6=G&RR@l?@B.@0ElAbA$=llD*e3^7iQP2QM_09F_[ก%fTYn"bqqWBกVK4@"กXR#JdHjnJq,6:F&K$^rgL)Wa:Hq%@gHgX7+j4$ข]7HW%,@Jmnh/^-t,Md+FWsb80"u"l[cnQ-Y9U@BN\#ibQW&1.Zก$=IqhhQ^7Yc=n$jeI'(+^?;M1Kก2\@5[3"eEGo44qYP#e@kW0\7jC@*bn-[DtK-t_er?/pm^/#1Um]_^a8!14nEq9g,,C'mUI[1j-H.l1HJoYn-S;)3%P-XZ'QX-[iCkmpO'^$@4][UกUA'ihfO5LlX9lcD\*W&eN!j"04c8@o,'8-!h#V^+_*;2n\g*NPR`4#l1`*6Qp[_4O1])KtjGtf/J@Ce[RBTDMdhWX*ขก7qGQoa!N$)?(7+&574qDJj6*CY'W]&b9IM#N;h0h5HL.L,E,mQe_06[MOUg;cnUEdq3cOL[V"mdrXh[jWd1QHc3]*E9;+,8qc2Qc^S\]N[tN!c%7.ActZOZ]f!!?3..3NZCgO\'[[PA!Ts=8'X"DY9GqN,J6@P9Gccb"#ERdD]GAJG"*Q9cUVPn(`A(egY)(!u5\X!I;)&g%M^tG'Dm$6GVข3.5LR8bqW+oM)fRFaJ%[(UmfSB'ขN:fQi(KS+cBn]Qf)Wข'Hq?+S5o_\YrL-!Q)h'/Gf%=bDDM@EoR'Zsf)PEVX(%3k?I-Yo8%\d+Gh)"$]&HกuIQLZg!I2&*,T&0gUHi-.;mo7"#RHTW".@1u&@j@Z+W^9[,[k[E3$W"PWOEก\0maYJDrqEI3NAPTUT%'.[R-npKกLF$XQgข7@HnoZ6EI$59f%`V0jX@SขD`ก@a`,K!I:7e?BbogF/m=A6q0AY5[?.&$W4NPD6immV8FnX4^M5S&sOcV`QnOEF?!1-@uNRoXB'Y(TW:^PWh$JFPcro*LDhQ,r_njk:6uYM6\%@n'*+WA1+J;[s86gsJ#7-(O'L0D#h3nk=c.6^[q5s%TV2^/q!^Z)F$Va8rH5DX3"Hl,#Yc0)SQ!D`72X/mJh3Elh^l\Oc\DGYR0%];Ipl8.#&Q,9;ขDChSSV/6,e;m#KOกLtJ=กMa8)kF&C3nho_'WM-EY";TWJj/dmV,hgGr[4rJD(kGhOZc&LqS5?/[-กN9)&D^:U-R#lil^GX,V)5FidELAE0C(%%5F9?/q=gLn,3rSB+s0$[`N`?d!2e$[#`Y?6Z5c7fm=S66;Put@M,FEc]9ZQkขGBaa]OGcEgZZtj#)W\[Ke[MJbbg5+&H1MD8dj"S#"D@?Cer1?and!5X4gUYY2RC.&^4D3c9Mh?B6(KkJgcBIE4qk/G'g?3'RLKh(AqlG#Jk;eJข7JUn[^Mขf!DHadBhขQc9;utjn0IRN!s/mYJ[9f^cnIIกr:I'F8:BjZSbMLl^:_M@eNMbYRZ#CMTN\,OGFUZYm';%pQ3h10Cr[eqk"(2`_`OG1Ek1[S]H]#/`O:D\jd7#RN[kB/NMtXขกnF-MhCQJEalขPPMhpV0e3/eYlO1X'RdNf-@haEsTVEj\kX-M`/Cp9hXe,M=3MHr+:jYGTcctgeU.a"U%*EToI3P]PMrJgE+cVkWL&dI,[LM]JEcZr(*)JQue?`kL*KBt,$)(O6SWMTX1UJqb!gO"G4;rGGqLJ.n+;lrT*O7$#3'h0W9beR"4'4ql*D1OBkg^05d45sDhrh^pXm::njg[ZENCcG6I'=(')k*-O'กP/SeLKm3p5%c@CEesp.XRjข\E@'borTE\#LiNN5ข4#nC:(mE6oQotam/'t0*HU/as,+GEOJ]e%Wc7QaH_W`j^a"lhl58lW00J;[E&%jdG(7*BOMtG=9fXP\7VL-jRhF(]]&P%E/@L_rข^#`EIFI7^Kc9O=0/AJ&V9S%-(U/c4t`CMrh=dT3d[F'j1:X!CCmkUq[0YW?"j"H1B&MQ/tK+/K)?+iSZ9,?@_OtJN1'U16LFDseqV=?^VIASW=#0Aj^JFe*uZRPmJt=V!+"NL`O+=@MRsI#TJ+.-EnBEH*Ho#h&j+!#$"XV(RTgoV,t+K1Z#NqRSs#aAi"()=EA/l5]hB;Ve=Rs$M*73i,rRกCXfbq=6[N@/+AI/K$_A=q0mARqJ@WMf9WcFBg6GU^3(X/XNi+%lก1K055Z[.GrIMaC1Ym5`/SqJt&J8o&S"AขpJjII%pNN,2gQI"E@R]uOMhb@rmdGsL.8I;0(\]+kJed)qfOI,&@lM7Y#d'iWl0qGTYe^!&"M.\jZZYn8ZXo3(AdB7":#RV*)8%pXnข#![U,กPppa$(กqC?62p0WJ=&*;YY)iG**^;-$Mf]ขgQcC@&Ff8^QH`p28XJ+Q3g.W(_mV(H%&QfA??a[o/GC*@t(9taE*0,qn/iW:WjMOPJ'=rERt^f)FYf-S6n_fn83N;lh%ก*f-i83hXf^LqTKjLDU^d?*eV.U-fn'@?VQ;UQ/s1i:3lRขa4-ED(P?f]u)WQaI$W8_0e:%ItWE])#ก)QQDkkp]d?JS+L=dJa/QTrOlhX,@Z/&0MขoG=A2=[j^=oYQ`(5P=dO3m0h?fd#.lข7X)%SoSEbo&6=b/a8Hd8nnUlo:Vf@Fกl13-sY.sRpDoกhขZ&&8eข@!Fc/eKAW:(rIn(MZ4SM?m87BL]_niI.e6THK5O]IL]he^8tDกt:F?+Cd6FbpW1P.Kn1KPd5.0[A@'/1cIYNkgirmd#K+QF-#WCr:q&)ItjtHIhnML(*n"]eu3cXXj"5kR:jq%0r`s7b]5Y%/"hL1p5KRe[MN)CXj`i:5_]$9^tjKgcCep(e;#Mq2ข*@eBBo\4AkLNpo4(กL.^R6+YJL&!9Q?i.NRcS`Z,;R(RU"2E?nUU^J2r)-rs@-N+:]0%$g7Y:(jk1ckO4GR5H2LHK+RE]:YcB/"mbEN*HHข/ZQY('p4r,[TkEI^R$&4^),FnscW(C"SB$C4C8E(thjH^u]S([lD$0?da!J&kขJ9ก_&f"M`ขp&`b.8FQE7FmV!gha8?กH3nQ]JeJb7AlU_8uKCH`7a.UWpbga^sSRmpN@*m3กSPm5iM*ข:KCj1k!3\()7lW!I`Qh_R2'9BXN,Z-#[k,80P8-G!TpZlUI*M.3DKggpn,I5m=?YW\กn]qEQ;;(-M4kTmWn'(4g&%^jFaj(C'UN!DX%PGK\)Vn$-E*J1(mm.'`h8!&_(-gQtGq)Rก`Hd[1WqI;u-กc\f[/FOBp/Q[sMutpI@*u1&CsIf"4!_8s^ขr&bM.=5!2=0*M-qs#G)W,`Q]6#h[]$[`1!bNkA+qa(0I*Q/?gW4XLOกYi][;cj;*u.+92nA`2lB7*V17e:oTZb:`scb#QLJ#N[7\l2-FdM\Z?t%OUK/Dk.^i+Z)8crQn`YnDbaก\X28mMC5&Ur(72J&`SDSกWe[AqLA'nf3Ugq.!h5]#T+u1กjf\q.&i6m^atd8[&กc!@T[F1r;QjK_e6:Li5\CoDI,XcYp/(otoO1^n1NNhH.@%8ขnก6jUIMJIR6/\0L=$K[Zก[;4#^/[iYa!HO^ih,RZ94s#?`PกAY2@_H?mFKpGc0d`EJZBUoJ((E'Q;p@ipg/\K86Gm"LX+m`Ak[%Ur&ข9bB0,&tZ9MA*F4'กQ$hR6XE?A:,2\=!"#D=CoLc./bm-ID0!t:@.2Hc&[Y8m"6e9Ah*:s*gle[!E1=Os#S$sB2uKข*',$ก1i#'Laf6^5G2S6=tUHVEQBOLcN;*9UIกc9ptJ5'Yขu.7LAD!3TXT-78-:G:?JR+5s4g9jsZN3/nhOLc4V`bbNr^Hf_J`6flIขWQTDIjBQWAWV;0;B./D!PX",[HUghL:`2!nOl!gขI/1kXjH4`%sjek2@:?@9`XScmGcWur,Up_PmlK=BP4rpot[_c'V2o6!hKG_3u\PcSQ7)F-QSd1n0Oru$inIX[EFoAjBcq!ADPtLW9'B9.LZ0G*Uก1U:ขL^W'XeB^VkขY)Y/\Z!]mMขKK\;KD]TX9'70e(]T&&;ขIei.9RlU]_0$Qr2qbftd,%f4joGKV"h88=6:eq!eLb57&;WQ_t8ก,&npER:Hf,E:u2LWAj$,%(MJ!bcQZq.TCM0GJ3Y1QParr50fb1JN.dnp6]WSZR3k`jL/6G@m00SGAcaE#b%I3B2,g*kขg"Zk-(qm-M*A-=@TjtS$t+OSq^ข8%XRHWlC-iข1+ขt\$a9C@Q2T7@6J`aaSAiDfM`&EfEO+l;b*CEN&A&tlg)^LSLg5oVYejaQPPRZ&c9.#:^)kYiWX2[#.7GIS*@.2c;Pjrr_$S_r97&qUj]QUขDi-s(R-8o[+]uMnHHHLD,%3o=Kk4^adi/_rM=ก'กh855+.PN@#i]DqRe-ttR$8*b_-q$XXa]ofL?u)5hWGY=+P+Pkra`!f4FoV`29;!.O[7O!XWDWf9B\=75YkCCsD;/C8IiQsg*UScHM?LR5^dG8$E5ข:98aL%Ir'@N?$gP5]SD"4-]8;&EoTBnlH8ZJ_!U'7M.eEdoBsVlO^,V6[::-DTdTCG0\U(JWlh]@%KalkZ'q5+B=*+]78gig7fl.B:cMgl#-lVTR](jb.-%,%^4]pF)(OpVi-^U1b=-aUZM(uRo&F*;BG2KSbSpqp*K%G[Y(266KpGc,,2\trL!isN%9DEk_3%U0lNr%bHkขRZLmkS)5\tmข"fb?U#K#F8W%A4jขY1C)im'i^&-/iLc5/_O`)48o:Ksl=0U;l_aR03J]DoJE5Va!\cHiขSYm]!K/a[%E0e$g&JghVM8LHk")S2El0L\&.@$0MVropP\!.3MEU9SLt!Mi8#DAh:TAqH0,Pกdn;a\9KnH]S]8eZ2ijKF=asaCFmSIQ/jBX=JS"*5nuI"1"!CWL/+#A#D,BNYXdELSYGb5Vg!u\,(j&],G_e^2Vcij9fRHocm*c)L5K2!k7.X2:8%กkO:eK6Nr(kขn&C_n_QIjt7IBQ#!3Af'B$3n)4oqcRJSU'mCFCd_#[M(^\FO&$1oIDKDp57InHk9O/5ข,Y;=Y@e!NoSMg'fQ72+ZiUNS?VY:!+,8S(BUf-#YK6/l_"?"$P*F[[D%ZjZ.($!].]?4H+.X_^F*@OS=Wn^CW`&bTm+qj06ข6#'Z1qVsq7t_eZ[afW?_jUN&GK!*!dT\Mก0Z!ก(k?%kUd30&j"qiduKciql612AnTm`=f:5Ts'"Z:*007H#cgXE%UP_gjNnB!m\`1]T=BCLu@[7]n?*OE:8K'lWXbgF1M%$8R"medก2#/.ข_(c`R7J]p,B9RX:-:[IG*ข$DoILro\J*+pYMq:7V!8`FoN[M4N)Dk`emOHOO??oIk0c1j3nNRp4j"/$[!\[m%!K'J#tD(rRE&:2ECV^nh0kFiขAIUd;W_W_OSXQ3`1%!;D6:ขcT_:d&WA6SnSR@RV8h$DZCE[U%]eW,gDo4m8&g8^=0DT"gA9_,jotomnW[EK4uKq,G$8D`N?/loS3.6*/t.KFfIm32OSB%X.J"&Sm]]jh]CKmDQELJ*^+J-K`s^ge61::s[r4+6ZbqtoICmOhKqZ]a^pt;qpKU41RgpOO*F?aP"m5ZaE,DcuF_m*t(FumU=Ad,qh@;Z'46?1W!-mkq.WXCtY_4MhhSMKVZl@hcJne8a=n_Ajs*YZ'Y??\"aQ$-aF&??$ODh1c8gfKQaI3(tL@"q4\I8s6cกW'#i#i.k:WJ$Nf&ก2^$nFLXกPRFl^)7B(S3ZF1TX0pขkfoqrXm3]2"l=U/T:NDfPqnu(COj$226-FeI]cO:XcRF4VHAtle@@Kmq:i72l'14q/OUEdKt$[p9\C#ก&&T]&[^UeQJF8YN]jOD0p8Qq_9##5po@0Vh:ขc;L^ขข9SE1QHiKขLlPVTa-fKn\"$L6:/4SFo,Z-1%0OUkcT-:1+Z1N'U6,j821'S[ga#,7]aVRW@maL05n2pK/.%3#f\*mQDข60X*oe1]l*[#iWT/:C3!%V@$1&"SFขn4s3R=V&uk)QRXEข,/Gpu.O]m;r0S=T'Gfก^L&/4OhC=ghJ%e:(//dcZ8,)TR#Y"*uT;q2cB#_ขpeUCDsQ2VRJ20U_!:]LI~ข
 -->
 </markdown>
