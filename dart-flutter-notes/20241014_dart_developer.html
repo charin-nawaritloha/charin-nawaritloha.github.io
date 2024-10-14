@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: การใช้งาน dart:developer เพื่อ debug โปรแกรม</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: การใช้งาน dart:developer เพื่อ debug โปรแกรม</h1>
+<p><img src="images/20241014/20241014_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ในการพัฒนาแอปด้วยภาษา Dart สามารถใช้ dart:developer เพื่อพิมพ์และบันทึกการทำงานของแอปในส่วนที่ต้องการได้ โดยคำสั่งเหล่านี้จะใช้งานได้เฉพาะตอน debug เท่านั้น เมื่อมีการ compile เพื่อใช้งาน production ตัว Dart จะตัดคำสั่งเหล่านี้ออกไป</p>
+<h2>พิมพ์ข้อความออกทาง console ด้วยคำสั่ง <code>log()</code></h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-developer/log.html"><code>log()</code></a> จะใช้พิมพ์ข้อความออกทาง debug console เท่านั้น จะไม่ส่งออกไปยัง std output</p>
+<pre><code class="language-dart">void log(
+  String message, {
+  DateTime? time,
+  int? sequenceNumber,
+  int level = 0,
+  String name = '',
+  Zone? zone,
+  Object? error,
+  StackTrace? stackTrace,
+})
+</code></pre>
+<div class="image"><img src="images/20241014/20241014_0100_log.png" class="u-max-full-width" /><div><p>ตัวอย่างการใช้งาน log</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>หยุดการทำงานตามเงื่อนไขที่กำหนดด้วย <code>debugger()</code></h2>
+<p><a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-developer/debugger.html"><code>debugger()</code></a> เป็นคำสั่งที่ช่วยในการหยุดการทำงานที่ตำแหน่งของคำสั่ง ตามเงื่อนไขที่กำหนด คล้่ายกับการกำหนดจุด break point โดยหากไม่กำหนดเงื่อนไขใด ๆ โปรแกรมจะหยุดเสมอ ใน debugger บางตัวจะรองรับการแสดง <code>message</code> ที่ระบุ</p>
+<pre><code class="language-dart">bool debugger({
+  bool when = true,
+  String? message,
+})
+</code></pre>
+<div class="image"><img src="images/20241014/20241014_0200_debugger.png" class="u-max-full-width" /><div><p>การใช้ <code>debugger()</code> โดยกำหนดเงื่อนไขในการหยุด ผู้ใช้ต้องกด Continue เพื่อให้ทำงานต่อ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การใช้ Timeline class เพื่อตรวจสอบเวลาประมวลผล แบบ synchronous</h2>
+<p>ในการประมวลผลของแต่ละส่วนของโปรแกรมที่เขียน สิ่งที่ช่วยในการเพิ่มประสิทธิภาพของโปรแกรมที่นิยมกันทั่้วไปคือการติดตามการทำงานในแต่ละส่วนว่าใช้เวลามากน้อยแค่ไหน หากโปรแกรมที่เขียนใช้เวลาหรือตอบสนองแย่ ผู้พัฒนาสามารถเข้ามาตรวจสอบว่าส่วนไหนใช้เวลาทำงานเท่าไหร่ เพื่อให้สามารถปรับปรุงได้ตรงจุด ผ่านคำสั่งใน <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-developer/Timeline-class.html">Timeline</a> class</p>
+<pre><code class="language-dart">import &quot;dart:developer&quot;;
+
+void testTimeline() async {
+  Timeline.startSync(&quot;Doing Something in 1000ms.&quot;);
+  await Future.delayed(Duration(milliseconds: 1000));
+  Timeline.finishSync();
+}
+
+void main() async {
+  while (true) {
+    testTimeline();
+    await Future.delayed(Duration(seconds: 1));
+  }
+}
+</code></pre>
+<p>ทดสอบโดยการใช้คำสั่งเพื่อ debug และเปิด Dart DevTools debugger</p>
+<p><code>dart run --pause-isolates-on-start --observe .\dart_developer.dart</code></p>
+<div class="image"><img src="images/20241014/20241014_0300_timeline.png" class="u-max-full-width" /><div><p>การเปิดดู Timeline event ใน Dart DevTools</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>คำสั่ง <code>TimelineTask()</code> รองรับงานย่อยภายใน</h2>
+<p>หากต้องการดูเวลาในการประมวลผลแบบที่รองรับงานย่อย ๆ ลงไป สามารถใช้คำสั่ง <a target="_blank" href="https://api.dart.dev/stable/3.5.2/dart-developer/TimelineTask-class.html"><code>TimelineTask()</code></a></p>
+<pre><code class="language-dart">TimelineTask({
+  TimelineTask? parent,
+  String? filterKey,
+})
+</code></pre>
+<p>ตัวอย่างการใช้งานจาก <a target="_blank" href="https://github.com/flutter/devtools/issues/5835#issuecomment-1557582512">github</a></p>
+<pre><code class="language-dart">Future&lt;void&gt; sendB() async {
+  final b = TimelineTask();
+  b.start('B');
+  await Future.delayed(Duration(milliseconds: 20), () {
+    b.start('B1');
+  });
+  await Future.delayed(Duration(milliseconds: 30), () {
+    b.start('B2');
+  });
+  await Future.delayed(Duration(milliseconds: 50), () {
+    b.finish();
+  });
+  await Future.delayed(Duration(milliseconds: 50), () {
+    b.finish();
+  });
+  await Future.delayed(Duration(milliseconds: 100), () {
+    b.finish();
+  });
+}
+
+void main() async {
+  while (true) {
+    testTimeline();
+    await Future.delayed(Duration(seconds: 1));
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241014/20241014_0400_timeline.png" class="u-max-full-width" /><div><p>TimelineTask ที่สามารถงานย่อยภายในได้</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-tQh+nt[&:_1-s"K!/c4^*VC,JUUO]'\q9'nuj.Rj$`?L2IQ\*i(D,?c5oMJกdsWIh!4'\/i^eL4ก=8[JD7p.qZ"p@`ms%j:MกQ$BfChou#\lSl/o^l%N;H_BH.P*\e4Wrขdd5#_EX8p9FZ&8Lu/NOข1tขKd?&J"l!s-/Yd&Ss$:N`[YC;ก.@E[@oBO*b"e5g:1^:XGODQ7ขK('VR)M!^IlOZeMCt.kPn#H=p,2*f-O=?WSgaCขIJg"+Q\6-=m*SDV./ขGaI19;)IS5hWกWกl@pI`QBPWU-0LIsa3no)A]6[Z&tRlDกYmZ=$c!,LXnO%c&]-1C'jJD?gd#8,hCmcg,+PDd%`UPBsgX@'MD&KJN"_s^.J*l8ph;QQ)cT9ขh5jOaL$5E+(`"OR[C?BCI?rBiLUW%JuFR%_Zl/]VEInJnZsQHsขTกB/b914GqXR7Z/)6$,DAhq[JJoX@P$*b-58beS0Mjc9.YQdVN7`(4?0/sYcgQ$WO%:JrJs$jFd+Y?T[8g00E+fก'c=Xl*NZ@(2Xg(0\Glg4_fE'pfXNo;2@O!DdcVq%[.@cSn8@c,*$2D?Xขo0m6u71*^;@W!.\=70--gP!$KE]n**_%n.u_0U9bEb@U;je)jC7d.aLJ^dI'B?6,Ic#jaUAK-0W&`ข3:?BsM:]:6Wr]OlM:0#h\kpo;_0#YZYDK3กp?&"%uI\95*ta-A*V3SYa6-\]:#p#OZ;C?WFgMกNutVpUMA;g!rTn^0Pกn&B)n9;jja=!nWAE=!"o!@RASTMWS/M?akpa&Q)DVSPt1e($d,+3/E`O\`b=88%7PSJd]"Yn=6กJPNก$\b%mRDก,l]qf38r[OZ&J[aGs986\\*WDLh2D+g@.BQG,p5&tC?,&3H&UOVPd&URcSo&-=;-7AQjQHU;(E&=^]oLVgd'rIBdOlpoF^=I0=ก4t!W&7.6r5-XjrLm=X^(4FRn]mRmZq2ข)'\K+9l.bQ3!^$T9VJXl.^InTกD\[+6H\3`(jjZj_fLSXMhl'0T[\gl:])eC8U4\A::0!o\ncdB(N2rt"kYE*oGV3Z6kFLN@hDJs%dOlr2Kq*Zc6+qsYKtK]@dH#M(n`4jqCC_7EWO85d6Z?V#CDj"[LDFqBTb(^G^qkGq*#8+b%DD&SaกBj`:!k4"(fYCQ1fUuW*jRpNM]F,u(WN89oACIi@jg)[l],WCq^S$ขCsC'=Y,ciS0\k=H2^e]eCF$AoV`-4l@^eF5O_kfrPW9js`P[tL_r3aEC0EJ^RABX7#78ttRLUNSo.qZFEt`+7SgX+GR3&PcS]Wก@Di$:,t6blHHe8-j6;(I'1Djo\L9_;mUJ]f-*c7ขJ-39N2-i_*ml'D;Jc'l6g0oM9j5mFrZHOKT)62i"!^fZ,K+_VhB2%l],A4$;;,-I[9'(fnq$กSH8b#,R0aekUK2X]OnbR(1Z!Qk(kF[@8+uRqK85YmL,CW?X'DrA)Gc3-!2:K-7]H^P(VW)b\96P[P&\ขHก"a,L#YYqOขiS@i033;I'Hdi#5RNMI2&t/gQ$g16P9/G?Xp7Pa_KC!khEVOขขก.\SUa_Nกt"GYA6+W-[Pf,O#o[=_J(]^!2JpK-j*TRs$\O-H,ca^KaIE)'n7kW!3"_IYWQ\C"H)Qo"'0MbS1.,j6fZV:%CTP&YlE,mk6XO2$=F6กS2i+@XqG(/r5P-(bCYก.3E_aDUขHf6j]c:SfE]IG4R,;M;rrt^f2U4)n;L*"fL(6o+?[jbO=I[^P6IhKU[;H]qUVR\)Y0f=j;6t!BO(^)*=XW3[G[`"'HioFCSn:mE?=U1KKK@ZT2k4;g#c?4ขlQPQก$e=Iก5JHET"Cjd)2B839dI=(Xeb"]I:K^8s0qKp`bP%ขO;B+5BisOpu_);N[f.F-a7!t@U=K=NX&QT)GlM#[k2[^RB-j3g!g&d24hul?eJjS_i@VLRgX1[+rT#f0C8fsDf/sPK7Z3g8I'7YUmn0nLaX$'!p_M7+(/lZ3bdc%(CY%T/gAfo6G3*@gIZZBNn6o31I+"ขt@E1MoNF=u?TB5(JGAlS*rUC_@Zf4k.9H(W/5=['qhcKJkZ4eK\t_R`bFW*%:C"+6W6C(q~ข
+-->
+</markdown>
