@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การใช้ RenderRepaintBoundary เพื่อเปลี่ยน Widget บนจอ เป็นภาพ PNG</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การใช้ RenderRepaintBoundary เพื่อเปลี่ยน Widget บนจอ เป็นภาพ PNG</h1>
+<p><img src="images/20241016/20241016_0000_cover.svg" class="u-max-full-width" /></p>
+<p>อันนี้มาจดบันทึกไว้ ตอนเขียนแอปที่ต้องการจะเอา Widget ที่แสดงบนจอมาพิมพ์ ซึ่งการ <a target="_blank" href="https://api.flutter.dev/flutter/rendering/RenderRepaintBoundary-class.html">RenderRepaintBoundary</a> สามารถเอามา render ตัว Widget ที่ต้องการ ออกมาในความละเอียดที่ระบุ จากนั้นนำมาเป็นภาพ PNG ได้ ซึ่งสามารถนำเอามาใช้งานต่อได้เช่น เอามาบันทึกเป็นไฟล์ <a target="_blank" href="https://en.wikipedia.org/wiki/PNG">PNG</a> ส่วนงานลูกค้าที่เอามาใช้คือต้องการพิมพ์ออกกระดาษ หรือสร้างเป็นไฟล์ PDF ซึ่ืงมันมี Package ที่ช่วยเรื่องนี้อยู่แล้ว</p>
+<p>การใช้งาน RenderRepaintBoundary ไปดูตัวอย่างวิธีใช้ของคนอื่นที่เขาแชร์เอาไว้ ไม่ได้คิดเอง 😅 ต้องขอบคุณสังคมแห่งการแบ่งปัน</p>
+<h2>กำหนด Widget ที่จะใช้งานกับ RenderRepaintBoundary</h2>
+<p>การสร้าง <a target="_blank" href="https://api.flutter.dev/flutter/rendering/RenderRepaintBoundary/RenderRepaintBoundary.html"><code>RenderRepaintBoundary</code></a> มีวิธีการดังนี้</p>
+<pre><code class="language-dart">RenderRepaintBoundary({
+  RenderBox? child,
+})
+</code></pre>
+<p>ตัวอย่างสร้าง MyWidget โดยเอาไว้ใน RenderRepaintBoundary เพื่อลองเอามาขยายขนาดเป็น 2 เท่าและแปลงเป็นข้อมูลแบบไฟล์ PNG ดู</p>
+<pre><code class="language-dart">class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Text('This is sample widget'),
+        OutlinedButton(onPressed: () {}, child: const Text('sample button')),
+        Image.asset('asset/Icon-192.png'),
+        const Divider(color: Colors.green)
+      ]),
+    );
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>สร้าง RenderRepaintBoundary</h2>
+<p>เพื่อให้เข้าถึงตัว RenderRepaintBoundary ที่สร้างขึ้นได้ในฟังก์ชั่นที่ใช้สร้าง PNG โดยตรง เลยกำหนด <code>GlobalKey()</code> เข้าไปด้วยดังนี้</p>
+<pre><code class="language-dart">class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;MainApp&gt; createState() =&gt; _MainAppState();
+}
+
+class _MainAppState extends State&lt;MainApp&gt; {
+  final GlobalKey _globalKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    Widget sampleWidget = RepaintBoundary(key: _globalKey, child: const MyWidget());
+  }
+}
+</code></pre>
+<p>ในฟังก์ชั่นที่ใช้สำหรับสร้าง PNG ชื่อ <code>_createPng()</code> จะมีการอ้างถึง <code>_globalKey</code> ที่เอาไปผูกไว้กับ RepaintBoundary โดยคำสั่ง <code>.currentContext</code> จะคืนค่า Context ของตัว Widget ที่ render อยู่บนจอ ถ้าเป็น <code>null</code> แสดงว่าไม่สามารถเข้าถึงได้แล้ว ในการเขียนใช้งานจริง ควรใส่ try-catch เพื่อดักจับ Exception ด้วย</p>
+<pre><code class="language-dart">class _MainAppState extends State&lt;MainApp&gt; {
+  final GlobalKey _globalKey = GlobalKey();
+  Future&lt;Uint8List?&gt;? _output; // for store result from _createPng()
+
+  Future&lt;Uint8List?&gt; _createPng() async {
+    if (_globalKey.currentContext == null) {
+      return null;
+    }
+
+    RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    double ratio = 2; // render in 2x size
+    ui.Image image = await boundary.toImage(pixelRatio: ratio);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData != null) {
+      return byteData.buffer.asUint8List();
+    } else {
+      return null;
+    }
+  }
+}
+</code></pre>
+<p>คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/rendering/RenderRepaintBoundary/toImage.html"><code>.toImage()</code></a> จะทำงานแบบ asynchronous หากใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/rendering/RenderRepaintBoundary/toImageSync.html"><code>.toImageSync()</code></a> จะเป็นแบบ synchronous</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>ผลการทดสอบ</h2>
+<p>ตัวอย่าง จะเป็นการแสดง Widget ที่จะใช้ทดลอง ในที่นี้คือ MyWidget และมีปุ่มกด <code>create PNG in x2 size</code> เมื่อกดแล้ว จะเรียก <code>setState()</code> ทำการกำหนดค่า <code>_output = _createPng()</code> และวาดหน้าจอใหม่</p>
+<pre><code class="language-dart">  @override
+  Widget build(BuildContext context) {
+    Widget sampleWidget = RepaintBoundary(key: _globalKey, child: const MyWidget());
+
+    if (_output == null) {
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(
+              child: Column(
+            children: [
+              sampleWidget,
+              OutlinedButton(
+                  onPressed: () =&gt; setState(() =&gt; _output = _createPng()),
+                  child: const Text('create PNG in x2 size'))
+            ],
+          )),
+        ),
+      );
+    } else {
+      // after user press the button → _output = _createPng()
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(
+              child: Column(
+            children: [
+              sampleWidget,
+              const Text('output PNG'),
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: FutureBuilder(
+                  future: _output,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &amp;&amp; snapshot.data != null) {
+                      return Image.memory(snapshot.data!); // snapshot.data → data from _output
+                    } else {
+                      return const Text('error: invalid _output');
+                    }
+                  },
+                ),
+              )
+            ],
+          )),
+        ),
+      );
+    }
+  }
+</code></pre>
+<div class="image"><img src="images/20241016/20241016_0100_result.png" class="u-max-full-width" /><div><p>ผลการทดสอบกดปุ่มเพื่อสร้างภาพ PNG ขนาด 2 เท่า</p>
+</div></div>
+<p>จากผลการทำงานจะเห็นภาพผลที่ได้ ตัวหนังสือและขอบปุ่มที่แปลงมามีความคมชัด ส่วนภาพ icon ดูเบลอเนื่องจากเป็น bitmap</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>โปรแกรมทั้งหมด</h2>
+<p>ไฟล์ main.dart อย่าลืมเตรียมไฟล์ <code>asset/Icon-192.png</code> สำหรับตัวอย่างด้วย หากใช้ภาพอื่นให้เปลี่ยนใน <code>class MyWidget</code> หรือลบทิ้งหากไม่ต้องการ</p>
+<pre><code class="language-dart">import 'dart:typed_data';
+import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;MainApp&gt; createState() =&gt; _MainAppState();
+}
+
+class _MainAppState extends State&lt;MainApp&gt; {
+  final GlobalKey _globalKey = GlobalKey();
+  Future&lt;Uint8List?&gt;? _output;
+
+  Future&lt;Uint8List?&gt; _createPng() async {
+    if (_globalKey.currentContext == null) {
+      return null;
+    }
+
+    RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    double ratio = 2;
+    ui.Image image = await boundary.toImage(pixelRatio: ratio);
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData != null) {
+      return byteData.buffer.asUint8List();
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget sampleWidget = RepaintBoundary(key: _globalKey, child: const MyWidget());
+
+    if (_output == null) {
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(
+              child: Column(
+            children: [
+              sampleWidget,
+              OutlinedButton(
+                  onPressed: () =&gt; setState(() =&gt; _output = _createPng()),
+                  child: const Text('create PNG in x2 size'))
+            ],
+          )),
+        ),
+      );
+    } else {
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(
+              child: Column(
+            children: [
+              sampleWidget,
+              const Text('output PNG'),
+              Container(
+                decoration: BoxDecoration(border: Border.all(color: const ui.Color.fromARGB(255, 255, 230, 0))),
+                child: FutureBuilder(
+                  future: _output,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &amp;&amp; snapshot.data != null) {
+                      return Image.memory(snapshot.data!);
+                    } else {
+                      return const Text('error: invalid _output');
+                    }
+                  },
+                ),
+              )
+            ],
+          )),
+        ),
+      );
+    }
+  }
+}
+
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Text('This is sample widget'),
+        OutlinedButton(onPressed: () {}, child: const Text('sample button')),
+        Image.asset('asset/Icon-192.png'),
+        const Divider(color: Colors.green)
+      ]),
+    );
+  }
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*rs)6Z3(&qQireD9mW%#NYขRpurV+qdRMc":^NMOI@0S5)n:XUg/.?I%iC1*]X]fF4*e)iK0;C#0L_cQsBMj(U!Im`QUfUoD(]0#SDU7,NT[UbAIONHP=]D)!ihRbiU(VH+i&iLk,2Ug_H:%m&X(MRn;S_StC`-4dtR1()#ZfNข'ขpgUX3r(m4*i6u&l/Ym6*9$5$1c\*jDfFc/Rd@k/W7rU,dcก]_m%k#\#]f'ก#D`;;]01br9.SOb[;t9Fg/Vos@:ขkLh`0HQ3R6AH]!p.!N!jO"aY$I+?gjo7\"*'3G+'CkT$uaA0&FM%[eO=m.%P26pd8:235()hO4%Pd(S5R7='U*:-HEY:C(Vib'RA?YKi@ข$8sขV:r$\,kKf&T-kE#(sDZOXMHG+(d(`Pl&HJKH8]-GO/]4AT-TBdXQUOK[Y9&TZVkกtHg@stNbaQ0VcC-PG,b[_?=+K,Tp4\q9ZBi3(G"8I=ummrp0b?gX1qBbM29nPe0],K(Frfq7O!E@l0dbก_TnD/c:?RY1q49j0j]ขEL;Ni/Zge4eOO&'$!:39Qn(Akกf*gqgfi.'ข5n5E/N8i\=NPj=[O9?กYH&976U@]hSgNV2cRLh)^%dY?kBE#320n,2%pWK/B!hK!pftA'GTuM6tMpPCG')Do4ju@rกdขm,H7(5ajgQ+[PEC!e]E=B;W&:k:c&mp^XbS.p\.`j;V3Dg=MlJdG=/L')W%KhTqlAg!SgZ#[M/=K(&aF%g?,NTe"UM9FTZF.+gu]ap=)59Q!ENq8g`9q$J"\#]D03[ZS$D`U072ROpA=-==af\sqG)LFW9[`WaNL374)f/8"@dh]I@@4"tM#3-]t;P;N(Kข3EHUBoKYf.tA*ข5#?kBKh8fB:7`0@rrVT$QR9กj5Thb#3bUF6c@^-`S!Gcl#hGH@CRVGdK&raF.ZP+(1rJGamOBMTO/l;2c"ขFI6ก5P3C#,jk5`38q%*q2N7m2(1ข1okEKgP]?Y%;A.i^iก]ZA"6"RกBBt[/XT1k.#E,,#nlN/I\@`r7s\:O-R?!J;-KYmCqX^`#?,bVTSKW!$kdk2ocb0#L_56]BRt`;&]U4;_4fIข^S;;`-3H9_Al$-&k-g\2;Jc?Lh1Y0Ro)9jTm`Jj2JT/"Z2oCqXHP?60&\I(Be-'PCG#/8F+MZYOE!VbInc".#RQDV+0Nu:Lq=W8/MRTOK=\/9JAm4rGr:7%DSWfuMu16=GGp"78ขEL4mJ;7jZNaYc%bY^Y1D7ukV'5@JYbn?JR6DoaB$GbXUCkiY,,[Zp#iEกgfN`8WTD_@*4R*T(3G'i3Xh\9Q8JDcG!EKYIDTjX)FK1L-$^])fFE/JtSM%1ก-mHm(_gh??gO]D(#กuG"#Cb:Wข*(jBf;VD0WuZFNLh[44aR4e9pbar'W`mEE!jGP(CoD;กXข)kf2KBM4bV'OWDG+r6"MVhH]9=$c1VtAl1,G'_)#.._*I6c`--]qR#Fh)0mpLiI!;[*:9rUO7U-b8(\'KhlpB)Bj&\#=1"YIdl,oKjn-5[q=M$gS[WhsA.กE02:pVOb^N2KG;Q%Y?gq9!A;$6RCCVkG+DLCkN5C9VduY/sI[kZ"sq;6กB,N,L%=3CW#.6[d"-9GqfORlrBTVPDb$Gก&SiL4!-U,._,/UP?cR+h09EW_L,$^["-กก6=eQiNpJ!3"6`:d(C]aYj-G[Bge,M#qekc8"-X)@"DoBกข.t39'LA'bL/1ข5[(`PAtR;t[o&*^9%4kpg?gj.M9htTE_]&oMS0+()Gp.UC91RO8`%-oกM@fUnqQ=NTnS#o++#%ข0YNก)ก/F@MA*'iA'^"J$O]SกNCnHtuKdLoQL(Z)c9ขh(g7Ys0lpB/3U?g"Y:D`YiF(t_4`BU3!6gLS*5i.I%+;q^k/&rlr.@MXa[UL-rlrUa/J@V8H.JSRQq"u/1Cof@2H&0_mC"@กa?*eR3)oKd\1&_,9ON(Mqq,JU?IRกHBg\LP*-/1gl]GS^'WWop.T`7Tgs'kV!:Q?lYbRJWMY44JJnqG1;0-#JBQQ;a%&\jข-B#_W\_!A)&2W^o0.ojMhG&cIZE\M:KHกกL4t-#d`]P\$rL/ATT_J.@E[R8[o-_DSmWnq`G"%Wfo\90QoTOJL,&29"h`@GbLQCfCขl!flfข5Z-TgcY/l:V.MU&DT/.V$#M'4XD01V)aM&l]YZur^/dikB!%IMU%SSq&ก^)F1^Lb*O1VF%กAgrKa'KVX5ob`Y),E)JIXDp?=%7Z9LZFiO1V#D)FiCZ30mA+MR=1(68X;F*,K)\Zc0"bC1M(nNIA_bP=#ZFS9A-pf=IRL[NWS8RLYath/k%,&LV,M,CW=Hก/i3`d?ll..$l:Y6A?e#C@!*.!;ht!M\p]:nS'[*"PJrPUU+\@Z)กG.qiL1Aj3LZขg46QW?[U`jTbW/i5N&aK4of&fXdP+hG3=?`X3fJaAnTaGhG8\)e:E"2Km;tC?k@u(=ข(JbM^c?5.N"=BSRJF7tmh1,]kjucSKk@C\RK&Zaf[=KTHpSUfV:MeDD5E)^[r/#`4'/JNbHDiF%-mZ[/@;P2_กEWd66)+!#$`'S4k21%hgYUG)+(uYk0t+r-!J!h1,j%Y*\Irq9@s;b8NX`3l8N*2(nT&[X]?"Er"`i]s4`RsPoEna-AicOcdIdQ3]Nn.e6hJs/[ก"jQAk3VLjWhHo`D!ZSGC4#;baQE:4sM_^%\gd[Tf?OMgs1E,#S&*56scF6/t?BCDrBhG:7hM`Li6oI#F`"cกroH.g\Rl/4'5Wa.od]5Gt$$C59+RN=nr])tLCG&F13ohrกAUq\-/,8:!TQ2?JRW%HEmF46.n3ls7"750.WrZ?qsQกaM0,MF`EH$?n7?@Fe*6[kh13n4_^0aQ$(/=3/isG,VNUDZ/!X*BhQZ9Vct4g'QLmd:Nข6hja?h8ggtt]-H/eIZF:GW&r3doA2d47.24%PkCSu.[YJ4qbYg&ir2@8r*4AhR&uQXE@@KNL%9j`RqHXn9;r"mMm2\6XkXa4X..RNF\O8G6'ufiS2Z5""`%^Km;Bg$IOj:Kb+n3uH(*J=ขTk+1:\T.กS#b^SSM6"8h)K/G%dadYOMModBs?!8\CW^-bakc&T40k%qlcAr9qjf\`6D4Je^T#8Zd97ENT.mXps*JP/*d4YdขXC0a=tVT2"O\K-4duMY]IA?s6_/j8)ก4?CZi*Krf&tSIFl$BD4SjS@u^M;iur@(`5XOขnX@bc(&-D)/'HN'LEFfoq"`%K4=o"=2(Ci5%`GGBhHdtthd=5""3ia#%IG~ข
+-->
+</markdown>
