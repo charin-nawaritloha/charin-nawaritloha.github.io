@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: ลำดับการทำงานใน StatefulWidget</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: ลำดับการทำงานใน StatefulWidget</h1>
+<p><img src="images/20241019/20241019_0000_cover.svg" class="u-max-full-width" /></p>
+<p>StatefulWidget เป็น class ที่แทบจะเป็นหัวใจหลักของ Flutter ที่จะใช้แสดง UI และมีการโต้ตอบกับผู้ใช้งาน เลยมาจดบันทึกว่ามันมีลำดับการเรียกคำสั่งอย่างไรบ้าง</p>
+<h2>StatefulWidget class</h2>
+<p>ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html"><code>StatefulWidget</code></a> มีการประกาศโครงสร้างของ class ไว้ดังนี้</p>
+<pre><code class="language-dart">abstract class StatefulWidget extends Widget {
+  const StatefulWidget({ super.key });
+
+  @override
+  StatefulElement createElement() =&gt; StatefulElement(this);
+
+  @protected
+  @factory
+  State createState();
+}
+</code></pre>
+<p>สิ่งที่ใช้กันบ่อย ๆ คือคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatefulWidget/createState.html"><code>createState()</code></a> ตัว Flutter framework จะเอา <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State-class.html">State class</a> มาผูกกับตัว StatefulWidget อีกที ตัวอย่าง code ที่เห็นกันบ่อย ๆ เวลาสร้าง Project ใหม่จะประมาณนี้</p>
+<pre><code class="language-dart">class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;MainApp&gt; createState() =&gt; _MainAppState();
+}
+
+class _MainAppState extends State&lt;MainApp&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World!'),
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+<p>จะเห็นว่าตัว StatefulWidget จะเป็นตัว Widget ที่มีการผูก State ไว้กับตัวเวลาสร้างขึ้นมา ในการใช้งานทั่วไปก็มี private State class ที่ใช้สำหรับตัว StatefulWidget ตัวดังกล่าว ซึ่งอาจมีแค่ตัวเดียวหรือหลายตัวก็ได้ เช่น</p>
+<pre><code class="language-dart">class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  // ignore: no_logic_in_create_state
+  State&lt;MainApp&gt; createState() {
+    if (DateTime.now().weekday &lt; 6) {
+      return _MainAppWeekday();
+    } else {
+      return _MainAppWeekend();
+    }
+  }
+}
+
+class _MainAppWeekday extends State&lt;MainApp&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello Weekday -_-'),
+        ),
+      ),
+    );
+  }
+}
+
+class _MainAppWeekend extends State&lt;MainApp&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello Weekend :D'),
+        ),
+      ),
+    );
+  }
+}
+</code></pre>
+<p>เนื่องจาก Linter rules &gt; no_logic_in_create_state ถูกประกาศเอาไว้ว่า ไม่ควรมี logic ใด ๆ ใน <code>createState()</code> ทำให้จำเป็นต้องใส่ <code>// ignore: no_logic_in_create_state</code> เพื่อแจ้งว่าให้ละเว้นกฎดังกล่าว ประเด็นคือ ทำไมไม่ควรมี logic ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatefulWidget/createState.html"><code>createState()</code></a> ตามเอกสาร Flutter ได้ระบุเอาไว้ว่า</p>
+<blockquote>
+<p>The framework can call this method multiple times over the lifetime of a StatefulWidget.<br>For example, if the widget is inserted into the tree in multiple locations, the framework will create a separate State object for each location. Similarly, if the widget is removed from the tree and later inserted into the tree again, the framework will call createState again to create a fresh State object, simplifying the lifecycle of State objects.</p>
+</blockquote>
+<p>ตัว framework มีการจัดการตัว StatefulWidget เมื่อมีการสร้างใหม่ ดึงออก ย้ายตำแหน่ง ทุกครั้งที่มีการใส่ widget ดังกล่าวจะมีการเรียก <code>createState()</code> ทุกครั้ง และต้องคืนค่าเป็น new instance ของ  State class เสมอ ถ้าการเขียน State class แยกออกเป็นส่วน ๆ มันทำให้การทำงานง่ายกว่า ก็สามารถทำได้ถ้ามันสมเหตุสมผล ส่วนประเด็นที่กฎนี้ถูกสร้างขึ้นมาเพราะว่า</p>
+<blockquote>
+<p>Implementations of <code>createState()</code> should return a new instance of a State object and do nothing more. Since state access is preferred via the <strong>widget</strong> field, passing data to State objects using custom constructor parameters should also be avoided and so further, the State constructor is required to be passed no arguments.</p>
+</blockquote>
+<p>ในตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State-class.html">State class</a> สามารถเข้าถึงตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a> ที่มันถูกผูกติดอยู่ด้วยคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/widget.html"><code>widget</code></a> ดังนั้นสามารถเขียนส่วนของ logic ที่จะให้ตัว widget ทำงานอย่างไรโดยผ่านการเข้าถึงค่าดังกล่าวแทน แต่หากวิธีดังกล่าวทำให้ตัว code ดูยุ่งยากซับซ้อน ดูแลภายหลังลำบาก การแยกออกเป็น State class ตามความต้องการอาจดีกว่า</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>State class</h2>
+<p>ทุก StatefulWidget จะต้องมีการผูกตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State-class.html">State class</a> ผ่านคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatefulWidget/createState.html"><code>createState()</code></a> เพื่อใช้ในการปรับปรุงตัว widget เมื่อมีการร้องขอผ่านตัว framework เอง หรือคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/setState.html"><code>setState()</code></a> ลองไปดูการประกาศตัว class</p>
+<pre><code class="language-dart">abstract class State&lt;T extends StatefulWidget&gt; with Diagnosticable {
+  T get widget;  
+  BuildContext get context;
+  bool get mounted;
+
+  @protected
+  @mustCallSuper
+  void initState();
+
+  @mustCallSuper
+  @protected
+  void didUpdateWidget(covariant T oldWidget);
+
+  @protected
+  @mustCallSuper
+  void reassemble();
+
+  @protected
+  void setState(VoidCallback fn);
+
+  @protected
+  @mustCallSuper
+  void deactivate();
+
+  @protected
+  @mustCallSuper
+  void activate();
+
+  @protected
+  @mustCallSuper
+  void dispose();
+
+  @protected
+  Widget build(BuildContext context);
+
+  @protected
+  @mustCallSuper
+  void didChangeDependencies();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties);
+}
+</code></pre>
+<p>สำหรับ life cycle ของ State class เมื่อตัว widget ถูกสร้างขึ้นจะมีดังนี้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เมื่อสร้าง State</h3>
+<p>สิ่งที่จะเกิดขึ้นเมื่อมีการเรียก <code>createState()</code> ก็คือ ตัว framework จะไปเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/initState.html"><code>initState()</code></a> ของ State class ดังนั้น หากมีการส่วน logic ที่ต้องทำงานก่อนที่ widget จะถูกนำไปใช้งานแสดงใน widget tree ให้ใส่ logic ที่นี่</p>
+<pre><code class="language-dart">  @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+  }
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เมื่อ widget ถูกใส่ใน widget tree</h3>
+<p>ทุกครั้งที่ตัว widget ต้องแสดงบน widget tree ตัว framework จะเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/build.html"><code>build(BuildContext context)</code></a> ให้ใส่ logic ที่จะสร้างตัว widget ไว้ที่นี่ และทุกครั้งที่มีการปรับปรุงหน้าจอ UI คำสั่ง <code>build(BuildContext context)</code> จะถูกเรียกซ้ำเมื่อจำเป็น</p>
+<pre><code class="language-dart">  @override
+  Widget build(BuildContext context) {
+	Widget resultWidget;
+	// build logic...
+    return resultWidget;
+  }
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เมื่อ widget ถูกดึงออกจาก widget tree</h3>
+<p>ในกรณีที่ตัว widget ถูกถอดออกจาก widget tree ตัว framework จะเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/deactivate.html"><code>deactivate()</code></a> เพื่อให้ทำการ clean up ส่วนของ widget ที่ไปผูกติดกับ widget อื่น ๆ ใน tree</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เมื่อ widget ถูกใส่กลับเข้าไปใน widget tree</h3>
+<p>ตัว framework จะไปเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/activate.html"><code>activate()</code></a> หากตัว widget ถูกใส่กลับไปเข้าไปใน tree อีกครั้ง เหตุการณ์นี้จะเกิดหลังจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/deactivate.html"><code>deactivate()</code></a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>เมื่อ widget จะถูกทำลายทิ้ง</h3>
+<p>หากตัว widget ที่ถูกดึงออกมากจาก widget tree ไม่มีการใส่กลับเข้าไป และถูกตีว่าไม่ได้ใช้งานต่อไปแล้ว จะเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/dispose.html"><code>dispose()</code></a> หากจำเป็นต้องการจัดการงานที่ต้องทำก่อนถูกทำลาย ให้เขียน logic ไว้ที่นี่</p>
+<pre><code class="language-dart">  @override
+  void dispose() {
+    // TODO: implement dispose   
+    super.dispose();
+  }
+</code></pre>
+<p>เมื่อจบการ dispose หากเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/mounted.html"><code>.mounted</code></a> จะได้ค่าเป็น <code>false</code> และหากมีการเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/setState.html"><code>setState()</code></a> จะทำให้เกิด exception error</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในกรณีที่ตัว StatefulWidget ที่สร้างขึ้น ยังมีการ reference จากโปรแกรมที่ทำงานอยู่ เช่น สร้าง widget แล้วเอาไปเก็บในตัวแปร <br>เมื่อถูกถอดออกจาก widget tree ตัว framework จะทำลายเฉพาะตัว State class เท่านั้น เมื่อมีการนำตัว StatefulWidget กลับมาใช้ต่อเพื่อใส่เข้าไปใน widget tree ตัว framework จะทำการเรียกคำสั่ง <code>createState()</code> เพื่อสร้าง State class ใหม่เพื่อใช้งานอีกครั้ง</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>เมื่อทำการ Hot Reload</h3>
+<p>ขณะที่พัฒนาโปรแกรม หากมีการทำ <a target="_blank" href="https://docs.flutter.dev/tools/hot-reload">Hot Reload</a> ตัว framework จะเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/reassemble.html"><code>reassemble()</code></a> เพื่อให้ผู้พัฒนาใส่คำสั่งที่จะทำการกำหนดค่าต่าง ๆ ของ widget เพราะการ Hot Reload อาจทำให้ข้อมูลของ widget สูญหาย และทำให้ไม่สามารถทดสอบโปรแกรมที่แก้ไขได้ ผู้พัฒนาอาจจำเป็นต้องใส่คำสั่งเพื่อกำหนดค่าที่จำเป็นอีกครั้งเมื่อมีการ Hot Reload ที่นี่</p>
+<div class="image"><img src="images/20241019/20241019_0100_widget_tree.png" class="u-max-full-width" /><div><p>แสดง widget tree ใน widget inspector</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>เพิ่มประสิทธิภาพ StatefulWidget ด้วย Key</h2>
+<p>หลักการทำงานของ Flutter framework ในการ render ตัว widget นั้น ตัว framework จะมี cache เพื่อเก็บโครงสร้างของ widget tree เอาไว้ เมื่อเรียกคำสั่ง <code>build()</code> ตัว framework จะเอาผลที่ได้จากคำสั่ง <code>build()</code> (ถ้าเปรียบเทียบก็เหมือนการสร้าง blueprint หรือพิมพ์เขียว) มาทำการเปรียบเทียบกับสิ่งที่อยู่ใน widget tree หากมีการเปลี่ยนแปลง มันจะทำการเอาสิ่งที่เปลี่ยนแปลงไปใส่ใน widget tree แล้วทำการ render ใหม่ ประเด็นที่น่าสนใจคือ วิธีการตรวจสอบว่า widget ตัวไหนเปลี่ยน ตัวไหนไม่เปลี่ยน โดยทั่วไปถ้าค่า hashCode มันเปลี่ยนก็ถือว่าเป็นคนละตัว แต่หากเป็น class ที่เขียนขึ้นมาเองก็จะเป็นอีกประเด็น</p>
+<p>ในกรณีที่เขียน StatefulWidget class ขึนมาใหม่เอง หากมีการเปลี่ยนตำแหน่งใน tree ตัว framework จะทำลายของเดิมทิ้ง แล้วสร้างใหม่ แม้ว่าจะเขียนเอา instance นั้นไว้ในตัวแปรและใช้ซ้ำก็ตาม สิ่งที่จะช่วยให้ตัว framework ทราบว่าตัว widget นั้นคือตัวเดิมหรือไม่คือค่าใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Widget/key.html"><code>Widget.key</code></a> ที่ใส่ไว้ในตอนสร้าง instance</p>
+<p>เพื่อประสิทธิภาพที่ดีในการ render ควรกำหนด <a target="_blank" href="https://api.flutter.dev/flutter/foundation/Key-class.html"><code>Key</code></a> กับตัว widget ที่จะใช้งานซ้ำ ๆ เพื่อเมื่อมีการ build ใหม่ และส่งตัว instance เดิมไป ตัว framework จะได้ไม่ทำลายตัวเดิมแล้วสร้างใหม่ทุกครั้ง ส่วน Key จะเป็น <a target="_blank" href="https://api.flutter.dev/flutter/foundation/LocalKey-class.html"><code>LocalKey</code></a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GlobalKey-class.html"><code>GlobalKey</code></a> ก็ได้ตามการใช้งาน แค่ขอให้มีไว้ให้ตัว framework เปรียบเทียบว่ามันเป็นตัวเดิมหรือไม่</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".7\h/="Z'n;5irsoขX2/กข$qU,U9km'%ข7&iY/1_3W?a"qqQ;eB[N1U@o++iOqKmA0,:@j!Z8'dLne/L4dr3r@gYT@2S;^WtWFZQDFVji-)E\Y&&Vo/iT=1qXV6nslNa:_j:InZj]hb2U%=fIMmQZ8a:kB4^TEhf%N7DE7Wh/9]uUmcCN+Lcu9#'pd1kbg)_ข[J3njr;#sIkP/!K4-[Y/bMlAZguNn^aNH?SEPF/^ขNKfEJ+&ZAกa!).:!;N5=*'2(DW0UV^0*+INO!e8(7T%DA3`0#(M3,:3S_XEO)STunAtoccNh*OnW\7E)]`g\`I6U:\;rub)@0e7/rLm5V$9rl&6h4EMgZT5"=N*C52Yก/*gXbU37&g$m0&o8:La/)ZL_Ls@=ruUGn6AbnRd0=9jH\l)KW5)hS]&6\2aJB+2d?lek$2-cd(Gi3FuW=WS1hGZW9$2qq4กJmIeBmNhGff^i$RAn+J4hbhCU-kA]Y\DVgก6^ntu=#lhV8DuPC=(/*N&D*?ขU2b,AYKl?ขi578qIf(cs!DU6VP/1iFW?CK2bb?:E_^ข,EqD0A!REKGa!]JDVOi$WN1ข7Fe\+ก0rU3e*?q_;2X0S;70[9l@3m%0OTlก/3\+XN0ก?r02IePขA;@q"5rF8Ls7aR3&E$-9:[=(ขr-3oCF55df[ePn99fb\]]3ls*Z)R?E(9_ZD758?#eC9[c,F2jmYo..fU;lfIR/`99n1:qrldF(sN&ก_3B=j;Qn,APOp156%ก2V-a5"Cc4=g8-.J@N6jbFlL_a@*()rS7r.7R%6-Z,Ui;u4M(e(OP3ขข&@C*Yo[FboU:@W=ATS0i_s50(Vq&Cd9ifJ8U62Y2odf`dH:aU@.dp%t2gXkaR9QRuEc1in`9mขJ:CV(+-=`kET\&bb:\LuhT"กYoข%]Mk:uY',(%7R?A7r9r_mcIqTTYFY]c':f,$Q4MDGD^f=5kXBl'i\NhYl*1E%k'NXo&dA+h^iC'h/\kp5k:@p_!W6gP"Uf:?h9K6n^ก`N%JPVId$;S8rGLj,W^XY!OFb%)'4ขfoMcHqC)aF88cVjcltข,bYT.[aP9#/Nj"kst4d,4,p9.+HY$i5f2uL2;R!.hVi&LpK;)NVVl8!hl6@\+kQ28:q;QNY%,/E@YO0ก6M(,IoP?h[YIZp?fNcGกYS.CkqtlRaZiX;lmTPnW0SP+nlSb'T?N1^iu?f'LYG.q^VUS,Ifb1;[io"5PE[XaSD8p`Q-d8X`]&QYhT5KeA*$``:Y:6L'ea4O_]G;.PL\7ขr$l28")eW$_QS&;/S7VF58B/]K&m%$!fJflZ8mgFdp*2O*@U!i5@^XR)`W'%gr+Hr-3K0YT/RY_"r=@8Kpjg(1FPu0ขl:D_gdKOQiPข.qaQJ;"&?uXmZ'&I-PQ3+i#ข4+0m7_5*&;6:X/3m.4?Mqfi,)G2/!Xa.I/kก+c17(9&7RDt'OgjhbMWan#mYj(d.Yh641kAUZ$)DiUBZ$N[9-LQก/S=8MV+M44T!+L"5=^7$U6GXG\Qii!lCA4_N@33CO)@Ubj!5.63-8Ci)=L?EZo\6#Z7&0^4r;+0E4sGN?0Zbkpg+X8\(@=onno(*D\2#=5@T_04dH,86cckJU9MQ1.nD_Z=\(c,EB1`)?BPB%mIg;f43PI,G7n,70S;()=IQPr_Dk?\ขFmSS@;I9L'&UmM,gO]pGI,TF0T%-qK*N:[H`9lQaYI%c*Bq*uGP*BUE%UF1OdAOQNod(กQeZ$NFOHstกo_."6l\(QQKtYt@I.กlVq3?JKhW^dbecFjbIWs=T7ni_oqSat(ก.knb5RhO+dm&nCn@8lYo9Qb@9H3,fOTcMBehP*]0%BQA.;MGSVZM?3;aก0rnnb'kW`ksCZ6X4n1hpZd/--I/!P+9G*%sV#+JBjaJq"Tgqp0U$*/7rT]!gFa(f;#KRfIYMHse"SQ%pก0jE`jPC'R\d96;:กND4*35SZZ7g,1.U?gW3leSt[Y,ed_,^0uFO/.&YiL)?MKNp(@DMWก&e(mnl[n[WlZuh@.*(P+"5gWCoOPYqfpdi6Q0eu+i[f3cf%Y1^l!LP`;#ZR-C+]3Vs%""gFSmd6f((Pf/;2U,Y"Q46-ZhYj3-A*^C(55gQ@Y94=IlMNQ$,fEljg*Z7;T9ก)2\nI/o6lp9*..N2l``3W!Se#FPkm1K"G`U0".bNB_-,uK=iSJg]\MNi;Lnldi&?.Ij[i5b46_9NกIcก(O6%q;eG?j,9440=G:Nt%(ขq6["?M/ln$5nXR:J01%O0uk"sIขaNrAd*=9*=B?FhoMUm$T[r?iUlHY]mG)UeunO[oC9iD4T*%;p)5W^i1C0XbRY*Hep=j&@"e0S[I)VHZYF%e5N'%^l.:Yt+Vc=%C/\h^Ru3TUQ"KWpD11P,=3`UjT6f`(8uiihfWSEQ)O8`,c/2IB5X"g2L\sV?5?rUmJ@XขlffVn\_V`d6g$PDfMgPR_f+o[4`Eeg;,T$7oN$ifDB=PYEe#E[8I@DWe47fs&KE*U\:0,g:\kNI'W]JLi,WpPVjl6;=U.@-4T9%(pKc7TnY]C*B-9(Wก+"?23g2WiKt]Sn0tjEU`j!t!RV4=C5ขD1/AVeTGขWpce]H%9B8!i_%dD7ZL7Yd?\Ks\ข3"?jก/:U@q[8g:V*!aWW'="_]Fmoic%O4lm]jif5(U#b#O"S7`R!7L]kcMcpQAก2`*6BขIFl:aaX1eSL?WD[ZR._-,dJmNJOpGFgP!PVE^n$kV%C5o;(Icr#J;V,#$5:99ก0UAกC(73G@CI?f53W;Yc=E6[:MtGlkf#PeLEm5FgP-,nHQaiu$FmPbOd4GZe`Zpu,RjGjbFX1s3q60J"jHRZN+t7Ee^3dXH3Ia.:U6imj$Q&[bnXLOHLV?S_YPen=R:eoCH2KZOqPrjQ1r-DqD_4G/BrHU_ia(-/rZXRf5F2,CNcQrrC&p]KVN1EE6VU[i).t=P?ข]O0=#YUW";_U-`UcrY)/7@3u_hlqกQ0-,.!ขb^Tm3pE'6mF`o[#Rq%9"6jcกhiM$W_&Yc.G6ข]cR+b9R1!U=;;AmC:[t0WKLPCMR4กe2U'T0ขs8omatO2g*9+*K9Q_aYa-75UE.?Ld[k]#Q%GF4#gBm`M,7N4C.0ขขMQcr+]+*@V](45MKZZe@]ePs*6`CRPXilH&GC=PNqIpF0e7=S/2[S`Y+^gFM"M9\,e.HXY2ก3[ug;4_WTRqSC9W;/Q3kT,^!Y(bq)=D4GX$dA1ขM6I2Z)XWq[uk4%$&3j:_Q85i6S1Cกh9ข,IV((8`bu0i:U0KfcR%8N#h%i/mM9O;l=#([plRBfG(9KAqLT3l^9D9ก9ikHQ]%!qON39\ZOdGIbGW)5=X%%,กb9`8J?cS%.KJfc^#L-Zp:?8M8/7D;jUaS!o19N%?$cdh*g1uX%ขR[kAQKTdo3L\fO*p1r=Tk1]G:cGMgTUE:GCbe7)kกnE?XfBJG743U?MP8](f.ขNC#iPrH[6_/SCk&6YNa"i1AiW[Zn9`@Dde@)V-DA6fmAก27tVlI4)U.qB+*Om39QrI'J+;49/8b]1jFK!kiT5e3EYrI(BnC\RK^PUoกGp1WYT'0กijcR+$;:ujkGg^+0;@Cjr#?9AX1CG[lfr2g/(iu-Hb*6t7CpFKUpKUjJeCQK+bb]ขS@Ak6iOEQ6ISกptheAj$8l/U9\-j$u_jNg`EM_[t6CNaU"pEs)กgPjp(.4aarPnt^3!P@a*5#6\/9@G.T`H1ก'0Td)HM\t^pNUA3l#UOLlkQ7+_@3Tp(V%.cก)M,eK[?RS"(0CDO6gp:t-*Z3.D87'SW$]b28IขpSWima.YSUX[n9fGขD;UpJA0F"+BH-?(',d)^B0bJ\%nZ[q4.g#WOQ[cE+"IA2R9.i;XDt^e9-("3d4ps."@SVZG%qTlCL+*YL*drj95TOf=.%6@;)Ds'gSB3]al1Ps9"Y/6HJUmnHU0Xg#nlก+37E^_$q:@6pft%:jtIVb,^rbpOZZ40XPHVAF"'#กHUA137OY1S0%5*IKs%R*fS%[28,_S#jkNlSMuS#NSP1ZC3X'Z`e3f.q\o%/q.;$U4PE_#kH.l(Ur@,V'J]"NJ_CtpcVnI$EeeHZB+m)JKn)/Q*i\;?P`Ci5L#,qZ@U:T%77&=:O_m-&FkqqTA=qeI.EA[/b&#jFIiกขjrกLR*%9I![WB77ekk+B',s&*//_JG^qgacq\lYHks;u*fXiX_/4Hrข`,P=C;-CeY%rl(t&MJe%[`&BuD!Zกก:[5^3VGs.C"@CkcXTNUoกJbN_DeกTsY\?`GB[CYกID3aO+g=:@ZK7REU&il=SllHAWE-h([%"ข*OT,C%\=Cesข.r?t=?5F4E$VX\ขSZ)XgiUB0\Y@@UPY5NF@Z^_?.Cกil3dF$$2#7`R)UWdABsT@ขj1[.t!FpCU;)N3]X=cf4%5/Qlgdro/m,Q\*59:94tM0Xtj.=peI?8@AG6FOAOข6EMJTKlDsI12*?_/^f!CMV/\IlUi]@JX31s4V\cUCu3k5*jKYK*DE_-rORWamZLrdขqbMM()7MJfUQRsL&Z^5=RF[กoY-*1%kกmIUUjsrNCp7g`EกVHr9iO@lQ1r7+c_2OF\XQeaAoc`h*;+R.'k,@i\YrZMก2cXA6B@i:$Q+7!*5FT?7DZ-กOF/Ob/]=Lclk$4e/]3+P7uAGiCM?AWF=5KM$F"'fKmMก=7LW__QmbX7O9[`Q\\(6oo^Fi["lfHgFMU!S/_m"ขXGgciก[jE'X&4?X+HA*/p?E3k-E))-กltVY*NWO2q_B:R*ขVขS^,P]%2mPXlB#UXY_LkI@n[e-F0%rJZ9EB,IDu2ก`MKUKmCJJiiW+lsgK3'sกDZZ,(0M0!กc:eR4%aOY\_q.(2pM&m8ESEuj$45MEhlm%&Hp6)1/9kkข/+#/!%cN@n_[m*gfu!so@@!rRc@j!/1u@กpg,fMl)A"?&K64O`MGdgamu5p.ripaC:liM]9-"'`qt9OmauAU4]?ข&O31EHU5V%KC=hWSf-\P4b5VHQ9&`\;5QCc~ข
+-->
+</markdown>
