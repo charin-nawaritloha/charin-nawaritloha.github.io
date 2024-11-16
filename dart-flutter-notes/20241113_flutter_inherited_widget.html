@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: InheritedWidget ส่งต่อข้อมูลไปให้ widget ที่อยู่ลึกลงไป</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: InheritedWidget ส่งต่อข้อมูลไปให้ widget ที่อยู่ลึกลงไป</h1>
+<p><img src="images/20241113/20241113_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html">InheritedWidget</a> เป็น widget อีกประเภทที่ออกแบบมาเพื่อให้ widget tree ที่อยู่ใน child ของมัน ไม่ว่าจะลึกแค่ไหน ให้สามารถแชร์ข้อมูลจากตัว InheritedWidget ที่อยู่ด้านบนได้ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a> ที่ส่งผ่านไปในคำสั่ง <code>build(BuildContext context)</code> ของ widget ที่อยู่ใน child</p>
+<p>ตัว InheritedWidget จะตรวจสอบทุกครั้งที่มีการ rebuild ตัวมันเอง หากข้อมูลที่ผูกติดกับตัวมันมีการเปลี่ยนแปลง มันจะทำการ rebuild ตัว widget ที่อยู่ใน child แต่หากข้อมูลไม่เปลี่ยนแปลงมันก็จะไม่ทำอะไร</p>
+<div class="image"><img src="images/20241113/20241113_0100_diagram1.png" class="u-max-full-width" /><div><p>การผูก data A B C ไปยัง InheritedWidget โดย widget ที่อยู่ลึกลงไปสามารถเข้าถึงข้อมูลได้</p>
+</div></div>
+<h2>การสร้าง InheritedWidget</h2>
+<p>InheritedWidget ถูกกำหนดมาเป็น <strong>immutable</strong> ไม่สามารถเปลี่ยนแปลงได้หลังจากที่สร้าง instance ดังนั้นสมาชิกข้อมูลที่จะใช้สำหรับผูกนั้น จะต้องประกาศเป็น <code>final</code> โครงสร้างของ InheritedWidget class มีดังนี้</p>
+<pre><code class="language-dart">abstract class InheritedWidget extends ProxyWidget {
+  const InheritedWidget({ super.key, required super.child });
+
+  @override
+  InheritedElement createElement() =&gt; InheritedElement(this);
+
+  @protected
+  bool updateShouldNotify(covariant InheritedWidget oldWidget);
+}
+</code></pre>
+<p>สิ่งที่จำเป็นในการสร้าง InheritedWidget มีดังนี้</p>
+<ol>
+<li>ข้อมูลที่จะไปผูกไว้กับตัว InheritedWidget</li>
+<li>ใส่วิธีการทดสอบการเปลี่ยนแปลงข้อมูลในข้อ 1 ในคำสั่ง <code>updateShouldNotify()</code></li>
+</ol>
+<p>ตัวอย่างการสร้าง InheritedWidget ที่ผูกข้อมูล <code>int</code> ชื่อ <code>a</code> และ <code>b</code></p>
+<pre><code class="language-dart">class ExampleA extends InheritedWidget {
+  final int a, b; // &quot;a&quot; and &quot;b&quot; can read from any widgets in child
+  
+  const ExampleA({ required this.a, required this.b, required super.child, super.key }); 
+  
+  @override
+  bool updateShouldNotify(covariant ExampleA oldWidget) {    
+    // Flutter framework call every time when rebuild this InheritedWidget
+    // Compares the results of old and new data, returning true if there are changes.
+    return oldWidget.a != a || oldWidget.b != b;
+  }
+}
+
+
+
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;MainApp&gt; createState() =&gt; _MainAppState();
+}
+
+class _MainAppState extends State&lt;MainApp&gt; {
+  int dataA, dataB, dataC;
+  
+  @override
+  Widget build(BuildContext context) {  
+    Widget renderWidgetTree = ...; // widgets to be rendered on the screen
+
+    // attach this.dataA and this.dataB to InheritedWidget
+    return ExampleA(a: dataA, b: dataB, child: renderWidgetTree);
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การอ่านข้อมูลจาก InheritedWidget</h2>
+<p>widget ที่อยู่ใน child ของ InheritedWidget สามารถอ่านข้อมูลที่แชร์มาจาก InheritedWidget ผ่าน BuildContext ด้วยคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html"><code>dependOnInheritedWidgetOfExactType&lt;T extends InheritedWidget&gt;()</code></a> ผลที่ได้กลับมา หากตัว widget อยู่ใน child ของ InheritedWidget ตัวคำสั่งจะคืนค่าตัว InheritedWidget ที่อยู่ใกล้ที่สุดมาให้ แต่หากไม่พบจะคืนค่า <code>null</code></p>
+<pre><code class="language-dart">  Widget build(BuildContext context) {
+    ExampleA? exampleA = context.dependOnInheritedWidgetOfExactType&lt;ExampleA&gt;();
+    int dataA = (exampleA == null ? 0 : exampleA.a);
+
+    return Text(dataA.toString());
+  }
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การประยุกต์ใช้งาน</h2>
+<p>ตัว InheritedWidget ออกมาแบบมาเพื่อช่วยตรวจสอบว่าข้อมูลที่ผูกไว้มีการเปลี่ยนแปลงหรือไม่ ถ้าไม่มีการเปลี่ยนแปลง (จากการถูกเรียกคำสั่ง <code>updateShouldNotify()</code>) มันจะไม่ทำอะไร ตัว widget ที่อยู่ใน child ก็จะไม่มีการเปลี่ยนแปลง แต่หากข้อมูลที่ผูกเอาไว้เปลี่ยน มันจะทำการ rebuild ตัว widget ที่ตัว child อัตโนมัติ</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>สร้าง InheritedWidget แยกการทำงานของแต่ละ widget</h3>
+<p>วิธีนี้เป็นการใช้งานตรงไปตรงมา คือ เขียน class ใหม่สำหรับงานใดงานหนึ่ง เช่น มี 2 widget ที่จะใช้แสดงบนหน้าจอและเปลี่ยนแปลงค่าเมื่อข้อมูลถูกเปลี่่ยน</p>
+<div class="image"><img src="images/20241113/20241113_0200_demo1.png" class="u-max-full-width" /><div><p>ตัวอย่าง widget 2 ตัวที่แชร์ข้อมูลจาก widget หลัก และปุ่มสำหรับเปลี่ยนข้อมูล</p>
+</div></div>
+<ul>
+<li>ข้อมูลที่ต้องเปลี่ยนคือ Text1 Text2 Text3</li>
+<li>ปุ่ม setState1 เปลี่ยนค่าของ Text1 Text2</li>
+<li>ปุ่ม setState2 เปลี่ยนค่า Text3</li>
+<li><code>_Widget1</code> <code>_Widget2</code> เป็น InheritedWidget</li>
+<li><code>_W1</code> <code>_W2</code> เป็น StatefulWidget ที่จะผูกไว้กับ child ของ <code>_Widget1</code> <code>_Widget2</code></li>
+<li>ใน InheritedWidget จะใส่ debugPrint เพื่อแสดงค่าผลลัพธ์การตรวจสอบการเปลี่ยนแปลงของข้อมูลใน <code>updateShouldNotify()</code></li>
+<li>ใน StatefulWidget จะใส่ debugPrint เพื่อแจ้งว่าตัว widget ถูกเรียกคำสั่ง <code>build()</code></li>
+</ul>
+<p>code ในส่วนของ <code>_Widget1</code> และ <code>_Widget2</code></p>
+<pre><code class="language-dart">class _Widget1 extends InheritedWidget {
+  final String text1, text2;
+
+  const _Widget1(
+      {required this.text1, required this.text2, required super.child, super.key});
+
+  @override
+  bool updateShouldNotify(covariant _Widget1 oldWidget) {
+    bool r = oldWidget.text1 != text1 || oldWidget.text2 != text2;
+    debugPrint('_Widget1 $r');
+    return r;
+  }
+}
+
+class _Widget2 extends InheritedWidget {
+  final String text3;
+
+  const _Widget2({required this.text3, required super.child, super.key});
+
+  @override
+  bool updateShouldNotify(covariant _Widget2 oldWidget) {
+    bool r = oldWidget.text3 != text3;
+    debugPrint('_Widget2 $r');
+    return r;
+  }
+}
+</code></pre>
+<p>code ในส่วนของ <code>_W1</code> และ <code>_W2</code> ที่จะดึงข้อมูลจาก <code>_Widget1</code> และ <code>_Widget2</code> มาแสดง</p>
+<pre><code class="language-dart">class _W1 extends StatefulWidget {
+  const _W1({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW1();
+}
+
+class _StateW1 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW1.build()');
+
+    String text1, text2;
+    _Widget1? widget1 = context.dependOnInheritedWidgetOfExactType&lt;_Widget1&gt;();
+    assert(widget1 != null);
+    text1 = widget1!.text1;
+    text2 = widget1!.text2;
+
+    return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+        child: Table(defaultColumnWidth: const IntrinsicColumnWidth(), children: [
+          TableRow(children: [const Text('Lable1:'), Text(text1)]),
+          TableRow(children: [const Text('Label2:'), Text(text2)])
+        ]));
+  }
+}
+
+
+class _W2 extends StatefulWidget {
+  const _W2({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW2();
+}
+
+class _StateW2 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW2.build()');
+
+    String text3;
+    _Widget2? widget2 = context.dependOnInheritedWidgetOfExactType&lt;_Widget2&gt;();
+    assert(widget2 != null);
+    text3 = widget2!.text3;
+
+    return Container(
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+      child: Table(
+	    defaultColumnWidth: const IntrinsicColumnWidth(), 
+		children: [TableRow(children: [const Text('Lable3:'), Text(text3)])]
+	  ));
+  }
+}
+</code></pre>
+<p>code ในส่วนของ MainApp ที่จะรวมทุกอย่างเข้าด้วยกัน</p>
+<ul>
+<li><code>String text1 = 'Text1', text2 = 'Text2', text3 = 'Text3';</code> ตัวแปรที่จะใช้สำหรับแสดงข้อมูลใน <code>_W1</code> และ <code>_W2</code> โดยมี <code>_Widget1</code> และ <code>_Widget2</code> ที่เป็น InheritedWidget สำหรับผูกค่าดังกล่าวเอาไว้</li>
+<li><code>initState()</code> จะทำการประกาศปุ่มสำหรับกด setState1 และ setState2 ในตัวแปร <code>late Widget button1, button2;</code></li>
+<li><code>build()</code> จะเอาทุกส่วนมาประกอบกันเพื่อสร้างผลลัพธ์ที่ต้องการแสดงบนหน้าจอ</li>
+</ul>
+<pre><code class="language-dart">class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateMainApp();
+}
+
+class _StateMainApp extends State {
+  String text1 = 'Text1', text2 = 'Text2', text3 = 'Text3';
+  late Widget button1, button2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    button1 = OutlinedButton(
+        key: const ValueKey('button1'),
+        onPressed: () =&gt; setState(() {
+              debugPrint(DateTime.timestamp().toString());
+              text1 = DateTime.now().millisecond.toString();
+              text2 = DateTime.now().second.toString();
+            }),
+        child: const Text('setState1'));
+
+    button2 = OutlinedButton(
+        key: const ValueKey('button2'),
+        onPressed: () =&gt; setState(() {
+              debugPrint(DateTime.timestamp().toString());
+              text3 = DateTime.now().microsecond.toString();
+            }),
+        child: const Text('setState2'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget widget1, widget2, outputBody;
+
+    widget1 = _Widget1(text1: text1, text2: text2, child: const _W1());
+    widget2 = _Widget2(text3: text3, child: const _W2());
+
+    outputBody = Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [widget1, widget2]),
+        Row(children: [button1, button2]),
+      ],
+    );
+
+    return MaterialApp(home: Scaffold(body: outputBody));
+  }
+}
+</code></pre>
+<p>เมื่อทำการ debug จะพบว่าโปรแกรมแสดงออกมาหน้าจอดังนี้</p>
+<div class="image"><img src="images/20241113/20241113_0300_demo2.png" class="u-max-full-width" /><div><p>เมื่อเริ่ม debug โปรแกรม</p>
+</div></div>
+<p>เมื่อลองกดปุ่ม setState1 จะทำคำสั่งเพื่อให้ <code>text1</code> และ <code>text2</code> มีค่าเปลี่ยนแปลง โดยใช้เลขของเวลาขณะที่กดปุ่ม</p>
+<pre><code class="language-dart">setState(() {
+  debugPrint(DateTime.timestamp().toString());
+  text1 = DateTime.now().millisecond.toString();
+  text2 = DateTime.now().second.toString();
+})
+</code></pre>
+<div class="image"><img src="images/20241113/20241113_0400_demo3.png" class="u-max-full-width" /><div><p>เมื่อกดปุ่ม setState1</p>
+</div></div>
+<p>ผลการทำงานจะเห็นว่าตัว <code>_StateW1</code> นั้นถูกเรียก <code>build()</code> เพียงตัวเดียว เนื่องจากค่าที่ได้จากการเปรียบเทียบใน <code>updateShouldNotify()</code> ของ <code>_Widget1</code> เป็น <code>true</code></p>
+<p>เมื่อลองกดปุ่ม setState2 จะทำคำสั่งเพื่อให้ <code>text3</code> มีค่าเปลี่ยนแปลง โดยใช้เลขของเวลาขณะที่กดปุ่ม</p>
+<pre><code class="language-dart">setState(() {
+  debugPrint(DateTime.timestamp().toString());
+  text3 = DateTime.now().microsecond.toString();
+})
+</code></pre>
+<div class="image"><img src="images/20241113/20241113_0500_demo4.png" class="u-max-full-width" /><div><p>เมื่อกดปุ่ม setState2</p>
+</div></div>
+<p>ผลการทำงานจะเห็นว่าตัว <code>_StateW2</code> นั้นถูกเรียก <code>build()</code> เพียงตัวเดียว เนื่องจากค่าที่ได้จากการเปรียบเทียบใน <code>updateShouldNotify()</code> ของ <code>_Widget2</code> เป็น <code>true</code></p>
+<p>จากผลการทำงานจะเห็นได้ว่า InheritedWidget ช่วยดูแลในส่วนของการ rebuild ตัว widget ไม่ต้องเขียนคำสั่ง <code>setState()</code> กับตัว <code>_W1</code> หรือ <code>_W2</code> โดยตรง แค่ rebuild ตัว InheritedWidget ถ้าข้อมูลที่ถูกผูกไว้เปลี่ยนแปลง ตัว InheritedWidget ก็จะไปทำการสั่งให้ rebuild ตัว widget ที่อยู่ใน child ให้เอง ส่วนตัวไหนที่ไม่เปลี่ยนก็จะไม่ต้อง rebuild ให้เสียเวลา</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>สร้าง InheritedWidget ตัวเดียว ควบคุมการทำงาน widget หลายตัว</h3>
+<p>ในบางครั้งหากงานมันไม่ซับซ้อนมาก และมี StatefulWidget หลายตัวที่ต้องการใช้ InheritedWidget ก็เขียนแบบ InheritedWidget ตัวเดียว ใช้งานกับ StatefulWidget ได้หลายตัวก็สามารถทำได้ ในการออกแบบก็แล้วแต่ความขี้เกียจของคนออกแบบว่าจะเอาแบบเขียนน้อยหรือเขียนมาก แต่แน่ ๆ คือลดการประกาศ class ได้</p>
+<p>code ใหม่จะใส่เลข module เข้าไปเพื่อแยกว่าจะใช้กับตัวไหน <code>_W1</code> หรือ <code>_W2</code> ตัว logic ใน <code>updateShouldNotify()</code> ตามเลข module ส่วนตัว text1 text2 text3 จะกำหนดให้มี default value เพื่อจะได้ผูกเฉพาะตัวแปรที่ใช้งานเท่านั้น</p>
+<pre><code class="language-dart">class _WidgetX extends InheritedWidget {
+  final int module; // 1 for _W1 , 2 for _W2
+  final String text1, text2, text3;
+
+  const _WidgetX(
+      {required this.module,
+      this.text1 = 'no data!!',
+      this.text2 = 'no data!!',
+      this.text3 = 'no data!!',
+      required super.child,
+      super.key});
+
+  @override
+  bool updateShouldNotify(covariant _WidgetX oldWidget) {
+    // compare by module number
+    if (module == 1) {
+      return oldWidget.text1 != text1 || oldWidget.text2 != text2;
+    } else {
+      return oldWidget.text3 != text3;
+    }
+  }
+}
+</code></pre>
+<p>ในส่วนของ <code>_W1</code> และ <code>_W2</code> ก็อ้าง InheritedWidget ชื่อ <code>_WidgetX</code> แทนของเดิม</p>
+<pre><code class="language-dart">class _W1 extends StatefulWidget {
+  const _W1({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW1();
+}
+
+class _StateW1 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW1.build()');
+
+    String text1, text2;
+    _WidgetX? widget1 = context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+    assert(widget1 != null);
+    text1 = widget1!.text1;
+    text2 = widget1.text2;
+
+    return ...; //...same as old code...
+  }
+}
+
+class _W2 extends StatefulWidget {
+  const _W2({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW2();
+}
+
+class _StateW2 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW2.build()');
+
+    String text3;
+    _WidgetX? widget1 = context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+    assert(widget1 != null);
+    text3 = widget1!.text3;
+
+    return ...; //...same as old code...
+  }
+}
+</code></pre>
+<p>code ในตอนที่สร้าง ที่เพิ่ม module เข้าไป</p>
+<pre><code class="language-dart">  @override
+  Widget build(BuildContext context) {
+    Widget widget1, widget2, outputBody;
+
+    widget1 = _WidgetX(module: 1, text1: text1, text2: text2, child: const _W1());
+    widget2 = _WidgetX(module: 2, text3: text3, child: const _W2());
+</code></pre>
+<div class="image"><img src="images/20241113/20241113_0600_demo5.png" class="u-max-full-width" /><div><p>ได้ผลการทำงานเหมือนกัน</p>
+</div></div>
+<h2>สร้างคำสั่ง <code>.of()</code> และ <code>.maybeOf()</code></h2>
+<p>จากตัวอย่างที่ผ่านมา หาก widget ที่อยู่ใน child ต้องการเข้าถึง InheritedWidget ที่ถูกผูกไว้ ต้องใช้คำสั่ง <code>.dependOnInheritedWidgetOfExactType&lt;T&gt;()</code> ดูไม่เป็นมิตรต่อการอ่าน code เท่าไหร่ ถ้าดูคำสั่งใน class ของ Flutter framework ที่ inheritance ตัว InheritedWidget มันจะมีคำสั่งแบบ static ชื่อ <code>.of()</code> ที่ทำงานเหมือนกัน แต่สั้นกว่า เช่น <a target="_blank" href="https://api.flutter.dev/flutter/material/RadioTheme/of.html"><code>RadioTheme.of()</code></a></p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในคำสั่ง <code>.of()</code> จาก <a target="_blank" href="https://api.flutter.dev/flutter/material/RadioTheme/of.html"><code>RadioTheme.of()</code></a> จะมีพฤติกรรมว่าหากไม่พบตัว Theme ที่อยู่ใน BuildContext มันจะคืนค่ากลับมาเป็น <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/radioTheme.html">radioTheme</a> แทน จะเห็นว่าเมื่อมันไม่มีข้อมูลให้ดึงก็จะส่งค่ากลับมาเป็นค่าเริ่มต้นสักอย่างที่ออกแบบไว้</p>
+</div></div>
+<p>ในกรณีที่ตัว widget อาจไม่ได้ผูกติดกับตัว InheritedWidget และต้องการคืนค่าเป็น <code>null</code> ให้เพิ่มคำสั่ง <code>.maybeOf()</code></p>
+<ul>
+<li><code>.of()</code> คืนค่าเป็น InheritedWidget ตัวที่อยู่ใกล้ที่สุดที่พบ</li>
+<li><code>.maybeOf()</code> คืนค่าเป็น InheritedWidget ที่เจอ หรือคืนค่า <code>null</code> หากไม่พบ</li>
+</ul>
+<p>code ของ InheritedWidget ที่เพิ่ม <code>.of()</code> และ <code>.maybeOf()</code></p>
+<pre><code class="language-dart">class _WidgetX extends InheritedWidget {
+  // -- old code --
+  
+  // add 2 static methods
+  static _WidgetX of(BuildContext context) {
+    _WidgetX? result = maybeOf(context);
+    assert(result != null); // in debug mode if (result == null) → throw error
+    return result!;
+  }
+  
+  static _WidgetX? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+  }
+}
+</code></pre>
+<p>ใน widget ที่เรียกข้อมูลที่ผูกไว้กับ InheritedWidget เขียนใหม่ได้ดังนี้</p>
+<pre><code class="language-dart">    String text1, text2;
+    // _WidgetX? widget1 = context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+    _WidgetX widget1 = _WidgetX.of(context);
+    text1 = widget1.text1;
+    text2 = widget1.text2;
+</code></pre>
+<p>แต่สำหรับ InheritedWidget ที่สร้างขึ้นมาจากตัวอย่างข้างบน คำสั่ง <code>.of()</code> หากไม่พบ InheritedWidget ที่ระบุ การทำงานก็จะล้มเหลวจากคำสั่ง <code>assert(result != null);</code> เพื่อป้องกันการใช้งานไปผูกกับ InheritedWidget ผิดตัวเท่านั้น และมีผลเฉพาะตอน debug หากลืม test แล้วไปใช้งานก็อาจจะเกิด Exception ตามมาได้ ดังนั้นหากต้องการจัดการกับในกรณีที่ตัว widget ไม่ได้ไปผูกไว้กับ InheritedWidget ที่ถูกต้องและได้ค่า <code>null</code> กลับมา ควรเรียกคำสั่ง <code>.maybeOf()</code> จะตรงกับจุดประสงค์มากกว่า และทำให้กลับมาอ่าน code ภายหลังเข้าใจมากกว่าด้วย</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>โปรแกรมตัวอย่าง</h2>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateMainApp();
+}
+
+class _StateMainApp extends State {
+  String text1 = 'Text1', text2 = 'Text2', text3 = 'Text3';
+  late Widget button1, button2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    button1 = OutlinedButton(
+        key: const ValueKey('button1'),
+        onPressed: () =&gt; setState(() {
+              debugPrint(DateTime.timestamp().toString());
+              text1 = DateTime.now().millisecond.toString();
+              text2 = DateTime.now().second.toString();
+            }),
+        child: const Text('setState1'));
+
+    button2 = OutlinedButton(
+        key: const ValueKey('button2'),
+        onPressed: () =&gt; setState(() {
+              debugPrint(DateTime.timestamp().toString());
+              text3 = DateTime.now().microsecond.toString();
+            }),
+        child: const Text('setState2'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget widget1, widget2, outputBody;
+
+    widget1 = _WidgetX(module: 1, text1: text1, text2: text2, child: const _W1());
+    widget2 = _WidgetX(module: 2, text3: text3, child: const _W2());
+
+    outputBody = Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [widget1, widget2]),
+        Row(children: [button1, button2]),
+      ]
+    );
+
+    return MaterialApp(home: Scaffold(body: outputBody));
+  }
+}
+
+class _WidgetX extends InheritedWidget {
+  final int module;
+  final String text1, text2, text3;
+
+  const _WidgetX(
+      {required this.module,
+      this.text1 = 'no data!!',
+      this.text2 = 'no data!!',
+      this.text3 = 'no data!!',
+      required super.child,
+      super.key});
+
+  @override
+  bool updateShouldNotify(covariant _WidgetX oldWidget) {
+    if (module == 1) {
+      return oldWidget.text1 != text1 || oldWidget.text2 != text2;
+    } else {
+      return oldWidget.text3 != text3;
+    }
+  }
+
+  static _WidgetX? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+  }
+
+  static _WidgetX of(BuildContext context) {
+    _WidgetX? result = maybeOf(context);
+    assert(result != null);
+    return result!;
+  }
+}
+
+class _W1 extends StatefulWidget {
+  const _W1({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW1();
+}
+
+class _StateW1 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW1.build()');
+
+    String text1, text2;
+    _WidgetX widget1 = _WidgetX.of(context);
+    text1 = widget1.text1;
+    text2 = widget1.text2;
+
+    return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+        child: Table(defaultColumnWidth: IntrinsicColumnWidth(), children: [
+          TableRow(children: [Text('Lable1:'), Text(text1)]),
+          TableRow(children: [Text('Label2:'), Text(text2)])
+        ]));
+  }
+}
+
+class _W2 extends StatefulWidget {
+  const _W2({super.key});
+
+  @override
+  State&lt;StatefulWidget&gt; createState() =&gt; _StateW2();
+}
+
+class _StateW2 extends State {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('_StateW2.build()');
+
+    String text3;
+    _WidgetX widget1 = _WidgetX.of(context);
+    text3 = widget1.text3;
+
+    return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+        child: Table(defaultColumnWidth: IntrinsicColumnWidth(), children: [
+          TableRow(children: [Text('Lable3:'), Text(text3)]),
+        ]));
+  }
+}
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*uD/UCaErKkVr!tA@!,%;A/ifE^_s/X=Or`JBข\op`=F`Y]B6S[@JS/V_R9ขB*NdrMa8(j5)3U.SVL(Hrh'Mo?[iq[0]D\i-p8QW[Abj6lLSU?6@#B=CR?`L0-WiM_omZ5`Pa5`o0=Vq#l=iXZEi:)XQ]R^GISK(Cc+&"&oe&auPnS1+q4$EQ]IN2$/a4&0%l1+`:jRMm;hK8=/HMfY3`N+GLSc$8R4XF[]n)r0AO422\r7IiG(Ddi'cCDGZjt/5ข0/pu$Fbข]3DnRPWnnu&[CdbBKV7%,uRr.l29fpVS7`D]d36:^BH819rBR5%2#i2%Hp*H!-#aL(9a4&/:l/[n%l9BiGFTAU9RH'k&j:V=i?ogก"P#%s=T3)tp"%@ra#ocF_I5G&eiXc]^P&ItZlข,qkpi6A"?GOกGe&_\YRp[ข3j?BqmT6(E_=SH@O8-L,u%-\:!qA]#&ptm(_2k_8YO?"Zd^Mo![F"[3[V5*9c+*b(%`6ak.EO,ขdoh4กn%PO_OJN)bZ8[XjJNKP,%S?b4F)YXPr-@Z)G]VZuPYข:V[eAfmdrb_;gก)a713dX8"Wu+@)m3,0A$[=de[N7``'4C]cq"bmG\#XUr^dXI2,K_^eN^ReP?9f'QClef]QhE7oG/&YgFMขL;1Ici.#+DWjFX!1[Ok+2E:SIY+rfU)#C=8f*$WBk_M#*WrDQ":"+/D`'=bJ8HmXRk/C8KcaZ=!-gc^9iXSD[X?@8I*j,.`F[,:7f6Ze'jJQ8flA"a3,$hakขcq@7/R&UขX%G"Yq(P]G#Q?=ER#UQ:KlO@,C;g5JJlidrc2J)Kn("&+"Iขhi8:+uceLIiOG;j!*^-pu@E8X6(Bpj`F)Cne0flL;=5?V3hC.0N!uL5r'QpG`UJ0kGks$V(!#6J0n6r%@*$%UbK-\FR[Vdnd)plขppJ=[C[qj)E%d!XmrJON05=O;-BTY@Fl?^1fNPlJ=T)5C"4C,0KoD]EFGQml\.W*/-PpaaFXGr@CCeI$_2l1qE.D0\(J=IM[P?nb.KEdHacj9hSก:[/%jD#)?,tBPi7_;UWU4)3(F)^Tta6=i[g!S9HHS`Tขl,/P6)1K*#+c'Gn%-,hC@P#lVT9กgW7eE%gj;ขVgb)SBY4o]"hq:6NoTW$dNTTIH%Ya$O@;HE&WY;,r?;\g'CJ\DIRqD.XY&i9s%/b2^ก"f&Ul&;XBqZGs8$)cX1%P)@WgL6LemQ6]]n8]7;%QV)&'_2ข^@mefWNNdUR2a9_p)^?/o!R+)กK5l8$)t3=JQ65rqsGH*[b!R(:t1DdJh6`T#S.FกJf\30Skg_`7(n%Fd28l3T5Fk.NขQ":)Idk!=op14U81%?'D9\FFrPiHI#*A"6m)+e7"ZUJ)%JtibgI(1OtF*^j=!Xa@Rh?!lGbpYDG0(8ข0mVF`f%Q8rL-VKM'aG']V^Xo[7:X3WXZP!&8_f;;6iFg%C9GqDl),gBFr*:_DcJCKo0PsdB.P]#VU_TCl9fZlZ,&?#VqpF@ND3PkMs(n;*#tn""+b0$eAWขjC4W*;/uaRfbgJt8?-2;"W9d^ocUero+l2/QB_$N!d&#h"m@n[;;Uuf]Dafg@s`3(Rofga5:QZJ$DQV@`eKl\.n*:miAe9*,V/-8(;+i16"o3nXRpdM!oYF_J7#TXm+"*c&g^'FW"UJH"JU]/&p@Ps_OjKncfK4C=^\#(E0eVa;kC;#),กMgdข+bJnl\D`กXWH196ZMm5%XtกLscF'2BQHH-^6ขขnNg"TK68Zj5VYsAGe?GuE=*/E?(il:Q]JZ6jb!bckZZIoPj)e\JF4\rOqC0/"D*cshn(IGdiI;n$u1#oข1e&7UIZ2p8;l--$0Q3X$_Z60in&N#hS;_X=^j5`g$mJ8?r1+ag;(J5ข%TD5H]?n(6GiH_DFM55S^%u/8a^OnOp1Jmpgf(+-^ZitMO@`0:ขpW,o[(".0n6nCS.GaS+JVeขi/-HSF&^!g5=pY.#r'1i($[+*3:=nbYb$993m!ZW!lB?X=QP6?2+35O5OVGaก=BaK7@n=;'bMqC"gj6"U9@V59s1]1=7Kn]62aiH?7E0.\`#E5qNDLpRP2ขHV`\:88/+Z#!kVEKWc8"K+gFVก"Hlกf&%KVขT`]iQeVNdmV`8$3cXWH:^t^V8J`r0kขuGq0KEs[dDVJ$I)Q!-;4T5?RG%uA`%1@D/&*6Ri5.FIAH,5V(&;F[!.D0^IVpa,EBg=?L$Qo!kG^]q'kWWpWTLO$Sr!:Rข`6!h-l;LF!g6Lt?%ขuNN_#(jbก_tqe@53r]L.VB6.`o(g?mtr8RsSo8?6P'"0X9BqEAY(o'!j:OIGPข\[\n4ข!KeIl^d?dTUY-XcJ:%UjFa/IVj,c4s82eXN9`\lBWROaU^;,hn#E#@_V,()ZV+ogJ^qneL)BYกL/q6WGUtgeขX:\"LNf;,2W!QNhCJLCiYkhPpQ@/skSZNC8("gO^1m]ขjXK94P55a/$Zu&Adb&IHBq$JTg93??%;Q,S@2WrD"Nflc0pV*G,\^D-UrLU_T@QCYhMcMOT)PN3@b2lHRjZ5C.K)nmiขQUsI9EU!Y5JHZ57Q^cg;b#:^_-lO?;W2pgC^Z@r@A',`mQ?R:_ti*?81EsML2/MeY0fGk(/QssQG'K:fMW6`!กLRj%C&0ข"I?F`S43ZN;'scm;g@gn?jcSV&9/XjRde@1SfNg!H!;ข4p(4g;,9s:arR.;ERCL0.fl2cbSdLf\nt:#XกYa*b#UIInrLkAI5UZTo1I#!!J[Zo9qQ"FhqoR(ขbqpP1A%Y#Rj#\lRqjrGhS[ZjC^HPRXS8k*?`qbmY@pqYDq):a7fM'aHmZh\?La@"p-6X[o@)e0[PA-ARjcp`กeX'XEe:adm2I&cfr;L0E!iah!SJk,=gouuP%U&BTAuq;/bicDQj9oVi"_JKNjpOh-FW$JLH&f5Jj/nlGnL4E0Q$S^ขG)!$/o$KB\qI\YX=:mq-c@h$!C`&sN:df$G7@2HI:W0$[:U?-nFBjF4XWWY;5oQY((L8A;nlCL_7\_E%@_gVrZก?@EGSlD"ic5ru8')QE=KH_cedl2'*Y"?P?A%3O),@d,\ni&-k'ilXns&UM+c+%&rfMS8kq4i^oEDIqZ)/.7Wt??KH6[lKXWcG$CT%6jJl!#nQ@en0Xก;tKK(s7c62YI$l0+SpF3X2MU`"WกB)""'kQp/AWUP+D$i_0%IQnl`7J8U\?X3AV[Q^kr/1uขขJKg_o"M^_TCo=Ph=9AU=ETM03bghL;9N^W*1S2r:&l/()2(akS"ad5\^/)YBSn^pG.U%G^Aขq#Z(VK7jM[k6a=ZY/5@_lQ:BN9C`?1[!tข\a#UbL8%Fe3/.Y'p36V8;&I:r^DJ`G'PN#94,E;Tc@HWPXG[2'0YDED]D=NeU]D'[\nhLI)'LPG`RJ&gขno59[&PO2FW`T.o#`T5M(Niก.kH"52ekmEi+^Ch1&6k+lXu6_k^b77`L':@WR7f1/OI"TZDrMD/\mnขT.j^CjjZr#:F5MU(aRSWE_I8NWIs0UC\jeb?#\+#N^TBiN-%dMEVsqEKoDN'"h']RBQ)q2mEก%`+/]UGfsก#op/Qq+AG&GE1Z*oM^[Vq3.$f$q4Fr"IM*@iC,EdZZ43?@_.^`%=??NJJ"3"&@ZoU=)QcjNa&.j%BbDoGS[EmXp8j/+%[Tjp2M=CM2,+#G-fhK2%f+k!nTU(kVo:!48Znk-i(UD=bWg#d?_rV-ENq5N/u@NmQjaj-#Y5"BWN/H2oZ;%:`04:sE(YF`,16[]dAe4fWp_A\+ULN:LjCO;)FhZ,Ce"5ck[/=rg+iกN)?lVAข@`'P`1t_XK$77j)RpVS2\M:IeOขh,GHJL`ZD)&4Ps(M9eKP"2NA?KX;Ke&uZ?H1q'biWcJs[D,olPl!kfP"b%b!E0qJ!Iiกข]?C?6gW:7*YCa'i4t:Cd6ก*k_KK7R'/t@YkT7&/!I\%BS65CHngMo)alD3msBd!1SS.QYBe;3L43ขOH`jHEHY)EKk+Gh'gLXOX4ck0กo`?/tM9Ir%P@DNq)L(Q/I`WW*G$!?m\c]+UF,m4!SeFg;2$^(QPEs=[f?DLSFNh!pCc?#ui"CX!Bj:1ps-h7po;9ZRjFfVhP4,VX:i_VL/nF\*N*80IXEodu53Sข=`V[:M[+"b&BXrP&BPP,^E3nr-%VojJ8Wt9ODA%Au4BA-GmS+$O@@&716/(ขrb2g="13J%(WhWs_VkQกFp]]C]Og6j27egcUo&#tO7em#`1rA#bj;LขZ.QX2c_302cBh'/GVTJ0jd`.ก1JaC0Cl6Jaกj:5\g=/H542Tg^*",EtJC^*]a.5a"Q_3,In38EVgdWHCZGmbA!f]']$[3]&;4AU7S7S:m7$aWY=)7NjhF977?EDm?0WREC4kก;\Y:pm"pข`_%X8'\jpข,1#;8VCP*CZi[$.es4ELก.YgJ5Hg!PfCq239!7mR\eกc4ao6VLi%WWkKH=$P0cO8SkSY3G?g5Za-e*D*%`TAn25"=g-O@Bd"X,EA^Y0=,1!$RKข3El+eG!-dVk^;1'U(!`_Og5=lOQ-aJNJ\RtjT"a@%68$RHOF$3T\RY*/[h_ajขa0lH`Z,J/C&%&nn&GlcC*mIQ0[Woj@#`AB;oa:isp+\Vข"[kbQ&Gdg`TAVtR[`\SY'((")H(520\cmT@D1$0oi1,na..li3Ug'0ot6s.JP`Tc)sq^p#oSDK&+B\(o5ONjXk^ก;VC5_91Fe1]h\U42`0T)Ag]A@iZA-@pKE,S=bRpfUneTR71pO8,F!'$T4`+mMข6Uibbt3-V2b]ก9[I5stGMk6P,80[4!0]8:q/gTO9_BpRp6ขV!u3TcFJ26"Z/hgb_SGp\;t#-+e[lX$ESYJ2:2WIlsilM//-1M09gIkU@J#hr9fdN(8;dZ!?Tกo%ก9YกOAJCJC[;\\arn2&WUopUI?\YA(s&BEKZ7hC:[bPXj?:;0[ก#9e@0b\.U?Gr2ZocJ8JlT60Wr)l'#qขgObD]=_-eXZข-1gHN%bTZ3/pDYW`H1^b-QDd?r3;"nE6ข7N]HE+JjIYLF`#,_jF2*j+`r-:q2*%'90F*9NkCieMegQ)G7iกW;qSmID=WC+`a4B,l_s5D3KQKL":ข.6=^`8nCYnXขWn/=0qoa.Nhb&YกSIpcMCD:UXnRk51LUFก[Ytcf"#กASmU`VF_k6-Yu??4g%;0@,b'FE.@QO]Uข06Id&SYtกs7:l,DRfR1-Y[fq.$.ffk1QP`aVJD'Aah71WqKX@?R0,dhVjur^Sq2;f=`=[9FC=IpLiWF23,ZWr=L3JuUZP!AO9e-n/\%%e.B4oFl=lt["`KXqNILN\HLKHO(o:กcnHdTMB:lgVZ#-hUXP-F)lsM-กk(S]arF0S*XnC18crpBZ3r(FXW=@\LK'bH6mZjขijAQJh=6cN"1tI`gq`Ld%`)OWGY@hก8F794QIhEG]ข?2P!ขVY[]กC,1_6ขiP^Pb$*).iMuV'P7M.PIE9s)SNjt+a5QL*SP/3AEU!ngrh"FR2Qo=;ขก;5aZA[`T'lhJ5[#Zg5VBf)aaNUE\TRM%Y]#i'B_XTX[l(t@-OPVKWhqCCOIdb_YHk3d6d$i:E%KiW[A$Vk]&kA/Fdp0MC2d/*3Fu0ekL+@N33uoMWm1)=:'bpJgZ\!,iG#$mB,B6ก%-/=[0LS*31e+uW:W&]M@W,dZ5HK#1V7TGTd6Oag;pLกdIP`Q%gh9#JPd$*u&YYE(!k^6g$N8:hruDj?=aCJ7/5%eD\Y`ran@T)h6t72Q"BC_^@4f2Z]\ic#CbO!p))^#+CQ9ds7_q?n'm*AX)csb/&e%aYe*Zkn#?O7;lk"a3KHWZOLg;OJ(/ppก1Kl\PPt,WIN:eE&5I;pob2)^%9(b\rnZ;4kgpX&:6AfnMRSG3.1iC\VdcV%\A\R&CIMS(7oUก.Pk\\X8INRlk&\n@Km.dr-kข]!"P9P*[ก4?-QJ?ZRs`54MขoLsXกO]qEUE@62Zp:.oK=Cg*VM7Eก-gข/H)+-Qle([Y%^dANH9]Km#;.-Nebกl?&ขqtก#2Z4P%hrrB'tq]=O.R)^kbh2thVJ^k,-e6#M:+r;TIข#64uV9kd4B/Rtrl99`E+m,re8Nl!,K\.;+jNaR2]k5ก@DM0Fc/N;X[ข(3@i:Qd57O8'2$^J@Z.@dX7kNfMXW&faYck4t9E*6k-HUQ%)\d*bB;paWe)];E3t,/oiJVh)d%P.\mmCU,Z?MsL3&%0QJ(H"F?9^/&HmT@3^&VขW&0VขY$-%_qs1pUO2VhaTO$W@"rUa8bขYJq(PaIe'''TC58G3tB6e$)19#:2"tEId_aJhYl3H"ghEYf=)il_S$1mGiQW^mQ,TbMGPZ8TtV(^$ph"8;o*2)กUaXfก6#^Wbq`Gfom6WGZta$(9P+8)~ข
+-->
+</markdown>
