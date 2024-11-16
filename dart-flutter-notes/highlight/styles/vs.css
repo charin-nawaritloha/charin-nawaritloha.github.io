@@ -33,7 +33,10 @@ code.hljs {
 	color: darkcyan
 }
 
-.hljs-addition,
+.hljs-addition {
+	color: rgb(19, 137, 253);
+}
+
 .hljs-attribute,
 .hljs-literal,
 .hljs-section,
