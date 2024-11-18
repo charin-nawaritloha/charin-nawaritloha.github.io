@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: BuildContext ตัว interface สำหรับติดต่อกับ Element</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: BuildContext ตัว interface สำหรับติดต่อกับ Element</h1>
+<p><img src="images/20241117/20241117_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext class</a> ถูกออกแบบมาให้ใช้สำหรับเป็นตัวกลางเพื่อติดต่อกับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Element-class.html">Element class</a> ที่เก็บข้อมูลของ widget ที่ถูกสร้างอยู่ใน widget tree โดยปกติแล้ว developer มักไม่ได้ไปยุ่งกับการสร้าง Element โดยตรง เนื่องจากเป็นส่วนที่ตัว Flutter framework เป็นตัวจัดการ ซึ่งวิธีในการจัดการเราจะไม่ได้พูดถึงเนื่องจากทางคนออกแบบ framework ไม่ได้ต้องการให้มายุ่งในส่วนนี้ หากลองดูโครงสร้างของ Widget จะเห็นว่ามีคำสั่ง <code>createElement()</code> งานสร้่างแอปทั่วไปก็จะไม่เคย override เอามาใช้งานกันเลย</p>
+<pre><code class="language-dart">abstract class StatelessWidget extends Widget {
+  /// Initializes [key] for subclasses.
+  const StatelessWidget({ super.key });
+
+  /// Creates a [StatelessElement] to manage this widget's location in the tree.
+  ///
+  /// It is uncommon for subclasses to override this method.
+  @override
+  StatelessElement createElement() =&gt; StatelessElement(this);
+}
+</code></pre>
+<p>เมื่อลองมาดู StatelessElement จะพบว่ามัน inherite มาดังนี้ <br> StatelessElement &lt; ComponentElement &lt; <strong>Element</strong> &lt; DiagnosticableTree &lt; Object <br>จะเห็นว่ามันมาจาก Element และตัว Element เองก็ implements ตัว BuildContext</p>
+<pre><code class="language-dart">abstract class Element extends DiagnosticableTree implements BuildContext {
+  /// Creates an element that uses the given widget as its configuration.
+  ///
+  /// Typically called by an override of [Widget.createElement].
+  Element(Widget widget): _widget = widget {
+    if (kFlutterMemoryAllocationsEnabled) {
+      FlutterMemoryAllocations.instance.dispatchObjectCreated(
+        library: _flutterWidgetsLibrary,
+        className: '$Element',
+        object: this,
+      );
+    }
+  }
+  
+  /// The configuration for this element.
+  ///
+  /// Avoid overriding this field on [Element] subtypes to provide a more
+  /// specific widget type (i.e. [StatelessElement] and [StatelessWidget]).
+  /// Instead, cast at any call sites where the more specific type is required.
+  /// This avoids significant cast overhead on the getter which is accessed
+  /// throughout the framework internals during the build phase - and for which
+  /// the more specific type information is not used.
+  @override
+  Widget get widget =&gt; _widget!;
+  Widget? _widget;  
+}
+</code></pre>
+<p>หน้าที่หลักของ BuildContext คือ ใช้สำหรับจัดการเรื่องโครงสร้างของ widget ที่อยู่ใน widget tree โดย instances ของตัว BuildContext ทั้งที่ได้จากการคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/StatelessWidget/build.html"><code>.build(BuildContext context)</code></a> หรือจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/context.html"><code>State.context</code></a> จะมีการเปลี่ยนแปลงทุกครั้งที่มีการ rebuild ตัว widget tree และก่อนใช้งานทุกครั้งควรตรวจสอบว่ามันถูก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/mounted.html"><code>.mounted</code></a> อยู่หรือไม่ เพื่อหลีกเลี่ยงการเกิด Exception error</p>
+<h2>การใช้งาน BuildContext ในคำสั่ง <code>build(BuildContext context)</code></h2>
+<p>ในคำสั่ง <code>build(BuildContext context)</code> ใน StatelessWidget หรือ State จะเป็น BuildContext ของ widget tree ที่จะนำผลที่ได้จาก build ไปใส่ ดังนั้นหากต้องการดึงข้อมูลที่สนใจจาก widget tree สามารถใช้งาน context ที่ส่งมาได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>คำสั่ง <code>BuildContext.widget</code></h3>
+<p>ในตัวอย่าง จะลองพิมพ์ค่าที่ได้จากตัว <code>context.widget</code> ออกมาว่ามันคือ widget ตัวไหน ผลที่ได้คือตัว MainApp</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'dart:developer';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    log(context.widget.toStringDeep()); // output → [log] MainApp
+
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World!'),
+        ),
+      ),
+    );
+  }
+}
+
+</code></pre>
+<p>หากลองใส่คำสั่งนี้ในตัว Text ที่แสดงผล โดยสร้าง MyText ขึ้นมาแล้วแทนคำสั่ง Text เดิมด้วย  <code>child: MyText('Hello World!')</code> จะได้ผลดังนี้</p>
+<pre><code class="language-dart">class MyText extends StatefulWidget {
+  final String text;
+
+  const MyText(this.text, {super.key});
+
+  @override
+  State&lt;MyText&gt; createState() =&gt; _MyTextState();
+}
+
+class _MyTextState extends State&lt;MyText&gt; {
+  @override
+  Widget build(BuildContext context) {
+    log(context.widget.toStringDeep()); // output → [log] MyText
+    log(context.mounted.toString()); // output → [log] true
+
+    MyText myText = context.widget as MyText;
+    log(myText.text); // output → [log] Hello World!
+
+    return Text(widget.text);
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>คำสั่ง BuildContext.size แสดงขนาดของตัว widget</h3>
+<p>ค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/size.html">BuildContext.size</a> คือขนาดของ widget ที่ถูกแสดงบนจอ ลองเปลี่ยนตัว MyText เมื่อมีการแตะหรือคลิก จะแสดงขนาดใน log ดู</p>
+<pre><code class="language-dart">class _MyTextState extends State&lt;MyText&gt; {
+  @override
+  Widget build(BuildContext context) {
+    void logSize() {
+      log(&quot;MyText size = ${context.size}&quot;);
+    }  
+	
+    return GestureDetector(
+      onTap: logSize,
+      child: Text(widget.text),
+    );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241117/20241117_0100_context_size.png" class="u-max-full-width" /><div><p>แสดง log เมื่อคลิกที่ตัวข้อความ</p>
+</div></div>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/size.html">BuildContext.size</a> จะสามารถเข้าถึงได้หลังจากที่ตัว widget ถูกสร้างและนำเข้าไปใส่ไว้ใน widget tree แล้วเท่านั้น ไม่สามารถเรียกคำสั่งนี้ได้ใน <code>build(BuildContext context)</code> หากเรียกใช้งานในขณะที่ยัง build ไม่เสร็จ จะเกิด Exception error ขึ้น</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>คำสั่ง BuildContext.mounted ตรวจสอบว่า widget ถูกใส่ไว้ใน widget tree หรือไม่</h3>
+<p>ในการสั่ง setStatus ตัว widget หากคำสั่งนี้มาจากตัว widget เองที่จะเกิดขึ้นเมื่อ widget อยู่บนหน้าจอแน่ ๆ ก็คงไม่มีปัญหาอะไร แต่หากเรียกคำสั่งนี้จากจุดที่อยู่นอก widget เช่น callback หรือเหตุการณ์แบบ asynchronous</p>
+<p>การตรวจสอบว่าตัว widget ยังอยู่ใน widget tree หรือไม่ ให้ตรวจสอบจากคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/mounted.html"><code>.mounted</code></a> ต้องมีค่าเป็น <code>true</code> มิฉะนั้นจะเกิด Exception error ขึ้นได้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>ค้นหา InheritedWidget</h3>
+<p>widget ที่เป็น child ของ InheritedWidget สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html"><code>.dependOnInheritedWidgetOfExactType&lt;T&gt;()</code></a> เพื่ออ้างถึง InheritedWidget ดังกล่าวได้ สามารถอ่านวิธีใช้ได้ที่<a target="_blank" href="20241113_flutter_inherited_widget.html">บทความ</a></p>
+<h3>ค้นหา widget ที่อยู่ด้านบน ที่มี type เป็น T</h3>
+<p>ในกรณีที่ต้องการตรวจสอบว่าตัว widget นั้นอยู่ใน child ของ widget ที่มี type เป็น T หรือไม่ สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/findAncestorWidgetOfExactType.html"><code>.findAncestorWidgetOfExactType&lt;T&gt;()</code></a> ตัวคำสั่งจะทำการค้นหาทุก Element ที่อยู่ภายใน widget tree จนกว่าจะเจอตัว type เป็น T ตามที่ระบุ และหากค้นจนครบแล้วไม่เจอจะคืนค่ากลับมาเป็น <code>null</code></p>
+<p>ตัวอย่าง เมื่อแตะหรือคลิกที่ตัวข้อความ <code>Hello World!</code> จะทำการเรียก <code>findScaffold()</code> และแสดงข้อความ log ออกมา</p>
+<pre><code class="language-dart">class _MyTextState extends State&lt;MyText&gt; {
+  @override
+  Widget build(BuildContext context) {
+    void findScaffold() {
+      Scaffold? scaffold = context.findAncestorWidgetOfExactType&lt;Scaffold&gt;();
+      if (scaffold != null) {
+        log('Scaffold is ancestor of this widget');
+        log(scaffold.body!.toStringDeep()); // output → [log] Center(alignment: Alignment.center)
+      }
+    }
+
+    return GestureDetector(
+      onTap: findScaffold,
+      child: Text(widget.text),
+    );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241117/20241117_0200_findAncestorWidgetOfExactType.png" class="u-max-full-width" /><div><p>widget tree ที่ใช้ทดสอบ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การค้นหา State ใน widget tree ที่ใกล้ที่สุด</h3>
+<p>ตัว StatefulWidget จะมี State ที่เก็บสถานะของ widget หากต้องค้นหาตัว State สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/findAncestorStateOfType.html"><code>.findAncestorStateOfType&lt;T&gt;()</code></a> โดยค่าที่ได้จะเป็น State ตัวที่อยู่ใกล้ที่สุด หากไม่พบจะคืนค่า <code>null</code> โดยมีข้อควรระวังในการใช้งานดังนี้</p>
+<ol>
+<li>ไม่ควรใช้ในคำสั่ง <code>build()</code> เพราะอาจมีผลทำให้ตัว widget ไม่ถูก rebuilt หากค่า State ที่ได้ถูกทำให้เปลี่ยนแปลง</li>
+<li>ไม่ใช่พร่ำเพรื่อ ควรใช้เมื่อมีความจำเป็น เช่น สั่ง Scroll view เพื่อเลื่อนตำแหน่งหน้าจอ หรือเปลี่ยนตำแหน่ง focus ของ widget เพื่อตอบสนองผู้ใช้งาน</li>
+<li>วิธีนี้จะทำให้ดูแลรักษา code ยาก ควรใช้วิธีเปลี่ยน State จาก callback</li>
+</ol>
+<p>ตัวอย่าง จะเป็นการให้ตัว MainApp แสดงข้อความที่เป็นวันที่และเวลาปัจจุบันบนหน้าจอ เมื่อแตะหรือคลิกจะทำการค้นหา <code>_MainAppState</code> จากนั้นจะเรียกคำสั่ง <code>void callFromOutside()</code> เพื่อให้ _MainAppState ทำการ rebuild หน้าจอใหม่</p>
+<div class="image"><img src="images/20241117/20241117_0300_findAncestorStateOfType.png" class="u-max-full-width" /><div><p>คลิกที่ข้อความเพื่อแสดงวันที่และเวลาปัจจุบัน</p>
+</div></div>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+import 'dart:developer';
+
+void main() {
+  runApp(const MainApp());
+}
+
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State&lt;MainApp&gt; createState() =&gt; _MainAppState();
+}
+
+class _MainAppState extends State&lt;MainApp&gt; {
+  void callFromOutside() {
+    // ❌ this is not good practice to rebuild widget from outside
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var now = DateTime.now().toString();
+
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: MyText(now),
+        ),
+      ),
+    );
+  }
+}
+
+class MyText extends StatelessWidget {
+  final String text;
+
+  const MyText(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void rebuiltMainAppState() {
+      _MainAppState? mainAppState = context.findAncestorStateOfType&lt;_MainAppState&gt;();
+      assert(mainAppState != null);
+      log('try to call method in _MainAppState');
+      mainAppState!.callFromOutside();
+    }
+
+    return GestureDetector(
+      onTap: rebuiltMainAppState,
+      child: Text(text),
+    );
+  }
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>คำสั่ง <code>.findAncestorStateOfType&lt;T&gt;()</code> เป็นคำสั่งใช้การประมวลผลมาก เพราะแอปในชีวิตจริงมีโครงสร้างที่ซับซ้อน และมี widget จำนวนมาก ดังนั้นควรใช้งานเมื่อจำเป็นจริง ๆ <br>ในกรณีที่ต้องการเข้าถึง widget ใด ๆ จากภายนอก แนะนำว่าให้ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GlobalKey-class.html"><code>GlobalKey()</code></a> ผูกกับ widget ที่ต้องการ เพื่อสามารถเข้าถึงได้ทันทีไม่ต้องค้นหา</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การค้นหา State ใน widget tree ที่ี่ไกลที่สุด</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/findRootAncestorStateOfType.html"><code>.findRootAncestorStateOfType&lt;T&gt;()</code></a> หลักการทำงานจะทำงานเหมือน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/findAncestorStateOfType.html"><code>.findAncestorStateOfType&lt;T&gt;()</code></a> คือหาตัว State ตาม type ที่ระบุ แต่จะหาตัวที่อยู่ไกลที่สุดแทน</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>widget ที่เอา BuildContext ไปใช้งาน</h2>
+<p>ในการใช้งาน widget หลายตัว มักมีการเอา BuildContext ไปใช้เพื่อดึง widget นั้นออกมา ตัวอย่างเช่น</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/Theme/of.html"><code>Theme.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery/of.html"><code>MediaQuery.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Navigator/of.html"><code>Navigator.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/DrawerController/of.html"><code>DrawerController.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/Material/of.html"><code>Material.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialLocalizations/of.html"><code>MaterialLocalizations.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/Scaffold/of.html"><code>Scaffold.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/DefaultTextStyle/of.html"><code>DefaultTextStyle.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Form/of.html"><code>Form.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Overlay/of.html"><code>Overlay.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/PageStorage/of.html"><code>PageStorage.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/PrimaryScrollController/of.html"><code>ScrollController.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Scrollable/of.html"><code>Scrollable.of(context)</code></a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/View/of.html"><code>View.of(context)</code></a></li>
+</ul>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-tT?Z4`ข&V$q`Itpl6ก$rp$PFXnZZ!Gt)d\(U8ejAsN#X4-TGK6.B?:gaLMdaE,Kh-C8QUZuc3=T^0JP[3cCcP(dDaWTL'K`q5gg-'jT55a#Oa&-qG'กlPDeข;R_h\468Q[eW^DhEHlXC\Vlt-ก%qCkR7BB_$n6,KA)j"e^(]e"SoV,+Fข#9RjBขกcZ_#/ก-&cdMbCขnN.UZHmhJ85;jKR$aD6?`;5nbficP?h;9*Y4'=!6EQ_&rHPcuE;EnS/NBcขfMY(C2jV-XLF$q-+8[+ขX`ou#57Lcl9pQj[o_Xf4_\H^%.ncLFks9K;O0a:[+"n])MrK$mmpt\Clu4OL2jFN-k4bB4\qVkcQ_j_YeQ/l'?4()q(!9t9iZ;[qO*h-qrsCNkQ)/\E&c9)P6fdbir`fOk9H0กkB906^O2LY[f=1Q#:A\@`DUQlW@LTQ[]=ข@f/epPeQ[=PZi$กKข`Kll5p/qOข`H1*XQ!\TaX*cajpaQp/cI*Dp=]8eHMZZq/_&/T$cGDqrD%0;IS!ju@Z?.+BXdBIN_\[Ld=p]fIข1u-H,H&SJ_rq;(BR_$U2AE'NV-dj!:UH3h["*WMq0P)!XiMQ?'C=ZMHBp`F&JV^V6QGY+T0aH$`EN)+KG%AV*S^"AV%onS8Ck,E0h=JPขXmข4ขb!Fq9jI==5SlI(57nSgd&?@VD``3a1-@ขBccB(ข8F@T&63Xt\f)[Yu,ขri=A=a0pT]nqi8XM?"g2n!inpt=N9IEE5Tih$9%Nc:ข?*[/_;O15Ki0;t-0!Qhqข"fdS5&k\;"VN\n0^DG\oD:)pjoKCpfke*e.%,#ij!8YM)%tk2iZu`\E@aPoDC-oJ`?^RM-RJg3NกXbMG_tVYhWHGEq&=.[!:;IlGd*!7=Bt#B\mZ-t2TaZ)L^/ขDeShZ8gn$^I\IgYOU?#d&?s\hTEa4,?KUri:*กo*eMe,;DMSTg/-h5%R]E"*I_\c7;'G[q\GVKU.2sg4S^uCSWกmjCi4dL3-()$Ep4lJVAVSH(eS39quVoC1V7Gd/ขkA*LD4OLf3RAV`WDPY7NU`j\agbOkNWtr@@b9ATJTM]up7*-N7=H&-m_6กgu$sX3fr@hVF@ba+l;Z8e(;V\eC3Lq:O'@1e:I5],U1#B[VpfHT)35JH%K4ZMlPS$7jWkqc.jl%nCF=.S+LMPi@qVk)J@01inY-r6m8TnCF.#kfh$ขpUF1]SlE-!_mL!ErEg6-!2=!Gu"8$sjQf?YFeW6%m6m)sH(]n%"JI%tXal/Qa!5lH1Zq2TuQtWขdb)J:u"nUlUCYVe=u"jPVSoJh$ijg/,C)\!ehK(Il:M5.OOก3T,L&:".8cกH$I%+ASHBAbD?*pRT7i$;1riC"6lZJFข'Z:,JJplOm;*:?,-grHIil;+[B@4Z3[Hn&TWGC!T/:@2Af@hก+.Es52u=n;i`JQ^NFqha]&\R^4kk@4ChP,^;!+LmQj;o32b1$:$34!0Rcf,(0$XE/CX;JR00J+r0j?la8lWTpK2[6-ZI:HกGW:JsLRa#\[YXT#]SF@8?,oE1Jrh-NPS+`WEEcD/m,0,)4+X=ifdG8\Grbp:#ShYuX"(NขI5bกuXNnFTVQN_daU_ce%&c%PAV.RNX4bmWrc;;fc31`A)-?Z(r=mK2+?F,ku]"a!4Ck*']2/+;3[EYfOKbqHYI\n/a3PCB]RX"NqSo[)8gij*_ข%Le_"aWhh6,m_Eข=oS:OEq&AM]jr&%n(o)A4k1F++E.Lขi:GG$VS5`%q8l/Q6ขYk*&'V;L]?lGV_)3@b7dk?KGJc(g(caslnbJGY=/.lP^iI(m]'^AWdZ@I_mRs!5)c-3E1s68[hk9-(/1m"`[7@m*Xo$u+41ขg#)FZJ-bF#E#ก22Bh8"n'iขpDE9aW*gPRB8(41WMTChW\a`LRO1=VQuJ*k,Gl+(-FlGmh^lZmกO8hP:ขV\_7ALQC8ขcSlW"b5lYnmn%KXJf2UTX0B*3Q*:)69o'K"=cLCS+3RbD]%0q3n:E'p/L6jdRmgA$B?ก'Lj'j^&9jVR=ueCbPGdr;8i7)/6ZGoj,B39(,36N+7W1R9Or0W40B;EK_=Cq-Z"&Aqข1q]=m=`t?H]^/Zabee0efIYYY?_8.SJmuOIp%pZc`K/[66;0opc2,'mk5;_hih@U.A@H?pn(.a!+กBb7mG92O#X`(MR0ZcidXh.N_/jVQกOH$AIi]6\Bd'0+PbV1W`]g6r`aVVJFGKkLกB27Altf8F6u,-_H04D,@A,กJmNh^_Olt0(f#ZV"T-50M5`Qn$kกH%\"cRml:]44NFYs\#.H@:bVCsZ`5K2Kde,'XIeGU2$l.8!M?59E^i''D&Qข#rkกpOo"K_E[]A3+dnV*,94aSBfdqa_,92o?YTJ%'VDd^2GV.majq;1F/2S7V%[-f6JY0^P#L*'RB-EV7+;;"j&-[qa+Z%CmiRr+inaA?eBt$H:a3ffRCH)\ก)$a0qD#h'2q5mee@lKV*eF/goL[\F`q5qcกBam2ff5r=#o5,2Hb"mqL'CtsnO/W!)nd&bp0+j'chZaSLVPi%mbTbf,iLGd55ขbAl/t:JfnG6"-N"s6UB\X`ขgQ82YD1JJtQC,].กths(M\md'`D3?hIupNVpbj\04n*U3CjU`nKกQ3NAgHb@RY"q'-QI:.n6J#rFE*กO`40lo)M.WN/`O?d,4CnZUd$Y\กqL;.'!?h-(MOG*+กm'RP%_YPdA06Xinmlm)ก-L`GiMI]T6M0k?SR+L/s]#&qIm9-J\4Yก'c$V)Z-C5Dk7Zo+J%:J,-]0qg]Ir=[N[si=QnM8u-ข):*'jss%6Oขt%MYkCk[W(FkVFYuW.DsO.r\Mb==tc@J3*^9fccf'j'rh2J&HoXeKjY)To#$L'22;A0I_uYJgS#^4Y'HYGRT=gp7erขa!Lh#2GitBnC%h7)Wr0\3fO#L3q%8OK6,YC\KXj[AmhoOfkO`D$5.*!+gPBafL#%@SMTNtc?(sZ7[\@dg'K[?S&/:N=LG91ER8Ymte"$F52e:)5T+uA,*Fe4tlZT4t5SX:#L54I#;6EaChTAbVK\uWr-H*or]4uC=9*F?gG_`UK;.'mR[15k*;KpKA[OG"Rg=]KH%(SขAKi.'MR\6%C9#P[-9ขกr14OX/"b?3(Pก:`J5P074YJLV9r"%8(JqM'jKXTh7ma@.\qPh*u4ขs4n.)iqpCbV8;jiaPVI_eR`u1[FEs)L6ขYbRQMH)IUe]n!k+UU#2SL:fYms(3$&)'Zp:i5TR"-Ej@&r3TMnMq0-$#5!cIpOJ-!H%E_@]PUr%5f!.KG;-lDLS]_a87M!ENXL^#FmL;gYf^n%ก9f4eWc1=*KqfLh+i-(kL#R@WU,P*iaf4,/6hki@i]&m'k=]$3idTP2&D!DI/Jb1DmF]?ขKp"Dm!_n)^YDZ,ZnpF1EgWl%r$TJZDpaqsQPm&%0S;rF[+Dfk\lhpcBnf(dW-M_ZHb=J#c!X+ก_'CA[Qra%b]NIJ1M4\_9$n;aUj]P:-=]27S(:%P@FqP1?R;8aK=?ก2Pad09ZX=XS+=5pqd,C(Es=4UTH^8J]$`?e%[nclIข^\BY$rud?^m*MhP.[IUl#U:+o`)&lfX@Lb!ccL1SS3_&YlE[rMp8Pa';0$jO9j']O[\SAd?dnQlqo`jOs;(UPgaIR=`;YLek+;V#ก9`1"Yn@@`M#$_rJce1tSa4mtk,ขK=M?iKUVr]MAก)3`H,Q*SEcEQขขG&a]hKPK7%TKBr\WF1bb$3`D,UuCmgYf7oem)2gIl,hPOขMขTqb#:9EcS3ขhP*/0%ZT6`l=*W*J^9dfa@L\[X-E=PขU:!Aq@/W6uU8gduloC07!%A;กYIobU15bpDG],2GกkZ+SMB*i#9fL7YGC2CXXm-pj,1JLaon:#r0M1_SQ[P!2+6TV'ZSBo52E[E]/KP:ouTP#Y;upGrข!_caK7QZX+::"(AseT$+ZP$qXrYETWcG?j\Mq$:h2L@p8Sb\ก4*k'L!O+JR.W=a\UE;*M-Aก&iAbI+5;plJ51b@k'Y"\VJqIfEIn4Cb)=k+=j6+9YB)6Jg@M-?gCaed8WA%กNAVKDp4dmX\XYUW`FPEde&2rV+BJU9J6_(1*Gm&$X@O;ZlRjgFsU7s1=22UEj5ar@cC?mY;-[R*4:doK4=`n&5sQ7I7@ieก?eCกก%lJ&`Cs\T#LopmD0.9q('5sf\'glufU1,.e`/kKEE\]\ขl;0ก(;G*fXci8;123#ข3:e-r`U^mM0I&A27"!7=6JmPEO"D/e]^28kM+"oI"YNCmm/e?^$%+Jh/Zmd]KV0?sK=D&:QCM4;V]`ก;Z/]'\PP[e,4ขHAT*K4gNaRc#=bXS-&(&RqขS`KSW[gข"S7qqc+%RdS3TGo+).9X1;Qq&'p9J@A('nSp._.TebขNcS3YY&W$9"qI!4O:ji*IKข#.1jIbFXiPjdAZW9c8"hEdBFRYfB$I=Y"d9c&uCHbW;7#]&N=]hHl.RNX+M\kข"ju@MKL@g0P1QJ=7))EZ,Dข1ก+1hhaNL8oRFZ1lF=k7jmM9Onn)L;us0k^MX&V2e%poBSnTJUoก7ขHa'rn=g_X'Z'R4ขZiK#EWQr;กb%"Rq\3'0BXTJj)DJm(&(I'ICYZ!O*Su4UuUE\IP9A0ก9*([hZW)Q'B+A+:+=m/6m3.2Wsa84U@BidonEtN.mL'l_+I7edfRYQTpCI@RO#J54.mOS*FK1@hNIB#*rmnL2ibS?W!\$St,%qeekOPB)Ki+.&e*F-q.&f@=FM16Z.-nก*4P#^qZ*f#]'7(:2mLF0_P@:of/@ขM24b;XQn#%Zi\DPqrh;#qL#;ขs2fJ/[0o,Eขl98,W^*4Q#T?fiกIM\.U$`$กLBL_(Lf&C%YGo6!l=@*P)nr+gbEoS-D!H-a9[]67`9d`qm[G,ijlc5m^de"W/G*Xd9mnbK^qhZf`iX*D[9.K4GRm^oC_!H3SdK85.3mSกq#NsbWYN7FK_ab#I^nV:Ipg1!;Fก=aqW.0Naq3cpb$m69AC3i=4)X6WOh(:gFJgn7IN?sl4?ZjsSBqrRL$J=.cXE3RM%mXTY'pjcS^CLh(Z8$LYr_a2NW5ubJ)P=\9V!=kAQ)naOelGg.'ข0.5L`I()O)^d&=#jg-gdj!กA]!t!ms1pXU[-h=kf(8#,@RX4h3e6,6+UNj=L;XI+YU3@DsA$S!"S7TdksVP&N%MpL(]qf4@*G&)4KH^3(Rfh8$jdYYFL7:@JU+H-W#d//jO?Q0^1P?r?pQ=n4UK&k9neXN"Id01F/AMmssU.ข!OP?:i&3@ge#hQ=H)UnJ,S!$!mP(X8M2K($@9,=VDFX540CIhUVaD3s.\ZD2FrNY"b(BD)0Zn+,3Y]R$@DCMqZ]-(AZ6q%:,"&B`?EDY\QfI3M#2f5bh.P*Oj7&ขIp7Gnp4%f[&Kกc`]qp7jto(!Mt14;[X:c;I&Ne55ImYJ1r;~ข
+-->
+</markdown>

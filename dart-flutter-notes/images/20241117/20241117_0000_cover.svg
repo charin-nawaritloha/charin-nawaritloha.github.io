@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9.6e2" height="3.9e2" version="1.1" viewBox="0 0 253.99999 103.1875" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient id="ida" x1="1.4e2" x2="1.4e2" y1="2.6e2" y2="3e2" gradientUnits="userSpaceOnUse">
+<stop style="stop-color:#1fbcfd;stop-opacity:.46" offset="0"/>
+<stop style="stop-color:#26b8fd" offset="1"/>
+</linearGradient>
+<filter id="idb" style="color-interpolation-filters:sRGB">
+<feFlood flood-color="rgb(0,0,0)" flood-opacity=".15" result="flood"/>
+<feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/>
+<feGaussianBlur in="composite1" result="blur"/>
+<feOffset dx="6" dy="6" result="offset"/>
+<feComposite in="SourceGraphic" in2="offset" result="composite2"/>
+</filter>
+</defs>
+<metadata>
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g transform="translate(0 -1.9e2)">
+<rect x="1.1e-22" y="1.9e2" width="2.5e2" height="1e2" ry="0" style="fill:url(#ida);paint-order:fill markers stroke"/>
+<g transform="matrix(.084 0 0 .084 2.9 2.1e2)">
+<g transform="translate(61 -1.3e2)" style="filter:url(#idb)">
+<path d="m1.4e2 4.1 82-0.09-1.4e2 1.4e2 -36 36-41-41zm-0.76 1.2e2c1.1-1.4 3-0.71 4.5-0.89l78 0.02-71 71-41-41z" style="fill:#44d1fd"/>
+<path d="m3.3e2 61 89 0.03-0.01 18c-23 0-47-0.07-70 0.03-1.8 0.59-0.94 2.8-1.1 4.2l0.07 47c0.59 1.8 2.8 0.92 4.2 1.1l60-0.03v18c-19-0.01-37-0.01-56 0-2.8-0.01-5.6-0.18-8.3 0.29l-0.21 67c-6-0.24-12-0.02-18-0.15l-0.01-1.5e2zm1.1e2 0.03h18l0.01 1e2 -0.2 49c-6-0.11-12-0.14-18 0.02-0.46-2.4-0.27-4.9-0.27-7.4zm1.8e2 13 18 0.01 0.03 31c9 0.22 18-0.4 27 0.31-0.25 5.6-0.04 11-0.14 17-8.9 0.02-18 0.09-27-0.04l-0.07 62c0.19 5.7 1.4 13 7 16 6.4 3.6 14 1.9 20-1.6v18c-6.6 3-14 3.4-21 2.4-10-1.5-20-8.4-23-18-2-5.4-1.6-11-1.6-17l-0.04-60-0.45-0.51c-6.3-0.34-13 0.05-19-0.17 0.04-5.7-0.22-11 0.14-17 6.4-0.11 13 0.29 19-0.2zm77-0.06c6.1 0.21 12-0.07 18 0.14l0.42 0.46c0.23 10-0.31 20 0.24 31 8.7-0.16 17-0.03 26-0.08l0.06 17c-8.7 0.33-18 0.13-26 0.08l-0.1 63c-0.01 5.5 1.6 12 6.9 15 6.5 3.5 14 1.7 20-1.9l-0.02 18c-6.4 2.9-14 3.5-21 2.7-9-1.2-18-6.3-22-15-2-4.3-3.2-9.1-3.4-14v-68c-6.3-0.01-13 0.02-19 0l0.04-17c6.2 0.17 12-0.05 19 0.16 0.66-10-0.05-21 0.34-31zm89 32c13-5.2 27-5.4 40-0.95 15 5.1 26 18 30 33 2.8 8.3 2.6 17 2.2 26l-87 0.09c0.72 9.3 3.5 19 9.9 26 9.2 11 25 15 38 10 9.3-2.8 17-9.9 21-18 5.3 2.4 10 5.1 16 7.5-7.2 14-20 25-36 28-13 2.4-27 2.4-38-3.8-15-7.5-25-23-28-39-2.2-13-1.5-26 3.3-38 5-13 15-24 28-30m6.9 16c-11 4.9-18 16-20 27l67-0.21c-1.1-7.4-3.7-15-9.1-20-9.5-10-26-12-38-6.7zm1.1e2 1.4c7-17 28-26 45-19v20c-7.1-2.8-15-4.5-23-2.3-10 3-18 12-21 22-2 6.8-1.2 14-1.2 21-0.78 9 0.39 18-0.2 27 0.48 7.8-0.42 16 0.24 23-6.2 0.3-12-0.02-19 0.19-0.36-24-0.05-47-0.15-71l0.14-40c5.8 0.16 12-0.02 18 0.12 0.53 5.8-0.65 12 0.32 18zm-4.1e2 -18c6.2 0.26 12-0.37 19 0.33l-0.09 66c-0.06 8 1.1 17 6.6 23 7.2 7.9 19 9.4 29 6.2 13-4.7 22-19 22-32l0.2-63 19 0.04-0.11 1.1e2c-5.9-0.1-12 0-18-0.07l-0.07-16c-3.8 4.8-7.8 9.7-13 13-11 7.1-26 8-38 4.4-8.1-2.4-15-8.1-19-16-4.8-8.2-6-18-6.3-27z" style="fill:#666"/>
+<path d="m65 2e2 41-41 41 41 0.17 0.18-41 41z" style="fill:#1fbcfd"/>
+<path d="m1.1e2 2.4e2 41-41 71 71c-27 0.06-53-0.02-80 0.04-1.5 0.34-2.5-1-3.4-1.9z" style="fill:#08589c"/>
+</g>
+</g>
+<text x="58.514259" y="251.21829" style="fill:#ffffff;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;line-height:1.25;stroke-width:.19;stroke:#1fbcfd;word-spacing:0px" xml:space="preserve"><tspan x="58.514259" y="251.21829" style="fill:#ffffff;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;stroke-width:.19;stroke:#1fbcfd">widgets.dart</tspan></text>
+<text x="23.15859" y="283.29474" style="fill-opacity:.13;fill:#000000;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;line-height:1.25;stroke-width:.23;word-spacing:0px" xml:space="preserve"><tspan x="23.15859" y="283.29474" style="fill-opacity:.13;fill:#000000;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;stroke-width:.23">BuildContext class</tspan></text>
+<text x="22.131981" y="282.48758" style="fill:#666666;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;line-height:1.25;stroke-width:.23;word-spacing:0px" xml:space="preserve"><tspan x="22.131981" y="282.48758" style="fill:#666666;font-family:Arial;font-feature-settings:normal;font-size:25px;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;letter-spacing:0px;stroke-width:.23">BuildContext class</tspan></text>
+</g>
+</svg>
