@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta name="author" content="Charin Nawaritloha">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" href="favicon.ico">
 
 <!-- syntax highlight -->
 <link rel="stylesheet" href="highlight/styles/vs.css">
@@ -128,55 +128,38 @@ class _MainAppState extends State&lt;MainApp&gt; {
 </script>
 <h2>การอ่านข้อมูลจาก InheritedWidget</h2>
 <p>widget ที่อยู่ใน child ของ InheritedWidget สามารถอ่านข้อมูลที่แชร์มาจาก InheritedWidget ผ่าน BuildContext ด้วยคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html"><code>dependOnInheritedWidgetOfExactType&lt;T extends InheritedWidget&gt;()</code></a> ผลที่ได้กลับมา หากตัว widget อยู่ใน child ของ InheritedWidget ตัวคำสั่งจะคืนค่าตัว InheritedWidget ที่อยู่ใกล้ที่สุดมาให้ แต่หากไม่พบจะคืนค่า <code>null</code></p>
-<pre><code class="language-dart">  Widget build(BuildContext context) {
-    ExampleA? exampleA = context.dependOnInheritedWidgetOfExactType&lt;ExampleA&gt;();
-    int dataA = (exampleA == null ? 0 : exampleA.a);
-
-    return Text(dataA.toString());
-  }
-</code></pre>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<!-- h2-3 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="6575154506"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-<h2>การประยุกต์ใช้งาน</h2>
-<p>ตัว InheritedWidget ออกมาแบบมาเพื่อช่วยตรวจสอบว่าข้อมูลที่ผูกไว้มีการเปลี่ยนแปลงหรือไม่ ถ้าไม่มีการเปลี่ยนแปลง (จากการถูกเรียกคำสั่ง <code>updateShouldNotify()</code>) มันจะไม่ทำอะไร ตัว widget ที่อยู่ใน child ก็จะไม่มีการเปลี่ยนแปลง แต่หากข้อมูลที่ผูกเอาไว้เปลี่ยน มันจะทำการ rebuild ตัว widget ที่ตัว child อัตโนมัติ</p>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<!-- h3-1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="7534278305"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
-<h3>สร้าง InheritedWidget แยกการทำงานของแต่ละ widget</h3>
-<p>วิธีนี้เป็นการใช้งานตรงไปตรงมา คือ เขียน class ใหม่สำหรับงานใดงานหนึ่ง เช่น มี 2 widget ที่จะใช้แสดงบนหน้าจอและเปลี่ยนแปลงค่าเมื่อข้อมูลถูกเปลี่่ยน</p>
-<div class="image"><img src="images/20241113/20241113_0200_demo1.png" class="u-max-full-width" /><div><p>ตัวอย่าง widget 2 ตัวที่แชร์ข้อมูลจาก widget หลัก และปุ่มสำหรับเปลี่ยนข้อมูล</p>
+<p>คำสั่ง dependOnInheritedWidgetOfExactType เมื่อถูกเรียก ตัว framework จะทำการลงทะเบียน widget ที่มีการเรียกใช้ และเมื่อตัว InheritedWidget มีการเปลี่ยนแปลงค่าข้อมูลที่ถูกผูกอยู่ ตัว widget ที่เรียก dependOnInheritedWidgetOfExactType จะถูก rebuilt ดั้งนั้นหากไม่ต้องการให้ตัว widget ที่อยู่ใน child ของ InheritedWidget ถูก rebuilt สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext/getInheritedWidgetOfExactType.html"><code>getInheritedWidgetOfExactType&lt;T extends InheritedWidget&gt;()</code></a> แทน</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ตัว widget ที่เรียกใช้ dependOnInheritedWidgetOfExactType เมื่อถูก rebuilt จะถูกเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/didChangeDependencies.html"><code>State.didChangeDependencies</code></a> ด้วย สามารถเขียน code เพิ่มเติมเพื่อจัดการเหตุการณ์ดังกล่าวได้</p>
 </div></div>
-<ul>
-<li>ข้อมูลที่ต้องเปลี่ยนคือ Text1 Text2 Text3</li>
-<li>ปุ่ม setState1 เปลี่ยนค่าของ Text1 Text2</li>
-<li>ปุ่ม setState2 เปลี่ยนค่า Text3</li>
-<li><code>_Widget1</code> <code>_Widget2</code> เป็น InheritedWidget</li>
-<li><code>_W1</code> <code>_W2</code> เป็น StatefulWidget ที่จะผูกไว้กับ child ของ <code>_Widget1</code> <code>_Widget2</code></li>
-<li>ใน InheritedWidget จะใส่ debugPrint เพื่อแสดงค่าผลลัพธ์การตรวจสอบการเปลี่ยนแปลงของข้อมูลใน <code>updateShouldNotify()</code></li>
-<li>ใน StatefulWidget จะใส่ debugPrint เพื่อแจ้งว่าตัว widget ถูกเรียกคำสั่ง <code>build()</code></li>
-</ul>
-<p>code ในส่วนของ <code>_Widget1</code> และ <code>_Widget2</code></p>
-<pre><code class="language-dart">class _Widget1 extends InheritedWidget {
+```dart
+Widget build(BuildContext context) {
+ExampleA? exampleA = context.dependOnInheritedWidgetOfExactType<ExampleA>();
+int dataA = (exampleA == null ? 0 : exampleA.a);
+<pre><code>return Text(dataA.toString());
+</code></pre>
+<p>}</p>
+<pre><code>
+## การประยุกต์ใช้งาน
+ตัว InheritedWidget ออกมาแบบมาเพื่อช่วยตรวจสอบว่าข้อมูลที่ผูกไว้มีการเปลี่ยนแปลงหรือไม่ ถ้าไม่มีการเปลี่ยนแปลง (จากการถูกเรียกคำสั่ง `updateShouldNotify()`) มันจะไม่ทำอะไร ตัว widget ที่อยู่ใน child ก็จะไม่มีการเปลี่ยนแปลง แต่หากข้อมูลที่ผูกเอาไว้เปลี่ยน มันจะทำการ rebuild ตัว widget ที่ตัว child อัตโนมัติ
+
+### สร้าง InheritedWidget แยกการทำงานของแต่ละ widget
+วิธีนี้เป็นการใช้งานตรงไปตรงมา คือ เขียน class ใหม่สำหรับงานใดงานหนึ่ง เช่น มี 2 widget ที่จะใช้แสดงบนหน้าจอและเปลี่ยนแปลงค่าเมื่อข้อมูลถูกเปลี่่ยน
+
+&lt;div class=&quot;image&quot;&gt;&lt;img src=&quot;images/20241113/20241113_0200_demo1.png&quot; class=&quot;u-max-full-width&quot; /&gt;&lt;div&gt;&lt;p&gt;ตัวอย่าง widget 2 ตัวที่แชร์ข้อมูลจาก widget หลัก และปุ่มสำหรับเปลี่ยนข้อมูล&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;
+
+- ข้อมูลที่ต้องเปลี่ยนคือ Text1 Text2 Text3 
+- ปุ่ม setState1 เปลี่ยนค่าของ Text1 Text2 
+- ปุ่ม setState2 เปลี่ยนค่า Text3
+- `_Widget1` `_Widget2` เป็น InheritedWidget
+- `_W1` `_W2` เป็น StatefulWidget ที่จะผูกไว้กับ child ของ `_Widget1` `_Widget2`
+- ใน InheritedWidget จะใส่ debugPrint เพื่อแสดงค่าผลลัพธ์การตรวจสอบการเปลี่ยนแปลงของข้อมูลใน `updateShouldNotify()`
+- ใน StatefulWidget จะใส่ debugPrint เพื่อแจ้งว่าตัว widget ถูกเรียกคำสั่ง `build()`
+
+code ในส่วนของ `_Widget1` และ `_Widget2`
+
+```dart
+class _Widget1 extends InheritedWidget {
   final String text1, text2;
 
   const _Widget1(
@@ -343,12 +326,13 @@ class _StateMainApp extends State {
 <p>จากผลการทำงานจะเห็นได้ว่า InheritedWidget ช่วยดูแลในส่วนของการ rebuild ตัว widget ไม่ต้องเขียนคำสั่ง <code>setState()</code> กับตัว <code>_W1</code> หรือ <code>_W2</code> โดยตรง แค่ rebuild ตัว InheritedWidget ถ้าข้อมูลที่ถูกผูกไว้เปลี่ยนแปลง ตัว InheritedWidget ก็จะไปทำการสั่งให้ rebuild ตัว widget ที่อยู่ใน child ให้เอง ส่วนตัวไหนที่ไม่เปลี่ยนก็จะไม่ต้อง rebuild ให้เสียเวลา</p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
+<!-- h3-1 -->
 <ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
+     style="display:block"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="3595033291"></ins>
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script> 
@@ -432,6 +416,17 @@ class _StateW2 extends State {
 </code></pre>
 <div class="image"><img src="images/20241113/20241113_0600_demo5.png" class="u-max-full-width" /><div><p>ได้ผลการทำงานเหมือนกัน</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
 <h2>สร้างคำสั่ง <code>.of()</code> และ <code>.maybeOf()</code></h2>
 <p>จากตัวอย่างที่ผ่านมา หาก widget ที่อยู่ใน child ต้องการเข้าถึง InheritedWidget ที่ถูกผูกไว้ ต้องใช้คำสั่ง <code>.dependOnInheritedWidgetOfExactType&lt;T&gt;()</code> ดูไม่เป็นมิตรต่อการอ่าน code เท่าไหร่ ถ้าดูคำสั่งใน class ของ Flutter framework ที่ inheritance ตัว InheritedWidget มันจะมีคำสั่งแบบ static ชื่อ <code>.of()</code> ที่ทำงานเหมือนกัน แต่สั้นกว่า เช่น <a target="_blank" href="https://api.flutter.dev/flutter/material/RadioTheme/of.html"><code>RadioTheme.of()</code></a></p>
 <div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในคำสั่ง <code>.of()</code> จาก <a target="_blank" href="https://api.flutter.dev/flutter/material/RadioTheme/of.html"><code>RadioTheme.of()</code></a> จะมีพฤติกรรมว่าหากไม่พบตัว Theme ที่อยู่ใน BuildContext มันจะคืนค่ากลับมาเป็น <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/radioTheme.html">radioTheme</a> แทน จะเห็นว่าเมื่อมันไม่มีข้อมูลให้ดึงก็จะส่งค่ากลับมาเป็นค่าเริ่มต้นสักอย่างที่ออกแบบไว้</p>
@@ -465,17 +460,40 @@ class _StateW2 extends State {
     text2 = widget1.text2;
 </code></pre>
 <p>แต่สำหรับ InheritedWidget ที่สร้างขึ้นมาจากตัวอย่างข้างบน คำสั่ง <code>.of()</code> หากไม่พบ InheritedWidget ที่ระบุ การทำงานก็จะล้มเหลวจากคำสั่ง <code>assert(result != null);</code> เพื่อป้องกันการใช้งานไปผูกกับ InheritedWidget ผิดตัวเท่านั้น และมีผลเฉพาะตอน debug หากลืม test แล้วไปใช้งานก็อาจจะเกิด Exception ตามมาได้ ดังนั้นหากต้องการจัดการกับในกรณีที่ตัว widget ไม่ได้ไปผูกไว้กับ InheritedWidget ที่ถูกต้องและได้ค่า <code>null</code> กลับมา ควรเรียกคำสั่ง <code>.maybeOf()</code> จะตรงกับจุดประสงค์มากกว่า และทำให้กลับมาอ่าน code ภายหลังเข้าใจมากกว่าด้วย</p>
+<p>ในกรณีที่ต้องการให้ตัว widget อ่านข้อมูลอย่างเดียว ไม่ต้องการให้ rebuild เมื่อข้อมูลเปลี่ยน มีคนอื่นแนะนำว่าให้เพิ่ม rebuild เข้าไปเป็น optional parameter อีกตัว</p>
+<pre><code class="language-dart">class _WidgetX extends InheritedWidget {
+  // -- old code --
+  
+  // add 2 static methods
+  static _WidgetX of(BuildContext context, {bool rebuild = true}) {
+    _WidgetX? result = maybeOf(context, rebuild: rebuild);
+    assert(result != null); // in debug mode if (result == null) → throw error
+    return result!;
+  }
+  
+  static _WidgetX? maybeOf(BuildContext context, {bool rebuild = true}) {
+    if(rebuild) {
+      return context.dependOnInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+	}
+	else {
+	  return context.getInheritedWidgetOfExactType&lt;_WidgetX&gt;();
+	}
+  }
+}
+</code></pre>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
+<!-- h2-3 -->
 <ins class="adsbygoogle"
      style="display:block"
-     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
+</script>
+
 <h2>โปรแกรมตัวอย่าง</h2>
 <pre><code class="language-dart">import 'package:flutter/material.dart';
 
@@ -649,38 +667,13 @@ class _StateW2 extends State {
 
 
 <!--footer-->
-<!--share button-->
-<script type="text/javascript">
-function share_fb()
-{
-	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
-}
 
-function share_twitter()
-{
-	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
-}
-</script>
-
-<div class="row" style="padding-top:3rem;">
-<center>
-	<!-- LikeBtn.com BEGIN -->
-	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
-	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
-	<!-- LikeBtn.com END -->
-</center>
-<center style="padding-top:0.5rem;">	
-	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
-	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
-</center>
-</div>
-<!--/share button-->
 <!--/footer-->
 </div>
 </body>
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!"/*uD/UCaErKkVr!tA@!,%;A/ifE^_s/X=Or`JBข\op`=F`Y]B6S[@JS/V_R9ขB*NdrMa8(j5)3U.SVL(Hrh'Mo?[iq[0]D\i-p8QW[Abj6lLSU?6@#B=CR?`L0-WiM_omZ5`Pa5`o0=Vq#l=iXZEi:)XQ]R^GISK(Cc+&"&oe&auPnS1+q4$EQ]IN2$/a4&0%l1+`:jRMm;hK8=/HMfY3`N+GLSc$8R4XF[]n)r0AO422\r7IiG(Ddi'cCDGZjt/5ข0/pu$Fbข]3DnRPWnnu&[CdbBKV7%,uRr.l29fpVS7`D]d36:^BH819rBR5%2#i2%Hp*H!-#aL(9a4&/:l/[n%l9BiGFTAU9RH'k&j:V=i?ogก"P#%s=T3)tp"%@ra#ocF_I5G&eiXc]^P&ItZlข,qkpi6A"?GOกGe&_\YRp[ข3j?BqmT6(E_=SH@O8-L,u%-\:!qA]#&ptm(_2k_8YO?"Zd^Mo![F"[3[V5*9c+*b(%`6ak.EO,ขdoh4กn%PO_OJN)bZ8[XjJNKP,%S?b4F)YXPr-@Z)G]VZuPYข:V[eAfmdrb_;gก)a713dX8"Wu+@)m3,0A$[=de[N7``'4C]cq"bmG\#XUr^dXI2,K_^eN^ReP?9f'QClef]QhE7oG/&YgFMขL;1Ici.#+DWjFX!1[Ok+2E:SIY+rfU)#C=8f*$WBk_M#*WrDQ":"+/D`'=bJ8HmXRk/C8KcaZ=!-gc^9iXSD[X?@8I*j,.`F[,:7f6Ze'jJQ8flA"a3,$hakขcq@7/R&UขX%G"Yq(P]G#Q?=ER#UQ:KlO@,C;g5JJlidrc2J)Kn("&+"Iขhi8:+uceLIiOG;j!*^-pu@E8X6(Bpj`F)Cne0flL;=5?V3hC.0N!uL5r'QpG`UJ0kGks$V(!#6J0n6r%@*$%UbK-\FR[Vdnd)plขppJ=[C[qj)E%d!XmrJON05=O;-BTY@Fl?^1fNPlJ=T)5C"4C,0KoD]EFGQml\.W*/-PpaaFXGr@CCeI$_2l1qE.D0\(J=IM[P?nb.KEdHacj9hSก:[/%jD#)?,tBPi7_;UWU4)3(F)^Tta6=i[g!S9HHS`Tขl,/P6)1K*#+c'Gn%-,hC@P#lVT9กgW7eE%gj;ขVgb)SBY4o]"hq:6NoTW$dNTTIH%Ya$O@;HE&WY;,r?;\g'CJ\DIRqD.XY&i9s%/b2^ก"f&Ul&;XBqZGs8$)cX1%P)@WgL6LemQ6]]n8]7;%QV)&'_2ข^@mefWNNdUR2a9_p)^?/o!R+)กK5l8$)t3=JQ65rqsGH*[b!R(:t1DdJh6`T#S.FกJf\30Skg_`7(n%Fd28l3T5Fk.NขQ":)Idk!=op14U81%?'D9\FFrPiHI#*A"6m)+e7"ZUJ)%JtibgI(1OtF*^j=!Xa@Rh?!lGbpYDG0(8ข0mVF`f%Q8rL-VKM'aG']V^Xo[7:X3WXZP!&8_f;;6iFg%C9GqDl),gBFr*:_DcJCKo0PsdB.P]#VU_TCl9fZlZ,&?#VqpF@ND3PkMs(n;*#tn""+b0$eAWขjC4W*;/uaRfbgJt8?-2;"W9d^ocUero+l2/QB_$N!d&#h"m@n[;;Uuf]Dafg@s`3(Rofga5:QZJ$DQV@`eKl\.n*:miAe9*,V/-8(;+i16"o3nXRpdM!oYF_J7#TXm+"*c&g^'FW"UJH"JU]/&p@Ps_OjKncfK4C=^\#(E0eVa;kC;#),กMgdข+bJnl\D`กXWH196ZMm5%XtกLscF'2BQHH-^6ขขnNg"TK68Zj5VYsAGe?GuE=*/E?(il:Q]JZ6jb!bckZZIoPj)e\JF4\rOqC0/"D*cshn(IGdiI;n$u1#oข1e&7UIZ2p8;l--$0Q3X$_Z60in&N#hS;_X=^j5`g$mJ8?r1+ag;(J5ข%TD5H]?n(6GiH_DFM55S^%u/8a^OnOp1Jmpgf(+-^ZitMO@`0:ขpW,o[(".0n6nCS.GaS+JVeขi/-HSF&^!g5=pY.#r'1i($[+*3:=nbYb$993m!ZW!lB?X=QP6?2+35O5OVGaก=BaK7@n=;'bMqC"gj6"U9@V59s1]1=7Kn]62aiH?7E0.\`#E5qNDLpRP2ขHV`\:88/+Z#!kVEKWc8"K+gFVก"Hlกf&%KVขT`]iQeVNdmV`8$3cXWH:^t^V8J`r0kขuGq0KEs[dDVJ$I)Q!-;4T5?RG%uA`%1@D/&*6Ri5.FIAH,5V(&;F[!.D0^IVpa,EBg=?L$Qo!kG^]q'kWWpWTLO$Sr!:Rข`6!h-l;LF!g6Lt?%ขuNN_#(jbก_tqe@53r]L.VB6.`o(g?mtr8RsSo8?6P'"0X9BqEAY(o'!j:OIGPข\[\n4ข!KeIl^d?dTUY-XcJ:%UjFa/IVj,c4s82eXN9`\lBWROaU^;,hn#E#@_V,()ZV+ogJ^qneL)BYกL/q6WGUtgeขX:\"LNf;,2W!QNhCJLCiYkhPpQ@/skSZNC8("gO^1m]ขjXK94P55a/$Zu&Adb&IHBq$JTg93??%;Q,S@2WrD"Nflc0pV*G,\^D-UrLU_T@QCYhMcMOT)PN3@b2lHRjZ5C.K)nmiขQUsI9EU!Y5JHZ57Q^cg;b#:^_-lO?;W2pgC^Z@r@A',`mQ?R:_ti*?81EsML2/MeY0fGk(/QssQG'K:fMW6`!กLRj%C&0ข"I?F`S43ZN;'scm;g@gn?jcSV&9/XjRde@1SfNg!H!;ข4p(4g;,9s:arR.;ERCL0.fl2cbSdLf\nt:#XกYa*b#UIInrLkAI5UZTo1I#!!J[Zo9qQ"FhqoR(ขbqpP1A%Y#Rj#\lRqjrGhS[ZjC^HPRXS8k*?`qbmY@pqYDq):a7fM'aHmZh\?La@"p-6X[o@)e0[PA-ARjcp`กeX'XEe:adm2I&cfr;L0E!iah!SJk,=gouuP%U&BTAuq;/bicDQj9oVi"_JKNjpOh-FW$JLH&f5Jj/nlGnL4E0Q$S^ขG)!$/o$KB\qI\YX=:mq-c@h$!C`&sN:df$G7@2HI:W0$[:U?-nFBjF4XWWY;5oQY((L8A;nlCL_7\_E%@_gVrZก?@EGSlD"ic5ru8')QE=KH_cedl2'*Y"?P?A%3O),@d,\ni&-k'ilXns&UM+c+%&rfMS8kq4i^oEDIqZ)/.7Wt??KH6[lKXWcG$CT%6jJl!#nQ@en0Xก;tKK(s7c62YI$l0+SpF3X2MU`"WกB)""'kQp/AWUP+D$i_0%IQnl`7J8U\?X3AV[Q^kr/1uขขJKg_o"M^_TCo=Ph=9AU=ETM03bghL;9N^W*1S2r:&l/()2(akS"ad5\^/)YBSn^pG.U%G^Aขq#Z(VK7jM[k6a=ZY/5@_lQ:BN9C`?1[!tข\a#UbL8%Fe3/.Y'p36V8;&I:r^DJ`G'PN#94,E;Tc@HWPXG[2'0YDED]D=NeU]D'[\nhLI)'LPG`RJ&gขno59[&PO2FW`T.o#`T5M(Niก.kH"52ekmEi+^Ch1&6k+lXu6_k^b77`L':@WR7f1/OI"TZDrMD/\mnขT.j^CjjZr#:F5MU(aRSWE_I8NWIs0UC\jeb?#\+#N^TBiN-%dMEVsqEKoDN'"h']RBQ)q2mEก%`+/]UGfsก#op/Qq+AG&GE1Z*oM^[Vq3.$f$q4Fr"IM*@iC,EdZZ43?@_.^`%=??NJJ"3"&@ZoU=)QcjNa&.j%BbDoGS[EmXp8j/+%[Tjp2M=CM2,+#G-fhK2%f+k!nTU(kVo:!48Znk-i(UD=bWg#d?_rV-ENq5N/u@NmQjaj-#Y5"BWN/H2oZ;%:`04:sE(YF`,16[]dAe4fWp_A\+ULN:LjCO;)FhZ,Ce"5ck[/=rg+iกN)?lVAข@`'P`1t_XK$77j)RpVS2\M:IeOขh,GHJL`ZD)&4Ps(M9eKP"2NA?KX;Ke&uZ?H1q'biWcJs[D,olPl!kfP"b%b!E0qJ!Iiกข]?C?6gW:7*YCa'i4t:Cd6ก*k_KK7R'/t@YkT7&/!I\%BS65CHngMo)alD3msBd!1SS.QYBe;3L43ขOH`jHEHY)EKk+Gh'gLXOX4ck0กo`?/tM9Ir%P@DNq)L(Q/I`WW*G$!?m\c]+UF,m4!SeFg;2$^(QPEs=[f?DLSFNh!pCc?#ui"CX!Bj:1ps-h7po;9ZRjFfVhP4,VX:i_VL/nF\*N*80IXEodu53Sข=`V[:M[+"b&BXrP&BPP,^E3nr-%VojJ8Wt9ODA%Au4BA-GmS+$O@@&716/(ขrb2g="13J%(WhWs_VkQกFp]]C]Og6j27egcUo&#tO7em#`1rA#bj;LขZ.QX2c_302cBh'/GVTJ0jd`.ก1JaC0Cl6Jaกj:5\g=/H542Tg^*",EtJC^*]a.5a"Q_3,In38EVgdWHCZGmbA!f]']$[3]&;4AU7S7S:m7$aWY=)7NjhF977?EDm?0WREC4kก;\Y:pm"pข`_%X8'\jpข,1#;8VCP*CZi[$.es4ELก.YgJ5Hg!PfCq239!7mR\eกc4ao6VLi%WWkKH=$P0cO8SkSY3G?g5Za-e*D*%`TAn25"=g-O@Bd"X,EA^Y0=,1!$RKข3El+eG!-dVk^;1'U(!`_Og5=lOQ-aJNJ\RtjT"a@%68$RHOF$3T\RY*/[h_ajขa0lH`Z,J/C&%&nn&GlcC*mIQ0[Woj@#`AB;oa:isp+\Vข"[kbQ&Gdg`TAVtR[`\SY'((")H(520\cmT@D1$0oi1,na..li3Ug'0ot6s.JP`Tc)sq^p#oSDK&+B\(o5ONjXk^ก;VC5_91Fe1]h\U42`0T)Ag]A@iZA-@pKE,S=bRpfUneTR71pO8,F!'$T4`+mMข6Uibbt3-V2b]ก9[I5stGMk6P,80[4!0]8:q/gTO9_BpRp6ขV!u3TcFJ26"Z/hgb_SGp\;t#-+e[lX$ESYJ2:2WIlsilM//-1M09gIkU@J#hr9fdN(8;dZ!?Tกo%ก9YกOAJCJC[;\\arn2&WUopUI?\YA(s&BEKZ7hC:[bPXj?:;0[ก#9e@0b\.U?Gr2ZocJ8JlT60Wr)l'#qขgObD]=_-eXZข-1gHN%bTZ3/pDYW`H1^b-QDd?r3;"nE6ข7N]HE+JjIYLF`#,_jF2*j+`r-:q2*%'90F*9NkCieMegQ)G7iกW;qSmID=WC+`a4B,l_s5D3KQKL":ข.6=^`8nCYnXขWn/=0qoa.Nhb&YกSIpcMCD:UXnRk51LUFก[Ytcf"#กASmU`VF_k6-Yu??4g%;0@,b'FE.@QO]Uข06Id&SYtกs7:l,DRfR1-Y[fq.$.ffk1QP`aVJD'Aah71WqKX@?R0,dhVjur^Sq2;f=`=[9FC=IpLiWF23,ZWr=L3JuUZP!AO9e-n/\%%e.B4oFl=lt["`KXqNILN\HLKHO(o:กcnHdTMB:lgVZ#-hUXP-F)lsM-กk(S]arF0S*XnC18crpBZ3r(FXW=@\LK'bH6mZjขijAQJh=6cN"1tI`gq`Ld%`)OWGY@hก8F794QIhEG]ข?2P!ขVY[]กC,1_6ขiP^Pb$*).iMuV'P7M.PIE9s)SNjt+a5QL*SP/3AEU!ngrh"FR2Qo=;ขก;5aZA[`T'lhJ5[#Zg5VBf)aaNUE\TRM%Y]#i'B_XTX[l(t@-OPVKWhqCCOIdb_YHk3d6d$i:E%KiW[A$Vk]&kA/Fdp0MC2d/*3Fu0ekL+@N33uoMWm1)=:'bpJgZ\!,iG#$mB,B6ก%-/=[0LS*31e+uW:W&]M@W,dZ5HK#1V7TGTd6Oag;pLกdIP`Q%gh9#JPd$*u&YYE(!k^6g$N8:hruDj?=aCJ7/5%eD\Y`ran@T)h6t72Q"BC_^@4f2Z]\ic#CbO!p))^#+CQ9ds7_q?n'm*AX)csb/&e%aYe*Zkn#?O7;lk"a3KHWZOLg;OJ(/ppก1Kl\PPt,WIN:eE&5I;pob2)^%9(b\rnZ;4kgpX&:6AfnMRSG3.1iC\VdcV%\A\R&CIMS(7oUก.Pk\\X8INRlk&\n@Km.dr-kข]!"P9P*[ก4?-QJ?ZRs`54MขoLsXกO]qEUE@62Zp:.oK=Cg*VM7Eก-gข/H)+-Qle([Y%^dANH9]Km#;.-Nebกl?&ขqtก#2Z4P%hrrB'tq]=O.R)^kbh2thVJ^k,-e6#M:+r;TIข#64uV9kd4B/Rtrl99`E+m,re8Nl!,K\.;+jNaR2]k5ก@DM0Fc/N;X[ข(3@i:Qd57O8'2$^J@Z.@dX7kNfMXW&faYck4t9E*6k-HUQ%)\d*bB;paWe)];E3t,/oiJVh)d%P.\mmCU,Z?MsL3&%0QJ(H"F?9^/&HmT@3^&VขW&0VขY$-%_qs1pUO2VhaTO$W@"rUa8bขYJq(PaIe'''TC58G3tB6e$)19#:2"tEId_aJhYl3H"ghEYf=)il_S$1mGiQW^mQ,TbMGPZ8TtV(^$ph"8;o*2)กUaXfก6#^Wbq`Gfom6WGZta$(9P+8)~ข
+ก~+,^C)z!"/*UCMsp?Q(PขBs):--P,h)IgTFกF6PI?=1FkoIm#2#"5sj.EFk:J8Rd)A@FZ%epQ8"u!RI$i2a_\j#X^Rขn7S(?uB%m9^[D-8HT)3t9FgWq+;4'b]X6Mmo4g04X\`_b/d6GXg4NCS4rA%Nr=d7t9b:(#SF#4aV:6$Di`k.H)6hp1l1;5h1rW[iก:WCG=najlmrQ4j)jS7SBr*j^E%D'NjIQ&.Zk+/*,[cI2SanUY5GR&]ad]W1_o5b9If@R[sjlPSBH+In/Z0&1Oq8T)8ZkR=EN?3e^&`T9Qm.V-`FKf:t4PPjJ_4\')pZ!0\*8^c^G:2F5K^pF?OoY-!14D,!ru##=-U=jfi$E)Y]JCEiK)b:8`^eDHa^k;oCL^frcS-t:")0e_h=W0+&]#mk[L8kE+s-eกqp=R-r]Q^/*t['-q?SA@@ANd2;Wu#q-T!%g!(=,g5=+URam\8ขF3ni!-eKS!-M&ก=fYC)%4W*Es1*-Hk7KกjFq)nt0KW\Z#7WEZ59ldm,"!uK(3Z04tJiVq7$9*tNMT1,HI(Z1*;7f2Mp!gfTQi=+p,q7!)=J['If.t9AZ98=W*5LSXN:dI2*Wt-b_q.t?\6W[gIEn:7N[VdF3tek+IK;n@Y^mT=/T!8$EPI8fPhuF--q8[#!gp'_FWd%WOjWAh:LX)?rfTMhHIAXข#:(^&7!22@1fOht02`)$1dDd8GกdGSZr6ก?fJ!'DB1tlg9Q2PW0ZX?ก&R@_i&S"![fdhX_M]IiH!kP#LXs@:NIข9'*LcghQ]*0T+6Fl51Y;#qOn]+1'aก;+\%V*=;5A0T[T/cl;!0UXg(AANขaHc*ขT1&YW0Fp3!ro=_mX#\d08hR)H?GN%3YZRU0'Uข=D-;"JfOE?กthW'#Rขgu6iRKE"284'lข:_($+)D`sก(]TF%O,tkPKq\V#\@ZdZ@3kVd%;5'7PQYuqndกnU]ขh.PRPJRZH4k4kกLกW0Er=2[gg%JI%YH=)$T`o&$bF!+3=aoiE=rc.(Knข[`STFBT0l"J%W\ndG8h!G)`VV\NOS1$_uDcV1*!TDก-Ylfk6U)koFL1\S7PQRab(GnZP`FVP+uoLK,h3FYD-*(ขA_$#4W9.(2R50[h&M42WKX26)K(3oNj#O^_`7SW1llre?8oP8A5SFjJข4r5^W:r["?TST*tia)H](Mr^SmsfRnP\*.\Y!W"'&_kWWbACOiIRf@d7i8K)Gn]%M"mq6!4(M1pp*@g/GGWWp8H;DCAE8HaJB^pL4B,C@2%6;IpdKXiU50h&0%+mr]tMW#[0Eg%)lm(*%&oD7[tST8`f/g7ขYr0iUt5gC3ot0to%]`1.aA"@O(q8WJB`lC:479B`//,8;CHqP`utl37R;E"JaMQM+1;CpEA8Jข.^7G%;.5DLข@N[M1ขก"c]0m]]clEY:eq#80['2CVi&:HGngขfV$t)dBO6c-$(ข.0+7XOกgnGr\j7;\HkU-s.$+3Ah-.jUYQข*S2S69"/uSZ-+N";GY@EgU_(a.ข..*/=!L!i("a_n*E^%^1.(Op"Cktsก,@*'`JdeFBHB?ptK*E?^[Zp8?!jo1h!qa+^.IT=Y?0ก3lYrt=\9f)qI+(]t0#ขoM]@meWC8fm''2iMT"a]a#""n(2=&4ZEuCOMeR5^5j8i)f7YHZb@"7)@87l9NH7!@YgE"C2i0nE1G_F8;ขi(YEIpN+Gข#MGr(a_b#Y?qJ_^E5-(X0BE7LBm`nb\_5ndi;47K!#MfgKKH^U++67^o?)J)?&-KJ^j!?I@PA(kVKt%7;^ข_nG0,ioFAO0O!aN\l/h+2i@4cEh\ap+oXF^)AR4058-d."S&[r7mcOY/n]k-8V'k@WกH^hkOjlg57%i$A4_0o#V=pXs0*c*)#%i*T_@;O?R[ข5Mh_iR7@4KtmDrNYPtomVkg^3V9?KA@X'8TUXTQ9WW6/n35NOkhaCB5FVmQ!.dS#eYjha=L#nlก5RTY8V?pI+MeL%C+$nYAsSRu!7U0t"#'O,:a-kbo)9LD,#8MDb2phF_s'X2j5W3BYBe%k)*'f0gOkc4$@?+Iq\HQX1muTIกleNTlj;iI=ข#cpAT"i*b:7%2W+@cjขrh)^&rT5XmZPgRW`p_;+9GEHqtMJcA:nTCOhs,"kc#L\s+s`Tl&6f78\N^f7$8กกก%"q]h)ขm2"e-DdQufeL$กBV@N5EbG@sn\\i1q=N_$h05;3m`I#R)i)+=G\_%O)TP2\"GdT5ZH$+!,.'CYoQTP(g[1;(s070;/8G;)s,ZD,bauก:ก_)4qO3@oG=MF;:KRD(กZl7\V\#B)`9,3YIsm\O4l=G[ข.eF-O3pG7$XMTBGn4rข`F9gV8@nsMDoSeqD\!;8tJJn%Bmcf,dKb[4;&fsV]9C]$+cotmS_f64BTbdltki7NOG$j+)nR)).,P*TP\OiHก-S3"$f)&9ub[,-nFSQ8khกU*7[uขขก@`(=%t[1Y'&!Hc5+G^:DBLFLJhcE+BOEk3[dO/i(&rpY*i$050^k37DFN=LCg[/naVIATjG[XBPP&/XSAbiC'rOp2"KlX.rbY7MHeกLd%`WQYb]7ก[,"ju8M3.Md**TB9harjQcN(31tY@.HPtHnJtdW.dVM^IPX^X^?jmEQ;i,*CHB!:Wme%DJ_8[W?p5pข\@@Ee1WFfEno?ขu?D=1=+;&PQ..h2sBE@egV?hG#$:0Y!$.8V8+iB)o'97Rq%iNm4W`.U#"R^_Xio7F=1nO^\*F:ZVVLhnRln?3B&2A$s66Al%-#E)sn'ojTI3jf[P5mrJขV[Q)3+l1m[;5mf7MkขH&5กHกdI-=!\Qu.iXONGYanQa6]FohjUVE26Fm#_O%;2@กO)dd-o19aNVกB1ZtVJ\2$XsZWH&ก7G3b.6WZ&iXE/K0+Tg(`X=7[1GFKC*.C(.#\:%hcJ]OWJ+CU&"-RmpXo!K1JpV:1+Ju0KqLoRR5_;^EMf$?,%fk-*WGiXZD/R75*e]u4bR_=iFCHdId'Xf/%];\dppO0H"p$@Jd7i&[&Sdk!C.9hV*Dขk/\oKCq90ข7Cu?n&WW"MSjEก;bG;Ci)X!-ขl&b/R3`dQ0al/p_iWa?dG9oc_q1#i+/`%e`o$NHTs:NWJ5(\\9_Zc*\ข7?Wbl7PNpnONF:k;L,**/H;b(=";5[oeB_1I/*[%MA=6Gmr`:l&2VAh*AhกE2jgmSPWk^DCQL1h_&&Jขขa`hgjkZb;)@Qg0bก8&C!qf(Z=";_#I'No*m`J&Wr90W1.mZT8,rcPfNhE)8AjIK78IJfr2a8%ก?73uaP4j&*r\f?fp:=t.AhA+mr#%=H*7ekI3ข=Pก\4SLp]Fagh@@U\"j'b1J1(*XGQ8fs6-lk]]jdT=]LCY7tข3NO;'@GcfPMYkpmrT]A_\`?0Hs^Sขf';l2TV])o!`j"H*;fRTIVl26a&oCAV]^%I5l=4Uih*N,p]U`Y^Kgm1b6=]@98:b=_`s8op]Ziข]-O.#R,=gchji!iDnu4?G_d*kf/S8/mL1+aกWSS[4**mMcUs/Re9SK*ขH=k,!"-@/1V9Wu%mRe9p7#\WlV1pOl)=nkZB]_[7a:TกFd(OZ/k)gS&Y,'(]$OdQ_IkNjr'b\sข[-_%O$tsAjkM**JhJmYh)d:98Rl*$oNbH+7i/['W&-Y0GSilcก&9a@W/ZrgB54/HF=^s6กgขb`UtM@%Eq0C7IcER4,ghF#g+cGh6J:FFR]P#l&-#lRHr8i@#lfQ2:%F^pVDPกTY!Vn`,10ขKJJr62:63Z]VFsErH3?Z_,]ขaLUขjbข#A*db[QQT9UC`tu1eHk.ข!!LA1Q=_sE%Kmd-m"T`6AMmEd45!?R)`'U_b9Jg0kA#กข?o#D9+VX(YOIjeaSIKgej,[OOl=+VLFkn+a4].0ON@Hd?1?;ca&f$"DNJ+o5p#YW]UEsET`3!:.68g?/[*ah7r]LXE&UKXV7X(CDtfjSESFobWSก.=kf'!I?iPfSp"ppARkFV^Zh1WOj=eZHoF6a.ern_LF`+80;*)o[LA@Z&g_.PemXtj;!%50208)ObFWG_dM[ก'KlUuKVJ25idBm')3KdA!PBGFB;7;tVd.$DhgE$b?4DG`R:Sf7Q8;`BV.Mk4$-3[k?B#%W7BEHEEKBrin.fm;6ej?]*`NNR:+'=F86@$jfgP#C#:Z!Z(]hlhYPB2K3Rjgq&WE=6(:#/+=]LL)ข;[os-U%,6]9L6thZrEoe^5]#1NZi`?uJNW),d10uAqteU6*t6jhIRd9fNPHJuYui&/($7clk$R_GRk4DQXmEU(Ms_กKY;HF$8cU=j*GP]VCShoh5[.cgW.u'ccI'.1-dPHR^pgquH.!]e4eD8$qB%`EFAR%08p&KZH*aN]fsctZ[YsMkFU;;H:dVTJDu"%9lHG\H3ft*กg^ASJAqcE&4Qo,1VrlA@j?G*E,3'41AQQ-#mf;_Hr;gao;O4326jPU'c?usYQ5MUf@-Ac]GKODeก8N$oTiX+5bZr6VSm@`]2\N"MHQtRDm."&.B,8*e]-d)PB9EOMc!12Ckt?^0[jMdM_'#'MJla]&N!Pa-1JBn.E&C@%&!AhoPVN\กN20'$KJNX*:ChCbPR4c'$sA97/3oo)eCZJ_QCNIn"fqeu=7.3;(1p.N/57BEMB7\R2H"!*ข;6LcO`AY=7V.`FrDKU%กQQcpkก;\Y:o0kqGg`/ก,O$k4efZq_*20=Sb'ข^q69YV%&Djr.@?g^7TeZ-aN]7]7@B"6jO4Q$,Z/]c)(g!LU#q6QW[fQeai/IR=NXQNBd?67-^1Np?3rk`c[,Hk6"l*\q,1!$R!PaX?+eG!-_J^3%)@N64@okขaQ$?XJA5gW&b_gbY16LsQTVOnOAtTgmกH=^Tpkg+@b3_AdAก3o1gก1$QDd[=h&LYe$4U9ขIVQms)T&;DV/A^B(bNp^oSW\V?Kec*.'uQF\mM6+2=r)dqข#7EmLG@p?ขV\8.Yq%hd7^W\Y#`c-(`PiPp`VNf;YrKE/Fj[S0o-'m+"hmWl0h6gV#LkBcp7blc/G%:U&D?:O\k,4Oกg&9gF8S?,BqThU/WY-fImMก8Q6C!.*/hr[B)O\bV*V\qก@p#&pjlnT("ขl437b5WTDeIV;afoiGmi5]1.CD[,,??f7nDDl8KmhQ@:@Q$i(n.8/83s8Q/E`[.q@S-,@b1s$$Br2,3iua:/$E@%aJ1ZFUrcap$+#1;'LNk\`(d./)(?M"$C-_.sYXZ.V:b67KulK0?a'%[ก@k2YUsW/FD#กKk21YZ_DkC*`jI`u_RT:tOtbZO(p*)1d:`r?5"ก?g8p8ก_eS$dEGuc""$jmXVIS-V!9r_D("r/TQ3fJR0mG`_e3qQon=h.II\S-กMh4.YR@sYnDR*;/=!JVSXDp2/*1=WOgC9A6U&m0S25.กY.F['($QN(:),K;]M[QXIVg8!%5Z$A2&_,^ejhLg2XqedkK8dD2S6Wus*2=ก"1-r,96ED]J6Kl(6D5Tdb:g9=jO7^&D]eh2s)ke8t`T^BX_q2cn-b@$lDPHGV5EกDD-jj3RF,W_ขกKR-FnkRa&2I@Z#+&rPnif^1_r26pu-%?JGro5c!rO9[f9&2_jfF.":NกJFPTM%5eqU\&KsdZa"ahZRAP?กtU"9P9o&ak17HAkTGq;VGX"MnH'rn.HG?2P/KGl6,;hIkhoA(U&OgB3fK3-JcA0ic%Y%(qilaNV`ed%^:lJbrU5(:3o&:9:ขkld/MK:&!gaMX5^Q=A8OfWmALOaV_cq^HC5t2=UCV?/*e[e?9bcX-^S'KNขOข%q._4B(CG#V3X.[I`g*XIWcV/m6%FK9e5hlfข^WN@]C,'sFZl&;D\f6anT24)^^)hJ'u)@u;n")EcP")r3`X;H%O\cO6+e@M7A5f^bmoVG2M&กd_GNag3M7QVQ\J^9.=QiI2U*."@@1P=$(X40/5:6[lo_ncLข3LWLก/PI7N^gZBfI6-fGj)+pWC`GBl;ChLกqF0ORo?\*R1#Z1R\:W,qPga:Z*L,!Bq?9L&Ui@s,Q[C/A6aVQDL!]ขgp+h4Kjขhd9+Em!EJB!fSFJ(00"Og;struXj3BUPAR.(7'DmขVURN,Hk416..a@'Q;6ขJ&q"ก'#Xg!J(,B.]8fkD`KkenHfrSa#XaPWU%t+E(mKG'ue*edB+48?ข`0PE/Q8/_[XS^CU4@Y$RMmea3B9?G2q`X,MM#=(#KWRLWgNMZPZ+_%E91"QZVi?W1MA_m?Tf]#qm,A9VRqG47STBIUM6/:+X'R4:`/d;.kBJ+-=a"C$0#t@pGA+(=nUe!'FstGqZct,Z+GBniFIlVciXEkU`MR[NP%0EZmbSLU_^otfD2qก%/[:K9Vtt_6MHm)&CIก5L-Ugh.X@nขkD%ks\i*FกbHGGLGEB83_NCe-/f8ehG#ZdZiDSeNDlqZก-,kk[gnImO(l)GMT\HafK-ก?$M.bL.Fh',gIqjCa!Tq-"#]"1EmbFWkn5k-EขYEd!pg4.$Nrs1JO^]MC/E*KS.*;72h2[`QGbofIp!HHYHcOSFกกd"99BRnX\D-E(Ef!u,h3,[&MQdpB=(Bกo+@&Zk)G1?-Y@]Zo.',rE6[cci!nDgก#ep-กNA(a40Y"Nj`neRT,)E1.aNASi+i^V;n3k0`FVE`r\bn_H6$^DGP4.E.nAOEC#d0i]a7Vr,'.Tr2ข:p]_dB&uD)b$TG=b'S.)oCa\;Au]-^)s&QIข-28imkJUกc%f8ePGcjA^R6kG37ddu6C)1@XX5D;P&mKIkIeLDT15Z$ID*`Oข\rtc=.5ZG16W6Z7TFJgW\\YD@+5NbOdtQF,X4;e3pn,i(\(\@hขTXกQiขZ9DZBb~ข
 -->
 </markdown>
