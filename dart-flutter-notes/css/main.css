@@ -413,6 +413,23 @@ iframe.youtube {
 	max-width: 100%;
 }
 
+div.youtube {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+
+div.youtube iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
 
 /*
 Google Ads
@@ -422,4 +439,5 @@ Google Ads
 	padding-bottom: 5rem;
 	background-color: #eee;
 }
+
 

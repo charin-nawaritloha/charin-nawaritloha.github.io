@@ -60,7 +60,7 @@
 <h1>Flutter: MediaQuery class ข้อมูลหน้าจอที่ใช้แสดงผล</h1>
 <p><img src="images/20241121/20241121_0000_cover.svg" class="u-max-full-width" /></p>
 <p>การเขียนแอปแบบกราฟฟิกอินเทอร์เฟส สิ่งที่ขาดไม่ได้เลยสำหรับการทำงานกับงาน 2D คือ หน้าจอที่จะใช้แสดงผลว่ามีโครงสร้างเป็นอย่างไร เช่น ขนาดกว้าง ยาว ขอบภายใน แนวนอน แนวตั้ง สิ่งเหล่านี้จำเป็นต้องทราบเพื่อจะได้ออกแบบหน้าจอส่วนติดต่อกับผู้ใช้งานได้มีประสิทธิภาพและใช้งานได้ง่าย การเข้าถึงข้อมูลเหล่านี้สามารถทำได้ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery-class.html">MediaQuery class</a></p>
-<div class="u-max-full-width"><center><iframe width="560" height="315" src="https://www.youtube.com/embed/A3WrA4zAaPw?si=BwvfjPrco0jG9NTX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></center></div>
+<div class="youtube"><center><iframe src="https://www.youtube.com/embed/A3WrA4zAaPw?si=BwvfjPrco0jG9NTX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></center></div>
 <h2>การเข้าถึง MediaQuery class</h2>
 <p>ตัว MediaQuery class เป็น <a target="_blank" href="20241113_flutter_inherited_widget.html">InheritedWidget</a> ที่มีข้อมูลของหน้าจอที่เป็นพื้นที่สำหรับแสดงผล การเข้าถึงข้อมูลสามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery/of.html"><code>.of()</code></a> หาก widget ที่เรียกใช้คำสั่งนี้มี MediaQuery ใน widget tree สายเดียวกัน ก็จะคืนค่าเป็น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQueryData-class.html"><code>MediaQueryData</code></a> กลับมา แต่หากไม่เจอจะเกิด Exception error แทน ในกรณีที่ไม่แน่ใจสามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery/maybeOf.html"><code>.maybeOf()</code></a> เพื่อคืนค่ากลับมาเป็น <code>null</code> หากไม่เจอ MediaQuery ใน widget tree เดียวกัน</p>
 <pre><code class="language-dart">import 'package:flutter/material.dart';
@@ -125,6 +125,19 @@ class MyText extends StatelessWidget {
 </code></pre>
 <div class="image"><img src="images/20241121/20241121_0300_add_row.png" class="u-max-full-width" /><div><p>ผลที่ได้จาก MediaQuery ใน MyText ก็เท่ากับ MainApp</p>
 </div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <h2>ขนาดหน้าจอที่แสดงผลของแอป</h2>
 <p>การอ่านค่าหน้าจอของแอปจาก MediaQuery ด้วยคำสั่ง <code>.of()</code></p>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
@@ -178,14 +191,14 @@ log(&quot;devicePixelRatio: $d&quot;); // output → [log] devicePixelRatio: 1.0
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
 <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5405806399"></ins>
+     data-ad-slot="5702321883"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script> 
- 
+</script>
 <h2>พื้นที่หน้าจอที่ไม่สามารถใช้งานได้</h2>
 <p>เนื่องจากในอุปกรณ์ smart phone หรือ tablet มักจะมี System UI ที่เข้ามาบดบังพื้นที่การแสดงผลของแอป เช่น</p>
 <ul>
@@ -205,17 +218,6 @@ log(&quot;devicePixelRatio: $d&quot;); // output → [log] devicePixelRatio: 1.0
 <p>หากมีความจำเป็นต้องการเขียนแอปบน smart phone หรือ tablet สามารถใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SafeArea-class.html">SafeArea class</a> เพื่อป้องกันการแสดง widget ไปยังพื้นที่ที่ผู้ใช้ไม่สามารถแตะหรือวาดนิ้วได้</p>
 <div class="image"><img src="images/20241121/20241121_0600_safearea.png" class="u-max-full-width" /><div><p>เปรียบเทียบระหว่างการไม่ใช้และใช้งาน SafeArea</p>
 </div></div>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="5702321883"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
 <h2>การวางแนวหน้าจอ แนวตั้ง แนวนอน</h2>
 <p>การตรวจสอบแนวหน้าจอหรือ Screen orientation สามารถอ่านได้จากคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQueryData/orientation.html"><code>.orientation</code></a> หรือจากคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery/orientationOf.html"><code>MediaQuery.orientationOf()</code></a></p>
 <ul>
@@ -227,17 +229,15 @@ log(&quot;devicePixelRatio: $d&quot;); // output → [log] devicePixelRatio: 1.0
 </div></div>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
      crossorigin="anonymous"></script>
-<!-- h2-3 -->
 <ins class="adsbygoogle"
      style="display:block"
+     data-ad-format="autorelaxed"
      data-ad-client="ca-pub-9963456691869043"
-     data-ad-slot="6575154506"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+     data-ad-slot="5405806399"></ins>
 <script>
      (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
+</script> 
+ 
 <h2>ข้อมูลอื่น ๆ ที่สามารถอ่านได้จาก MediaQuery</h2>
 <ul>
 <li>การขยายขนาดตัวอักษร <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQuery/textScalerOf.html"><code>.textScalerOf()</code></a> → <a target="_blank" href="https://api.flutter.dev/flutter/painting/TextScaler-class.html"><code>TextScaler</code></a></li>
@@ -307,6 +307,6 @@ log(&quot;Orientation: ${m.orientation}&quot;);
 </html>
 <markdown style="display:none">
 <!--
-ก~+,^C)z!".6qqemEBqWEd$s'[TPEDH:k["(]9Eoi8`Zq&9TaboT-4-#Z1G?;-23!Meq&กW:=V^&#tiS`._b)n(b/M4((S(7H`VtoJ[1V7G7:3c!&WjUG7hgG%/?i)*pea61jaT?brgQ(sY%OO?gE31f^EV*s-\.qN3EHDa^K/gFY7jiก+LPHE"kU-4L-]T7eK:DDhZT.f5rAก/aUZ4ขfNME%(qDOB%9i!qB6uAc&X]DL/do4^oEO5oH&*(JRm#:.**8Le.ข6&Xb54$,C/[gTirZ;&&KIก\eTb#oH^t6JKn0NJ\5)tX8SH"Zo`DDX%ZBH=`]E[-W64Dsmpj*กkh?,$`j6.l#j^B.bQP]_*%*hWKn,YV?4m*3k'/]_EMPKPuqB_.sd3qVlYกS&?กu`6sZ3NYh8+GM9J9qP0No@8`ljb/P*tNMpUJl=กZ#L"$GDKYG(\"dB$tTft$L@ga$5.sF5DZ'Z^?QE8p2ข1t(NAad^pMF2M:7DR[i%=G\/ge4%"T(8.tLhFY&k&Mnก8-KgJZfdf/Vgb@*NnSXohEh:-Qc]pขhIo-4u[tl&T9AOZ8%dcRp2];sY7#r0E1"@u99+@Wui4YU%p-oR7K5A_;G6+#q6R"(^g;CsE'h,AD07V0,+4s)f=[$p-8630^Mb;K0.qIOt[]3V?Ua"kD$^^J\lF)MAK`MA8,4-8uBF)mกข]k=X@2f.[Xaaj(Oc/@TกI"nfT?46mm?;P@$(ข8sDNa)t$\a/5uUj\$'L;+rTLEgjp]@g%jZ$I:h=/YEl&elm0pE+/1&!X_M/W?AJ1G.Zk-hk?T@ข]0?($?!%V]5m#MHfWขgO02U:\hA`^dYlrSk(hPZ_lnOag@K5iJ%pN46X@?(pq,FohH@g2h6F5G!nZ^G;F#4#W_[G)Q3u.DZกZ#M/etHW"1srqD+lZe6ro*ขCr[`7\5'9nขJr.:M*peW_Hqle!fHACRh9-BXn@Jl2Z*P.U;1Ki%`'I3.uB=FW/F_M@ETk)J-^%%68/^nf4jlC$6^]jK9goEXขsUdgVR9r62WDN:BY]sNa[QJls7ข)iUja0W?MXPZ(:R2Muc^ก3C]MoVOh"'d,=+9`t;ugMJ@'S/^+K.^B^L;;Ojr9?_!UT]C:B5OUiGBiWCebขW.[U!P&hSh92]orC?W#h-t?0E!ni[i#*K*Z*9Fmข?7j=`SQ@@Nkt]LPDกoGZJR4Yf$C'b'u-`hFTSIX+he;O1cU_KF)(n.RU';Hf3'V_\q!K]`^ntW/f_)G%lf^fZ4D%eU^%PaS6_b8i$QF)PBq9%b8.M26k-S%[kF7kpSขK7m,1'`gN#S6c,5#T`J6O7:LHCCs6,`-"qITlHO(;E'+X.7GAกaA%tขEd?ND#YjV;กFHm8!h3O*t=XkkPAH=eก4gEf_F*\tX#%+Pbee\."/f$Od"Nข%g*o"sb9ก4uVI/OHA*G2O$kAcf#Q_cjqcnp5/2@cCL-RB;o\S5p$NpB;MขA(M5F@DขK3Xo"-กg6Ub6B@4cK;[AMGG9mNP%GqOBHHU?eg[+:do[G3lcOH7dNpm7lSfOP:C/O?W0]XRข6S^rT*-MBWau=9XEu%M?kV)or-H*/Dq]^3dFr]*d^ก$;%anI4?TF;ข-?f6^$.F"fNQF'0+:rj*(W)ขniW(-,#n_6SขcXFEaข-V?C/DG?\[5.EA.ก3!XG&IT&n'I^pd=4C\-`X`Vg'W/F?Gg]++f8]D,ขกJ*7d,5Q`rfFe5/P:LkNAo-lI0FL3qlmIL%9`QJ-`"mi[O_DDDE-=r&.kHb71N*oNf)=lJ&uUoFe[7@\`%pp&_gc2e[3.KjEก&R@OMq+ga6m[E6@!$8RB!CFk.m&5-Gr%]%F$"bB+H7o`6pUI5-s4p";e]"M"CcAD1H\\bPH8%9oedTrhVH3g)8;@89L5g`OJ00Lhqm&j-%W.d@5&C(On%.](7*RaR9SNGe&M'*to"]\LtXkTaZ).!gs&QaC(2=ก+tm_p:9_!0XA.JWdj&'nN*\=D&ei)#_53b`IZ=c)_=.bA/h)กe#i8E[.s2k9oN^Gb@X/&ged8ih%1S&EZ"LFHW"K2q(`:Fq"sJ.pln"rcUoS?(d5'/o*X1Z.68UWiWGM0qh'q+SG3KLs4I4o\-EO@W7$Stgsik/B-nUD'@#กf^s5?'":O7@$กse=rr`R6QSq2HNq/1bnu1juข@X8Q]+3g0E7bblกsI+(rhgข3bV^R/bD0E)W9S7u:C"+!SX_oK.MgขA/W%"]R:Ea?QkE"Iก\1]@_5q`WDTU)@ก1a"f"';i[14aSUDDขf)GKhI_sOLRG$9+m45cScoaI-*R4;Tj&n"oF@กPNZLj1E&kj*PjขbMP':-$`:SU-T9P0mEOBFhEIB;LAF(WWW-9lm?+Z445D/m8t*hg+^0ขk2'E'fpT?E-YM;&5!\c!)Vt0.ข]cam1ขsX'q,BSขEoW?ขO.A;:S:'A'9JMHDk(M\gpMกh4+aX,_5GX+sG8c[u"q]7-#!]&d?PbG#?Z[f:7TWnuq"']?[TLS,@o`'2]bJKB:%gb:)8EP(O0=K2sW^!3fJDi4;]mlTQ4%%rk54MW.^j5QoVR]^@WG2$Wt!M`Ui?ZcYlYOIf)k"]L6BQJ31K-trDtF5soVYmi+%jR,V6FXis40&1`f3PDQ:*RD^t,[.9JGL]sO,R/iLI:4"N6bK:^.")uID[%0B6@'r]\7nV3"0n.8_IFs"9_h-#Udo%+%+NsoขJขGdDS%E71b+Ku"Uc@O2:J6CWj1&b4;s18V2eJ_X"sp7_2bgG)L'h3'Uh,r(E^\an?H(.RbX8Gp6_ข5S!p)DKt/nfs,Jq_LJ[Nn),X[,`K]*%.^jEKegp?ก6U[7(PKK;EQV83='6BขpKAs`1#WDEu1T:[1.[m%J(+gnX\KfYrก;$^jcG0(9*nP;OP%#Lk95A&C%arYZ(UT&@U60GE`b;5d&R%MBjf2Y?;@0ข67]n[K@)%m+o-lA$5H/6(^4]k&Us][fPAU4dRR,aV^5Y'4+aR0lll8.YmW5*"%+=MK\e5,u7aกlqWcJt(L54!+JP0YuBf,%sN`9@(B-g@.?lcu0ข!MSVZmP&4AA]I+lK[Rq7QZ#YDN3+@2[_uF1YM/:jf3#mP]GqJ#4uPmF'P;N;K.B#NRกibV^`ELY[o':F*ee;Vl+@GZg)"1RhSN!b;$1\'XT55QQGHขS]jJQQ5c.5dKL6ก/n7N4X/[\`kBOGm%J;L+,8kd+7cQ1J?7Ao.RLsLV@q.p:Vs5*DXCf$E#r\Ah7UL5?4,F#qpb9a?T[8LN1p*Y+WXAun"&Q'NSK)=R(K0$Xn%Op!AZ/5;JTN9OZGa++KG:G71Hs)Abnn!6$*?9ta)]Q:gk1V.@a@0/2Hms@8\=UYkO?gGN/77/%u4Qg(!e5.1(DPSIT3=ZpGk=qFh`p`M\^SsA%2cX.K(`7iW@&o$a$nG'kq]?lOi,"U=`bs(&_UNiU`2uDO_Wo&DT&rcK\VoA7EuBrr4QQ+_/rd=10)+)^)aMbeENHPU"kMn"X&ad2jCa"d\1'D65(Q;B]Ado40D#2WiqLก3)A;*SfaQceRN[,VT?r)XM6%^HWfZ!CV+q!I/Qi^d/IW&9Rh-*3u11H-)3O/=A;U[e_?_7[:q&ZP\a3.T7QU;@$ก\eRqhr=iFb$1iW(PbIErfD@jf,etE9heX!กa^-]%]kq%VFB50jrn_,oTF'nW3drm_8=_u!hmZ'-bl9f1WAs?)\h"jQu&T%SLj5,tuAFcdglT*?r!]p'TnO"DUb+J;lP--=SlE`g-N7eVjnW#LrQ-FsP-`f(u=QX!sY43Q^MBQ[Xf^jrP4_d9ก4AT$*Z^*9YO[)%@8^N"OEtWeA@OMG,*1h[@H_J:VOr,NX#HqlUZขMS**'1nZ=&ZSU;Sj"%l;Wtกc_MFM91]m4fCJ:4@0QEgW$ieKEA;!&ECMT(kaAq9Xgnll'eQ#E9g3Hขn&**h3V.;S6*gmZ1Jข9G'UJXMCoCBm9rb5HHIX-pr&'Uข.9ก'6QbCjr:*U)FขYe!?;b/L6iY&82iDWm;^2"LNoh#Q%jaUZ$lก:mFOtW+4@ก-PId:!;LL*WmM?2a70J5p9LlnZTn9?9d=nh69PNq.:JQP+'+nuD04%.r6AR6],:=f8'J=lWJGFkBA3DขL&fV#/gI@FbVgEWQQ8$tOFPFIo-q.D1K0TV?"(#FV9sL[a@hEV+l4/3-5"WE[`sm"*#TDjb)8.Y*Ulnli`^En4Eq=%9:\*!A3or/O/]7S;#0eJKLWo4+.5=(.l*NE.P\2gj3f=b!`9m7r@pSVEiElF7ขkกE=*19*):9e7mjFeFL3tlA$+_Kp3k,at,kJ3?rFk_,8If\ss`XFol:,aqcMก_ขGj$Q"[5(eoขM2E?NtGs'กG3GcnS\XZ1bhS"i*c"lZML.:_.S]QHp39+8`-m+aCjr,LNPGl6.RIG#f'.W7ZกXR4aZOtq$Z(SUZliU@i*b_'KZgขn%03'aoCP"eก&/0boP.H(bKTYJp+jtFHomV04;Wu&Jhiq\M9q]57-:YOA[[!i:jhp^_&(ZZi=q25G+9rCq`b)1F`AIC\ก"6EMWd$GtH7uV2k'='aiMW_ขiL,as-jFI*7WPpKqข;9c&cZja'L(7dbU/'X?U,#;pld@p+KMS+gCs_-@CpB/?q8d1M1)0%cj4=U%bM8IZaHOnkDIY%O@'A_,P2XขX+OY[@;r`#Y[%UQPB]@'pmoB9t'Cn-OC9tJ+F_IQCVR;ก;F&4RreF00ก,Armขข_@Gpd'^Lq/GN*bs7jieE5mWIo$ข^=rY;3HJbE"a'&YiกrbM24Bก=72T^-Olp,W!@BfLk.^MWm._#`]กoK*Uob%@)MUf9SqK.eM!1Q%Air2U`AG!ZrK=d&V]r]Ft"9sa")b'3[l!6h$[*PF/(^M^QJPg(&c+7Z]mSN(Y030`]J,YDt`V1Z^hAh-knH8qoRPWqo#ab7+Di=BJก7XpbF6K#Vu]1=.o=_o'ccbA\@cFMYVA]&90lb*:*\peoK4jk\Z/*"GRF@XOqk;B9!iAขG^^&c@/Q*o6rXm:!Q)^&JiICDTrก\U"=lKMP9a^M=FB$E:m8dกPb.กoR*Z^2\i[Qms=bu5m')f!&E!g*"oMgGข'M83WD1%._K'.1BASXpc"X^2E/Q^C5k$R^bAqs^'b[UbYก:YI_?]u[+EPV5bEJกlY@)UatrDhd&pYeMih3(tQc)dI!#PnsZ68PC690e14A/C9crk&U-=c"87$%jed:E)ขD,M[:bo@\WQW9M1(1^))rk,O&TIdl.66qD?"SHOpFfTmnJ-_-USqก%ggc=n8kuN$6PpmjS^eh4G/ma1cS^*AfS]6l$l^"/dN'F042AlT%p48'WI5lK'lsLV'(_]กdW-กF\+';X+G8:'e-N#N\INGq%Eq\]@6kXข%SG(,\WY/0X_!,9K+lREJ3g5#Ja?C;Dru-urb1$)[#E23^h"$qC3?_-M:gnM*LNe_8Dก[plbrPMdt!cG?BJ#5oWuego7a6N@)~ข
+ก~+,^C)z!".7กCMt04[@\s7s'_W90NEc:a_m#/QกWP&"DD9%b&(;n6Fc"b`NขK=MqOpT-4g_76=f9A;^9ขZPbs]L6`gIlYnJM.J$\ขl\N"4C40uOE9drYR%DsNZ1Mข"'pM4+]YIiU=U25\!7;^*AT.X]'dWDTF,Y@oB1;'6tk=L&c`5กjLSA]&34MZ_JPP?3uoIu,o-,Y)On=q9."F_9W,k5R]mjIX3&q?%^O(W*3GbMiPWmtjlq:V1hR3^Y*rQ!%L"#qNSQGegqmLDQG`"*+JG6aGMid]nDDt(k/IMh#:L\UO%)1IHMs,k6t"OI)PO9-+AJoK.:^h^Ff(BThFn`tVYq&#5R:#`AHQH)Sp6t1\V!h?G+i);TST(ก-F$!DY@,k5abJ!\+:A/qH(lW7T[Q,G&[lm^B]=Yfmdi?%$2;nOXd]8)1a-Gr!bkT"I_2X]PcNX;l`"J60cTs,*-!#IUlO9j_BBbI'-กTeV7J)[4nM!KR6V?ขHs:,กqS!."XT4d5kq^_tp"?oGeNh+&rBD-l.O'K=;pcM.KHo-Mb+aQ^df-[ขqmcJ^[\d,[cJML/.;.3LeNGhbHe=0V6'&9D69jGdVmH5s495",%W&iTu1s+VUT`P+`N*ZJoJ!4=1gnq^h!6=Bh=&qขg$F.,(OXJ\s8\Cขs["?/L:$ak]กZTขj%C.D,4/lerQi)En81fS;&=V[R04icEP;-6P:QขpQ6*HbUdn*@Egaeขi\p&/dX?)Ma&XuEกr;0M!2dpc@5P)qP&k2][Y?EYPRกgnK88iu@gY26hf%_I#R]pmU?hQK:ZjlP?2lS#_Me$&`3\%d7dcCa5ij?tV+RJXขJ^!g8bACIf_:BK/5;`7/8R!#%SPc`0[k(r-1IW&fCC,W%aRGX\MA]r$W7R$0@-;E(uepWJ0jW8Ie\kK'SAGmXFG.@]Vขp^M=k(cYqTZ\U"RSfF!ZK%4ha(ก\olfG?f0fhfAD,J;$$[gQ?p/gCnLcN_Yln`:ln]JO'ou^"kLS8r:ODAuE2f(6A]c5S(S4klE=!c\&[^15]aSXtT'8.ZEaLTParJXMZbe0g*V#I7CVEb.Y*G"eGBsG*kD.-l3lFT@ahK@n:GI]8Dc4eI:Eข?SWNt8(-O7=F*4lAq^+$V:63=DCaT@5;h?ข3กFh8St\dCOlp,P=OFDjBH((X\MJhbrMr_p`c7?U[X,*)!KF1BnRgl[e+XCPBkGYTlUdOgf^k#OKV9:8Ih-+PhS?BOHNE)o)\r0FTsUUkcWu7Fm0k!?61I_&;uLข%:qFpFtB#$\E*lqZA92ga.ขuqn]e+f=%,)L`G:sPVJeM0Ft_;qFLJOj!=U4ae1&c+JW-S;9ceRjeHขYfBKCF$]3LgM3@O]3QC-YB!A;oF^;IB`mAXei/Ea6YU_Mh7`2Z:1uiZZT1.g5?o@CV)g"YXY@C"c3L3m#กEGK!eO'&FACF9กqขk0sbO!HMn(=FG3F6Ek]K\JF#jZdqK:p`d]eCXK=UonMT3n1\fnT1TJ;NHBDFN']6a@V5&Tqe)EYHG9R3:ขs])cK.]กo=9O!bV3)h4&,k1CB^Ln3j;a0ePn_nWDM?:;7HJ-5fZr!5$RRก6N-p';(\gosJPกกขEC@^h`^+ZaiXe+GXlSP!;C[c;4(,(DIZNjf&`"rMeJ$G$iFcc:M]FkขMQ,HocขoM%!7;-8+)11,eK3q(Jก!*5ZbBPHF,MmZ1E-*g?OpgjU1oq-1gN(.+8.Je%%!Y*n5LG"_ขVU]GWY$G6*mJ[`D"l31XflgVIM;4e/;ก^]B\upNoINJ;SaS+uE2MfTdjon3)=9u;XQGP$j8Y:PA!fKo/;A&5d&dA40$mcX1H`^7O&BP0e_U#&KGUsl`,H4mnJ=Q:1$AgE5d8Z2[4Y+,1T$Qi)KfioXcA403njLnHde&1;ST1JO)"-jfW[[ntmF/cXSk"luX$0dJqb*2WnV;I93]CXXrZU:=1QrY/-hSE=PUDYiRKmQPTfg!1jPV@P*OR]fg_KWSoAB4"`nbC3ก*NกNAO1R))S5Pp"\a!Al9+0b"Y^'u-G7;oUKiq&eQcb0-J`e[HX(i\RCs2pbm68#MjKAVku=tOn#6s5#mflX8Ju2J4=ก6P&K5T\6$jPsข_a^oL3-4LWqKtH.!!p+=oHL]p^กM+'[S+:AOC-P6ZY'`Y:TYuCHgกI:H$#dBDBA=EVc6%Am'US#WL2HpNt[^1[6QS]"(6.H#5(94Ib'$Q:n]QaMLSก(j.GJV(40879AX7?R!h(IkeF)3?)f8:pbXFG8?XFa0"CThJta%-(L"6G!\ag@$b94+="oMC-,imขOrL'mu#5PT5)FuOe9@kjC\;3KQSD%I$#R0GYN$pYmVVJ\N)=\[9[`กQp"c397p)t7&B%JQ"jBcn&=@1Sก)4)aHslOhF0(DJl,L4&EVR8i:A"id$=#le+opb_AกNO]TPh,Mi29ngGflB"G.nMZUJ.tEr?HFBt=.W3"OX:hIoi8Y^%Eair=_&=Ek_F]2Wg4j(Zm.LB[`\Fc*@!*4HuPEUaUก,d/#5Q4HASh56Z:PMQN%^UGE-^M$YNblZ=7WO*Y&;;H!-@M&q#^'APGf.M4Y7?6/5l+YHขZeEG]%lpP327_bX\=Q*HFm?,u/"=ODJC;cG@W;YnFOX'N^4P7OKกก:$G%I.pM:Ip_#@]8-_IFs"9_hH,UrR)V!:&Rc/`/]@\)!B.)O8ข!`s#8$Rb:N"e0/t&N!@Y@gi]X$3`g8;mO='lEกhemd,^%npa!S,cc)'ojMn:*a5!3?dhH@9b_ก%q&#Fh@`eqgnR-GS=A^km0Z(7r(??b#U*O5[;กmD,dA@f";RZeF-OpjQ%\9Uoก8PN&Zd1"!mBKกcL6`H[?Z5ZV^rpกeZ\9:B.'F2-N=sH+JLj&KcTN1n!)&qc%N+UWVOVP/uWTf["Q&r"]'RDP=p.H8WT-FFJdq[J';uCc..a85]@H2R[%-fb@D7\7,aY/mt0#47G5$'7!-b:กA2hSoB`4:k.FlD'(n;*JdE![NrNกTLกD]21,XQ4(3Xi"dT@n.T*eKc0-I+Zข2?%ZD%BP0!=X`=(!p=tJP9Rck*V.Q/1V;-cbJc(H@**6[ข'V#bQ@m$R?R;/!@Cข$Q"gjTb%fbrQ5Y.KqN-H3:V$I!8d"mmb\V8p/]T/%.ขeY_Fp\fcUZกขn=$กRmAkEBN"EKmFX%RขedX)f_*)YE`kSbQt__Yq[T\;g"$Rก\rK:6lQZ*1!n_A?E-774tNo\,W$\h9rfLSh8KH;&Lu@l:(FS`%jTdOIsกcub#"@T,O%tsAVk,ข"=[=IAoaDWRP20mR;=omf5eu=g;f3pJS1Pr2;ขtk8\=UBcJ`]ก)%lDข*Y.0"S"@lt16'UiIT31VpG&3.LขS]cAW&^l1#)lgPCAe+BG"_-A(I.#MDPLQobd31;=$L0MLMf8q"[=$2pRCc#O\"1Zhft$R@"De]740ga?\I:b*M'Ks0ขi2pAFubSB/_IJCN&*pขjjYYT+1\[@2!UKQoN'PI'oWR"GcE]i!I)BTGNoE/Ucc_@S\@Y]'.2rc5dX&D;\+i5&t*#6d@[eFDGE&:33",te9CFG`?;lE=&%กขI[=@Q]FFbREu3+]p8FI]f]l.fRSgJ`FdN-;?=:K.tu_N\p7$^1t(ข9h)7!-T0sK;_,/1f:dJX-aH72[DQ_)@MeM+BWN@Y+**Q&j*]SQejiขkBG7ก_pOShHP@);YcC*5rd(-'3+8TqWnJi(%FBpEIIN\j8R*?0ZmqFRUq)kU#IO[9iAWG"M)Xl(O(m64t4eFaaM_+4V([9(aee2Uข;MZ,J#oXA':-u-ZN5RuB_c&6*02rcR;SrW\nกSeUFL.Cs6rP(G.s&lM,n/b7c8F;N8=G[BPiOQ=/^Forก^8กjM?5ON(IL(qBCl7WSr"uHข1gVgdGgSIjPu!h$!o`[1I%d91n.#jZ]pBi@!S\FIVQ:C[&TRuกt3X"?PAj8;XKh(Z?Nb'BdDXZlY5U*$E5=NขXC;#HmidXO3HUh?:j+Lr4epq?#N[bq1=9UZA\%/%RVX"-ขAH$lA+O&X?sO@QT8ka-ข&-3I&V3CPc$m]PYc9tepZ-SckjH0$:2:8,@XpcNDi^*JXOHTjg,GZmcOS(=W8J3#UEq9OO&K`H%I*6n06H4Wg7oNjbE'7_'f7Tid[H7;K.khWC7iP+"2O0N]@ก:!XMpUY;[qJB;5pL11l6,+Lhaข7jPZ";M#sc%Z"N=%kpSY!i)jAFuuc^IFf"'5?X\'[gHWC@HadSXqUK/lSORC!OJ5We"gE_mJ"bc+')eX.nc8[GsY,D!o0`,PIbgN2*E_]#%6"3(6mTnIPtr-UNUdTle&T0@'g7??)กI$Ts\4-3ds%qTKL3tnZ/$+"7A2+-=tRTJ73\Bm[6oNHedY+r6XMQeREa'^VeK&a1!KEA`?lHA+SHMi?a:_"O"$Wkmu*[J8C@DRmn5t+;Q%Ji=9Iu^T^!ขYIsu2[+q8'&-!3h`G9De?1tkU3nขUaIK[/&e)kB]jกRUuMZtV'VfR)+7D+qlK-,9!E[lGRa:Y0\TUP8$O9aY7S.กOMQOo/Y:u=4ขi$/%uF(Y,tQfi8M=N2fT"กK$BP@V0Uh;_oก`!H^%%^/e=8d^n0T*`S8XB1BgVbf!e@m2&344AnCS]lVtReo^4'@2e3:Lm1Zf7C8_?3R(&+"+d(oij#lj1JTuenWNfRdK!8ldWTN'am;*3%@#PLAAqKgin?Ub6Q+?:\F7=+5@+aCoA]\*.@0\!@กc5T*CY_58กZqDcAi7e(HulJ'5;Sd@\b%0dQd9j2WSY0K3V$JXB7ldf^nj!kK4r,+5$$S93ate`cQ;Z8fpgeusto=gMk35Q=j"Z$1k/%a=8&Ke`O;_Lo43"rr-4e&H4`aMm+?WlKrE]`C_qWEmbMWm(*SขZ7SGS8+K!D3;^Xabl)WVWกuW^Q3T$`_Nhl1n^FgbKHDsX7b24eVrqg"+'pkNN)P@T*VMn"u"=D1O!*RW&BCZ\Dd9'9$Y/P`U7DFQP8$Pq&JY2,AOK8fmH[nkMfVFCUH*:-E0j'BPpS]91,8blq"Je_I@CH,-nYNenZK1"Y[?`Q[=u'4Js1jY*:hQ_Fr_กWUV(q`NX08Bq2JJJuH;B^?KT,กiHS)D:@6tHjWLAd``)4R453LIECJ\a?pF6-ZY*^1no]?AY)slEPRCK"OdpWE\,1]9Xnj]=+A_97e6R]P$8A#'tq&CE[!(^C9PNcFEm/!+mCtL%TYK)MdMq!!mJCaE?lM"a3k_CUkVD4P#RdE.'(K.!kn?"d=B+4fjJgZ/!p&t6c21MnM*.FG*9A^\kTW),=Q_@Ci[3dfq?`+QZI.j2AWB/C_oc;rL.h+Jum$Zq=/-):Uf40_'kB[L6P+Q%FPV7"Q!tU_aalO=m=?N.^g'p\.0mDขb#`Ll2"WoAXfKJ;1E\$%pr@bNfdPRG5T^h=KV6Ape%Z0YUub=rssM-6,9!~ข
 -->
 </markdown>
