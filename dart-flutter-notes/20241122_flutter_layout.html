@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: Layout ที่ใช้เพื่อจัดพื้นที่หน้าจอ เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: Layout ที่ใช้เพื่อจัดพื้นที่หน้าจอ เบื้องต้น</h1>
+<p><img src="images/20241122/20241122_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ตัว Flutter framework มีวิธีในการวาด widget บนหน้าจอผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/rendering/RenderBox-class.html">RenderBox class</a> โดยเราจะไม่ได้ไปยุ่งในส่วนนี้ สำหรับวิธีการวาด widget จะมีโครงสร้างลำดับเรียก widget tree <strong>แต่ถึงจะเป็น tree คล้าย ๆ กับ HTML DOM แต่วิธีการคิดแตกต่างกัน</strong> ดังนั้นอย่าเอาวิธีคิดจากการเขียน HTML DOM มาใช้กับ Flutter</p>
+<p>ข้อมูลต่าง ๆ ที่รวบรวมมาส่วนใหญ่นำมากจาก <a target="_blank" href="https://docs.flutter.dev/ui/widgets/layout">flutter.dev</a> และ <a target="_blank" href="https://medium.com/flutter-community/flutter-the-advanced-layout-rule-even-beginners-must-know-edc9516d1a2">Flutter: The Advanced Layout Rule Even Beginners Must Know</a></p>
+<p>หลักการทำงานของการวาด widget ถูกอธิบายไว้ในบทความ <a target="_blank" href="https://docs.flutter.dev/ui/layout/constraints">Understanding constraints</a> หัวใจหลักในการทำงานคือ</p>
+<blockquote>
+<p><strong>Constraints go down. Sizes go up. Parent sets position.</strong></p>
+</blockquote>
+<p>หมายถึง ตัวข้อจำกัดพื้นที่ในการวาด widget จะถูกส่งจากด้านบนลงล่าง Constraints → Widget ส่วนขนาดของ Widget ที่ถูกวาดตามเงื่อนไขของ Constraints จะถูกส่งขึ้นไปข้างบน Widget → Parent ตัว Parent จะนำข้อมูลขนาดมาวางบนหน้าจอในพื้นที่และตำแหน่งที่กำหนด อธิบายรายละเอียดได้ดังนี้</p>
+<ol>
+<li>ตัว widget จะได้รับค่า Constraints จาก Parent ของมัน โดยค่า Constraints จะประกอบไปด้วย</li>
+</ol>
+<ul>
+<li>min width</li>
+<li>max width</li>
+<li>min height</li>
+<li>max height</li>
+</ul>
+<ol start="2">
+<li>จากนั้น widget จะดู child ของตัวเองทีละรายการ widget จะบอก widget ใน child ของตัวเองว่าข้อจำกัดคืออะไร (ซึ่งอาจแตกต่างกันไป) จากนั้นจึงถาม widget แต่ละตัวว่าต้องการให้มีขนาดเท่าใด</li>
+<li>เมื่อได้ขนาดแล้ว widget จะเรียง child ตามตำแหน่ง x y ทีละตัวจนครบ ซึ่งจะได้ขนาด width height รวมทั้งหมด</li>
+<li>ตัว widget จะบอก Parent ว่าตัว widget มีขนาดเท่าไหร่ (ตามเงื่อนไข Constraints ในข้อ 1)</li>
+</ol>
+<p>จากลำดับการทำงาน ตัว framework จะแยกการวาง Layout ออกจากตัว widget อย่างชัดเจน จะไม่มีการมากำหนดค่าขนาด ตำแหน่งที่ตัว widget โดยตรง</p>
+<h2>ข้อจำกัดของการวาด widget</h2>
+<p>เนื่องจาก framework ถูกออกแบบมาให้ทำงานเพียงรอบเดียว เน้นประสิทธิภาพที่ดี ทำให้มีข้อจำกัดดังนี้</p>
+<ul>
+<li>ตัว widget ต้องมีขนาดตามเงื่อนไขที่ส่งมาจาก Parent constraints เท่านั้น นั้นคือจะมากำหนดขนาดของตัว widget โดยตรงไม่ได้</li>
+<li>ตัว widget ไม่สามารถเลือกตำแหน่งที่ต้องการได้เอง การวางตำแหน่งตัว Parent เป็นตัวคำนวณตำแหน่งที่จะวาง</li>
+<li>เนื่องจากตัว widget แต่ละตัวอาจอยู่ใน Parent อื่น ๆ อีกหลายชั้น ดังนั้นขนาดและตำแหน่งที่แน่นอนของ widget ใด ๆ จะไม่สามารถทำได้ เนื่องจากต้องดูโครงสร้างทั้งหมดประกอบด้วย</li>
+<li>ถ้า widget ตัว child มีขนาดแตกต่างจาก Parent และตัว Parent เองไม่มีข้อมูลเพียงพอว่าจะวางตัว widget อย่างไรดี จะทำให้ตัว Parent ไม่สนใจขนาดของ widget ดังนั้นการระบุ alignment ของ layout จึงเป็นสิ่งที่ควรทำ</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ประเภทของ layout boxes</h2>
+<p>โดยทั่วไป layout box จะมีอยู่ 3 ประเภท โดยขึ้นอยู่กับวิธีจัดการกับ Constraints</p>
+<ol>
+<li>ขยายขนาดจนเต็มพื้นที่ เช่น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Center-class.html">Center</a> <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView-class.html">ListView</a></li>
+<li>ทำขนาดให้พอดีกับ child เช่น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform-class.html">Transform</a> <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Opacity-class.html">Opacity</a></li>
+<li>พยายามจะเป็นขนาดที่เฉพาะเจาะจง เช่น <a target="_blank" href="https://api.flutter.dev/flutter/dart-ui/Image-class.html">Image</a> <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text</a></li>
+</ol>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>Layout ที่ใส่ widget ได้ 1 อัน (Single-child)</h2>
+<p>เป็น Layout ที่ใช้งานมากที่สุด เป็นพื้นที่สี่เหลี่ยมที่ใส่ widget อะไรก็ได้ 1 อัน โดยมีรูปแบบของ Constraints แตกต่างกันไป ที่ใช้กันบ่อย ๆ เช่น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Container-class.html">Container</a></p>
+<h3>Container</h3>
+<p>ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Container-class.html">Container</a> เป็นกล่องที่มีความสามารถหลากหลาย เนื่องจากเป็นการรวม layout widget อื่น ๆ ที่ใช้บ่อย ๆ พฤติกรรมของ constraints จะขึ้นอยู่กับ constructor ว่าจะใส่ค่าอะไรเข้าไปบ้าง ซึ่งสะดวกในการใช้งานเป็นอย่างมาก แต่ก็มีข้อเสียคือ มันไม่สามารถประกาศแบบ <code>const</code> ได้</p>
+<p>ตัวอย่างการใช้งาน Container แสดงกล่องที่มีขนาด 48x48 และเทสี yellow ข้างใน มีช่องว่างระหว่างขอบ 10</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+        body: Container(
+          margin: const EdgeInsets.all(10.0), 
+          color: Colors.yellow, 
+          width: 48.0, 
+          height: 48.0)),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0100_container1.png" class="u-max-full-width" /><div><p>Container ที่ลงสีเหลืองขนาด 48x48 และมีช่องว่างระหว่างขอบ 10px</p>
+</div></div>
+<p>หากต้องการหมุนตัว Container ก็กำหนดค่าที่ transform ตัวอย่าง ลองหมุนตามเข็มนาฬิกา 0.15 radian (ประมาณ 8.6 องศา) หากมี widget ใน child ตัว widget ข้างในก็จะถูกหมุนไปด้วย</p>
+<pre><code class="language-dart">Container(
+  margin: const EdgeInsets.all(10.0),
+  color: Colors.red,
+  width: 48.0,
+  height: 48.0,
+  transform: Matrix4.rotationZ(0.15),
+  child: const Text('XXXX'),
+);
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0200_container2.png" class="u-max-full-width" /><div><p>หมุน 0.15 radian ตัวหนังสือ XXXX ข้างในก็จะหมุนตามด้วย</p>
+</div></div>
+<p>ถ้าต้องการให้ตัว Container อยู่ตรงกลางจอ ก็เพียงครอบด้วย widget ที่ชื่อ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Center-class.html">Center</a> อีกชั้น</p>
+<pre><code class="language-dart">Center(
+  child: Container(
+    margin: const EdgeInsets.all(10.0),
+    color: Colors.red,
+    width: 48.0,
+    height: 48.0,
+    transform: Matrix4.rotationZ(0.15),
+    child: const Text('XXXX'),
+))
+
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0300_container3.png" class="u-max-full-width" /><div><p>ย้ายไปอยู่ตรงกลางหน้าจอด้วย Center</p>
+</div></div>
+<p>เมื่อลองไปดูใน widget tree และเปิดดู Layout explorer จะพบว่าในแต่ละ widget จะมีค่า constraints ระบุอยู่ หากเขียน code แล้วพบปัญหา สามารถดูจากค่าเหล่านี้เพื่อหาสาเหตุที่เกิดขึ้นได้</p>
+<div class="image"><img src="images/20241122/20241122_0400_container4.png" class="u-max-full-width" /><div><p>Layout explorer กับค่า constraints</p>
+</div></div>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>Container สามารถใช้งานได้หลากหลายเพราะเป็นการรวมเอา widget พื้นฐานหลายตัวมาใช้งาน โดยคำสั่งใน constructor จะทำการเลือกสร้าง widget ตามค่าส่งมา เช่น <br>ถ้ากำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Container/padding.html">padding</a> มา มันจะสร้าง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Padding-class.html">Padding</a> กลับมา<br>ถ้ากำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Container/decoration.html">decoration</a> ก็จะสร้าง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/DecoratedBox-class.html">DecoratedBox</a> กลับมา<br>คำแนะนำจากผู้ออกแบบ framework คือ ถ้าคุณใช้งานแล้วพอใจ รู้สึกสะดวกสบาย ไม่มีปัญหาเรื่องการดูแล code ก็สามารถใช้งานได้ตามต้องการ ไม่ต้องกังวลว่าต้องใช้ layout widget ที่มีคุณสมบัติเฉพาะถึงจะดี</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ConstrainedBox กำหนดค่า Constraints เอง</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html">ConstrainedBox</a> สามารถระบุค่า constraints เพื่อให้ child ได้ใช้คำนวณขนาดของมัน ตาม layout ที่ต้องการ ตัวอย่าง หากกำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/rendering/BoxConstraints-class.html">BoxConstraints</a> อยู่ในช่วง 70 ถึง 150 ตัว child จะใช้ค่านี้อ้างอิงในการคำนวณขนาดของมัน ซึ่ง Container ที่อยู่ใน child แม้จะระบุขนาดเป็น 10x10 แต่ขนาดจริงที่ปรากฎบนจอจะเป็น 70x70 แทน</p>
+<pre><code class="language-dart">Center(
+  child: ConstrainedBox(
+    constraints: BoxConstraints(
+      minWidth: 70,
+      minHeight: 70,
+      maxWidth: 150,
+      maxHeight: 150,
+    ),
+    child: Container(color: Colors.red, width: 10, height: 10),
+))
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0500_constrainedbox.png" class="u-max-full-width" /><div><p>ผลจากการใช้ ConstrainedBox</p>
+</div></div>
+<h3>UnconstrainedBox ยกเลิกค่า constraints ที่จะส่งให้ child</h3>
+<p>อันนี้จะตรงข้ามกับ ConstrainedBox ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/UnconstrainedBox-class.html">UnconstrainedBox</a> จะไม่ส่งต่อค่า constraints จาก Parent ไปยัง child ของมัน ทำให้ตัว widget ไม่โดนจำกัดขนาด ในตัวอย่างจะเป็นการสร้าง Container มีขนาด 1000x10 ซึ่งโดยปกติหากไม่ใส่ไว้ใน UnconstrainedBox ตัว Constraints จะยาวได้แค่สุดขอบจอ แต่พอไม่จำกัด อาจจะเกิดเหตุการณ์ overflow ได้</p>
+<pre><code class="language-dart">Center(
+  child: UnconstrainedBox(
+    child: Container(
+      color: Colors.red, 
+      width: 1000, 
+      height: 10
+)))
+
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0600_unconstrainedbox.png" class="u-max-full-width" /><div><p>ผลจากการใช้ UnconstrainedBox</p>
+</div></div>
+<h3>LimitedBox กำหนดค่า constraints หาก Parent ไม่ส่งมา</h3>
+<p>ในกรณีที่ตัว widget ไม่พบ constraints ที่ส่งมาจาก Parent อาจจะพบปัญหาว่าตัว widget พยายามกำหนดขนาดจะไม่สามารถวาดบนหน้าจอได้ ปัญหานี้่แก้ไขได้ด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/LimitedBox-class.html">LimitedBox</a> ในกรณีปกติที่ Parent ส่ง constraints ตัว LimitedBox จะไม่ทำอะไร แต่หากไม่พบจะทำการส่งค่า constraints ไปให้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>OverflowBox อนุญาติให้ล้นจอได้ ไม่ต้องเตือน</h3>
+<p>ในกรณีที่อนุญาติให้ widget มีขนาดจนล้นหน้าจอได้ และไม่ต้องการให้ตัว framework แจ้งเตือน สามารถใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/OverflowBox-class.html">OverflowBox</a> ซึ่งหลักการจะคล้ายกับ UnconstrainedBox ตัว OverflowBox สามารถระบุค่า constraints ที่ต้องการได้ หากไม่ระบุตัวตัว OverflowBox จะมีค่า constraints เท่ากับ Parent</p>
+<p>ตัวอย่าง OverflowBox ที่กำหนดค่า constraints ให้สามารถสร้างความกว้างได้ไม่จำกัด ผลที่ได้คือ ตัว Container สามารถมีขนาดได้ 1000px โดยที่จะถูก crop อัตโนมัติและไม่มีการแจ้งเตือนการ overflow</p>
+<pre><code class="language-dart">OverflowBox(
+  maxWidth: double.infinity, // width is unconstrained
+  child: Container(color: Colors.red, width: 1000, height: 10),
+)
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0700_overflowbox.png" class="u-max-full-width" /><div><p>ผลจากการใช้ OverflowBox</p>
+</div></div>
+<p>หากต้องการกำหนดขนาดของ OverflowBox ให้ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedOverflowBox-class.html">SizedOverflowBox</a> แทน</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>FittedBox ย่อ widget ให้พอดีกับ Box</h3>
+<p>ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FittedBox-class.html">FittedBox</a> จะช่วยย่อขนาดของ widget ที่อยู่ใน child ให้เต็มตัวมันเองเสมอ หากขนาดของ widget ไม่เกินค่า constraints ก็จะแสดงผลตามปกติ แต่ในกรณีที่ใหญ่กว่า มันจะย่อ widget ให้ไม่เกินค่า constraints</p>
+<p>ตัวอย่างเปรียบเทียบการแสดง Text ขนาดปกติ ไม่เกินหน้าจอ</p>
+<pre><code class="language-dart">FittedBox(
+  fit: BoxFit.contain, 
+  child: Text('Hello World!!')
+)
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0800_fittedbox.png" class="u-max-full-width" /><div><p>แสดงผลตามปกติ</p>
+</div></div>
+<p>ลองขยาย Text เป็น 10 เท่า เพื่อให้เห็นว่ามันไม่สามารถแสดงบนหน้าจอได้ทั้งหมด</p>
+<pre><code class="language-dart">Text(
+  'Hello World!!', 
+  textScaler: TextScaler.linear(10)
+)
+
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_0900_fittedbox2.png" class="u-max-full-width" /><div><p>ข้อความที่ขยาย 10 เท่า หน้าจอไม่สามารถแสดงข้อความได้ทั้งหมด</p>
+</div></div>
+<p>เมื่อเอา FittedBox มาครอบเอาไว้ ตัว FittedBox จะมีขนาดตาม constraints ของ Parent ถ้า Text ใหญ่เกิน มันจะทำการย่อขนาดลงให้พอดี</p>
+<pre><code class="language-dart">FittedBox(
+  fit: BoxFit.contain, 
+  child: Text(
+    'Hello World!!', 
+    textScaler: TextScaler.linear(10)
+))
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1000_fittedbox3.png" class="u-max-full-width" /><div><p>ข้อความที่ขยาย 10 เท่า ถูกย่อให้พอดีกับตัว FittedBox</p>
+</div></div>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>เมื่อเอา Text ใส่ใน FittedBox จะพบว่าหากตั้งให้มีการตัดข้อความขึ้นแถวใหม่แบบอัตโนมัติ จะไม่สามารถทำได้ เนื่องจากตัว FittedBox จะย่อข้อความทั้งแถวให้พอดีเสมอ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Offstage ใช้ซ่อน widget เพื่อใช้งานแต่ไม่วาดบนจอ</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Offstage-class.html">Offstage</a> จะทำงานเหมือน layout box ทั่วไป คือมันจะเอา widget ไปใส่ใน widget tree แต่ไม่แสดง widget บนจอ ประโยชน์ของมัน คือ สามารถเขียนคำสั่งให้เพื่อติดต่อกับ widget ได้ เช่น อ่านขนาดของ widget เพื่อทดลองหาขนาดจริงก่อนนำไปวาดใช้งาน หรือส่งข้อมูลไปให้ widget ทำงาน เป็นต้น</p>
+<p>ตัวอย่าง การทดสอบอ่านค่าขนาดของ widget <code>Text(&quot;Hello world!!&quot;, key: _widgetKey)</code> ที่ render จริงบนหน้าจอ แต่ถูกซ่อนเอาไว้ด้วย <code>Offstage</code> หน้าจอจะเห็นเฉพาะปุ่มกด</p>
+<pre><code class="language-dart">import 'dart:developer';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State&lt;MyApp&gt; createState() =&gt; _MyAppState();
+}
+
+class _MyAppState extends State&lt;MyApp&gt; {
+  final GlobalKey _widgetKey = GlobalKey();
+
+  String _getWidgetSize() {
+    final RenderBox renderWidget = _widgetKey.currentContext!.findRenderObject()! as RenderBox;
+    return renderWidget.size.toString();
+  }
+
+  Widget get demo =&gt; Column(
+        mainAxisAlignment: MainAxisAlignment.center, 
+        children: &lt;Widget&gt;[
+          Offstage(
+            offstage: true,
+            child: Text(&quot;Hello world!!&quot;, key: _widgetKey),
+          ),
+          ElevatedButton(
+            child: const Text('Get Text widget size'),
+            onPressed: () =&gt; log(_getWidgetSize())
+          )
+        ]
+    );
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+	   home: Scaffold(body: Center(child: demo))
+	   );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1100_offstage.png" class="u-max-full-width" /><div><p>เมื่อกดปุ่ม จะแสดงขนาดของ Text widget ใน log</p>
+</div></div>
+<h3>SizedBox กล่องที่เน้นเรื่องระบุขนาด สามารถขยายหรือหดได้</h3>
+<p>หากต้องการกำหนดขนาดพื้นที่ที่จะใช้ render ตัว widget ที่มีขนาดแน่นอน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedBox-class.html">SizedBox</a> สามารถทำได้ดีในเรื่องนี้ ตัวอย่างการสร้างกล่องที่ใส่ Card ข้อความ Hello World!! ขนาด 200x300</p>
+<pre><code class="language-dart">const SizedBox(
+  width: 200.0,
+  height: 300.0,
+  child: Card(child: Text('Hello World!')),
+)
+</code></pre>
+<p>constructors ของ SizedBox</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedBox/SizedBox.expand.html">SizedBox.expand()</a> ขยายกล่องจนเต็ม Parent (ตามค่า constraints)</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedBox/SizedBox.shrink.html">SizedBox.shrink()</a> ย่อเล็กที่สุดเท่าที่ Parent จะอนุญาต (ตามค่า constraints)</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedBox/SizedBox.square.html">SizedBox.square()</a> กล่องสี่เหลี่ยมจัตุรัส</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/SizedBox/SizedBox.fromSize.html">SizedBox.fromSize()</a> ขนาดกล่องตาม <a target="_blank" href="https://api.flutter.dev/flutter/dart-ui/Size-class.html">Size</a> แทนการกำหนดค่า <code>width</code> <code>height</code> โดยตรง</li>
+</ul>
+<h3>AspectRatio กล่องที่มีขนาดตามอัตราส่วนที่ระบุ</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/AspectRatio-class.html">AspectRatio</a> จะพยายามขยายให้ใหญ่ที่สุดเท่าที่ Parent จะอนุญาต โดยคงอัตราส่วนกว้างและยาวไว้ตามที่ระบุเสมอ เช่น วาดกล่องขนาด 16:9 โดยข้างในมี Container เทสีเขียวเอาไว้</p>
+<pre><code class="language-dart">AspectRatio(
+  aspectRatio: 16 / 9,
+  child: Container(color: Colors.green)
+)
+</code></pre>
+<p>ตัวอย่าง กล่อง 16:9 ที่จะอยู่กลางหน้าจอ โดยจะขยายจนเต็มด้านกว้างหรือยาวเสมอ</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(body: 
+        Center(
+          child: AspectRatio(
+            aspectRatio: 16 / 9, 
+            child: Container(color: Colors.green)
+      )))));
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1200_aspectratio.png" class="u-max-full-width" /><div><p>เมื่อเปลี่ยนขนาดแอป ตัว AspectRatio จะขยายจนเต็มโดยรักษาอัตราส่วนเอาไว้</p>
+</div></div>
+<h3>Baseline ใช้ตำแหน่งของ baseline ใน Text ในการอ้างอิง</h3>
+<p>ปกติเวลาจัดตำแหน่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text</a> ตัว framework จะอ้างจากตำแหน่งทั้งชิ้นของ Text ซึ่งหาก Text มีขนาดแตกต่างกัน จะเกิดปัญหา Text เขย่ง ปัญหานี้สามารถใช้ Baseline เพื่อช่วยระบุตำแหน่งการวาง Text โดยใช้ค่า <a target="_blank" href="https://en.wikipedia.org/wiki/Baseline_(typography)">baseline</a> ได้</p>
+<p>ตัวอย่าง สร้าง SizedBox ความสูง 100 แล้ววาง Text ให้อยู่ด้านล่าง โดยเปรียบเทียบการใช้การ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Align-class.html">Align</a> กับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Baseline-class.html">Baseline</a> ในการวางตำแหน่ง</p>
+<pre><code class="language-dart">SizedBox(
+  height: 100,
+  child: Align(
+    alignment: Alignment.bottomCenter,
+    child: Text('java')
+))
+
+SizedBox(
+  height: 100,
+  child: Baseline(
+    baseline: 100,
+    baselineType: TextBaseline.alphabetic,
+    child: Text('java')
+))
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1300_baseline.png" class="u-max-full-width" /><div><p>การใช้ Baseline จะอ้างอิง baseline ของ Text ไม่ว่า Text จะมีขนาดเท่าไหร่ก็ตาม</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Align ตัวจัดตำแหน่ง สามารถระบุขอบ หรือระยะ offset ก็ได้</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Align-class.html">Align</a> มีความสามารถช่วยจัดการตำแหน่งของ widget ใน child ของมันโดยอ้างอิงจาก Parent โดยสามารถกำหนดเป็นมุม ขอบด้าน ที่ต้องการ หรือระยะจากมุมก็ได้ ซึ่งหากต้องการจัดกึ่งกลาง แนะนำว่าใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Center-class.html">Center</a> จะสะดวกกว่า</p>
+<p>ค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Align/alignment.html">alignment</a> ที่สามารถใช้งานได้</p>
+<ol>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/bottomCenter-constant.html">Alignment.bottomCenter</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/bottomLeft-constant.html">Alignment.bottomLeft</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/bottomRight-constant.html">Alignment.bottomRight</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/center-constant.html">Alignment.center</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/centerLeft-constant.html">Alignment.centerLeft</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/centerRight-constant.html">Alignment.centerRight</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/topCenter-constant.html">Alignment.topCenter</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/topLeft-constant.html">Alignment.topLeft</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment/topRight-constant.html">Alignment.topRight</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment()</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/painting/FractionalOffset-class.html">FractionalOffset()</a></li>
+</ol>
+<p>ข้อ 1 - 9 เป็นค่าคงที่ ที่ใชักันบ่อย ๆ คือชิดขอบ ชิดมุม หรืออยู่ตรงกลาง ในกรณีที่ต้องการระบุตำแหน่งที่ใด ๆ สามารถใช้ข้อ 10 และ 11 ในการกำหนดตำแหน่งเพิ่มเติมได้</p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment()</a> จะใช้ค่า (x, y) ในการระบุตำแหน่ง ค่าอยู่ในช่วง -1.0 ถึง 1.0 โดย 0.0 คือตรงกลาง</p>
+<div class="image"><img src="images/20241122/20241122_1400_alignment_xy.png" class="u-max-full-width" /><div><p>การระบุค่า x,y สำหรับ Alignment() เพื่อวางตำแหน่ง child</p>
+</div></div>
+<p>ในกรณีที่ใส่ค่าที่ไม่ใช่ 0.0 1.0 -1.0 แต่เป็นค่าระหว่างนั้น เช่นใช้ค่า 0.5, 0.5 จะได้ผลดังนี้</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: 
+            Container(
+              color: Colors.amber,
+              height: 300,
+              width: 300,
+              child: Align(
+                alignment: Alignment(0.5, 0.5),
+                child: Container(color: Colors.green, width: 30, height: 30),
+            )))));
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1500_alignment_demo.png" class="u-max-full-width" /><div><p>ผลของการใช้ Alignment(0.5, 0.5) ระยะตำแหน่งคือ (202.5, 202.5)px</p>
+</div></div>
+<p>สำหรับวิธีการคำนวณตำแหน่ง logical pixel ของ <code>Alignment()</code> คือ <br>([ขนาด Parent] - [ขนาด child]) * (x + 1) * 0.5 = <br>(300 - 30) * 1.5 * 0.5 = <br>270 * 0.75 = <br>202.5</p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/painting/FractionalOffset-class.html">FractionalOffset()</a> จะใช้ค่า (x, y) ในการระบุตำแหน่ง ค่าจะอยู่ในช่วง 0.0 ถึง 1.0 โดย 0.5 คือตรงกลาง ดังนั้น <code>Alignment(0.5, 0.5) = FractionalOffset(0.75, 0.75)</code></p>
+<div class="image"><img src="images/20241122/20241122_1600_FractionalOffset.png" class="u-max-full-width" /><div><p>การระบุค่า x,y สำหรับ FractionalOffset() เพื่อวางตำแหน่ง child</p>
+</div></div>
+<p>สำหรับวิธีการคำนวณตำแหน่ง logical pixel  ของ <code>FractionalOffset()</code> คือ <br>([ขนาด Parent] - [ขนาด child]) * x  = <br>(300 - 30) * 0.75 = <br>270 * 0.75 = <br>202.5</p>
+<h3>FractionallySizedBox สร้างกล่องตามอัตราส่วนของ Parent</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/FractionallySizedBox-class.html">FractionallySizedBox</a> ช่วยให้สามารถสร้างกล่องที่มีขนาดเป็นสัดส่วนตาม Parent แทนที่จะกำหนดเป็น logical pixel ค่าขนาดที่สามารถระบุได้คือ 0.0 ถึง 1.0 แทนขนาด 0% ถึง 100% ของ Parent ของมัน ตัวอย่างการสร้าง FractionallySizedBox กว้างเต็มหน้าจอ สูงแค่ครึ่งหนึ่งของจอ</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(home: Scaffold(
+      body: FractionallySizedBox(
+        widthFactor: 1.0,
+        heightFactor: 0.5,
+        child: Container(color: Colors.amber),
+  ))));
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1700_FractionallySizedBox.png" class="u-max-full-width" /><div><p>FractionallySizedBox() ขนาด 1.0x0.5</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>Transform เปลี่ยนรูปร่างของ widget</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform-class.html">Transform</a> มีความสามารถที่หลากหลายในการปรับเปลี่ยนรูปแบบของ widget ที่อยู่ใน child โดยจะมี constructor ที่นิยมใช้บ่อย ๆ ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform/Transform.flip.html">Transform.flip</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform/Transform.rotate.html">Transform.rotate</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform/Transform.scale.html">Transform.scale</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Transform/Transform.translate.html">Transform.translate</a></li>
+</ul>
+<p>ตัวอย่าง หมุนข้อความ 45 องศา ตามเข็มนาฬิกา</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var angle = 22 / 7 * 0.25; // 45 degree cw
+
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Center(
+              child: Container(
+    color: Colors.yellow,
+    child: Transform.rotate(angle: angle, child: const Text('Hello World')),
+  )))));
+}
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1800_Transform1.png" class="u-max-full-width" /><div><p>หมุน Text จะเห็นว่า Text หมุนออกมานอก Container สีเหลืองที่ขนาดเท่ากับ Text</p>
+</div></div>
+<p>หากไม่กำหนดจุดหมุน จุดหมุนจะอยู่ตรงกลาง widget หากต้องการเปลี่ยนแปลง สามารถกำหนดค่า alignment ได้ เช่น</p>
+<pre><code class="language-dart">Transform.rotate(
+  angle: angle, 
+  alignment: Alignment.centerLeft, 
+  child: const Text('Hello World')),
+</code></pre>
+<div class="image"><img src="images/20241122/20241122_1900_Transform2.png" class="u-max-full-width" /><div><p>หมุน Text โดยจุดหมุนอยู่ที่ด้านซ้ายของ Text</p>
+</div></div>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>การใช้ Transform ผลของการทำงานจะเป็นการวาด widget ทับไปบนหน้าจอโดยไม่มีการขยายขนาด widget จึงไม่ผลกับ layout หากต้องการให้ตัว layout สัมพันธ์กับตัว widget ตัองใช้ widget ตัวอื่นแทน เช่น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/RotatedBox-class.html">RotatedBox</a> เป็นต้น</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>Layout ที่ใส่ widget ได้มากกว่า 1 อัน (Multi-child)</h2>
+<p>เนื่องจากบันทึกตัวนี้ยาวเกินกว่าที่คาดไว้ และตัว <a target="_blank" href="https://docs.flutter.dev/ui/widgets/layout#multi-child-layout-widgets">Multi-child layout widgets</a> มีความซับซ้อนมากกว่า เลยคิดว่ายกไปไว้บันทึกอันใหม่น่าจะดีกว่า</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-D&CMt0DQ(MhWs5CQ/_PC8-L:1YT8sA'j:"lกr;C(Kb=@%b_j@Gl2jD]lARq`M-ก.mk`g;RMGa/'aYQ*l@Xnd:3'U`'+M@XlMZ50g_%5%[ขgc8peL%VP4i]UsC#Yd[j8/;qqFp.i,hoJ8DN+-#m\`[BO$PขB6pKCR&rj-/A]oก641p\\KL1sWSNq=AU?!uF0@k9Kq)reu?g(QZP+7nc%[$b%1:oก!$3:d-dYDW]aMo1R8l+:*QKs2KQJUE@:gfP2ข5U\dW/Q]:T"5"U2WcG(C_Ihi]H.OH6pg%NB\a5_Q&h2e%@&`:g8pt]9*3ก)UPom!!ff[ข+DV\uกiP6#I+_Hq/kE[T&A]uBgCYT)1pjYCSqkh`uK4J.K9im-7?4ut&4Xkh+QXXY9^C^Beu&R4.JBtkOXD"9`.fP^7!3,COoq."kdSr4ข#_3PSMf)tPg,e!Oej&bieM='X;..%qg-insf?%S-@D,]5t--"[E^hf#%VdfEA27?]dG@Ghb(bA=TLg@SK4rF\aDNFBBa8+W3j)U3qk;t`Xih.%\MWp_L/5Opnj:=qcPu#8GrkY^\fMCDก`Q3Sd4`-(746j6oDjDo?_i69S@^,h`!Oq5WT18r'idSVY,OlnI#fb3PQpX"o^OH@D0Hr%0!'Sn\JpRRIPm"c$FMBc[:BZXL_A+bdGpMg$iPV7UJl2]Cmb'T"PIN@\#hstHX/3-K6FE8PRn9AfcuVFCQUpMg[flG,,o3)4o5E7o8qmlE7-ooq]s,tARNNs6laJ)3f"J$"DFSD]V\ขmiG,sNDfIoข.I6D.'Cก$3qXc]uAH0-#:]A;qoffEH]mR2,i)LkL7A1m8YU:KJoe=!oXj3P.1]km+S-b2GX2&i_Me?:aqiFO;mSr$H32t4i'qDU\G`r]-X+FT.Cj@b&uTt'X=Jfo4_eI"c/&0*4rF&rdb$"Nข,V-e:@d*':$1[_?L7agO4Bc)'"?9&5NL?H\Wก@7G2ขYOpl^ae$//b5u;DK8%4+*"6lc7WCK;\.(&'%TbEGA?LCpihkqg@*VFYJN-]A?6SY4kกขREขBpmg8.FJeia0:?uq&HRZR6O=N%F;0h`;3;FVf6%[B0+r3uhaA-?rOWKLH+:3=,JqhP2^^Oa5#38G-q+,cC6Raกu;/)il*i805%dmข*l&UcVO`3H!@UT5g"f*7#."Hq17)akD3%Do.?:)'/(I`)V7HmoA,=[P-[#=;3^iR*Vl;-k4li?21k2t9m3/pDuQ)hOLsE=@3(8L_V+C,dN%V1d[PgกgJnขQo/JXOd^l9^:"9U41m^`8T]D#YG4Db(`'Y8;Ia/*o\,i[=.R2b)BUkV-Lt?f69%6fGn\I*PU+kNr0Y&kdS(ขmR6U!SIC"$YEs$`0S%_e2V7;So+T]b'=XEP0ขOIm]RV/Z6:?B68UJZenIXu68JfiLEWH#ข,T`2/')tS"mBaqps'.72,c)_SO/:Q:!k[_&Oglh,OtW)V`gu%,8Bau'iQก5Tข8ขB_Tm6BUBnd8Gid6.Xf#=QIHtVTsQ'sOWpU$U?e4C`&JoTi_1GuqU&F^frHnกขCCn6tr`k?5AHJ%C-M@"-XH1^YQPq$fb`%60:E8CXBYqpIhC,'?F2'L!P=Bcก#K6L8I^F.d+AgYT0P@p.k;e4#8b'$&01!SSW'hbu+ขn[O]+Y].Wk-hXD--:U,VKDl(CfN[b"3!3HO5"[YVDk1kL3'(PW.cot0a#%OjLDlY/JB3u%tXnFs)[-#.q\NIG1XquZ*b00T2tgnOK!LPJB1g+/,ht9ขdC;B'e'YoZ'&5+&U68sE;bกdALR)"UA[oeY",/&rZVRFRXg5*_:5!XPjedoeSK:jk+RCJiJYen#qcglN]g52กก"fa/g9"ขกK8M5;21i]l&qRWd$fQ`ขVFb@)bpกe+;,uCI4;Vo'G`Zu9][=(Nt/a!CWto)JoPW0NB"jE*,c0\NPt!5-EU+]=A:ก=;9U^85S^7[:pO!WjกnWกCFOZ7F,Z?aH3Bs3\g5^UGX/7Hl[Co6Dk[hh15(Q17FPpW;iข0VXill`%S8):ก+qg*5YVeO!\PcR'9=L4R"`I$PgoW-*.i4B`#@ibกss=K+kr/;T^0t`OhkD5L]XKj(7/Bd?Vt5Ne2UกRSOgOF)(D2c,c.hFMT-8'^co4:kO]B-1@.2l+?9g6nQMi-)#^Nข\f!%gK4Tc3[lIขIrlR,a%1$Y1ci6H3Akd8,)+6VrF_J$-#tTก=_O`(JRZT\KVX01Q2C_@VF%Nn]6ก%R\$NmsG0Sj6Oo*J^+%5HWm9S5=X##4tk5]4p66:s"\TL?rNRo(Pkd`E)&#ZJkBNF;)#4)lqNQT2Q@r@%/g0og:_*[sกWZQ54.A:km6J-%unขE)@*OG9=_C6H$'?P,J2DXH7tfSHm,l,QX3cr$Sh_AA88PEO=Resb5Z1&Uog0)'f'pM[+Yq6l5id_5[T*Nhhpf@p__Cp"l+MqcKขIh3'p;ZJEgAEIdSIkG!q-T8ItA69I2/(CEf&cmO*qf-8N(!R$n92C+n[YrT\3YmK?&M_2oขjกjIGAePaOก?gRข'^&Qpg=$6&ข*,CaBSZ"&Q']_bJ'):O,6กmNFkoDO*b::GAsก])&uOoS)PRTA7=7RPsg-m/8!H9E.Qt2AqoR39kU2A#U.;7;ePG_T&BZOd'ZcuW\Q-,;KKgK)c[sRe3TL!nh:M6(KWMP3.:dm!8FtlJphSnJO19H^t8bnUn6g0Z6X"iD#m%!S5qu,1*%SK0GSHZ7=35cC`Gc`m(a8qGก+4SVก*C]Au=__&/6-ขUA,:T?ooebM.'Mke3^!$j7,,//+Olg&^X]i`$6IZln#P`K:3J72@]n,[O.+fM&9L20t;O^=IIT?'K]pm;6,u;B4Dk#QL4kaoRP/*5Sbo[rQMo&WG@jNK:-fDก`W82c8ZWL]1JHrMqtUW2dD7VJNqmt(8Z$'Wq!\R^ก5DU08Z1"*QFXBQ$kc9Nj5tKH)',rgetWPchoP.GER-VaPLigX/egmW@ma+\!,tNU';P3KsขfgY/Qr#8]^8#k$%D8%SrhK_H*^8%r+CQQI5RK8LmC.@'(^AeKh6?4%-/eO^5Xt$d9]'peC`cXj6L0Wmt0`c@*RG,#d\.Yo7sbJHrn6ข3(#q5RCK;L9BrP\J!CHU&W@"กhZ%H/lPN9@nNSTa,4ข/?r^fH5HuE8?t*nA`(e-00nch5r%-gt59THU=\u.PYV^19@ข@ขnO]*S'I_fpOXt^dlYN,O_V=กQ[3A:i8k`5+BZOQuN8g9Bก3!fi,/LKRS6*^ขGPขK`,.BZS.jPMC\M@55l7กU3*dWf`=Q6obUdu"*.iUBd@o:กc;\Fin5pu-uMIX%"Tb%Z05AS(!DVeEY5"9&G@c]l2BaBZei52&CiqC$lEE4HTd7f*&r7Oh1@pkY7d5)=*U5Vm`T7mQ.Df=e0DPVeqaUk3F^!:ขB)i_YaSO,iO&U(WMd#Vp5t3@1@6Od\pZ*cda=i$OOjกUNOQ;'@VmSI.(%6l`eW70HhFO5LAlPEchKWJ#ZCkPCG(pgatrTlD/AXbt3s.9@c5FB_กdkY;cdf?2LmH)Zo@$hP2?@D:2IlZกQS#XiขdB9gRqOsVecJO;'RZ!`e\aTn6[&/$\DiAcqmW5E^nqE&&4RU"2_H/tZ$20EVg!'r+C&'!/qo1L]ก0mM]/cuLGBW_e*BT*un$7]0P('2rguq]E8V:V?0`P99+[1j5jNq&]Su)SeduC/m*!cAQ;P\LKdrTGกi=VEI_lHq"tg%E]W0ก$Ml&_1bMกaBb/Sj%jQjY7h602\XhA2f/&ZS/6/9k1-4T)s&!bSl\!2pTjFle'=j4YiP9bWd[orCWbHkUILCR3VXd;ek_KPB[(8YoV_9JW-L0:9KsJEC8sF86De-YMHs%DHmN=NB5Uo"802MY$mE,0jMD]sNjRl5/;r1n.T"!33#'3gU$ZC]YIj#,ขG64-p-FG*3q^Sก;@i7s-qUGCE%5QgC'ขU+KeC[Iq73g+3@9,"&MU$pข]ก%N!k`p.HNG\Cกข`Q0.U"-o,0"@enLj#ZPb8pq8H*P]\]c:`Vd;,K3),h0c"'(o[4'VV?W:$OQ)UUb^kfpB1+"(T[oU)eRp!_Y-,@,fCm=$Bb?QCd@ข\TT$(7+a;`c-/'*!J8l[$?g2.CtWn0H=6N!.M69EkuKbhsKJข@ขVa&"O?q3paetcFB'J"_7uOOfr@9b-I+RX;Vq34kGกP4eR?S.h/hg2P_^M%(=&mSGtZMra@\!=gWT?(gL.;5FTI[-S/6uWuf["a@nF#"Jm,_INsjMlX8%sMa(9d5.qjEe?/BIj!rib03]4,p.JX\"+6&R0T44F4TLh!GQ_@[1$BC,K+,,`9!Fu45UsEqh.bO$lNu4f:Eds?\%AadJ4!dgBpg,-eKZb?ONb0W'ข1MX1lCSm4=NHr(l$)u78L,Em3aLRG&m7X3M@;/%gaW6NP-"OBn;e02[f3$:*kb&E_!hV-ENV5@\P:GlDE*.TUก/$PnHi^[2oI6a_ก_=)rZjOd,S?iJ)N"&Hu@N:qhU=:/Y!*\9GANZD1jaGdT@@Y_bM;ก87+a#iuZRM"t(X\-O;;Ca:++=+nrtNjGtk&(T"/V_G!,#R1f%#n$l7ก*^HZK`!$!kiZ]M]=Y2VCfW[[KP6?Za?GSKlF@bB\:ขCl9$!*,/.F1,H@dtAG=(FDp[@Vn)Vo.Nj59/j%S\oFMกI(^7NI5)4TWC3(9k9SiSP?0m_W(Qh@X'F@Zก)k0#?e&`KPmq%UO4'a5t`,SV^YSqBก63MM_cgp+=`B_กuA1R#,!j;bCZ+'iCTRuiGhBW-rg&5In^W+K33qMOO,Tf]W5.AY#/5PjT6=?i)-.hInK"@.0@3NNiZ;Z6&EuWL+&P%UjuS_?fT:$a@sYMMS-9I\2/,I:IK?1F:$2$QA)*d&qTU&8l#"GQC=_.=Dr\T,S["8:tm9Bgก-4G(\#2:X8QQm&uT67$/f1C`0dQ%Baag(9O!h@[ANJกh%WS?FQ7tt.Vto7$:AAqjB0ich5bu.09mVKขYu^1+H.s\ii^D*K#DDi+:,O\Aerfl93ERa=กgPO=S_Magckl#:bo8uEb7Uc0gBA")N5?h/eKqขr#7UNc(oj$("MกhCกSa_BA*3qlEl@oXA9/[Rq4&?AcgSVOZBfuXV*u*"P9Qqi_D-(2Mi3k:^\B%Ph:@,$"Q87kt:?`;N:6jS7UChPM%a\UFe+o]9s)/3[,PZqDI:X51`=14.bBi-Ife*%Po6GBn[mnq`fiC(fZGLCj/;-5\5l#%LCe[UET_46HVb@b#bT/ข0-e^eI]Wn6pVd:d6f`8h10nsb,=)aBaKeldUE%(/elID=$sEph2C&61LY)"^q2GXQ6657M+i_teMn6$R()+Wer[1*H88+,aNWkoH!q'W9p2rRkKdM:ข2j$QขV0$/)^m\Ml9a)3X,WPk/OLNoL.ISZW'"kf&uI(\16t,?g@nY@'ขOrOER7kHP46\i62#aPCl."or*4$VSL@/^FUf83กQ#5lWcOก!$/cdWq=cQP#^g]ZmXMb[]Maj0`f).-WdBh:U"rbdpOfsYYla-Ae8Fi!4'@^LU_#RKcrm&uN(=)g2m,QQr"ZEfI7b`&ก'-V0l!uci92!`2;tVFK'@ms_Z.[F##sHpFY&FcE.[/eEก2)*gW:cBJ!G;93[6Tg3m;ข!Rha8Epo0@pTrJ)j4TEo*ข*;Wt)=nQ!Y0ข6JGL^sb7qXKHI0R$tLNTbH(\R&S/A`6h28B0_3FEb-MF="5^1OTPkrZ7F\1q^,rAm^-=:Z5oc-bT/9g[4f1;4cQpd8ArrgQ6#:;^OJX'KSoR#hLNS0k!ก^]QGcfWrBk!SdfA1)i[YmkRD'กpW;1]W69)dl82=kdX%=::^_pGG;+01"pq("6;R^FeOhD\CW8je9sGc2fSPr&&o1#^0-fDRa-sG!eLKj;,`,H?i.g(NAji0uA"*+กข7I)ME,nrMhNYI/mg(Ha.ก2'_k%Vn[+L`Qe_iLX+\1]_WO([/%BRQ"k,k(P?ZsI%c*WVBAกbB4qDsu%\*fขEkq6%Rm,+:$tOt/^P6uroACNe#'0qกM8isRq*PRh?^r6&P*\ehc;DNs_'m[$`M/dh\uXn0lENgeiWjGLUmU-TQ;RQ^@n(1ts/^ST4aq,is'lDHl7ot+()],Rl%;AE+cpกPi4ON,P$IhC$,7,7Z#CSXgp7H.4Ab$KFcI3a8ก(X-HPT?P9i?lr&%U(aufcW\HXYk?1QSPTH99jb'=db`;pigkM)(1hMRgi3PN^hEQu1eC5Ql`ZGeCQ3ecD(QfjL^)Q.g1oDWb3.WprS+95กNข4bf[E4$.ORc^XIjZpEGN8_GขTqbjO1t=)ขcfS=3\thCI[]E6gW'neSfY&)*Z+/)hYZp#'ข"Yข#=N_XWd7%[%q"F?YS"mA3Z3_]Y6f"m=DL$H@NpIFa9*\Bg8%DJ#)en7"."b28?iTMXHขDW.($YSVhV(ข06WI8:CVs_#\keC+V(&r$m\P]r8K_,jD_"[ขIZ`กF\o&bHf9mqZpHck]T1.2(LW]hhiiW)YsDq\eO_[k)1=lbnmDA6Djข'IQ@9#np[C#+\:[X)8e2:WbR=I4Y%,^I)-#Zi2*YW$GMe,/Q_4[:Kh*nShMh\l_'q!8pJLlr5B`6818ขeVก[FcNJa;^กp+กf1rH=1YX:S6AEXB4LYSJM(%s_;\Bg/)9eaขu%0!U6'Dd[,8R5ขขS@f.!d$a]AQo:AaHtS2SB1.4$jWGCF$#&XgjEfI,Kf!@G%K`[]isK+Di,P,B.trPGMcCuu9PSjPLCI2RขNRd)C=/[nG++]]ktsEYNIf0H`,กECDDMOกT,\'r$eJD'2ข?O7ETccCeh"kW25AJKC3ik2P25qLk'W[eX`S4B/E:I=p2Bm`NR#$m0nrhrX)UtmS%K2*EXq9:*L[@@9pก$83G2J=N'`@*-(2/K#T\aZ9])Gen+LB-MWH;FB14N;$กrWT\`,X6L1l`/HJPN^]uTHAMj6lU#s]?+:j%6Z]L."VW7!T@#q'dhNsG6;f+iMQ1C,WQBci;_^Dn:Lข84Mก+_%9(Z0d[ข4ก9e(e/fa$3ข0ds4t%OAข2j[AnJ1Z:%_H4F1_.s"?/9=4]))`8X%!d.6(-(กU&MdIlIXZNHc8er"aS+q1l==LG-1C)\HAqBXgVslBW\`4_M0NI,]#)','/ecU$%)tQo5@#6oL$`rNM:$"kKib[7L[oAb4YIe:2l0A7!#Z&n[Enci9Bg`P+n2@oMg-B073VfG^-4VM(E?NuI9[:c\+(ioX^iG.:qj;SOdCd3*+@L:rD`c=sN3HO^cm4h$CU7O34QQ%5d(ข]L+LbMoQa!'8.VGC7FjT(*AVZ6K^9Q.#0.pEVB8!Bgu5^pC\68@m5!o+ABZlDH)WYSptudjYO0\cm69E!$6gกcMh[8Z`XL""Q9$F73/7Nsd/pQq+PL4TF5T6"!ขN:E$oDVfk;=)gA&h*7g9pD4Z6HLDข8;ak")G=rMSQXB2IO*กF"Cข%?Qjข3Cs:#l,GCกi`+*+3Z-0R8)co3J6!IrI2m?3'AZZeC,t*prt8S&q7II9.%O.9/dlY:Ds_7.&snLHk7FJ-&0aCMfT:39rq\np/"8cF;4%aP%@3h.LกB*62GZ;%I\up?SA,fdnC'pก3lX7lML4]&(\@TS-U19Krsd6n91&8NUkWHeข-#[UtO*ขSWk*?'%dg[1s[GX9?E`V%.]8T**K40;7ขข%V1&SX4i0,?31thR;V=44+;)o@0TD3CYWol7@7Ci!0huYM(Ald1@[]Z?W!ILkL+Cf?'+Tr?3XsU+^.'Z_dfXN4(MgTh7]o3%nZ[cVfVL?=E`\bQ5=B:enL[H1กFS6JNe7#o7&rF=@;7[5dWU(B3;6=2I)+lNgก$?&W2-^b*JOX\PdEE2&)tOWq4"gtก?+E:j;3fข=4H=d'Ae:r"3f3pk!WT'KI)Lc!M-dXM,pP,Hf7ZrEG(jnSpB2QK)5riMกCFtXr9)R?6!hl5K"="j1d:do]+4Zf0&Z;35io0c:liLRBiW8#%GKJSQTj_Zb/!=e?dF/YLkYD34RmTB9%:'-^c=$kDjF$kud-8rcT2กpo+C)lWp2,:GoBTY^L%-3ขA(0Yue#s5A'1ขBfOBu4&7l9rc8QlNQD9CoSBdUnก2@)ก;B3IK#ZOUก8-:bfs.54K-Q[T,W%h@+E%gkf3Oกf$C:PNกY!fl.cRE7m_ขUkM:rem3@%YX1!V8$=gmb'r$MK+R7A&/pTi,qCIU6Ers%$a$cHsS3$-SqfTrqSpLQ%jmWj!n,62iAi%inRg3(T(qGjU%/MG5S%WeF_+a]Z-::A-%3=I08Fข9&I)nj;=d0&]+8CiFITXHPts)MHf,7C!s'Dha$K7c"8B*Sc4Yg@_L+`mK^_tIqh)ข,)7.Wg,กGt$Ud*d?-?7XA=k$:*;t9:.Uo3NErQ9@dqjk6kNEขWT']5kE[88nOOh?MOk\Ga6IgAcA4p?^772=C8klpF5"N2u-GR]EBBqKItc7#ขpES_(11o=%I`^5;f@EAขC0?0=B$dR!E!.Eg9pขPl^bPกp-)7=1fjb\Io$]NWYbV@eJH,n`/`sJbX[705rกFiV\=BlQ9)*4*_-6?jEP!H=;Eกp7G;[dAX&62กFn$K6gPu]Xi,1dI3gm"Z=*'+.Ut4[CaUG1XQ`#O4#IO(D8`B-Gsu6ek)gJ]MN.-e?.EZ?u_L(lP+b[Su416,13#]FGinbZ9GPMXmfRqaQcJeZC\eYifTYNhM-*7rLkก'?@$C(MaJ"EP1Sr(on`ZR+sF8M+6[Qmq!)t%pePfh70-9unQ@kiRNQ_dXH3`2B7.e?*?)p9Ofu:]m2n0%ข$qq6CWNu)@Zh"diU)_.0eIDs&Sj\d&F^VT\Q3Q\YsBRm.6)r_Ri=sกH^A9oVXUDjK%e(^V1.5+1Ol(D0_X[2iJ;pt[&1kr6f:s8LmRi7MกUbRoZb_=ZR[VUr)g"UnpS*Q+ui$'X&Uks8h%t?.WLE0cr6Z^WT4VกhlA0gaNHb^X0&o/!YCt_7t?t[0siplp(Z11hr&M`n*iKs;KfLr`=UnB`A,'.1G9i*Tgข0RF6i=CB4'WZeHP!CDKข)WkrIZT8^Q9$;\nqjMm1gcji_J3ขo+9rjb6e35lat&=ขSrc%r9se-.cdL)*J]\?7G&!OBET%Dl37[JuXWd/B[q8qC9udU$9OrQCPDI1sYuqGs#HS0AJh_N%\5eK;ขl!iM:V1K_HmBg)]EN(1JUnen*?L36*6,ก2:8fg4lB.aR6]BI8s-.%g$กMBk#17=h-e_(]A'jJkAN'at/#e)"$*ukX/=ข))NP?peom.e8P!#Q4O`&oH!KWFFXa:$ขAu[7pXU53Bก@Z-D$PSFkI$PRU"[1!`A#IiกT7^h'Iir3Ub(="NhD7IH#0Va!-J:[tOV8j(02:rqE\f\i@5กhuu5J[%%\uK8T.YC&H0KKZTn_T1.Y4dp?k(,L8K)ep`1Aq#,PqqC0&3HI'rbJi$9d3U(0K?N!7&"&Ja\.H!T=m:s@sl;kZb`V;WsdWXVUJES4;U_oeX`DO#A&PnT-P%Z=nfc?ZtF'tS;V%5j8X#&'*-E"^=P=EjuE^*%gb%E?6oe:IXd[[ndDi]ขW`:ขo"hoH=#3,;ID#Cif&ghNlc5__KM[D+=*iIFYV/$?`)(d5_OGrขBs!ข1^WNFR~ข
+-->
+</markdown>
