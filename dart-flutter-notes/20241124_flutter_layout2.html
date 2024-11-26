@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: Row Column Table เบื้องต้น</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: Row Column Table เบื้องต้น</h1>
+<p><img src="images/20241124/20241124_0000_cover.svg" class="u-max-full-width" /></p>
+<p>สำหรับ Layout แบบ single-child คิดว่าไม่น่าจะมีปัญหาเท่ากับ Multi-child layout widgets เนื่องวิธีจัดการของ Flutter framework นั้นจะทำการประมวลผลเรื่อง layout เพียงรอบเดียว ดังนั้นการที่ layout มี widget ที่ต้องการจัดการหลายตัว จึงจำเป็นต้องคุยกันเรื่อง ขนาด และต้องการกำหนดค่า constrains ที่ชัดเจน มิฉะนั้นจะไม่สามารถ render ได้ อย่างเช่น Row Column ที่จะมีไม่มีค่า constrains ส่งให้ตัว widgets ตัว widget แต่ละตัวต้องเป็นตัวกำหนดขนาดของตัวเองแล้วส่งไปให้ตัว layout ดังนั้นหากไม่ปฏิบัติตามหลักเรื่อง constrains จะทำให้เกิด error และไม่สามารถ render ตัว widget ได้</p>
+<h2>Row Column จัดแถว คอลัมน์</h2>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Row-class.html">Row</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Column-class.html">Column</a> จะมีหลักการทำงานที่คล้ายกันมาก จุดที่แตกต่างกัน คือ Row จะเรียง widget เป็นแถวในแนวนอน ส่วน Column จะเรียงในแนวตั้ง โดยพฤติกรรมนี้จะเหมือนกับเอา <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flex-class.html">Flex</a> มาใช้งานโดยกำหนดทิศทางการเรียงให้ ในการใช้งาน layout ทั้งสอง ตัว widget ที่จะเอามาเรียงต้องระบุขนาดของตัวเองแล้วส่งไปให้ layout</p>
+<ul>
+<li>กำหนดแบบ absolute คือ กำหนดแบบค่าแน่นอน เช่น ใช้ SizedBox ระบุขนาดของ widget ที่จะเอาไปเรียงใน layout</li>
+<li>กำหนดแบบ relative คือ กำหนดแบบอัตราส่วน เช่น การใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Expanded-class.html">Expanded</a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flexible-class.html">Flexible</a> เพื่อระบุว่าให้ใช้พื้นที่ของ layout ในอัตราส่วนเท่าไหร่</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Row เรียงตามแนวนอน</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Row/Row.html">constructor</a> ของ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Row-class.html">Row</a></p>
+<pre><code class="language-dart">const Row({
+  Key? key,
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+  MainAxisSize mainAxisSize = MainAxisSize.max,
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+  TextDirection? textDirection,
+  VerticalDirection verticalDirection = VerticalDirection.down,
+  TextBaseline? textBaseline,
+  List&lt;Widget&gt; children = const &lt;Widget&gt;[],
+})
+</code></pre>
+<p>หากใช้ค่าเริ่มต้น Row จะขยายด้านกว้างจนเต็ม Parent และจัด widget ไว้ทางซ้าย ลองมาดูตัวอย่าง เรียง Text ใน Row กัน จะเห็นว่าตัว widget จะไม่ทราบค่า width constrains</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MaterialApp(home: Scaffold(body: 
+    Row(children: [Text('1'), Text('2')])
+  )));
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0100_row1.png" class="u-max-full-width" /><div><p>โครงสร้าง layout ของ Row</p>
+</div></div>
+<p>จะเกิดอะไรขึ้นหากใส่ widget ที่ตัวมันเองอาศัยค่า constrains จาก Parent เข้าไปใน Row</p>
+<pre><code class="language-dart">Row(children: [
+  Text('1'),
+  Text('2'),
+  Container(color: Colors.yellow) //add yellow box
+])
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0200_row2.png" class="u-max-full-width" /><div><p>ไม่มีกล่องสีเหลืองบนจอ</p>
+</div></div>
+<p>จากตัวอย่างจะเห็นว่าการใช้งาน Row (และ Column) หากตัว widget ที่จะเอามาเรียง ไม่มีค่า size ในตัวมันเองเมื่อ render จะเกิดปัญหาเพราะส่ง Row ไม่ส่งค่า width constrains ไปให้ widget ที่จะ render ดังนั้นจึงจำเป็นต้องระบุค่า flex ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html">Flexible</a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Expanded-class.html">Expanded</a></p>
+<pre><code class="language-dart">Row(children: [
+  Text('1'),
+  Text('2'),
+  Flexible(
+    flex: 1,
+    child: Container(color: Colors.yellow)
+  )
+])
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0300_row4.png" class="u-max-full-width" /><div><p>กล่องสีเหลืองขยายในพื้นที่ที่เหลือจนเต็ม</p>
+</div></div>
+<p>พอใส่ Flexible พบว่า Container แสดงบนจอแล้ว โดยแสดงจนเต็มพื้นที่ที่เหลือ ที่เป็นแบบนี้เพราะกระบวนการ render ของ Row และ Column มีดังนี้</p>
+<ol>
+<li>ทำการ Render ตัว widget ที่มีค่า flex = null หรือก็คือ widget ที่ไม่ได้ครอบด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html">Flexible</a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Expanded-class.html">Expanded</a> โดยค่า constrains ที่ส่งไปให้จะมีเฉพาะส่วน height เท่านั้น ค่า width ตัว widget ต้องจัดการเอง</li>
+<li>พื้นที่ที่เหลือจากข้อ 1 จะถูกจัดสรรไปให้กับ widget ที่ระบุค่า flex มา โดยค่า flex จะใช้สำหรับคำนวณพื้นที่ที่แต่ละ widget จะได้รับ ดังนี้</li>
+<li>เอาค่า flex ของแต่ละ widget มาบวกกัน เช่น [A flex=1] [B flex=2] รวมกันได้ 3</li>
+<li>เอาค่าขนาดที่เหลือมาหารด้วยค่า flex ทั้งหมด เช่น เหลือ 300px หารด้วย 3 จะได้ 100px ต่อ flex</li>
+<li>ขนาดของ widget ที่จะได้รับคือเอาค่า flex คูณกับผลในข้อ 2. ดังนั้น ขนาดที่ได้จากข้อ 1. จะเป็น A=100px B=200px</li>
+</ol>
+<pre><code class="language-dart">Row(children: [
+  Text('1'),
+  Text('2'),
+  Flexible(
+    flex: 1,
+    child: Container(color: Colors.yellow)
+  ),
+  Flexible(
+    flex: 2,
+    child: Container(color: Colors.green)
+  )
+])
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0400_row5.png" class="u-max-full-width" /><div><p>ความกว้างของสีเขียวจะเป็น 2 เท่าของสีเหลือง</p>
+</div></div>
+<p>การจัด layout ของ widget ที่อยู่ใน Row สามารถกำหนดค่าได้จาก <code>mainAxisAlignment</code> <code>mainAxisSize</code> <code>crossAxisAlignment</code> <code>textBaseline</code> โดยตัวอย่างจะใช้สีเหลืองแทนพื้นที่ของ Row ทั้งหมด ข้อความ 1 2 3 4 แทน widget ที่ขนาดไม่เท่ากันเอามาเรียงในรูปแบบต่าง ๆ โดยความสูงของ Row จะเท่ากับตัว widget ที่สูงที่สุด นั้นคือ 4</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: 
+          Container(
+            color: Colors.yellow,
+            child: Row(children: [
+              Text('1', textScaler: TextScaler.linear(1)),
+              Text('2', textScaler: TextScaler.linear(2)),
+              Text('3', textScaler: TextScaler.linear(3)),
+              Text('4', textScaler: TextScaler.linear(4)),
+            ]),
+  ))));
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0500_row6.png" class="u-max-full-width" /><div><p>ผลจากการปรับค่าของ Row ในรูปแบบต่าง ๆ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Column เรียงตามแนวตั้ง</h3>
+<p>ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Column-class.html">Column</a> จะมีหลักการทำงานคล้ายกับ Row มาก โดยจะเปลี่ยนการเรียง widget จากแนวนอนเป็นแนวตั้งแทน ตัวอย่างจะใช้ของ Row แล้วเปลี่ยนเป็น Column แทน จะเห็นว่าตัว Column มีพื้นที่เต็มความสูงของ Parent</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+    color: Colors.yellow,
+    child: Column(children: [
+      Text('1', textScaler: TextScaler.linear(1)),
+      Text('2', textScaler: TextScaler.linear(2)),
+      Text('3', textScaler: TextScaler.linear(3)),
+      Text('4', textScaler: TextScaler.linear(4)),
+    ]),
+  ))));
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0600_column1.png" class="u-max-full-width" /><div><p>Column ที่ได้ ความกว้างจะกว้างเท่าเลข 4</p>
+</div></div>
+<p>หากต้องการกำหนดค่าอื่น ๆ จะคล้ายกับ Row แต่สลับเป็นแนวนอนแทน จะมีเฉพาะส่วนของ CrossAxisAlignment.baseline ที่ยังไม่ค่อยเข้าใจวิธีใช้ แต่มีตัวอย่างอยู่ใน <a target="_blank" href="https://stackoverflow.com/questions/62371976/align-text-baseline-with-text-inside-a-column-using-flutter">StackOverflow</a> โดยส่วนตัวคิดว่าไม่น่าจะได้ใช้</p>
+<div class="image"><img src="images/20241124/20241124_0700_column2.png" class="u-max-full-width" /><div><p>ผลของ Column เมื่อปรับค่าต่าง ๆ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>Flexible และ Expanded</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html">Flexible</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Expanded-class.html">Expanded</a> ต่างถูกใช้เพื่อระบุค่า flex สำหรับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Row-class.html">Row</a> <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Column-class.html">Column</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Flex/Flex.html">Flex</a> โดยมี constructor ดังนี้</p>
+<pre><code class="language-dart">const Flexible({
+  Key? key,
+  int flex = 1,
+  FlexFit fit = FlexFit.loose,
+  required Widget child,
+})
+
+const Expanded({
+  Key? key,
+  int flex = 1,
+  required Widget child,
+})
+</code></pre>
+<p>สิ่งที่ Flexible ต่างจาก Expanded คือ มันสามารถกำหนดได้ว่า จะให้ขนาดของ child มีขนาดเต็มที่หรือไม่ ผ่านการกำหนค่า <code>fit</code></p>
+<ul>
+<li><code>fit = FlexFit.loose</code> widget ใน child จะไม่ถูกบังคับให้ขยายขนาด (ค่าปริยาย)</li>
+<li><code>fit = FlexFit.tight</code> widget ใน child จะถูกขยายขนาดให้เต็ม มีผลเหมือนกับการใช้ Expanded</li>
+</ul>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+    color: Colors.yellow,
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(children: [
+        Expanded(child: Test(Mode.expanded)),
+        Expanded(child: Test(Mode.expanded)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Expanded(child: Test(Mode.expanded)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Flexible(fit: FlexFit.tight, child: Test(Mode.flexibleTight)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Flexible(child: Test(Mode.flexible)),
+      ]),
+    ]),
+  ))));
+}
+
+enum Mode { flexible, expanded, flexibleTight }
+
+class Test extends StatelessWidget {
+  final Mode mode;
+  const Test(this.mode, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (mode) {
+      case Mode.flexible:
+        return Container(color: Colors.grey, child: const Text('Flexible'));
+      case Mode.expanded:
+        return Container(color: Colors.green, child: const Text('Expanded'));
+      case Mode.flexibleTight:
+        return Container(color: Colors.cyan, child: const Text('Flexible(tight)'));
+    }
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0800_flex.png" class="u-max-full-width" /><div><p>เปรียบเทียบระหว่าง Flexible กับ Expanded</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>Table ก็ตารางนั้นแหละ</h2>
+<p>ในกรณีที่ต้องการใช้ Row เพียง 1 แถว เพื่อเรียง widgets ก็สมเหตุสมผลที่จะใช้ Row แต่เมื่อไหร่ที่มี widget ที่ต้องเรียงต่อกันไปเกิน 1 แถว แนะนำว่าให้ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table-class.html">Table</a> สิ่งที่ Table ทำได้มีดังนี้</p>
+<ol>
+<li>กำหนดขนาดความกว้างของแต่ละช่อง ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/defaultColumnWidth.html">defaultColumnWidth</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/columnWidths.html">columnWidths</a></li>
+<li>กำหนดวิธีการวางในแนวตั้งได้ ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/defaultVerticalAlignment.html">defaultVerticalAlignment</a></li>
+<li>กำหนดเส้นกรอบตารางได้ ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/border.html">border</a></li>
+<li>ในแต่ละแถว ตัว widgets จะถูกบรรจุอยู่ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/TableRow-class.html">TableRow</a> สามารถตกแต่งแต่ละแถวอย่างอิสระด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/TableRow/decoration.html">decoration</a></li>
+</ol>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/Table.html">constructor</a> ของ Table</p>
+<pre><code class="language-dart">Table({
+  Key? key,
+  List&lt;TableRow&gt; children = const &lt;TableRow&gt;[],
+  Map&lt;int, TableColumnWidth&gt;? columnWidths,
+  TableColumnWidth defaultColumnWidth = const FlexColumnWidth(),
+  TextDirection? textDirection,
+  TableBorder? border,
+  TableCellVerticalAlignment defaultVerticalAlignment = TableCellVerticalAlignment.top,
+  TextBaseline? textBaseline,
+})
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การกำหนดความกว้างของคอลัมน์</h3>
+<p>ตัว Table ก็ใช้หลักการจัดความกว้างแบบเดียวกับ Row ผ่านคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/defaultColumnWidth.html">defaultColumnWidth</a> เช่น ถ้าวางแผนว่าจะมี 3 คอลัมน์ ที่ขนาดเท่ากัน จะเขียนตามตัวอย่างต่อไปนี้</p>
+<pre><code class="language-dart">import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+              color: Colors.yellow,
+              child: Table(
+                children: [
+                  TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+                  TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+                  TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+                ],
+              )))));
+}
+
+class Cell extends StatelessWidget {
+  final String lable;
+  const Cell(this.lable, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor = Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.5);
+    return Container(
+      color: bgColor,
+      child: Text(lable),
+    );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_0900_table.png" class="u-max-full-width" /><div><p>Table ที่ใช้ค่าเริ่มต้น ทุกช่องกว้างเท่ากันหมด</p>
+</div></div>
+<p>ค่าเริ่มต้นของ <code>defaultColumnWidth</code> จะเป็น <a target="_blank" href="https://api.flutter.dev/flutter/rendering/FlexColumnWidth-class.html"><code>FlexColumnWidth()</code></a> ทุกช่องมีค่าเริ่มต้น flex=1 มาลองดูในรายละเอียดกัน</p>
+<ol>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/FlexColumnWidth-class.html"><code>FlexColumnWidth()</code></a> ทุกช่องค่า flex=1 ดังนั้นจะมีความกว้างเท่ากับทุกช่อง โดยจะใช้ความกว้างสูงสุดของ Table มาหารด้วยผลรวมของ flex</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/FixedColumnWidth-class.html"><code>FixedColumnWidth()</code></a> กำหนดความกว้างเป็น pixel เช่น <code>FixedColumnWidth(50.0)</code> ทุกช่องจะกว้าง 50.0px แต่การกำหนดแบบนี้ถ้าผลรวมเกินความกว้างสูงสุดของ Table จะเกิดปัญหา Overflow</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/FractionColumnWidth-class.html"><code>FractionColumnWidth()</code></a> กำหนดเป็นอัตราส่วนเมื่อเทียบกับความกว้างสูงสุดของ Table เช่น <code>FractionColumnWidth(0.33)</code> ทุกช่องจะกว้าง 33% ของความกว้าง Table</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/MaxColumnWidth-class.html"><code>MaxColumnWidth()</code></a> กำหนดค่าสูงสุด 2 ค่า หากคำนวณแล้วค่าไหนมากกว่าจะใช้ค่านั้น เช่น <code>MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))</code> ถ้า Table กว้าง 300 มี 3 คอลัมน์ <code>FlexColumnWidth() → 100px</code> ดังนั้นตัว render จะใช้ <code>FixedColumnWidth(150)</code></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/MinColumnWidth-class.html"><code>MinColumnWidth()</code></a> กำหนดค่าต่ำสุด 2 ค่า หากคำนวณแล้วค่าไหนน้อยกว่าจะใช้ค่านั้น เช่น <code>MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))</code> ถ้า Table กว้าง 300 มี 3 คอลัมน์ <code>FlexColumnWidth() → 100px</code> ดังนั้นตัว render จะใช้ <code>FlexColumnWidth()</code></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html"><code>IntrinsicColumnWidth()</code></a> ใช้ค่าขนาดของ widget ที่กว้างที่สุดในการกำหนดขนาดของแต่ละคอลัมน์ วิธีนี้แต่ละคอลัมน์จะปรับขนาดตาม widget ที่กว้างที่สุด <strong>ทำให้ใช้การประมวลผลมากที่สุด</strong> พิจารณาให้รอบคอบว่าจำเป็นต้องใช้จริง ๆ</li>
+</ol>
+<div class="image"><img src="images/20241124/20241124_1000_table.png" class="u-max-full-width" /><div><p>กำหนด defaultColumnWidth=IntrinsicColumnWidth()</p>
+</div></div>
+<p>สำหรับ <code>MaxColumnWidth()</code> กับ <code>MinColumnWidth()</code> เวลาใช้งานจริง อาจงง ๆ นิดหน่อย เช่น ต้องการกำหนดว่า</p>
+<ul>
+<li>คอลัมน์กว้างอย่างน้อย 150px จะใช้คำสั่ง <code>MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))</code></li>
+<li>คอลัมน์กว้างได้สูงสุดไม่เกิน 150px จะใช้คำสั่ง <code>MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))</code></li>
+</ul>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>จากการทดสอบกับ Flutter 3.22.3 พบว่า <code>MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))</code> มีปัญหากับคำสั่ง <code>FlexColumnWidth()</code> ทำงานได้ไม่ถูกต้อง แต่หากใช้ <code>FractionColumnWidth()</code> จะทำงานถูกต้อง เช่น ถ้ามี 3 คอลัมน์ ก็ใช้ <code>MinColumnWidth(FractionColumnWidth(1 / 3), FixedColumnWidth(150))</code> แทน แนะนำให้ตรวจสอบก่อนว่า issue นี้ได้ถูกแก้ไขหรือยัง</p>
+</div></div>
+<p>นอกจากการกำหนดด้วย <code>defaultColumnWidth</code> สามารถกำหนดเป็นรายคอลัมน์ที่ต้องการได้โดยใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Table/columnWidths.html"><code>columnWidths</code></a> ข้อมูลที่จะใช้กำหนดขนาดความกว้างจะเป็น <code>Map&lt;int, TableColumnWidth&gt;</code> เช่น กำหนดให้คอลัมน์แรกมีขนาด 80px <code>columnWidths: {0:FixedColumnWidth(80.0)}</code></p>
+<pre><code class="language-dart">Table(
+  columnWidths: {0: FixedColumnWidth(80.0)},
+  children: [
+    TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+    TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+    TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+  ])
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_1100_table.png" class="u-max-full-width" /><div><p>เฉพาะคอลัมน์แรกที่มีผลกับ columnWidths ที่เหลือใช้ค่า default ใช้ flex คำนวณ</p>
+</div></div>
+<p>หากต้องการกำหนดขนาดคอลัมน์ทุกอัน ก็สามารถระบุได้ตามความต้องการ ตัวอย่าง</p>
+<ul>
+<li>คอลัมน์ที่ 1 ขนาด 80.0</li>
+<li>คอลัมน์ที่ 2 ขนาด 150.0</li>
+<li>คอลัมน์ที่ 3 ขนาดพอดีกับ widget</li>
+</ul>
+<pre><code class="language-dart">Table(
+  columnWidths: {0: FixedColumnWidth(80.0), 1: FixedColumnWidth(150.0), 2: IntrinsicColumnWidth()},
+  children: [
+    TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+    TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+    TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+  ])
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_1200_table.png" class="u-max-full-width" /><div><p>กำหนดขนาดทุกคอลัมน์</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>ใส่เส้นขอบ Table</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/rendering/TableBorder-class.html">TableBorder</a> สำหรับระบุรูปแบบของเส้นขอบตาราง มี constructor 3 แบบ ดังนี้</p>
+<pre><code class="language-dart">const TableBorder({
+  BorderSide top = BorderSide.none,
+  BorderSide right = BorderSide.none,
+  BorderSide bottom = BorderSide.none,
+  BorderSide left = BorderSide.none,
+  BorderSide horizontalInside = BorderSide.none,
+  BorderSide verticalInside = BorderSide.none,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+
+// A uniform border with all sides the same color and width. → best for lazy guy 😍
+TableBorder.all({
+  Color color = const Color(0xFF000000),
+  double width = 1.0,
+  BorderStyle style = BorderStyle.solid,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+
+// Creates a border for a table where all the interior sides use the same styling and all the exterior sides use the same styling.
+const TableBorder.symmetric({
+  BorderSide inside = BorderSide.none,
+  BorderSide outside = BorderSide.none,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+</code></pre>
+<p>ตัวอย่างการใส่เส้นตาราง <a target="_blank" href="https://api.flutter.dev/flutter/rendering/TableBorder/TableBorder.all.html"><code>TableBorder.all()</code></a> เนื่องจากเส้นตารางมันทับกับขอบแอป เลยครอบด้วย Padding เพื่อให้เห็นเส้นชัดขึ้น</p>
+<pre><code class="language-dart">Padding(
+  padding: const EdgeInsets.all(30.0),
+  child: Table(
+    border: TableBorder.all(),
+    children: [
+      TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+      TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+      TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+    ]
+))
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_1300_table.png" class="u-max-full-width" /><div><p>ใส่เส้นขอบตารางด้วย <code>TableBorder.all()</code></p>
+</div></div>
+<pre><code class="language-dart">border: TableBorder.all(
+  width: 3.0,
+  color: Colors.white,
+  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+),
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_1400_table.png" class="u-max-full-width" /><div><p>กำหนดความหนาของเส้นขอบ 3.0 สีขาว มุมโค้ง 10.0</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ตกแต่ง TableRow</h3>
+<p>ในแต่ละ TableRow สามารถตกแต่งผ่านคำสั่ง <code>decoration</code> โดยใช้ <a target="_blank" href="https://api.flutter.dev/flutter/painting/Decoration-class.html">Decoration</a> ตัวอย่าง ลองใช้ <a target="_blank" href="https://api.flutter.dev/flutter/painting/BoxDecoration/BoxDecoration.html">BoxDecoration</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/painting/ShapeDecoration-class.html">ShapeDecoration</a> ในการตกแต่ง TableRow</p>
+<ul>
+<li>แถวที่ 1 สีพื้นหลังเขียว มีเส้นขอบสีดำ มุมโค้ง 5.0</li>
+<li>แถวที่ 2 สีพื้นหลังเป็นไล่เฉดจาก สีส้ม ไป ขาว</li>
+<li>แถวที่ 3 สีพื้นหลังขาว มีเส้นขอบ 2 ชั้น สีแดง กับ สีน้ำเงิน เส้นขอบหนา 2.0</li>
+</ul>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+              color: Colors.yellow,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Table(
+                  children: [
+
+                    TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        border: Border.all(),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                      children: [Text('Column11'), Text('Column12'), Text('Column13')]),
+
+                    TableRow(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [Colors.orange, Colors.white])
+                      ),
+                      children: [Text('Column21'), Text('Column22'), Text('Column23')]),
+
+                    TableRow(
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: Border.all(color: Colors.red, width: 2.0) +
+                               Border.all(color: Colors.blue, width: 2.0)
+                      ),
+                      children: [Text('Column31'), Text('Column32'), Text('Column33')]),
+
+                  ],
+                ),
+              )))));
+}
+</code></pre>
+<div class="image"><img src="images/20241124/20241124_1500_table.png" class="u-max-full-width" /><div><p>ผลจากการตกแต่ง TableRow</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+# Flutter: Row Column Table เบื้องต้น
+!![](0000)
+
+สำหรับ Layout แบบ single-child คิดว่าไม่น่าจะมีปัญหาเท่ากับ Multi-child layout widgets เนื่องวิธีจัดการของ Flutter framework นั้นจะทำการประมวลผลเรื่อง layout เพียงรอบเดียว ดังนั้นการที่ layout มี widget ที่ต้องการจัดการหลายตัว จึงจำเป็นต้องคุยกันเรื่อง ขนาด และต้องการกำหนดค่า constrains ที่ชัดเจน มิฉะนั้นจะไม่สามารถ render ได้ อย่างเช่น Row Column ที่จะมีไม่มีค่า constrains ส่งให้ตัว widgets ตัว widget แต่ละตัวต้องเป็นตัวกำหนดขนาดของตัวเองแล้วส่งไปให้ตัว layout ดังนั้นหากไม่ปฏิบัติตามหลักเรื่อง constrains จะทำให้เกิด error และไม่สามารถ render ตัว widget ได้
+
+## Row Column จัดแถว คอลัมน์ 
+[Row](https://api.flutter.dev/flutter/widgets/Row-class.html) และ [Column](https://api.flutter.dev/flutter/widgets/Column-class.html) จะมีหลักการทำงานที่คล้ายกันมาก จุดที่แตกต่างกัน คือ Row จะเรียง widget เป็นแถวในแนวนอน ส่วน Column จะเรียงในแนวตั้ง โดยพฤติกรรมนี้จะเหมือนกับเอา [Flex](https://api.flutter.dev/flutter/widgets/Flex-class.html) มาใช้งานโดยกำหนดทิศทางการเรียงให้ ในการใช้งาน layout ทั้งสอง ตัว widget ที่จะเอามาเรียงต้องระบุขนาดของตัวเองแล้วส่งไปให้ layout 
+
+- กำหนดแบบ absolute คือ กำหนดแบบค่าแน่นอน เช่น ใช้ SizedBox ระบุขนาดของ widget ที่จะเอาไปเรียงใน layout
+- กำหนดแบบ relative คือ กำหนดแบบอัตราส่วน เช่น การใช้ [Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html) หรือ [Flexible](https://api.flutter.dev/flutter/widgets/Flexible-class.html) เพื่อระบุว่าให้ใช้พื้นที่ของ layout ในอัตราส่วนเท่าไหร่ 
+
+### Row เรียงตามแนวนอน
+[constructor](https://api.flutter.dev/flutter/widgets/Row/Row.html) ของ [Row](https://api.flutter.dev/flutter/widgets/Row-class.html)
+
+```dart
+const Row({
+  Key? key,
+  MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+  MainAxisSize mainAxisSize = MainAxisSize.max,
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+  TextDirection? textDirection,
+  VerticalDirection verticalDirection = VerticalDirection.down,
+  TextBaseline? textBaseline,
+  List<Widget> children = const <Widget>[],
+})
+```
+
+หากใช้ค่าเริ่มต้น Row จะขยายด้านกว้างจนเต็ม Parent และจัด widget ไว้ทางซ้าย ลองมาดูตัวอย่าง เรียง Text ใน Row กัน จะเห็นว่าตัว widget จะไม่ทราบค่า width constrains 
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MaterialApp(home: Scaffold(body: 
+    Row(children: [Text('1'), Text('2')])
+  )));
+}
+```
+
+!![โครงสร้าง layout ของ Row](0100)
+
+จะเกิดอะไรขึ้นหากใส่ widget ที่ตัวมันเองอาศัยค่า constrains จาก Parent เข้าไปใน Row
+
+```dart
+Row(children: [
+  Text('1'),
+  Text('2'),
+  Container(color: Colors.yellow) //add yellow box
+])
+```
+
+!![ไม่มีกล่องสีเหลืองบนจอ](0200)
+
+
+
+จากตัวอย่างจะเห็นว่าการใช้งาน Row &#40;และ Column&#41; หากตัว widget ที่จะเอามาเรียง ไม่มีค่า size ในตัวมันเองเมื่อ render จะเกิดปัญหาเพราะส่ง Row ไม่ส่งค่า width constrains ไปให้ widget ที่จะ render ดังนั้นจึงจำเป็นต้องระบุค่า flex ผ่าน [Flexible](https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html) หรือ [Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html)
+
+
+
+```dart
+Row(children: [
+  Text('1'),
+  Text('2'),
+  Flexible(
+    flex: 1,
+    child: Container(color: Colors.yellow)
+  )
+])
+```
+
+!![กล่องสีเหลืองขยายในพื้นที่ที่เหลือจนเต็ม](0300)
+
+พอใส่ Flexible พบว่า Container แสดงบนจอแล้ว โดยแสดงจนเต็มพื้นที่ที่เหลือ ที่เป็นแบบนี้เพราะกระบวนการ render ของ Row และ Column มีดังนี้
+
+1. ทำการ Render ตัว widget ที่มีค่า flex = null หรือก็คือ widget ที่ไม่ได้ครอบด้วย [Flexible](https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html) หรือ [Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html) โดยค่า constrains ที่ส่งไปให้จะมีเฉพาะส่วน height เท่านั้น ค่า width ตัว widget ต้องจัดการเอง
+2. พื้นที่ที่เหลือจากข้อ 1 จะถูกจัดสรรไปให้กับ widget ที่ระบุค่า flex มา โดยค่า flex จะใช้สำหรับคำนวณพื้นที่ที่แต่ละ widget จะได้รับ ดังนี้
+ 1. เอาค่า flex ของแต่ละ widget มาบวกกัน เช่น [A flex=1] [B flex=2] รวมกันได้ 3
+ 2. เอาค่าขนาดที่เหลือมาหารด้วยค่า flex ทั้งหมด เช่น เหลือ 300px หารด้วย 3 จะได้ 100px ต่อ flex
+ 3. ขนาดของ widget ที่จะได้รับคือเอาค่า flex คูณกับผลในข้อ 2. ดังนั้น ขนาดที่ได้จากข้อ 1. จะเป็น A=100px B=200px
+
+
+```dart
+Row(children: [
+  Text('1'),
+  Text('2'),
+  Flexible(
+    flex: 1,
+    child: Container(color: Colors.yellow)
+  ),
+  Flexible(
+    flex: 2,
+    child: Container(color: Colors.green)
+  )
+])
+```
+
+!![ความกว้างของสีเขียวจะเป็น 2 เท่าของสีเหลือง](0400)
+
+การจัด layout ของ widget ที่อยู่ใน Row สามารถกำหนดค่าได้จาก `mainAxisAlignment` `mainAxisSize` `crossAxisAlignment` `textBaseline` โดยตัวอย่างจะใช้สีเหลืองแทนพื้นที่ของ Row ทั้งหมด ข้อความ 1 2 3 4 แทน widget ที่ขนาดไม่เท่ากันเอามาเรียงในรูปแบบต่าง ๆ โดยความสูงของ Row จะเท่ากับตัว widget ที่สูงที่สุด นั้นคือ 4
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: 
+          Container(
+            color: Colors.yellow,
+            child: Row(children: [
+              Text('1', textScaler: TextScaler.linear(1)),
+              Text('2', textScaler: TextScaler.linear(2)),
+              Text('3', textScaler: TextScaler.linear(3)),
+              Text('4', textScaler: TextScaler.linear(4)),
+            ]),
+  ))));
+}
+```
+!![ผลจากการปรับค่าของ Row ในรูปแบบต่าง ๆ](0500)
+
+### Column เรียงตามแนวตั้ง
+ตัว [Column](https://api.flutter.dev/flutter/widgets/Column-class.html) จะมีหลักการทำงานคล้ายกับ Row มาก โดยจะเปลี่ยนการเรียง widget จากแนวนอนเป็นแนวตั้งแทน ตัวอย่างจะใช้ของ Row แล้วเปลี่ยนเป็น Column แทน จะเห็นว่าตัว Column มีพื้นที่เต็มความสูงของ Parent 
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+    color: Colors.yellow,
+    child: Column(children: [
+      Text('1', textScaler: TextScaler.linear(1)),
+      Text('2', textScaler: TextScaler.linear(2)),
+      Text('3', textScaler: TextScaler.linear(3)),
+      Text('4', textScaler: TextScaler.linear(4)),
+    ]),
+  ))));
+}
+```
+!![Column ที่ได้ ความกว้างจะกว้างเท่าเลข 4](0600)
+
+หากต้องการกำหนดค่าอื่น ๆ จะคล้ายกับ Row แต่สลับเป็นแนวนอนแทน จะมีเฉพาะส่วนของ CrossAxisAlignment.baseline ที่ยังไม่ค่อยเข้าใจวิธีใช้ แต่มีตัวอย่างอยู่ใน [StackOverflow](https://stackoverflow.com/questions/62371976/align-text-baseline-with-text-inside-a-column-using-flutter) โดยส่วนตัวคิดว่าไม่น่าจะได้ใช้
+
+!![ผลของ Column เมื่อปรับค่าต่าง ๆ](0700)
+
+### Flexible และ Expanded
+[Flexible](https://api.flutter.dev/flutter/widgets/Flexible/Flexible.html) และ [Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html) ต่างถูกใช้เพื่อระบุค่า flex สำหรับ [Row](https://api.flutter.dev/flutter/widgets/Row-class.html) [Column](https://api.flutter.dev/flutter/widgets/Column-class.html) และ [Flex](https://api.flutter.dev/flutter/widgets/Flex/Flex.html) โดยมี constructor ดังนี้
+
+```dart
+const Flexible({
+  Key? key,
+  int flex = 1,
+  FlexFit fit = FlexFit.loose,
+  required Widget child,
+})
+
+const Expanded({
+  Key? key,
+  int flex = 1,
+  required Widget child,
+})
+```
+
+สิ่งที่ Flexible ต่างจาก Expanded คือ มันสามารถกำหนดได้ว่า จะให้ขนาดของ child มีขนาดเต็มที่หรือไม่ ผ่านการกำหนค่า `fit`
+- `fit = FlexFit.loose` widget ใน child จะไม่ถูกบังคับให้ขยายขนาด (ค่าปริยาย)
+- `fit = FlexFit.tight` widget ใน child จะถูกขยายขนาดให้เต็ม มีผลเหมือนกับการใช้ Expanded
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+    color: Colors.yellow,
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(children: [
+        Expanded(child: Test(Mode.expanded)),
+        Expanded(child: Test(Mode.expanded)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Expanded(child: Test(Mode.expanded)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Flexible(fit: FlexFit.tight, child: Test(Mode.flexibleTight)),
+      ]),
+      SizedBox(height: 2),
+      Row(children: [
+        Flexible(child: Test(Mode.flexible)),
+        Flexible(child: Test(Mode.flexible)),
+      ]),
+    ]),
+  ))));
+}
+
+enum Mode { flexible, expanded, flexibleTight }
+
+class Test extends StatelessWidget {
+  final Mode mode;
+  const Test(this.mode, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (mode) {
+      case Mode.flexible:
+        return Container(color: Colors.grey, child: const Text('Flexible'));
+      case Mode.expanded:
+        return Container(color: Colors.green, child: const Text('Expanded'));
+      case Mode.flexibleTight:
+        return Container(color: Colors.cyan, child: const Text('Flexible(tight)'));
+    }
+  }
+}
+```
+
+!![เปรียบเทียบระหว่าง Flexible กับ Expanded](0800)
+
+
+
+## Table ก็ตารางนั้นแหละ
+
+ในกรณีที่ต้องการใช้ Row เพียง 1 แถว เพื่อเรียง widgets ก็สมเหตุสมผลที่จะใช้ Row แต่เมื่อไหร่ที่มี widget ที่ต้องเรียงต่อกันไปเกิน 1 แถว แนะนำว่าให้ใช้ [Table](https://api.flutter.dev/flutter/widgets/Table-class.html) สิ่งที่ Table ทำได้มีดังนี้
+
+1. กำหนดขนาดความกว้างของแต่ละช่อง ผ่าน [defaultColumnWidth](https://api.flutter.dev/flutter/widgets/Table/defaultColumnWidth.html) และ [columnWidths](https://api.flutter.dev/flutter/widgets/Table/columnWidths.html)
+2. กำหนดวิธีการวางในแนวตั้งได้ ผ่าน [defaultVerticalAlignment](https://api.flutter.dev/flutter/widgets/Table/defaultVerticalAlignment.html)
+3. กำหนดเส้นกรอบตารางได้ ผ่าน [border](https://api.flutter.dev/flutter/widgets/Table/border.html)
+4. ในแต่ละแถว ตัว widgets จะถูกบรรจุอยู่ใน [TableRow](https://api.flutter.dev/flutter/widgets/TableRow-class.html) สามารถตกแต่งแต่ละแถวอย่างอิสระด้วย [decoration](https://api.flutter.dev/flutter/widgets/TableRow/decoration.html) 
+
+[constructor](https://api.flutter.dev/flutter/widgets/Table/Table.html) ของ Table
+
+```dart
+Table({
+  Key? key,
+  List<TableRow> children = const <TableRow>[],
+  Map<int, TableColumnWidth>? columnWidths,
+  TableColumnWidth defaultColumnWidth = const FlexColumnWidth(),
+  TextDirection? textDirection,
+  TableBorder? border,
+  TableCellVerticalAlignment defaultVerticalAlignment = TableCellVerticalAlignment.top,
+  TextBaseline? textBaseline,
+})
+```
+
+### การกำหนดความกว้างของคอลัมน์
+
+ตัว Table ก็ใช้หลักการจัดความกว้างแบบเดียวกับ Row ผ่านคำสั่ง [defaultColumnWidth](https://api.flutter.dev/flutter/widgets/Table/defaultColumnWidth.html) เช่น ถ้าวางแผนว่าจะมี 3 คอลัมน์ ที่ขนาดเท่ากัน จะเขียนตามตัวอย่างต่อไปนี้
+
+```dart
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+              color: Colors.yellow,
+              child: Table(
+                children: [
+                  TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+                  TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+                  TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+                ],
+              )))));
+}
+
+class Cell extends StatelessWidget {
+  final String lable;
+  const Cell(this.lable, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor = Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.5);
+    return Container(
+      color: bgColor,
+      child: Text(lable),
+    );
+  }
+}
+```
+
+!![Table ที่ใช้ค่าเริ่มต้น ทุกช่องกว้างเท่ากันหมด](0900)
+
+
+ค่าเริ่มต้นของ `defaultColumnWidth` จะเป็น [`FlexColumnWidth()`](https://api.flutter.dev/flutter/rendering/FlexColumnWidth-class.html) ทุกช่องมีค่าเริ่มต้น flex=1 มาลองดูในรายละเอียดกัน
+
+
+
+1. [`FlexColumnWidth()`](https://api.flutter.dev/flutter/rendering/FlexColumnWidth-class.html) ทุกช่องค่า flex=1 ดังนั้นจะมีความกว้างเท่ากับทุกช่อง โดยจะใช้ความกว้างสูงสุดของ Table มาหารด้วยผลรวมของ flex
+2. [`FixedColumnWidth()`](https://api.flutter.dev/flutter/rendering/FixedColumnWidth-class.html) กำหนดความกว้างเป็น pixel เช่น `FixedColumnWidth(50.0)` ทุกช่องจะกว้าง 50.0px แต่การกำหนดแบบนี้ถ้าผลรวมเกินความกว้างสูงสุดของ Table จะเกิดปัญหา Overflow
+3. [`FractionColumnWidth()`](https://api.flutter.dev/flutter/rendering/FractionColumnWidth-class.html) กำหนดเป็นอัตราส่วนเมื่อเทียบกับความกว้างสูงสุดของ Table เช่น `FractionColumnWidth(0.33)` ทุกช่องจะกว้าง 33% ของความกว้าง Table
+4. [`MaxColumnWidth()`](https://api.flutter.dev/flutter/rendering/MaxColumnWidth-class.html) กำหนดค่าสูงสุด 2 ค่า หากคำนวณแล้วค่าไหนมากกว่าจะใช้ค่านั้น เช่น `MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))` ถ้า Table กว้าง 300 มี 3 คอลัมน์ `FlexColumnWidth() → 100px` ดังนั้นตัว render จะใช้ `FixedColumnWidth(150)`
+5. [`MinColumnWidth()`](https://api.flutter.dev/flutter/rendering/MinColumnWidth-class.html) กำหนดค่าต่ำสุด 2 ค่า หากคำนวณแล้วค่าไหนน้อยกว่าจะใช้ค่านั้น เช่น `MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))` ถ้า Table กว้าง 300 มี 3 คอลัมน์ `FlexColumnWidth() → 100px` ดังนั้นตัว render จะใช้ `FlexColumnWidth()`
+6. [`IntrinsicColumnWidth()`](https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html) ใช้ค่าขนาดของ widget ที่กว้างที่สุดในการกำหนดขนาดของแต่ละคอลัมน์ วิธีนี้แต่ละคอลัมน์จะปรับขนาดตาม widget ที่กว้างที่สุด **ทำให้ใช้การประมวลผลมากที่สุด** พิจารณาให้รอบคอบว่าจำเป็นต้องใช้จริง ๆ
+
+!![ กำหนด defaultColumnWidth=IntrinsicColumnWidth() ](1000)
+
+สำหรับ `MaxColumnWidth()` กับ `MinColumnWidth()` เวลาใช้งานจริง อาจงง ๆ นิดหน่อย เช่น ต้องการกำหนดว่า
+- คอลัมน์กว้างอย่างน้อย 150px จะใช้คำสั่ง `MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))`
+- คอลัมน์กว้างได้สูงสุดไม่เกิน 150px จะใช้คำสั่ง `MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))`
+
+!? จากการทดสอบกับ Flutter 3.22.3 พบว่า `MinColumnWidth(FlexColumnWidth(), FixedColumnWidth(150))` มีปัญหากับคำสั่ง `FlexColumnWidth()` ทำงานได้ไม่ถูกต้อง แต่หากใช้ `FractionColumnWidth()` จะทำงานถูกต้อง เช่น ถ้ามี 3 คอลัมน์ ก็ใช้ `MinColumnWidth(FractionColumnWidth(1 / 3), FixedColumnWidth(150))` แทน แนะนำให้ตรวจสอบก่อนว่า issue นี้ได้ถูกแก้ไขหรือยัง
+
+นอกจากการกำหนดด้วย `defaultColumnWidth` สามารถกำหนดเป็นรายคอลัมน์ที่ต้องการได้โดยใช้คำสั่ง [`columnWidths`](https://api.flutter.dev/flutter/widgets/Table/columnWidths.html) ข้อมูลที่จะใช้กำหนดขนาดความกว้างจะเป็น `Map<int, TableColumnWidth>` เช่น กำหนดให้คอลัมน์แรกมีขนาด 80px `columnWidths: {0:FixedColumnWidth(80.0)}`
+
+```dart
+Table(
+  columnWidths: {0: FixedColumnWidth(80.0)},
+  children: [
+    TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+    TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+    TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+  ])
+```
+
+!![เฉพาะคอลัมน์แรกที่มีผลกับ columnWidths ที่เหลือใช้ค่า default ใช้ flex คำนวณ](1100)
+
+หากต้องการกำหนดขนาดคอลัมน์ทุกอัน ก็สามารถระบุได้ตามความต้องการ ตัวอย่าง 
+- คอลัมน์ที่ 1 ขนาด 80.0 
+- คอลัมน์ที่ 2 ขนาด 150.0 
+- คอลัมน์ที่ 3 ขนาดพอดีกับ widget
+
+```dart
+Table(
+  columnWidths: {0: FixedColumnWidth(80.0), 1: FixedColumnWidth(150.0), 2: IntrinsicColumnWidth()},
+  children: [
+    TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+    TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+    TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+  ])
+```
+
+!![กำหนดขนาดทุกคอลัมน์](1200)
+
+### ใส่เส้นขอบ Table
+
+[TableBorder](https://api.flutter.dev/flutter/rendering/TableBorder-class.html) สำหรับระบุรูปแบบของเส้นขอบตาราง มี constructor 3 แบบ ดังนี้
+
+```dart
+const TableBorder({
+  BorderSide top = BorderSide.none,
+  BorderSide right = BorderSide.none,
+  BorderSide bottom = BorderSide.none,
+  BorderSide left = BorderSide.none,
+  BorderSide horizontalInside = BorderSide.none,
+  BorderSide verticalInside = BorderSide.none,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+
+// A uniform border with all sides the same color and width. → best for lazy guy 😍
+TableBorder.all({
+  Color color = const Color(0xFF000000),
+  double width = 1.0,
+  BorderStyle style = BorderStyle.solid,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+
+// Creates a border for a table where all the interior sides use the same styling and all the exterior sides use the same styling.
+const TableBorder.symmetric({
+  BorderSide inside = BorderSide.none,
+  BorderSide outside = BorderSide.none,
+  BorderRadius borderRadius = BorderRadius.zero,
+})
+```
+
+ตัวอย่างการใส่เส้นตาราง [`TableBorder.all()`](https://api.flutter.dev/flutter/rendering/TableBorder/TableBorder.all.html) เนื่องจากเส้นตารางมันทับกับขอบแอป เลยครอบด้วย Padding เพื่อให้เห็นเส้นชัดขึ้น
+
+```dart
+Padding(
+  padding: const EdgeInsets.all(30.0),
+  child: Table(
+    border: TableBorder.all(),
+    children: [
+      TableRow(children: [Cell('Column11'), Cell('Column12'), Cell('Column13')]),
+      TableRow(children: [Cell('Column21'), Cell('Column22'), Cell('Column23')]),
+      TableRow(children: [Cell('Column31'), Cell('Column32'), Cell('Column33')])
+    ]
+))
+```
+
+!![ใส่เส้นขอบตารางด้วย `TableBorder.all()`](1300)
+
+```dart
+border: TableBorder.all(
+  width: 3.0,
+  color: Colors.white,
+  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+),
+```
+
+!![กำหนดความหนาของเส้นขอบ 3.0 สีขาว มุมโค้ง 10.0](1400)
+
+### ตกแต่ง TableRow
+ในแต่ละ TableRow สามารถตกแต่งผ่านคำสั่ง `decoration` โดยใช้ [Decoration](https://api.flutter.dev/flutter/painting/Decoration-class.html) ตัวอย่าง ลองใช้ [BoxDecoration](https://api.flutter.dev/flutter/painting/BoxDecoration/BoxDecoration.html) และ [ShapeDecoration](https://api.flutter.dev/flutter/painting/ShapeDecoration-class.html) ในการตกแต่ง TableRow
+
+- แถวที่ 1 สีพื้นหลังเขียว มีเส้นขอบสีดำ มุมโค้ง 5.0
+- แถวที่ 2 สีพื้นหลังเป็นไล่เฉดจาก สีส้ม ไป ขาว
+- แถวที่ 3 สีพื้นหลังขาว มีเส้นขอบ 2 ชั้น สีแดง กับ สีน้ำเงิน เส้นขอบหนา 2.0
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+      home: Scaffold(
+          body: Container(
+              color: Colors.yellow,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Table(
+                  children: [
+
+                    TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        border: Border.all(),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                      children: [Text('Column11'), Text('Column12'), Text('Column13')]),
+
+                    TableRow(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [Colors.orange, Colors.white])
+                      ),
+                      children: [Text('Column21'), Text('Column22'), Text('Column23')]),
+
+                    TableRow(
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: Border.all(color: Colors.red, width: 2.0) +
+                               Border.all(color: Colors.blue, width: 2.0)
+                      ),
+                      children: [Text('Column31'), Text('Column32'), Text('Column33')]),
+
+                  ],
+                ),
+              )))));
+}
+```
+
+!![ผลจากการตกแต่ง TableRow](1500)
+</markdown>
