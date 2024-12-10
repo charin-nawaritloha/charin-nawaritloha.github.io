@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: วิธีการใช้ Layout GridView เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: วิธีการใช้ Layout GridView เบื้องต้น</h1>
+<p><img src="images/20241204/20241204_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView-class.html">GridView</a> เป็น Layout widget ที่จัดเรียง widgets เป็นตารางที่มีขนาดช่องเท่า ๆ กัน หากความยาวของตัว widgets ที่นำมาเรียงทั้งหมดเกิดพื้นที่ของ Parent มันจะสามารถ scroll ตัว widgets ได้อัตโนมัติ ตัว GridView ออกแบบมาให้ใช้งานง่าย โดยมีพื้นฐานมาจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html">CustomScrollView</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SliverGrid-class.html">SliverGrid</a> หากผู้ใช้งานพบว่าตัว GridView มีความสามารถในการจัดวางไม่พอ สามารถเปลี่ยนไปใช้งาน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html">CustomScrollView</a> ได้เลย</p>
+<p>ตัวอย่างการใช้งานแบบง่าย ๆ ด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html"><code>GridView.count()</code></a> แสดงกล่องสีเขียวจำนวน 4 กล่อง แบบ 2x2</p>
+<pre><code class="language-dart">import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+void main() {
+  Color rndGreen() {
+    return Colors.green.withOpacity(0.1 + (Random().nextDouble() * 0.9));
+  }
+
+  Widget box(String text) {
+    return Container(color: rndGreen(), child: Center(child: Text(text, textScaler: const TextScaler.linear(3.0))));
+  }
+
+  var body = GridView.count(
+    crossAxisCount: 2,
+    children: [box('1'), box('2'), box('3'), box('4')],
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(body: body),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241204/20241204_0100_gridview_count1.png" class="u-max-full-width" /><div><p>ผลของ GridView.count()</p>
+</div></div>
+<h2>การสร้าง GridView</h2>
+<p>GridView มี constructor ทั้งหมด 5 แบบด้วยกัน แต่ละแบบออกแบบมาเพื่อการใช้งานที่แตกต่างกัน</p>
+<ul>
+<li>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.html">GridView()</a> สร้าง scroll grid view โดยใช้ <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegate-class.html">SliverGridDelegate</a></p>
+</li>
+<li>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html">GridView.count()</a> สำหรับการแสดง widget ที่มีการกำหนดจำนวนที่จะแสดงในแนวขวาง (cross axis) คงที่</p>
+</li>
+<li>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.builder.html">GridView.builder()</a> สำหรับงานที่ตัว widget ที่จะแสดงมีปริมาณมาก(หรือไม่รู้จบ ∞) จึงมีตัว builder เพื่อใช้สำหรับแสดงตัว widget ที่ต้องการแสดงเท่านั้น</p>
+</li>
+<li>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.custom.html">GridView.custom()</a> สำหรับสร้าง scroll grid view ที่ใช้ custom <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegate-class.html">SliverGridDelegate</a> และ custom <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SliverChildDelegate-class.html">SliverChildDelegate</a></p>
+</li>
+<li>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.extent.html">GridView.extent()</a> สำหรับสร้าง scroll grid view ที่กำหนดขนาดของแต่ละช่องไม่เกินค่าของ <code>maxCrossAxisExtent</code></p>
+</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้ SliverGridDelegate ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.html">GridView()</a></h2>
+<p>จากตัวอย่างที่ผ่านมาจะใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html">GridView.count()</a> ในการสร้าง GridView ที่แสดง 2 widget ในแนวขวาง เมื่อต้องการใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.html">GridView()</a> ในการสร้าง ต้องระบุตัว <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegate-class.html">SliverGridDelegate</a> ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithFixedCrossAxisCount-class.html">SliverGridDelegateWithFixedCrossAxisCount</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithMaxCrossAxisExtent-class.html">SliverGridDelegateWithMaxCrossAxisExtent</a></li>
+</ul>
+<p>ตัวอย่างที่เปลี่ยนจาก <code>GridView.count()</code> เป็น <code>GridView()</code> และใช้ <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithFixedCrossAxisCount-class.html">SliverGridDelegateWithFixedCrossAxisCount</a> ผลที่ได้จะเหมือนกัน</p>
+<pre><code class="language-dart">  var body = GridView(
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+    children: [square('1'), square('2'), square('3'), square('4')],
+  );
+</code></pre>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithMaxCrossAxisExtent-class.html">SliverGridDelegateWithMaxCrossAxisExtent</a> จะใช้สำหรับกำหนดเป็นขนาดสูงสุดที่จะใช้งาน เช่น ขนาดของ widget ที่แสดงใน GridView ต้องไม่เกิน 100px ในตัวอย่างจะเพิ่มกล่องสีเหลือง เพื่อให้เห็นพื้นที่ของ GridView</p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView(
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100),
+      children: [square('1'), square('2'), square('3'), square('4')],
+    ),
+  );
+</code></pre>
+<p>วิธีการคำนวณของ <code>SliverGridDelegateWithMaxCrossAxisExtent</code> ก็คือ</p>
+<ol>
+<li>จะคำนวณขอบเขตที่จะส่งให้ widget ให้มีขนาดเสมอกันทั้งหมด</li>
+<li>ขนาดที่ใหญ่ที่สุดของ widget จะไม่เกิดค่า <code>maxCrossAxisExtent</code></li>
+<li>คำนวณจำนวนช่องที่แบ่ง = <code>num.ceil(Parent / maxCrossAxisExtent)</code></li>
+</ol>
+<p>ตัวอย่างการคำนวณว่าจะแสดงกี่ช่อง</p>
+<ol>
+<li>Parent มีขนาด 400 จะแบ่งเป็น 4 ช่อง (400 ÷ 100 = 4.00 → 4 ช่อง)</li>
+<li>Parent มีขนาด 401 จะแบ่งเป็น 5 ช่อง (401 ÷ 100 = 4.01 → 5 ช่อง)</li>
+<li>Parent มีขนาด 301 จะแบ่งเป็น 4 ช่อง (301 ÷ 100 = 3.01 → 4 ช่อง)</li>
+<li>Parent มีขนาด 501 จะแบ่งเป็น 6 ช่อง (501 ÷ 100 = 5.01 → 6 ช่อง)</li>
+</ol>
+<div class="image"><img src="images/20241204/20241204_0200_gridview_maxCrossAxisExtent.png" class="u-max-full-width" /><div><p>ขนาดของ Parent และค่า <code>maxCrossAxisExtent: 100</code> จำนวนช่องที่ได้</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การกำหนดรูปแบบของ GridView</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>อัตราส่วนของช่อง ผ่าน <code>childAspectRatio</code></h3>
+<p>หากไม่กำหนดค่าอะไร ค่าปริยายจะเป็น 1.0 ผลที่ได้คือสี่เหลี่ยมจัตุรัส หากต้องการเป็นอัตราส่วนอื่นสามารถกำหนดค่าได้ตามการใช้งาน เช่น 16:9 4:3 ก็กำหนดค่าเป็น <code>16 / 9</code>  <code>4 / 3</code> เป็นต้น</p>
+<p>การกำหนดค่าสามารถกำหนดผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithMaxCrossAxisExtent/childAspectRatio.html"><code>SliverGridDelegate.childAspectRatio</code></a> หากใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html"><code>GridView.count()</code></a> ให้กำหนดที่ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.count.html#:~:text=childAspectRatio"><code>childAspectRatio</code></a></p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, 
+        childAspectRatio: 4 / 3),
+      children: [square('1'), square('2'), square('3'), square('4')],
+    ),
+  );
+</code></pre>
+<div class="image"><img src="images/20241204/20241204_0300_gridview_ratio.png" class="u-max-full-width" /><div><p>กำหนดอัตราส่วนของ Grid เป็น 4:3</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>กำหนดระยะห่างระหว่างแถว ผ่าน mainAxisSpacing</h3>
+<p>หากต้องการให้แต่ละแถวมีช่องว่างระหว่างกัน (แถวตามแนวแกนของ scrollDirection) ให้กำหนดผ่านค่า <a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithFixedCrossAxisCount/mainAxisSpacing.html"><code>mainAxisSpacing</code></a></p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, 
+        mainAxisSpacing: 10),
+      children: [square('1'), square('2'), square('3'), square('4'), square('5'), square('6')],
+    ),
+  );
+</code></pre>
+<div class="image"><img src="images/20241204/20241204_0400_mainAxisSpacing.png" class="u-max-full-width" /><div><p>กำหนด mainAxisSpacing: 10 ทิศของ scrollDirection = Axis.vertical</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>กำหนดระยะห่างระหว่างช่อง ผ่าน crossAxisSpacing</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/rendering/SliverGridDelegateWithMaxCrossAxisExtent/crossAxisSpacing.html"><code>crossAxisSpacing</code></a> จะเป็นการกำหนดระยะช่องว่างของ widget จะเหมือน mainAxisSpacing แต่คนละทิศกัน</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>กำหนด padding</h3>
+<p>กำหนดช่องว่างที่อยู่รอบ ๆ ตัว GridView สามารถกำหนดค่า padding เหมือนที่ทำใน Container</p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      padding: EdgeInsets.all(10),
+      children: [square('1'), square('2'), square('3'), square('4'), square('5'), square('6')],
+    ),
+  );
+</code></pre>
+<div class="image"><img src="images/20241204/20241204_0500_padding.png" class="u-max-full-width" /><div><p>กำหนด padding: EdgeInsets.all(10) เพื่อเพิ่มพื้นที่ว่างรอบ widgets ทุกด้าน</p>
+</div></div>
+## การแสดงผลแบบ on demand ด้วย GridView.builder
+<p>หากตัว widget ที่จะเอาไปแสดงใน GridView มีจำนวนมาก หรืออาจจะค่อย ๆ โหลดขึ้นมาหากผู้ใช้ต้องการดู สามารถใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GridView/GridView.builder.html"><code>GridView.builder()</code></a> เพื่อสร้างตัว widget เพื่อป้อนให้กับตัว GridView</p>
+<p>วิธีการใส่ฟังก์ชั่นเพื่อใช้สร้าง widget ให้กำหนดใน <a target="_blank" href="url"><code>itemBuilder</code></a> โดยเบื้องหลังมันจะไปเรียก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html">SliverChildBuilderDelegate</a> มาใชังาน</p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      padding: EdgeInsets.all(10.0),
+      itemBuilder: (context, index) {        
+        return square(index.toString());
+      },
+    ),
+  );
+</code></pre>
+<p>ตัวอย่าง เป็นการสร้างกล่องสีเขียวแบบเดิม โดยตัว itemBuilder จะสร้างไปกล่องใหม่ไปไม่รู้จบ ยิ่งผู้ใช้งานปัดเลื่อนลงไปตัวเลขก็จะเยอะขึ้นตามลำดับ การใช้งานแบบนี้ค่าเริ่มต้นจะไม่มี scroll bar ปรากฎให้เห็น</p>
+<p>เนื่องจากตัว itemBuilder จะเรียกตัวฟังก์ชั่นทุกครั้งที่มีการ scroll ดู widget ซึ่งมันจะสร้างเผื่อไว้เท่าที่จำเป็นแค่แสดงผลเท่านั้น ในการใช้งานในชีวิตจริง ควรทำการสร้างแบบเก็บ cache เอาไว้เหมือน class factory เพราะเวลาเลื่อนขึ้นกลับมารายการด้านบนซึ่งเป็นรายการที่สร้างไปแล้ว จะได้ไม่ต้องกลับมาสร้างใหม่อีก</p>
+<pre><code class="language-dart">  Map&lt;int, Widget&gt; factory = &lt;int, Widget&gt;{};
+  
+  var body = Container(
+    color: Colors.yellow,
+    child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+      padding: EdgeInsets.all(10.0),
+      itemBuilder: (context, index) {
+        if (factory.containsKey(index)) {
+          return factory[index];
+        } else {
+          return factory[index] = square(index.toString());
+        }
+      },
+    ),
+  );
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>กำหนดจำนวนสูงสุดด้วย itemCount</h3>
+<p>หากข้อมูลที่จะแสดงมีจำนวนมาก แต่รู้จำนวน ก็สามารถระบุ <code>itemCount</code> ไว้เพื่อให้ GridView แสดง scroll bar ได้ และหยุดเรียก <code>itemBuilder</code> เมื่อ <code>index</code> มีค่าเท่ากับ <code>itemCount - 1</code> ตัวอย่าง หากกำหนดค่า <code>itemCount: 300</code> ตัว <code>index</code> ที่จะส่งให้ <code>itemBuilder</code> คือ 0 ถึง 299</p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+      padding: EdgeInsets.all(10.0),
+      itemCount: 300,
+      itemBuilder: (context, index) {
+        // index range 0 - 299
+        return square(index.toString());
+      },
+    ),
+  );
+
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>บอก GridView ว่าข้อมูลหมดแล้ว</h3>
+<p>ในกรณีที่ข้อมูลที่จะแสดงใน GridView ไม่รู้จำนวนแน่ชัด ไม่รู้ล่วงหน้าเมื่อข้อมูลจะหมดเมื่อไหร่ สามารถส่งค่า <code>null</code> กลับไปเพื่อบอกเมื่อข้อมูลหมดแล้วได้ ตัวอย่าง สมมติว่ามีข้อมูลแค่ 100 เมื่อ <code>index</code> เกิน 99 ให้คืนค่า <code>null</code></p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+      padding: EdgeInsets.all(10.0),
+      itemBuilder: (context, index) {
+        if (index &gt; 99) {
+          return null;
+        }
+
+        return square(index.toString());
+      },
+    ),
+  );
+</code></pre>
+<p>เมื่อ scroll ไปจน <code>itemBuilder</code> คืนค่า <code>null</code> ตัว GridView จะแสดง scroll bar ขึ้นมา แต่หาผู้ใช้งานไปแตะเลื่อน scroll bar จะเกิด error ในการใช้งานแบบเบื้องต้น ก็ใช้วิธีง่าย ๆ คือ ปิด scroll bar ไม่ให้ผู้ใช้งานไปเลื่อน โดยการครอบด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ScrollConfiguration-class.html">ScrollConfiguration</a> แล้วกำหนด <code>behavior</code> ให้ปิด scrollbars หากเขียนใน widget ทีสร้างเป็น class ที่เป็น Stateless หรือ Stateful ก็ให้ใช้คำสั่ง <code>ScrollConfiguration.of(context).copyWith(scrollbars: false)</code> ผ่านการดึงข้อมูล BuildContext แทน</p>
+<pre><code class="language-dart">  var body = Container(
+    color: Colors.yellow,
+    child: ScrollConfiguration(
+      behavior: MaterialScrollBehavior().copyWith(scrollbars: false),
+      child: GridView.builder(
+        primary: false,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+        padding: EdgeInsets.all(10.0),
+        itemBuilder: (context, index) {
+          if (index &gt; 99) {
+            return null;
+          }
+
+          return square(index.toString());
+        },
+      ),
+    ),
+  );
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>เมื่อไหร่ไม่ควรใช้ GridView</h2>
+<p>เนื่องจาก GridView ออกแบบมาเพื่อให้เรียง widget เป็นตารางในขนาดที่เท่า ๆ กัน และ <strong>สามารถ scroll ได้</strong> ดังนั้นหากงานไหนที่ไม่ต้องการให้มีการ scroll และต้องการให้แสดง widget ทั้งหมดในครั้งเดียว ก็ไม่ควรใช้ GridView อาจใช้ widget อย่างอื่นแทนเช่น <a target="_blank" href="20241124_flutter_layout2.html">Table</a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap-class.html">Wrap</a> แทนเป็นต้น</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".OelYkP/(&r0es2-8e1fTd^ngf6UV*O?10Pn^_VH?&"7S-7[9oPr+MK3MI)58CTSaM&;NK`$E1ข%??_+&t-8K6sdrXiUha`,RSn@hFBZ]/Me#=G;3mlgF#F+3:D?%PkiDNad7*Oข;k94)8phm;sq/F@$5BpS1"rVKao?.OK2^[fr[h#op"KB@(Ss#+Ed]32_/V6@6)_^p5-V&NRKKqGhE7n-#*HZ*fYWRYak$FuVc_rdNO,\_Jf@q/h,W%QN+X%e(dN-ubZ*Aj,\Ubg"\ข\f"!Vc-krกl,2LoP)n6aO4p#&KLjSqLfF:hosNn/3V,'8,2R;mUe+F2qWa'AJ.กch'i*6+\f8#"7P2)Vdq^&L/#*T1;adก4GBm:/Khf'#Z4`NN6h7(oDs")'W9[&%u3+fk7nkRQrB8']q(uQER^tr"aoG8RCn(YmIG,fnE:p)kqdc4gX:ak;ข?+eq[m8e/u9=docd%i316!EO.k$Yข@@dQ.f0`q8UBGFGiY)Z]Bh;$,n8%oKfo@)d+Rl]f^/):hBs9,588^(ขกBeQ2^jHfF:WขU8&tj[0_.F-ap696cnR\NS*bB^f#fT"bF8g15#N'2?BuXCkmNlj'aC^f9QiGoh"_e0em*0CaO5Mก9:dกi%QS#MI&?7mAPYNrS9I%rEM5%%a9E^V0!=^q9:piR$ก/1c"Y*r-A4A?@WCcad*X!9K6I%l_mLcN4ขXกqqj/grg0eMR(/sM7;&]LWaIRnA#\X_!r7]RIS:;qX&4ก%5^OCd\_%tP@ขOFn"Qs!)FO*_1fL4LCH"N/*)*;kT*OYpYo@Rt/nK&_D/p?CZrW/+$B-^h%O`?h'ก@b;T^]q!GNApmnnTf/`d[?K0"V(KSZLo[22id"E,eLn"g"1HGRkgBq.ข`)6-4f_ก?jJCmZ/EC@S0ก0t[me_กBqr9LfC#a0ข.กZQsfJb+R32-VS+V&K/FaiCOO6KgKG\,s)'9Vlc^9Qc+A$h+mbqM!LhF"ก*"BF,ก$/MWTM&hf(=fP-G$lOmW-Ts5SjbrX)F;*l=s='tfขM*n/OMA+i]GTjขJNE4P#n4S)*)?uขm`Qi#%กiN$^Xa2]Q[$pก"'/UT#Uc%.4Vt8kNd$Z1=lS*=Dh'W?DIT2(_ZE)1/QRc-WJ!VP$Vb-DmlขgGW#?G`hA`I\#@CtoScH_5nVXlFLกrข#6C3YYpXg%%$dcsA2KoRMog`[k-9f4'W*9กDPh8K2!gP^!_+-Z^Yn'o@F=W\ZpF9s383Cก+Z8G,^$0fl&F'4l"8D'Z5#XขUNb6.3k["XQ6'^ข;1r-Vu?W?"@X:Ehfn]*[h'l@5mE`WE;]aa9cp.Y(:P.SBข!-J=?P(J]nHS`Bb/กWR&PcTQ&("'D/OOqFb/S%jiRqUS^iZB?VขI,HS=DNdBjmH=XcDn^.#mWB8P5jEPA.n9,NgQ$f7RCuYd))HFQAK`\X2&ก]-0gc8jk&002%nCE1$+nU?P*9q?CkQYJEO3bf_2G"3j%/JDc1FV!-A(aeNmhN=nht%@ALTgBขBLhIjln`"%bd[cThL%e+gW\*กUe*QaC^Zp%ข-;ขSVA'Z$\$I@a)&กO@rGgoF8KN[9nr)AC)$Ll?-on.j3h4(qf3p`%`N$6)[AqEp&dpPoHE%d^$namWIkC3:$6=5KoAI7k(ikk]"#S9:.+'-gN]cmd-4n#SO5!KT`EShnG5i4$hR-H[+U7'0!_'&/[5-6#hW1q2Ofpกกon0&@,//@H)5%AD%XOLOpF\_=fA't3#S\]gGs&lJaXOIRN3UiQZ1[4j;bขY4$/EYN1^D,17LR)P'3oo(\bhJ&ZoRQT+Be\#=S&#gMNก*B@L=G^+f:?kcOIiT4#Q/j3o1กH-ขV*^neGbYWTLhJขlNLuc:_HZ[rjSQSe*t"Bd8KVGIac8mKQSml;ig.eJ_Gmph!*lVf"fG!ZE((%]btJ=QfEa0D8O"`\/\"Mb3_2$H`Y=R-o?'`"Fo60(?@sขH$UPA\31T*'omM8F_`&C`7"0S;Wh1Or(MC=jthU]Q4tR,tPD2?l6)tg1pamMj.'Ei%m-I72&*-QXc9ขf-7,%3k!'ks)cJqกgnWbK4;H_kK+)YQSaE4;CLj[(q+ข*,$WYV@lW9u`PsXGPrdkP=-.K#&V,b7.YsM$U&t_26j37tjA?Au)&N6%EZPbTkn1$;YB"cicbIA=Cg4JeVapN-6QEVqขbD4eo`?o%&`/!id*8$G(`f$CCAK*/#fg*EB3\ci,W*kE,:_HFDEJR"Bn9ขH=TsF.=r8hO^l#_k:u8u^E22hn[G_@a_[6i_?nPK"LJ-(\e;0X();=dD@r`48H-6@%j`Fn1กWd'=*Ibee]d5\hHq&(rOFOqj3WV0JW`lIข^VB`:p/D2+ZY\=b6-E"BbDn*rNoRFoqQc;rbข&ORกoก;?]^-nNf%B@hfs9(ZQbBOR4"W*Ic'Q,H0?^\f2P\.R&KXiกlm'N\0V#L+-\eE^-Wg^T9n6tu,plF/ก^eLd1]q9G99ขLh==KCWc65-aPRr[KEaT)(6M#u'[bjWinก0I+&e3moUcb'?OXD@(k8ZDR6+SRe7C7กM-^d_YHK3OZM6$B$ขL"J8s#jE]hd'Q;g-SW2?HJ=7%C=&bZBnJ+\`_aKDd-sY7I8)SYf2A3-AtkOBDd((#,^[L_YOtK+FEeAf3o)"ขQAsT`aI4PlI-rBก@hhCbQ_r_P+"Ch3NX3_F:g.jR(eGT"3lIeMlaGqj/k%mM)*;CMKM+@?`O.":+Assp%^+'%f3ก=L:4=CO1,k05l+C59c['+0@kiQL-Ri:_.\_M;$1X/\arR5;Q=V?18h"kQp(@s/3,?[lqZuJcm7U\P-%RqO-EBG$ZD._BXC0-],^9-TOCm7*ok8=m?Og)i;hS".F"!PiJ8l0A`Q3Siข^%BIN6:T,7.ONR3'J\6Z.Pขข]'B$J1qb$*Re'JBq#'%e^Clngm3"ZX8HF1^:8&^\BtnX_V*#*;ขmOHrF_hj^eGr(WiLT=":["0g,F/'g/mJk#u1j;K[GoB=20/L[SL*rbLFVA^Vm;i9INg7K%Nmq]]gdk(Y0\dHIRWa7k'_ก/I)DqYLt2M#_,:?]80K"fjZL'$BDLa8:km5L1BIi)V1Sq1tgก;@d,7N/58,21k9c]0+'M&_"Uue:RXrU0;=K!FK/Xa3cขHWXN%f09JaS`jlrkW29jRCe0o1!.?a1VQWLU%c:li)'r)HjB,*,#&PZ6,#b(aM(H'a/0YMjPf^eS7rEZ5mP]tEก,sSA[f:l5F]Eb9X:T$lFo4/Y=/ZMIขM1e?,1hclF1R-0cdY;FV9unT.CQ"k)Kbp9mBC_h*กXHIG8#`;PB:qKgP](;@F_#0/gq]K._Q5%$9c_K.nCh"uli2f\J`Q__$8(S&ONN&bH;Vl6e$?1s,lYqVPT0&'duBJ1U.ก:@d&+j4_L"5;*ag=GEk?กeBb=arSขfFPRmX5ULjn:N3/OOZ"ekr;JqXoQ'e$4W?nก=**LoSLU-4;ueF_?Bn.#-jE\EMs3&9F2kGh+3p-LgA,E_o[.E]*RZ`[-_G%d=$6sH\4FHQH]BW%!J]Zntug,\4cG'PqpOP6-S+25qi9MZ$XQ#O-4/E'^^;ขjI?=l;Ps"mYmh3]Q0PA+t5&8)X.`9;กql.Mข8WW4oX9^11mVYdG[]_Rl6pg6[cW(10O*qpQTZf)Du5&I(J]JT*88s'dQa+fpglD2AK:Att1LjAaWjKWH!qF0#4h-2eYkln*\^$OLK`KK8uUnp8c:B=]qU73N5PMuE1)"/9d/2U3rjQ0@tp.9J\8Hg@*Ii*eY1q^g2i2G+G$(9UBกXrG12q"L2#ข,7OCdS[:)JVMcYp-EgU%eE&S6NDdJ=S,-Km^b*6ก++qS*hie0g6=u@pDu7H4-Ct1b/JtE$eu-M67s:Q!^l*P\H6A."\n`dB-p]skkbBI2`)=?,?L@965q\5aJ5&mqqPue4G]0$XขTqY_8Vn:h#HLH@e8eFDo8HtfnSUs.p)q0EMqN`)t3^Q?`-r+U-'n6*IE5FT:*HV5B-r+Yi?6K#&XpZQIs/`C,cTa&XkXr[R`rO!oXg`(pk.=*garR*.D8u$"aul;&#+Im]nR3?5);e@"usPM]'$Vก#8NdYd?U80*Fo7GI$lRAM^;0GDqEM)K4m55k/R]%R"e$'OBrdVqa*9'PขY&Zk9ePj";%X5P]"-U_**rl7bd;Lข3p6,RnK,d'gs[@mEq'O(h6E9[(^c6j;N)_MaqHD[n"%A+V+d?F8c\%B`R"S^g0+4;XG]?R4mX&\(@fQl7J]`QW01Ff9s(Y`DKe5:R[ข_sข"-%Bt2m&gl!'4me(ks406nJกr\_R)i4TVg$+KP\tLf(,)?KWm2?V,Pmn\/03?#ขe-SH(qQ@Wj?+KKA+^lADU1QT/LM_C;)&X/Nh'JP-ED7N]XL12LHC7CYYYU+Eg,5$N#^DI#h[^Rnc'(!6TY]UeN\SP)7tMd\ข@pLo*^kle)VYX$OF#qDb"p03:6NW?-Cc[9i'!Tet$!Fih/2RLpsl!YB]I"8g9""]jfp?0mPKlDu_-'*VQ*,i#YBP=O*ES0ACN*L`AlfF@Uq;r^))=o"`nhP`1].c1X03aRB#SpPrljd:0?0NCcQ#H@rks3S=$l%U2Y%Oh2##ZF:aZciXoMกI(n.`ขuL!6;GJ'i)7`[ข@M&JqPGF/hPj8b]9RVt+8VOgP%LT#(V?Ag`7g^Y["[t)L]+$"dpu(Y[E)4ก;JieplNDL'I#iDPoYQVaHJXp=ZCHIEM3Y_QF9^7==ZSM'pCikX3%oNalpi0L5JoPOpN,TJ+0k]กl#tU79aQm`[,YQ5Mq?Y'X8*PJJFUOOr#=Sl!2M9bH4B7sa86kH3T_:5:L(\EY=กQ/G_/C!464DqP'kt;^Pl%กCMs'M8a2;)0Hdh_(`346M0NCsb*A,s#iRttPq1QM6RUZ6M9njak%"'Ql_=$1gAFj1'?m5oJZU`:2iขl;;n:4J\=Apsq.uA[(77$_&0S0sM=8CRข48fIY/nFOkqAS(dT["UH"Wj00f;-Y1%dE13F@R:;`GG2)]a^u\Z]JG4hT;h:Rbrg:nkEFrWa1#4nV'~ข
+-->
+</markdown>
