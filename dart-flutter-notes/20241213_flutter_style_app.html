@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การกำหนดค่า Style สำหรับ Widget เบื้องต้น</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การกำหนดค่า Style สำหรับ Widget เบื้องต้น</h1>
+<p><img src="images/20241213/20241213_0000_cover.svg" class="u-max-full-width" /></p>
+<p>การเขียนแอปโดยใช้ Flutter มักเริ่มต้นด้วยการใช้ widget <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp-class.html">MaterialApp</a> หรือ <a target="_blank" href="https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html">CupertinoApp</a> เพื่อเลือกใช้รูปแบบ Style ตามแบบ <a target="_blank" href="https://flutter.github.io/samples/web/material_3_demo/">Material Design</a> ของ Andriod หรือ iOS ของ Apple</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp-class.html">MaterialApp</a> จะสามารถใช้ Widget ใน <a target="_blank" href="https://api.flutter.dev/flutter/material/material-library.html">material library</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html">CupertinoApp</a> จะสามารถใช้ Widget ใน <a target="_blank" href="https://api.flutter.dev/flutter/cupertino/cupertino-library.html">cupertino library</a></li>
+</ul>
+<p>ทั้ง 2 ตัวจะมีการสร้าง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/DefaultSelectionStyle-class.html">Style</a> ที่เป็นค่าเริ่มต้นของตัวเอง ซึ่งผู้ใช้สามารถปรับแต่งได้ในภายหลัง หลักการทำงานจะใช้ <a target="_blank" href="20241113_flutter_inherited_widget.html">InheritedWidget</a> ในการส่งข้อมูลต่าง ๆ ไปยัง widget ที่อยู่ลึกลงไปใน widget tree</p>
+<p>เลยสงสัยเองว่า แล้วถ้าจะสร้างแอปที่มีรูปแบบอื่น ๆ ที่ไม่ใช่ MaterialApp หรือ CupertinoApp สามารถทำได้ไหม คำตอบคือ <strong>&quot;ได้&quot;</strong> เนื่องจากทั้ง 2 ตัวเป็นตัวที่ประกาศรูปแบบการสร้าง widget บนจอว่าจะให้มีรูปทรง สี พฤติกรรมอย่างไรบ้าง ดังนั้นหากต้องการอะไรที่ไม่เหมือนทั้งสองอย่าง สามารถสร้างเองได้ ตัวอย่างเช่น package <a target="_blank" href="https://pub.dev/packages/desktop/example">desktop</a> ที่จะมี widget ที่ออกแบบมาให้กับการใช้บน desktop ที่ใช้ mouse เป็นหลัก</p>
+<p>เนื่องจากทั้งหมดทั้งมวลจำเป็นต้องตั้งค่า Style เลยมาจดบันทึกเอาไว้ว่ามันทำงานยังไงบ้าง</p>
+<h2>เขียนหน้าจอแอปโดยไม่ใช่ MaterialApp และ CupertinoApp</h2>
+<p>การทดลองว่าระบบการจัดการเรื่อง Style มันทำงานยังไง เลยลองเขียนแอปแบบเปลือย คือ ไม่ใช่ตัวช่วยในการสร้าง Style เริ่มต้น ดังนั้นมันจะมีหลายจุดที่ต้องมาใส่เอง ลองตัวอย่างสร้างแอป hello world พื้นสีเหลือง ข้อความตรงกลาง</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = Container(
+    child: Center(
+        child: FittedBox(
+      child: Text('hello world'),
+    )),
+  );
+
+  runApp(simpleApp);
+}
+</code></pre>
+<p>ผลที่ได้เกิด Exception แจ้งว่า</p>
+<blockquote>
+<p>No Directionality widget found.</p>
+</blockquote>
+<p>แล้วตัวแอปก็มีแต่จอแดง ๆ ไม่มีข้อความอะไร</p>
+<div class="image"><img src="images/20241213/20241213_0100_helloworld_app1.png" class="u-max-full-width" /><div><p>แอปที่เกิดปัญหา</p>
+</div></div>
+<p>ปัญหานี้เกิดจาก ไม่มีการกำหนดทิศทางของ Text หากใช้ MaterialApp หรือ CupertinoApp ครอบเอาไว้ มันจะกำหนดค่าเริ่มต้นมาให้ แก้ไขโดยสามารถกำหนดได้ 2 แบบคือ</p>
+<ol>
+<li>ใส่ไว้ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Text/textDirection.html"><code>Text()</code></a> โดยตรง</li>
+<li>ใส่ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Directionality-class.html"><code>Directionality()</code></a></li>
+</ol>
+<pre><code class="language-dart">  // mothod 1
+  var simpleApp = Container(
+    color: Colors.yellow,
+    child: Center(child: Text('hello world', textDirection: TextDirection.ltr)),
+  );
+</code></pre>
+<pre><code class="language-dart">  // mothod 2
+  var simpleApp = Directionality(
+    textDirection: TextDirection.ltr,
+    child: Container(
+      color: Colors.yellow,
+      child: Center(child: Text('hello world')),
+    ),
+  );
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0200_helloworld_app2.png" class="u-max-full-width" /><div><p>แก้ไขเรื่อง text directional แล้ว</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>เรื่องของ Theme</h2>
+<p>จุดเริ่มต้นของระบบ Theme จะมาจาก base class ชื่อ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/InheritedTheme-class.html">InheritedTheme</a> ถ้าจะตั้งค่าปรับแต่งอะไรให้มาดูว่ามี class ไหนที่ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/InheritedTheme-class.html#:~:text=Implementers">implement</a> ตัว InheritedTheme บ้าง</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>DefaultTextStyle</h3>
+<p>ตั้งค่าเริ่มต้นของรูปแบบข้อความที่จะใช้แสดงผล ก็ตรงไปตรงมา <a target="_blank" href="https://api.flutter.dev/flutter/widgets/DefaultTextStyle-class.html">DefaultTextStyle</a> กำหนดผ่านตัวนี้ได้เลย ตัว constructor ดังนี้</p>
+<pre><code class="language-dart">const DefaultTextStyle({
+  Key? key,
+  required TextStyle style,
+  TextAlign? textAlign,
+  bool softWrap = true,
+  TextOverflow overflow = TextOverflow.clip,
+  int? maxLines,
+  TextWidthBasis textWidthBasis = TextWidthBasis.parent,
+  TextHeightBehavior? textHeightBehavior,
+  required Widget child,
+})
+</code></pre>
+<p>วิธีใช้ ก็เอาไปครอบตัว widget ที่ต้องการกำหนดค่า สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/DefaultTextStyle/of.html"><code>DefaultTextStyle.of(BuildContext context)</code></a> เพื่ออ่านค่าจาก Parent เพื่อมาปรับใช้งานได้</p>
+<p>ตัวที่ใช้ข้อมูลจาก DefaultTextStyle คือ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text()</a> หากพิจารณาตัว constructor จะเห็นว่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Text-class.html">Text()</a> สามารถกำหนดค่าทับตัว DefaultTextStyle ได้</p>
+<pre><code class="language-dart">const Text(
+  String data, {
+  Key? key,
+  TextStyle? style,
+  StrutStyle? strutStyle,
+  TextAlign? textAlign,
+  TextDirection? textDirection,
+  Locale? locale,
+  bool? softWrap,
+  TextOverflow? overflow,
+  TextScaler? textScaler,
+  int? maxLines,
+  String? semanticsLabel,
+  TextWidthBasis? textWidthBasis,
+  TextHeightBehavior? textHeightBehavior,
+  Color? selectionColor,
+})
+</code></pre>
+<p>ในกรณีที่ตัว Text ไม่พบ <a target="_blank" href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a> เลย จะแสดงเป็นตัวอักษรสีแดงขีดเส้นสีเหลือง ตัวอย่างด้านล่างจะเป็นการสร้างข้อความ โดยไม่มี <a target="_blank" href="https://api.flutter.dev/flutter/material/Scaffold-class.html">Scaffold</a> ที่จะช่วยกำหนดค่าเริ่มต้นของตัว TextStyle</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = MaterialApp(
+    home: Center(child: Text('hello world')),
+  );
+
+  runApp(simpleApp);
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0300_helloworld_app3.png" class="u-max-full-width" /><div><p>เมื่อ Text ไม่พบ TextStyle</p>
+</div></div>
+<p>เพิ่ม <code>DefaultTextStyle()</code> ครอบตัว widget ทั้งหมดเอาไว้ ตัว <code>Text()</code> ที่อยู่ใน widget tree ที่ลึกลงไป จะทำการดึงค่า TextStyle ที่กำหนดเอาไว้ไปใช้งาน</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = MaterialApp(
+    home: DefaultTextStyle(
+        style: TextStyle(color: Colors.white, fontSize: 30),
+        child: Center(child: Text('hello world'))),
+  );
+
+  runApp(simpleApp);
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0400_helloworld_app4.png" class="u-max-full-width" /><div><p>ค่า TextStyle จะถูกนำไปใช้ใน Text()</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>การกำหนดรูปแบบของปุ่มแบบต่าง ๆ</h2>
+<p>ในตัว Flutter มีปุ่มให้เลือกใช้หลายแบบ แต่ละแบบมีรูปร่างที่ต่างกัน ดังนั้นการกำหนดรูปแบบสามารถกำหนดผ่าน class ที่เกี่ยวข้องดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ElevatedButton-class.html">ElevatedButton</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/ElevatedButtonTheme-class.html">ElevatedButtonTheme</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/ElevatedButtonThemeData-class.html">ElevatedButtonThemeData</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/FilledButton-class.html">FilledButton</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/FilledButtonTheme-class.html">FilledButtonTheme</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/FilledButtonThemeData-class.html">FilledButtonThemeData</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/OutlinedButton-class.html">OutlinedButton</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/OutlinedButtonTheme-class.html">OutlinedButtonTheme</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/OutlinedButtonThemeData-class.html">OutlinedButtonThemeData</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/TextButton-class.html">TextButton</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/TextButtonTheme-class.html">TextButtonTheme</a> → <a target="_blank" href="https://api.flutter.dev/flutter/material/TextButtonThemeData-class.html">TextButtonThemeData</a></li>
+</ul>
+<p>ตัวอย่าง ลองสร้างปุ่มทั้ง 4 แบบ โดยประกาศไว้ใน <code>buttons</code> แล้วเอาไปใส่ไว้ใน <code>body</code> คือส่วนที่เป็นตัวหน้าจอที่แสดงปุ่ม จากนั้นเอา <code>body</code> ไปใส่ไว้ในตัว widget ที่แก้ไขรูปแบบของ widget โดยจะลองกำหนดรูปแบบของ OutlinedButton จากเดิมเป็นจะขอบจะโค้งเป็นปุ่มสี่เหลี่ยมธรรมดาแทน ผ่าน <code>OutlinedButtonTheme</code> → <code>OutlinedButtonThemeData</code> → <code>ButtonStyle</code> → shape: <a target="_blank" href="https://api.flutter.dev/flutter/painting/ContinuousRectangleBorder-class.html">ContinuousRectangleBorder()</a></p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+
+  var buttons = &lt;Widget&gt;[
+    ElevatedButton(onPressed: () {}, child: Text('Elevated Button')),
+    FilledButton(onPressed: () {}, child: Text('Filled Button')),
+    OutlinedButton(onPressed: () {}, child: Text('Outlined Button')),
+    TextButton(onPressed: () {}, child: Text('Text Button')),
+  ];
+
+  var body = Center(
+      child: Column(
+         mainAxisAlignment: MainAxisAlignment.spaceAround,
+         children: buttons,
+  ));
+
+  var simpleApp = MaterialApp(
+    home: DefaultTextStyle(
+        style: TextStyle(color: Colors.white, fontSize: 10),
+        child: OutlinedButtonTheme(
+            data: OutlinedButtonThemeData(
+			  style: ButtonStyle(
+                shape: WidgetStatePropertyAll(ContinuousRectangleBorder())
+              )
+            ),
+            child: body)),
+  );
+
+  runApp(simpleApp);
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0500_helloworld_app5.png" class="u-max-full-width" /><div><p>ลองใช้ OutlinedButtonTheme เพื่อเปลี่ยนรูปแบบของ OutlinedButton</p>
+</div></div>
+<p>พวก Button นี่จะค่อนข้างยุ่งยากในการกำหนดพวก Style หน่อย เพราะตัว Button มันมีสถานะหลายแบบ เช่น ตอนอยู่นิ่ง ๆ ตอนเอาตัวชี้มาชี้ ตอนถูกกด หลังถูกกด 😅 ถ้าต้องการกำหนดรูปแบบทุกแบบก็ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/WidgetStatePropertyAll-class.html">WidgetStatePropertyAll</a> แต่ถ้าต้องการแก้ไขเฉพาะบางสถานะก็ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/WidgetStateProperty-class.html">WidgetStateProperty</a> โดยสถานะของ widget จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/WidgetState.html">WidgetState</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>การตั้งค่า theme ใน MaterialApp</h2>
+<p>ในการสร้างแอป การกำหนด theme ที่จะใช้งานกับทั้งแอป จะกำหนดที่ MaterialApp เพื่อให้ widget ที่อยู่ภายใน widget tree ใช้รูปแบบเดียวกันทั้งหมด</p>
+<pre><code class="language-dart">MaterialApp({
+  // some of theme config ...
+  Color? color,
+  ThemeData? theme,
+  ThemeData? darkTheme,
+  ThemeData? highContrastTheme,
+  ThemeData? highContrastDarkTheme,
+  ThemeMode? themeMode = ThemeMode.system,
+  Duration themeAnimationDuration = kThemeAnimationDuration,
+  Curve themeAnimationCurve = Curves.linear,
+  AnimationStyle? themeAnimationStyle
+})
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>light/dark theme</h3>
+<p>แอปที่ดีควรสามารถเลือกได้ว่าจะใช้ light dark ตามความต้องการของผู้ใช้ อาจอิงจากระบบหรือเลือกได้เอง การตั้งค่าสามารถกำหนดได้ใน <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp/themeMode.html"><code>themeMode</code></a> ค่าเริ่มต้นจะเป็น <a target="_blank" href="https://api.flutter.dev/flutter/package-flutter_src_material_app/ThemeMode.html"><code>ThemeMode.system</code></a></p>
+<ul>
+<li>light theme จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp/theme.html"><code>theme</code></a></li>
+<li>dark theme จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp/darkTheme.html"><code>darkTheme</code></a></li>
+<li>high contrast theme จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp/highContrastTheme.html"><code>highContrastTheme</code></a></li>
+<li>dark high contrast theme จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialApp/highContrastDarkTheme.html"><code>highContrastDarkTheme</code></a></li>
+</ul>
+<p>หากแอปต้องการที่จะใช้เฉพาะข้อมูล light theme เท่านั้น ก็กำหนดค่าเป็น <code>MaterialApp(themeMode: ThemeMode.light)</code> เป็นต้น สำหรับ high contrast ณ ตอนที่เขียนมีเฉพาะ iOS อ่านค่าผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/MediaQueryData/highContrast.html">MediaQueryData.highContrast</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ThemeData จุดเริ่มต้นของการตั้งค่า Theme</h3>
+<p>ใน <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData-class.html">ThemeData class</a> จะมีคำสั่งในการกำหนดค่าต่าง ๆ ของ theme ที่ใช้งานในแอปทั้งหมด จะมี constructors ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.html">ThemeData</a> สำหรับเอาค่า theme เริ่มต้น มาแก้ไขเฉพาะส่วนที่ต้องการ</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.light.html">light</a> / <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.fallback.html">fallback</a> ค่าเริ่มต้นของ light theme</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.dark.html">dark</a> ค่าเริ่มต้นของ dark theme</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.from.html">from</a> กำหนดค่าสีของ theme ตาม <a target="_blank" href="https://api.flutter.dev/flutter/material/ColorScheme-class.html">colorScheme</a> สีที่ให้เลือกจะมาจากสี ที่กำหนดใน <a target="_blank" href="https://m3.material.io/styles/color/roles/color-roles">Material colors spec</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.raw.html">raw</a> สำหรับสร้าง theme จากศูนย์ คือ ต้องกำหนดค่า theme ทุกอย่างเอง</li>
+</ul>
+<p><a target="_blank" href="https://dartpad.dev/?embed=true&split=60&run=true&sample_id=material.ColorScheme.1&channel=stable">ลองเล่นตัวอย่าง</a> การใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/ThemeData.from.html">ThemeData.from()</a> เปลี่ยนสีของ Theme</p>
+<p>ตัวอย่าง การเปลี่ยน light / dark theme โดยการกดปุ่ม 3 ปุ่ม ที่ประกาศใน <code>Widget get _buttons</code> ค่า <code>_selectTheme</code> ใน class <code>_MainState</code> จะเก็บผลจากการกดปุ่ม และทำการ rebuild เพื่อนำค่าที่เปลี่ยนแปลงมาใช้งานในคำสั่ง <code>MaterialApp(themeMode: this._selectTheme, ...)</code></p>
+<pre><code class="language-dart">import 'dart:developer';
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const Main());
+}
+
+class Main extends StatefulWidget {
+  const Main({super.key});
+
+  @override
+  State&lt;Main&gt; createState() =&gt; _MainState();
+}
+
+class _MainState extends State&lt;Main&gt; {
+  var _selectTheme = ThemeMode.system;
+
+  Widget get _buttons {
+    return Row(
+        key: ValueKey('bottons'),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          OutlinedButton(
+              onPressed: () =&gt; setState(() =&gt; this._selectTheme = ThemeMode.light),
+              child: Text('ThemeMode.light')),
+          OutlinedButton(
+              onPressed: () =&gt; setState(() =&gt; this._selectTheme = ThemeMode.dark),
+              child: Text('ThemeMode.dark')),
+          OutlinedButton(
+              onPressed: () =&gt; setState(() =&gt; this._selectTheme = ThemeMode.system),
+              child: Text('ThemeMode.system'))
+        ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    log('${DateTime.now()} ${this._selectTheme}');
+
+    return MaterialApp(
+      themeMode: this._selectTheme,
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData.light(),
+      home: Scaffold(
+          appBar: AppBar(title: Text('This is AppBar'), elevation: 4.0),
+          body: Center(
+              child: Column(
+            children: [
+              Text('hello world', textScaler: TextScaler.linear(5)),
+              this._buttons
+            ],
+          ))),
+    );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0600_select_theme.png" class="u-max-full-width" /><div><p>ตัวอย่างการเลือก light/dark theme</p>
+</div></div>
+<p>หากต้องการกำหนดสีของ light/dark theme เอง สามารถเลือกใช้ชุดสีจากคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/material/ColorScheme/ColorScheme.fromSwatch.html"><code>ColorScheme.fromSwatch()</code></a> เพื่อสร้าง color scheme จากชุดสีของ <a target="_blank" href="https://api.flutter.dev/flutter/material/MaterialColor-class.html">MaterialColor</a> หรือใช้ <a target="_blank" href="https://api.flutter.dev/flutter/material/ColorScheme/ColorScheme.fromSeed.html"><code>ColorScheme.fromSeed()</code></a> จากตัวอย่างที่แล้ว ลองเปลี่ยนให้สีของแอปเป็นสีเขียว <a target="_blank" href="https://api.flutter.dev/flutter/material/Colors/green-constant.html"><code>Colors.green</code></a> ตรง darkTheme กำหนดค่า <code>brightness: Brightness.dark</code> ส่วน theme ค่า <code>brightness: Brightness.light</code> ดังนี้</p>
+<pre><code class="language-dart">  @override
+  Widget build(BuildContext context) {
+    log('${DateTime.now()} ${this._selectTheme}');
+
+    return MaterialApp(
+      themeMode: this._selectTheme,
+      darkTheme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.dark)),
+      theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.light)),
+      home: Scaffold(
+          appBar: AppBar(title: Text('This is AppBar'), elevation: 4.0),
+          body: Center(
+              child: Column(
+            children: [
+              Text('hello world', textScaler: TextScaler.linear(5)),
+              this._buttons
+            ],
+          ))),
+    );
+  }
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0700_select_theme2.png" class="u-max-full-width" /><div><p>ตัวอย่างการใช้ ColorScheme.fromSeed() เพื่อกำหนดสีของแอปอย่างง่าย</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การแก้ไขข้อมูล Theme บางส่วน</h3>
+<p>หากตัว widget ที่อยู่ใน widget tree ต้องการที่จะอ่านค่าหรือแก้ไขค่าสีหรือข้อมูลบางส่วนของตัว Theme ที่กำลังใช้งานอยู่ สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/material/Theme/of.html"><code>Theme.of( BuildContext context )</code></a> เพื่ออ่านข้อมูล <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData-class.html">ThemeData</a> จาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a> ออกมา หากต้องการจะสร้าง ThemeData ใหม่ที่มีการแก้ไขเพิ่มเติมข้อมูลบางส่วน สามารถใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/material/ThemeData/copyWith.html"><code>ThemeData.copyWith()</code></a> เพื่อสร้าง ThemeData ใหม่และนำไปใช้งาน</p>
+<p>ตัวอย่าง สร้าง widget ชื่อ <code>TextRed</code> ที่จะเอาค่าสีจาก <a target="_blank" href="https://api.flutter.dev/flutter/painting/TextStyle-class.html">TextStyle</a> ที่สร้่างไว้ใน <a target="_blank" href="https://api.flutter.dev/flutter/material/TextTheme/bodyMedium.html">textTheme.bodyMedium</a> มาแก้ไขให้คงค่าสีแดงเอาไว้</p>
+<pre><code class="language-dart">class TextRed extends StatelessWidget {
+  const TextRed({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var currentStyle = Theme.of(context).textTheme.bodyMedium;
+    var newColor = currentStyle!.color!.withRed(255);
+
+    return Text('This is custom text',
+        style: currentStyle.copyWith(color: newColor));
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0800_select_theme3.png" class="u-max-full-width" /><div><p>ตัวอย่างลองเอาค่า ThemeData มาแก้ไขเพิ่มเติม</p>
+</div></div>
+<p>ข้อแตกต่างระหว่างการกำหนดสีเข้าไปตรง ๆ กับการใช้สีจาก ThemeData มาแก้ไขคือ สีมันจะกลืนไปกับวัตถุอื่น ๆ ในแอปได้ง่ายกว่า หากลองแก้ไขสีตรง ๆ ผลที่ออกมาจะเป็นดังนี้</p>
+<pre><code class="language-dart">class TextRed extends StatelessWidget {
+  const TextRed({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('This is custom text',
+        style: TextStyle(color: Colors.red));
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241213/20241213_0900_select_theme9.png" class="u-max-full-width" /><div><p>ตัวอย่างการกำหนดสีเข้าไปโดยตรง</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+# Flutter: การกำหนดค่า Style สำหรับ Widget เบื้องต้น
+
+!![](0000)
+
+การเขียนแอปโดยใช้ Flutter มักเริ่มต้นด้วยการใช้ widget [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) หรือ [CupertinoApp](https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html) เพื่อเลือกใช้รูปแบบ Style ตามแบบ [Material Design](https://flutter.github.io/samples/web/material_3_demo/) ของ Andriod หรือ iOS ของ Apple 
+
+- [MaterialApp](https://api.flutter.dev/flutter/material/MaterialApp-class.html) จะสามารถใช้ Widget ใน [material library](https://api.flutter.dev/flutter/material/material-library.html)
+- [CupertinoApp](https://api.flutter.dev/flutter/cupertino/CupertinoApp-class.html) จะสามารถใช้ Widget ใน [cupertino library](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
+
+ทั้ง 2 ตัวจะมีการสร้าง [Style](https://api.flutter.dev/flutter/widgets/DefaultSelectionStyle-class.html) ที่เป็นค่าเริ่มต้นของตัวเอง ซึ่งผู้ใช้สามารถปรับแต่งได้ในภายหลัง หลักการทำงานจะใช้ [InheritedWidget](20241113_flutter_inherited_widget.html) ในการส่งข้อมูลต่าง ๆ ไปยัง widget ที่อยู่ลึกลงไปใน widget tree
+
+เลยสงสัยเองว่า แล้วถ้าจะสร้างแอปที่มีรูปแบบอื่น ๆ ที่ไม่ใช่ MaterialApp หรือ CupertinoApp สามารถทำได้ไหม คำตอบคือ **"ได้"** เนื่องจากทั้ง 2 ตัวเป็นตัวที่ประกาศรูปแบบการสร้าง widget บนจอว่าจะให้มีรูปทรง สี พฤติกรรมอย่างไรบ้าง ดังนั้นหากต้องการอะไรที่ไม่เหมือนทั้งสองอย่าง สามารถสร้างเองได้ ตัวอย่างเช่น package [desktop](https://pub.dev/packages/desktop/example) ที่จะมี widget ที่ออกแบบมาให้กับการใช้บน desktop ที่ใช้ mouse เป็นหลัก
+
+เนื่องจากทั้งหมดทั้งมวลจำเป็นต้องตั้งค่า Style เลยมาจดบันทึกเอาไว้ว่ามันทำงานยังไงบ้าง
+
+## เขียนหน้าจอแอปโดยไม่ใช่ MaterialApp และ CupertinoApp
+
+การทดลองว่าระบบการจัดการเรื่อง Style มันทำงานยังไง เลยลองเขียนแอปแบบเปลือย คือ ไม่ใช่ตัวช่วยในการสร้าง Style เริ่มต้น ดังนั้นมันจะมีหลายจุดที่ต้องมาใส่เอง ลองตัวอย่างสร้างแอป hello world พื้นสีเหลือง ข้อความตรงกลาง
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = Container(
+    child: Center(
+        child: FittedBox(
+      child: Text('hello world'),
+    )),
+  );
+
+  runApp(simpleApp);
+}
+```
+
+ผลที่ได้เกิด Exception แจ้งว่า 
+
+> No Directionality widget found.
+
+แล้วตัวแอปก็มีแต่จอแดง ๆ ไม่มีข้อความอะไร
+
+!![ แอปที่เกิดปัญหา ](0100)
+
+ปัญหานี้เกิดจาก ไม่มีการกำหนดทิศทางของ Text หากใช้ MaterialApp หรือ CupertinoApp ครอบเอาไว้ มันจะกำหนดค่าเริ่มต้นมาให้ แก้ไขโดยสามารถกำหนดได้ 2 แบบคือ
+
+1. ใส่ไว้ใน [`Text()`](https://api.flutter.dev/flutter/widgets/Text/textDirection.html) โดยตรง
+2. ใส่ผ่าน [`Directionality()`](https://api.flutter.dev/flutter/widgets/Directionality-class.html)
+
+```dart
+  // mothod 1
+  var simpleApp = Container(
+    color: Colors.yellow,
+    child: Center(child: Text('hello world', textDirection: TextDirection.ltr)),
+  );
+```
+
+```dart
+  // mothod 2
+  var simpleApp = Directionality(
+    textDirection: TextDirection.ltr,
+    child: Container(
+      color: Colors.yellow,
+      child: Center(child: Text('hello world')),
+    ),
+  );
+```
+
+!![ แก้ไขเรื่อง text directional แล้ว ](0200)
+ 
+ 
+## เรื่องของ Theme
+จุดเริ่มต้นของระบบ Theme จะมาจาก base class ชื่อ [InheritedTheme](https://api.flutter.dev/flutter/widgets/InheritedTheme-class.html) ถ้าจะตั้งค่าปรับแต่งอะไรให้มาดูว่ามี class ไหนที่ [implement](https://api.flutter.dev/flutter/widgets/InheritedTheme-class.html#:~:text=Implementers) ตัว InheritedTheme บ้าง 
+
+
+### DefaultTextStyle
+ตั้งค่าเริ่มต้นของรูปแบบข้อความที่จะใช้แสดงผล ก็ตรงไปตรงมา [DefaultTextStyle](https://api.flutter.dev/flutter/widgets/DefaultTextStyle-class.html) กำหนดผ่านตัวนี้ได้เลย ตัว constructor ดังนี้
+
+```dart
+const DefaultTextStyle({
+  Key? key,
+  required TextStyle style,
+  TextAlign? textAlign,
+  bool softWrap = true,
+  TextOverflow overflow = TextOverflow.clip,
+  int? maxLines,
+  TextWidthBasis textWidthBasis = TextWidthBasis.parent,
+  TextHeightBehavior? textHeightBehavior,
+  required Widget child,
+})
+```
+
+วิธีใช้ ก็เอาไปครอบตัว widget ที่ต้องการกำหนดค่า สามารถใช้คำสั่ง [`DefaultTextStyle.of(BuildContext context)`](https://api.flutter.dev/flutter/widgets/DefaultTextStyle/of.html) เพื่ออ่านค่าจาก Parent เพื่อมาปรับใช้งานได้
+
+ตัวที่ใช้ข้อมูลจาก DefaultTextStyle คือ [Text()](https://api.flutter.dev/flutter/widgets/Text-class.html) หากพิจารณาตัว constructor จะเห็นว่า [Text()](https://api.flutter.dev/flutter/widgets/Text-class.html) สามารถกำหนดค่าทับตัว DefaultTextStyle ได้ 
+
+```dart
+const Text(
+  String data, {
+  Key? key,
+  TextStyle? style,
+  StrutStyle? strutStyle,
+  TextAlign? textAlign,
+  TextDirection? textDirection,
+  Locale? locale,
+  bool? softWrap,
+  TextOverflow? overflow,
+  TextScaler? textScaler,
+  int? maxLines,
+  String? semanticsLabel,
+  TextWidthBasis? textWidthBasis,
+  TextHeightBehavior? textHeightBehavior,
+  Color? selectionColor,
+})
+```
+
+ในกรณีที่ตัว Text ไม่พบ [TextStyle](https://api.flutter.dev/flutter/painting/TextStyle-class.html) เลย จะแสดงเป็นตัวอักษรสีแดงขีดเส้นสีเหลือง ตัวอย่างด้านล่างจะเป็นการสร้างข้อความ โดยไม่มี [Scaffold](https://api.flutter.dev/flutter/material/Scaffold-class.html) ที่จะช่วยกำหนดค่าเริ่มต้นของตัว TextStyle
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = MaterialApp(
+    home: Center(child: Text('hello world')),
+  );
+
+  runApp(simpleApp);
+}
+```
+
+!![ เมื่อ Text ไม่พบ TextStyle ](0300)
+
+เพิ่ม `DefaultTextStyle()` ครอบตัว widget ทั้งหมดเอาไว้ ตัว `Text()` ที่อยู่ใน widget tree ที่ลึกลงไป จะทำการดึงค่า TextStyle ที่กำหนดเอาไว้ไปใช้งาน
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  var simpleApp = MaterialApp(
+    home: DefaultTextStyle(
+        style: TextStyle(color: Colors.white, fontSize: 30),
+        child: Center(child: Text('hello world'))),
+  );
+
+  runApp(simpleApp);
+}
+```
+
+!![ ค่า TextStyle จะถูกนำไปใช้ใน Text() ](0400)
+
+  
+  
+## การกำหนดรูปแบบของปุ่มแบบต่าง ๆ 
+
+ 
+ในตัว Flutter มีปุ่มให้เลือกใช้หลายแบบ แต่ละแบบมีรูปร่างที่ต่างกัน ดังนั้นการกำหนดรูปแบบสามารถกำหนดผ่าน class ที่เกี่ยวข้องดังนี้
+
+- [ElevatedButton](https://api.flutter.dev/flutter/material/ElevatedButton-class.html) → [ElevatedButtonTheme](https://api.flutter.dev/flutter/material/ElevatedButtonTheme-class.html) → [ElevatedButtonThemeData](https://api.flutter.dev/flutter/material/ElevatedButtonThemeData-class.html)
+- [FilledButton](https://api.flutter.dev/flutter/material/FilledButton-class.html) → [FilledButtonTheme](https://api.flutter.dev/flutter/material/FilledButtonTheme-class.html) → [FilledButtonThemeData](https://api.flutter.dev/flutter/material/FilledButtonThemeData-class.html)
+- [OutlinedButton](https://api.flutter.dev/flutter/material/OutlinedButton-class.html) → [OutlinedButtonTheme](https://api.flutter.dev/flutter/material/OutlinedButtonTheme-class.html) → [OutlinedButtonThemeData](https://api.flutter.dev/flutter/material/OutlinedButtonThemeData-class.html)
+- [TextButton](https://api.flutter.dev/flutter/material/TextButton-class.html) → [TextButtonTheme](https://api.flutter.dev/flutter/material/TextButtonTheme-class.html) → [TextButtonThemeData](https://api.flutter.dev/flutter/material/TextButtonThemeData-class.html)
+
+ตัวอย่าง ลองสร้างปุ่มทั้ง 4 แบบ โดยประกาศไว้ใน `buttons` แล้วเอาไปใส่ไว้ใน `body` คือส่วนที่เป็นตัวหน้าจอที่แสดงปุ่ม จากนั้นเอา `body` ไปใส่ไว้ในตัว widget ที่แก้ไขรูปแบบของ widget โดยจะลองกำหนดรูปแบบของ OutlinedButton จากเดิมเป็นจะขอบจะโค้งเป็นปุ่มสี่เหลี่ยมธรรมดาแทน ผ่าน `OutlinedButtonTheme` → `OutlinedButtonThemeData` → `ButtonStyle` → shape: [ContinuousRectangleBorder()](https://api.flutter.dev/flutter/painting/ContinuousRectangleBorder-class.html)
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+
+  var buttons = <Widget>[
+    ElevatedButton(onPressed: () {}, child: Text('Elevated Button')),
+    FilledButton(onPressed: () {}, child: Text('Filled Button')),
+    OutlinedButton(onPressed: () {}, child: Text('Outlined Button')),
+    TextButton(onPressed: () {}, child: Text('Text Button')),
+  ];
+
+  var body = Center(
+      child: Column(
+         mainAxisAlignment: MainAxisAlignment.spaceAround,
+         children: buttons,
+  ));
+
+  var simpleApp = MaterialApp(
+    home: DefaultTextStyle(
+        style: TextStyle(color: Colors.white, fontSize: 10),
+        child: OutlinedButtonTheme(
+            data: OutlinedButtonThemeData(
+			  style: ButtonStyle(
+                shape: WidgetStatePropertyAll(ContinuousRectangleBorder())
+              )
+            ),
+            child: body)),
+  );
+
+  runApp(simpleApp);
+}
+```
+
+!![ ลองใช้ OutlinedButtonTheme เพื่อเปลี่ยนรูปแบบของ OutlinedButton ](0500)
+
+พวก Button นี่จะค่อนข้างยุ่งยากในการกำหนดพวก Style หน่อย เพราะตัว Button มันมีสถานะหลายแบบ เช่น ตอนอยู่นิ่ง ๆ ตอนเอาตัวชี้มาชี้ ตอนถูกกด หลังถูกกด 😅 ถ้าต้องการกำหนดรูปแบบทุกแบบก็ใช้ [WidgetStatePropertyAll](https://api.flutter.dev/flutter/widgets/WidgetStatePropertyAll-class.html) แต่ถ้าต้องการแก้ไขเฉพาะบางสถานะก็ใช้ [WidgetStateProperty](https://api.flutter.dev/flutter/widgets/WidgetStateProperty-class.html) โดยสถานะของ widget จะใช้ค่าจาก [WidgetState](https://api.flutter.dev/flutter/widgets/WidgetState.html) 
+ 
+## การตั้งค่า theme ใน MaterialApp
+ 
+ในการสร้างแอป การกำหนด theme ที่จะใช้งานกับทั้งแอป จะกำหนดที่ MaterialApp เพื่อให้ widget ที่อยู่ภายใน widget tree ใช้รูปแบบเดียวกันทั้งหมด 
+
+```dart
+MaterialApp({
+  // some of theme config ...
+  Color? color,
+  ThemeData? theme,
+  ThemeData? darkTheme,
+  ThemeData? highContrastTheme,
+  ThemeData? highContrastDarkTheme,
+  ThemeMode? themeMode = ThemeMode.system,
+  Duration themeAnimationDuration = kThemeAnimationDuration,
+  Curve themeAnimationCurve = Curves.linear,
+  AnimationStyle? themeAnimationStyle
+})
+```
+ 
+### light/dark theme
+ 
+แอปที่ดีควรสามารถเลือกได้ว่าจะใช้ light dark ตามความต้องการของผู้ใช้ อาจอิงจากระบบหรือเลือกได้เอง การตั้งค่าสามารถกำหนดได้ใน [`themeMode`](https://api.flutter.dev/flutter/material/MaterialApp/themeMode.html) ค่าเริ่มต้นจะเป็น [`ThemeMode.system`](https://api.flutter.dev/flutter/package-flutter_src_material_app/ThemeMode.html)
+
+- light theme จะใช้ค่าจาก [`theme`](https://api.flutter.dev/flutter/material/MaterialApp/theme.html)
+- dark theme จะใช้ค่าจาก [`darkTheme`](https://api.flutter.dev/flutter/material/MaterialApp/darkTheme.html)
+- high contrast theme จะใช้ค่าจาก [`highContrastTheme`](https://api.flutter.dev/flutter/material/MaterialApp/highContrastTheme.html) 
+- dark high contrast theme จะใช้ค่าจาก [`highContrastDarkTheme`](https://api.flutter.dev/flutter/material/MaterialApp/highContrastDarkTheme.html) 
+
+หากแอปต้องการที่จะใช้เฉพาะข้อมูล light theme เท่านั้น ก็กำหนดค่าเป็น `MaterialApp(themeMode: ThemeMode.light)` เป็นต้น สำหรับ high contrast ณ ตอนที่เขียนมีเฉพาะ iOS อ่านค่าผ่าน [MediaQueryData.highContrast](https://api.flutter.dev/flutter/widgets/MediaQueryData/highContrast.html)
+ 
+### ThemeData จุดเริ่มต้นของการตั้งค่า Theme
+ 
+ใน [ThemeData class](https://api.flutter.dev/flutter/material/ThemeData-class.html) จะมีคำสั่งในการกำหนดค่าต่าง ๆ ของ theme ที่ใช้งานในแอปทั้งหมด จะมี constructors ดังนี้
+
+- [ThemeData](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.html) สำหรับเอาค่า theme เริ่มต้น มาแก้ไขเฉพาะส่วนที่ต้องการ
+- [light](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.light.html) / [fallback](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.fallback.html) ค่าเริ่มต้นของ light theme 
+- [dark](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.dark.html) ค่าเริ่มต้นของ dark theme 
+- [from](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.from.html) กำหนดค่าสีของ theme ตาม [colorScheme](https://api.flutter.dev/flutter/material/ColorScheme-class.html) สีที่ให้เลือกจะมาจากสี ที่กำหนดใน [Material colors spec](https://m3.material.io/styles/color/roles/color-roles)
+- [raw](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.raw.html) สำหรับสร้าง theme จากศูนย์ คือ ต้องกำหนดค่า theme ทุกอย่างเอง
+
+[ลองเล่นตัวอย่าง](https://dartpad.dev/?embed=true&split=60&run=true&sample_id=material.ColorScheme.1&channel=stable) การใช้คำสั่ง [ThemeData.from()](https://api.flutter.dev/flutter/material/ThemeData/ThemeData.from.html) เปลี่ยนสีของ Theme
+
+ตัวอย่าง การเปลี่ยน light / dark theme โดยการกดปุ่ม 3 ปุ่ม ที่ประกาศใน `Widget get _buttons` ค่า `_selectTheme` ใน class `_MainState` จะเก็บผลจากการกดปุ่ม และทำการ rebuild เพื่อนำค่าที่เปลี่ยนแปลงมาใช้งานในคำสั่ง `MaterialApp(themeMode: this._selectTheme, ...)`
+
+```dart
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const Main());
+}
+
+class Main extends StatefulWidget {
+  const Main({super.key});
+
+  @override
+  State<Main> createState() => _MainState();
+}
+
+class _MainState extends State<Main> {
+  var _selectTheme = ThemeMode.system;
+
+  Widget get _buttons {
+    return Row(
+        key: ValueKey('bottons'),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          OutlinedButton(
+              onPressed: () => setState(() => this._selectTheme = ThemeMode.light),
+              child: Text('ThemeMode.light')),
+          OutlinedButton(
+              onPressed: () => setState(() => this._selectTheme = ThemeMode.dark),
+              child: Text('ThemeMode.dark')),
+          OutlinedButton(
+              onPressed: () => setState(() => this._selectTheme = ThemeMode.system),
+              child: Text('ThemeMode.system'))
+        ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    log('${DateTime.now()} ${this._selectTheme}');
+
+    return MaterialApp(
+      themeMode: this._selectTheme,
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData.light(),
+      home: Scaffold(
+          appBar: AppBar(title: Text('This is AppBar'), elevation: 4.0),
+          body: Center(
+              child: Column(
+            children: [
+              Text('hello world', textScaler: TextScaler.linear(5)),
+              this._buttons
+            ],
+          ))),
+    );
+  }
+}
+```
+
+!![ ตัวอย่างการเลือก light/dark theme ](0600)
+ 
+ 
+หากต้องการกำหนดสีของ light/dark theme เอง สามารถเลือกใช้ชุดสีจากคำสั่ง [`ColorScheme.fromSwatch()`](https://api.flutter.dev/flutter/material/ColorScheme/ColorScheme.fromSwatch.html) เพื่อสร้าง color scheme จากชุดสีของ [MaterialColor](https://api.flutter.dev/flutter/material/MaterialColor-class.html) หรือใช้ [`ColorScheme.fromSeed()`](https://api.flutter.dev/flutter/material/ColorScheme/ColorScheme.fromSeed.html) จากตัวอย่างที่แล้ว ลองเปลี่ยนให้สีของแอปเป็นสีเขียว [`Colors.green`](https://api.flutter.dev/flutter/material/Colors/green-constant.html) ตรง darkTheme กำหนดค่า `brightness: Brightness.dark` ส่วน theme ค่า `brightness: Brightness.light` ดังนี้
+
+ 
+```dart
+  @override
+  Widget build(BuildContext context) {
+    log('${DateTime.now()} ${this._selectTheme}');
+
+    return MaterialApp(
+      themeMode: this._selectTheme,
+      darkTheme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.dark)),
+      theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.light)),
+      home: Scaffold(
+          appBar: AppBar(title: Text('This is AppBar'), elevation: 4.0),
+          body: Center(
+              child: Column(
+            children: [
+              Text('hello world', textScaler: TextScaler.linear(5)),
+              this._buttons
+            ],
+          ))),
+    );
+  }
+```
+
+!![ ตัวอย่างการใช้ ColorScheme.fromSeed() เพื่อกำหนดสีของแอปอย่างง่าย ](0700)
+ 
+### การแก้ไขข้อมูล Theme บางส่วน
+ 
+หากตัว widget ที่อยู่ใน widget tree ต้องการที่จะอ่านค่าหรือแก้ไขค่าสีหรือข้อมูลบางส่วนของตัว Theme ที่กำลังใช้งานอยู่ สามารถใช้คำสั่ง [`Theme.of( BuildContext context )`](https://api.flutter.dev/flutter/material/Theme/of.html) เพื่ออ่านข้อมูล [ThemeData](https://api.flutter.dev/flutter/material/ThemeData-class.html) จาก [BuildContext](https://api.flutter.dev/flutter/widgets/BuildContext-class.html) ออกมา หากต้องการจะสร้าง ThemeData ใหม่ที่มีการแก้ไขเพิ่มเติมข้อมูลบางส่วน สามารถใช้คำสั่ง [`ThemeData.copyWith()`](https://api.flutter.dev/flutter/material/ThemeData/copyWith.html) เพื่อสร้าง ThemeData ใหม่และนำไปใช้งาน
+
+ตัวอย่าง สร้าง widget ชื่อ `TextRed` ที่จะเอาค่าสีจาก [TextStyle](https://api.flutter.dev/flutter/painting/TextStyle-class.html) ที่สร้่างไว้ใน [textTheme.bodyMedium](https://api.flutter.dev/flutter/material/TextTheme/bodyMedium.html) มาแก้ไขให้คงค่าสีแดงเอาไว้
+
+```dart
+class TextRed extends StatelessWidget {
+  const TextRed({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var currentStyle = Theme.of(context).textTheme.bodyMedium;
+    var newColor = currentStyle!.color!.withRed(255);
+
+    return Text('This is custom text',
+        style: currentStyle.copyWith(color: newColor));
+  }
+}
+```
+
+!![ ตัวอย่างลองเอาค่า ThemeData มาแก้ไขเพิ่มเติม ](0800)
+
+ข้อแตกต่างระหว่างการกำหนดสีเข้าไปตรง ๆ กับการใช้สีจาก ThemeData มาแก้ไขคือ สีมันจะกลืนไปกับวัตถุอื่น ๆ ในแอปได้ง่ายกว่า หากลองแก้ไขสีตรง ๆ ผลที่ออกมาจะเป็นดังนี้
+
+```dart
+class TextRed extends StatelessWidget {
+  const TextRed({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('This is custom text',
+        style: TextStyle(color: Colors.red));
+  }
+}
+```
+
+!![ ตัวอย่างการกำหนดสีเข้าไปโดยตรง ](0900)
+</markdown>
