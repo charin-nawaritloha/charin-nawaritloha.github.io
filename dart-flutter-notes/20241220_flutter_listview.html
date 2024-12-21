@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การใช้งาน ListView เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การใช้งาน ListView เบื้องต้น</h1>
+<p><img src="images/20241220/20241220_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ListView เป็นตัว layout ที่ช่วยเอา widgets มาเรียงในแนวตั้งหรือแนวนอนแบบแถวเดียว โดยหากตัว widgets ที่จะเอามาแสดงมีขนาดเกินกว่าพื้นที่ของ Parent มันจะเพิ่ม scroll bar ให้สามารถเลื่อนดูได้ ขนาดของ widgets ที่เอามาแสดงใน ListView ไม่จำเป็นต้องมีขนาดเท่ากันทั้งหมด จริง ๆ มันก็ไม่ต่างจากการใช้แทนการเลื่อนหน้าดูข้อมูลธรรมดา ๆ ที่สามารถใช้งานตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html">SingleChildScrollView</a> ที่มี <a target="_blank" href="20241124_flutter_layout2.html#:~:text=Row%20%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%99">Row</a> หรือ <a target="_blank" href="20241124_flutter_layout2.html#:~:text=Column%20%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87">Column</a> เป็นตัวจัด layout ให้</p>
+<h2>การสร้าง ListView</h2>
+<p>constructor ที่ใช้สร้าง ListView มีดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.html">ListView</a> เป็นสร้างจากข้อมูล List<Widget> ตรง ๆ</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html">builder</a> สร้างข้อมูลที่แสดงแบบ on demand ผ่าน callback ใน <code>itemBuilder</code></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.separated.html">separated</a> คล้ายกับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html">builder</a> แต่เพิ่มตัวสร้าง widget ที่ใช้สำหรับเป็น <strong>&quot;ตัวคั่น&quot;</strong> ระหว่าง widget ที่แสดงใน ListView ผ่าน callback ใน <code>separatorBuilder</code></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.custom.html">custom</a> ใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html"><code>SliverChildBuilderDelegate</code></a>  ในการสร้าง list</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การใช้งาน ListView เบื้องต้น</h3>
+<p>ListView สามารถแสดงได้ทั้งแนวตั้งและแนวนอน โดยค่าเริ่มต้นคือแนวตั้ง ต้องการให้แสดง widgets อะไรบ้างก็ใส่เข้าไปใน <code>children</code> เหมาะกับการแสดง widget ที่มีจำนวนไม่มาก</p>
+<pre><code class="language-dart">ListView({
+  Key? key,
+  Axis scrollDirection = Axis.vertical,
+  List&lt;Widget&gt; children = const &lt;Widget&gt;[],
+})
+</code></pre>
+<p>ตัวอย่างแบบง่าย ๆ สร้าง widget ที่มีความสูง 80 และ 100 สำหรับแสดงใน ListView</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  Widget xWidget(double x) =&gt; Container(
+      height: x,
+      decoration: BoxDecoration(
+          color: Colors.green, border: Border.all(color: Colors.yellow)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(&quot;This is xWidget $x&quot;),
+      ));
+
+  var listView = ListView(
+      children: [xWidget(80), xWidget(100), xWidget(100), xWidget(80)]);
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: listView,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0100_simple_listview.png" class="u-max-full-width" /><div><p>ตัวอย่างการสร้าง ListView แบบง่าย ๆ</p>
+</div></div>
+<p>อ่ะ ลองเปลี่ยนเป็นแนวตั้งดู เพิ่ม scrollDirection: Axis.horizontal เหมือนจะง่าย แต่กลายเป็นว่า scroll ไม่ได้ กลายเป็น Row ธรรมดา 😅</p>
+<pre><code class="language-dart">var listView = ListView(
+      scrollDirection: Axis.horizontal,
+      children: [xWidget(80), xWidget(100), xWidget(100), xWidget(80)]);
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0200_listview_h1.png" class="u-max-full-width" /><div><p>พอปรับเป็นแนวตั้งบน desktop เลื่อนไม่ได้ซะงั้น</p>
+</div></div>
+<p>วิธีแก้ไข หากแอปไม่ได้ทำงานบนมือถือพวก Android iOS หรืออุปกรณ์ที่รองรับการสัมผัสด้วยนิ้ว ต้องไปตั้งค่าเพิ่มเติมในส่วนของการใช้ scroll bar</p>
+<ol>
+<li>เพิ่มให้รองรับการเลื่อนด้วย mouse ผ่าน <a target="_blank" href="https://api.flutter.dev/flutter/dart-ui/PointerDeviceKind.html#mouse"><code>PointerDeviceKind.mouse</code></a> จะสามารถทำให้คลิกค้างเพื่อเอาไว้เลื่อน ListView ได้</li>
+<li>ต้องครอบตัว ListView ด้วย ScrollBar และแนบตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ScrollController-class.html">ScrollController</a> เข้าไปเพื่อแสดง scroll bar ในแนวนอน 😑 วิธีนี้จะทำให้มีการแสดงแถบ scroll bar ขึ้นมา และหากต้องการใช้ mouse wheel ต้องกดปุ่ม Shift ที่แป้นพิมพ์ค้างเอาไว้ด้วย</li>
+<li>หากต้องการให้ใช้ mouse wheel โดยไม่ต้องการกดปุ่ม Shift ค้างเอาไว้ จำเป็นต้องทำการแปลงค่าการเลื่อนของ mouse wheel จากแกน y เป็นแกน x วิธีการอยู่ใน <a target="_blank" href="https://stackoverflow.com/questions/67802044/flutter-web-horizontal-singlechildscrollview-cannot-scroll-with-mouse-wheel">stackoverflow.com</a></li>
+</ol>
+<pre><code class="language-dart">import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  Widget xWidget(double x) =&gt; Container(
+      height: x,
+      decoration: BoxDecoration(
+          color: Colors.green, border: Border.all(color: Colors.yellow)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(&quot;This is xWidget $x&quot;),
+      ));
+
+  var scrollController = ScrollController(); // for Scrollbar and ListView
+
+  var listView = Scrollbar(
+    controller: scrollController,
+    child: ListView(
+        controller: scrollController,
+        scrollDirection: Axis.horizontal,
+        children: [xWidget(80), xWidget(100), xWidget(100), xWidget(80)]),
+  );
+
+  runApp(MaterialApp(
+    scrollBehavior: MaterialScrollBehavior().copyWith(dragDevices: {
+      PointerDeviceKind.touch,
+      PointerDeviceKind.mouse // add to use drag mouse to scroll
+    }),
+    home: Scaffold(
+      body: listView,
+    ),
+  ));
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การสร้าง ListView แบบ on demand</h3>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html"><code>ListView.builder()</code></a> สำหรับกำหนด callback เพื่อใช้สร้าง widget ที่จะใช้แสดงใน ListView ผ่าน itemBuilder ข้อดีของการสร้างรายการแบบ on demand คือ ประสิทธิภาพของแอปจะดีกว่าแบบที่สร้างทีเดียวแล้วส่งไปให้ ListView เลย ตัว framework จะสร้างแค่พอแสดงบนหน้าจอและเผื่อการเลื่อนหน้าจอขึ้นลงเท่านั้น และยังสามารถใช้งานการรายการที่ไม่ทราบจำนวนล่วงหน้า รวมถึงรายการแบบไม่รู้จบได้อีกด้วย</p>
+<p>ตัวอย่างการสร้างรายการเป็นข้อความจำนวน 100 รายการ</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var listView = ListView.builder(
+    itemCount: 100,
+    itemBuilder: (BuildContext context, int index) {
+      return Text('item $index');
+    },
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: listView,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0300_listview_builder.png" class="u-max-full-width" /><div><p>การใช้ ListView.builder()</p>
+</div></div>
+<p>ในการใช้งานทั่วไปสามารถใช้ <a target="_blank" href="https://api.flutter.dev/flutter/material/ListTile-class.html">ListTile</a> เพื่อแสดงข้อความ สี icon และอื่น ๆ เพื่อความสวยงามและประแต่งใช้ในงานทั่ว ๆ ไปได้ทันที</p>
+<pre><code class="language-dart">  var listView = ListView.builder(
+    itemCount: 100,
+    itemBuilder: (BuildContext context, int index) {
+      return ListTile(leading: Icon(Icons.info), title: Text(&quot;item $index&quot;));
+    },
+  );
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0400_listview_builder_listtile.png" class="u-max-full-width" /><div><p>การใช้ ListTile</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>สร้างตัวแบ่งระหว่างรายการด้วย <code>ListView.separated</code></h3>
+<p>การสร้าง widget ที่จะใช้เป็นตัวแบ่ง จะกำหนดใน <code>separatorBuilder</code> ดังตัวอย่างต่อไปนี้จะใช้ <a target="_blank" href="https://api.flutter.dev/flutter/material/Divider-class.html">Divider</a> เพื่อเป็นเส้นแบ่งระหว่างรายการ โดยรายการที่แสดงต้องมีจำนวนที่แน่นอน นั้นคือต้องระบุ <code>itemCount</code> ด้วยเสมอ</p>
+<pre><code class="language-dart">  var listView = ListView.separated(
+    itemCount: 100,
+    itemBuilder: (BuildContext context, int index) {
+      return ListTile(leading: Icon(Icons.info), title: Text(&quot;item $index&quot;));
+    },
+    separatorBuilder: (BuildContext context, int index) {
+      return const Divider();
+    },
+  );
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0500_listview_separated.png" class="u-max-full-width" /><div><p>การสร้างตัวแบ่งรายการด้วย Divider()</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การสร้างและทำลาย widget ในรายการ</h2>
+<p>ในการสร้างรายการ widget ที่ใช้แสดงใน ListView แบบ lazily based เช่น การสร้างด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html"><code>ListView.builder()</code></a> การคงสถานะ หรือ state ของ widget จะสามารถกำหนดได้จากคำสั่ง <code>addAutomaticKeepAlives</code> โดยค่าปริยายจะเป็น <code>true</code> นั้นคือ ทุก widget ที่สร้างขึ้น จะถูกใส่ไว้ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutomaticKeepAlive-class.html">AutomaticKeepAlive</a> เพื่อแจ้ง framework ให้รู้ว่าให้เก็บค่า State ของ widget เมื่อถูกถอดออกจาก widget tree เมื่อมันไม่ได้แสดงบน ListView แล้ว</p>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในกรณีที่ตัว widget ที่แสดงใน ListView ไม่ได้มีความจำเป็นต้องเก็บ State แนะนำว่าให้กำหนดค่า <code>addAutomaticKeepAlives: false</code></p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>จำลองการทำงานเมื่อไม่มีการเก็บสถานะ</h3>
+<p>ตัวอย่าง จะเป็นการสร้าง StatefulWidget ชื่อ <code>ListTileColor</code> ขึ้นมา โดยเมื่อคลิกหรือแตะมัน มันจะทำการสลับสีจาก ขาว แดง เขียว น้ำเงิน วนไปเรื่อย ๆ ค่าสีจะถูกเก็บไว้ใน <code>enum TileColor</code> ที่สร้างขึ้น ตัว <code>ListTileColor</code> จะมี override ตัว <code>initState()</code> และ <code>dispose()</code> เพื่อพิมพ์ข้อความ log เมื่อมีการสร้างและลบ State</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var listView = ListView.separated(
+    addAutomaticKeepAlives: true,
+    itemCount: 100,
+    itemBuilder: (BuildContext context, int index) {
+      return ListTileColor(index: index); // ListTile for State test
+    },
+    separatorBuilder: (BuildContext context, int index) {
+      return const Divider();
+    },
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: listView,
+    ),
+  ));
+}
+
+// color table for Tile ---------------------------------------------
+enum TileColor {
+  white(Colors.white),
+  red(Colors.red),
+  green(Colors.green),
+  blue(Colors.blue);
+
+  final Color color;
+
+  const TileColor(this.color);
+}
+
+// ListTile for State test ------------------------------------------
+class ListTileColor extends StatefulWidget {
+  final int index; 
+
+  const ListTileColor({super.key, required this.index});
+
+  @override
+  State&lt;ListTileColor&gt; createState() =&gt; _ListTileColorState();
+}
+
+class _ListTileColorState extends State&lt;ListTileColor&gt; {
+  late int _tileColor; // index of enum TileColor
+
+  // callback for click or tap the ListTile to change color index
+  void _changeColor() =&gt; setState(() =&gt; _tileColor = (_tileColor + 1) % TileColor.values.length);
+
+  @override
+  void initState() {
+    super.initState();
+    _tileColor = TileColor.white.index;
+    log('init state ${widget.index}');
+  }
+
+  @override
+  void dispose() {
+    log('dispose state ${widget.index}');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _changeColor,
+      child: ListTile(
+        leading: Icon(Icons.info_outline),
+        title: Text(&quot;Item index ${widget.index}&quot;),
+        tileColor: TileColor.values[_tileColor].color,
+      ),
+    );
+  }
+}
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0600_listview_keep_alives1.png" class="u-max-full-width" /><div><p>ลองทดสอบคลิกเพื่อกำหนดสี แล้วเลื่อนรายการไปมา ผลคือ สีที่ทำไว้หายหมด</p>
+</div></div>
+<p>สามารถลองเล่นได้ที่ <a target="_blank" href="https://dartpad.dev/?id=081290114ac22fbf2d3bfe06497b6137">dartpad.dev</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>เก็บ State เอาไว้ ไม่ dispose ด้วย AutomaticKeepAliveClientMixin</h3>
+<p>วิธีการให้ตัว ListView คง State เอาไว้แม้ว่าจะถูกเลื่อนหน้าจนหลุดช่วงที่จะใช้งานไปแล้วก็ตาม</p>
+<ol>
+<li>ให้กำหนดค่าตอนสร้่าง ListView ด้วย <code>addAutomaticKeepAlives: true</code> ซึ่งค่าปริยายเป็นค่า <code>true</code> อยู่แล้ว ตัว framework จะทำการหุ้มตัว widget ด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutomaticKeepAlive-class.html">AutomaticKeepAlive</a> ให้อัตโนมัติ</li>
+<li>เพิ่ม <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin-mixin.html">AutomaticKeepAliveClientMixin</a> เข้าไปใน State ของ widget ที่ต้องการแสดงใน ListView เพื่อให้ตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutomaticKeepAlive-class.html">AutomaticKeepAlive</a> ใช้ในการติดต่อกับ widget เกี่ยวกับ State</li>
+<li>ทำการ override คำสั่ง <code>bool get wantKeepAlive</code> ถ้าคืนค่าเป็น <code>true</code> จะทำการเก็บค่า State เอาไว้ ถ้าเป็น <code>false</code> จะทำการ dispose เมื่อตัว widget หลุดไปจากหน้าจอ</li>
+<li>ในคำสั่ง <code>build()</code> ของ widget จำเป็นต้องเพิ่มคำสั่งเพื่อเรียก <code>super.build()</code> ด้วย ถ้าไม่ใส่ตัว complier จะเตือน</li>
+</ol>
+<p>ตัวอย่างส่วนที่แก้ไขเพื่อให้ตัว widget คง State เอาไว้</p>
+<pre><code class="language-dart">class _ListTileColorState extends State&lt;ListTileColor&gt; with AutomaticKeepAliveClientMixin {
+  // ....
+  
+  Widget build(BuildContext context) {
+    super.build(context);
+    // ....
+  }
+
+  @override
+  bool get wantKeepAlive =&gt; true;
+}
+</code></pre>
+<div class="notice"><div><img src="images/important.svg" alt="Dsmurat, penubag, Jelican9, CC BY-SA 4.0" longdesc="https://commons.wikimedia.org/wiki/File:Ambox_important_blue.svg"/><p>ในการเขียนแอปให้มีประสิทธิภาพ หาก widget ไม่จำเป็นต้องเก็บ State ในขณะใช้งาน ก็ให้คืนค่า <code>wantKeepAlive =&gt; false</code> สลับไปมาตามความจำเป็น โดยเมื่อต้องการเปลี่ยนค่านี้ ให้เรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutomaticKeepAliveClientMixin/updateKeepAlive.html"><code>updateKeepAlive()</code></a> ด้วยเสมอ เพื่อให้ตัว framework ดึงค่าล่าสุดไปใช้งาน</p>
+</div></div>
+<p>ตัวอย่างโปรแกรมที่เพิ่มส่วนของ AutomaticKeepAlive เข้าไป และมีการเลือกที่จะเก็บ State เฉพาะ widget ที่ถูกคลิกเลือกสีอื่นที่ไม่ใช่สีขาวเท่านั้น</p>
+<pre><code class="language-dart">import 'dart:developer';
+import 'package:flutter/material.dart';
+
+void main() {
+  var listView = ListView.separated(
+    addAutomaticKeepAlives: true,
+    itemCount: 100,
+    itemBuilder: (BuildContext context, int index) {
+      return ListTileColor(index: index);
+    },
+    separatorBuilder: (BuildContext context, int index) {
+      return const Divider();
+    },
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: listView,
+    ),
+  ));
+}
+
+// color table for Tile ---------------------------------------------
+enum TileColor {
+  white(Colors.white),
+  red(Colors.red),
+  green(Colors.green),
+  blue(Colors.blue);
+
+  final Color color;
+
+  const TileColor(this.color);
+}
+
+// ListTile for State test ------------------------------------------
+class ListTileColor extends StatefulWidget {
+  final int index;
+
+  const ListTileColor({
+    super.key,
+    required this.index,
+  });
+
+  @override
+  State&lt;ListTileColor&gt; createState() =&gt; _ListTileColorState();
+}
+
+class _ListTileColorState extends State&lt;ListTileColor&gt;
+    with AutomaticKeepAliveClientMixin {
+  late int _tileColor;
+  bool _saveState = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tileColor = TileColor.white.index;
+    log('init state ${widget.index}');
+  }
+
+  @override
+  void dispose() {
+    log('dispose state ${widget.index}');
+    super.dispose();
+  }
+
+  // callback for click or tap the ListTile to change color index
+  void _changeColor() =&gt; setState(() {
+        _tileColor++;
+        if (_tileColor &gt;= TileColor.values.length) {
+          //default color index then there is no need to store status values.
+          _tileColor = 0;
+          _saveState = false;
+          updateKeepAlive();
+        } else {
+          if (!_saveState) {
+            _saveState = true;
+            updateKeepAlive();
+          }
+        }
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return GestureDetector(
+      onTap: _changeColor,
+      child: ListTile(
+        leading: Icon(Icons.info_outline),
+        title: Text(&quot;Item index ${widget.index}&quot;),
+        tileColor: TileColor.values[_tileColor].color,
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive =&gt; _saveState;
+}
+</code></pre>
+<div class="image"><img src="images/20241220/20241220_0700_listview_keep_alives2.png" class="u-max-full-width" /><div><p>ผลการทำงานของ KeepAlive</p>
+</div></div>
+<p>สามารถลองเล่นได้ที่ <a target="_blank" href="https://dartpad.dev/?id=8795096b82475a0a98305e32f2e6e3de">dartpad.dev</a></p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"/*ulYbKIQMrO&mng9!\3#haขI&'กm8:1'bRB*i@"UGkr"&uieZ;dbVT9gA/]eZNO`n)^3O=2N,MSข#Gh*W5!B()5:;!:WL6"$LYc(KCMMG`IeJcE`*Pd7MFd'eE;l@q&3u@`EqjlK&+s&RD&eC0#FV=-h8)GW_pW:h],i42)47&T10`"k+YHd0PgEbWMia:X;+cLXGT6J;qf_F)(+"SsD)N@4]$=C-c4\h"qPB]S[&\grt"6Nd2r-lSIpe_[=8WL5efrZM`8E+:O`*j:nAo!F?bbL7GnP_`6\@s?1a3V]pK%QXTBE/\fW4กZ104กio@\.\W%SSApfbOP*LPOlTR!BW`5%)L[4o#!b-@-.!6-ก,p2!J49r)+2fZjr8o3D?^b=5G4m4eU`@\0qOlP5&\"1&qZii78QPn.(ldT&_j-_@!dh8T)1m+aW5t@PT\3.1=m]n%*ขW$5g#2"jH^',u&@@+[!.CX)0;o#\&jXUCA@850FM=BddkKaN!1lW!I6r6&K5กjWu.:.jMeM+cci;qa]กAJ""=1%&Vk`eo%eSkW^K)#%F^!L'K]s-9NPd/nfjhcQbP"H)o#s(EccQO]b2+GdX*?n9$sPIfR(R,b795-$B'KM^O`j``*3[DE?X[bHH+1f=hRS/Ju-&kseN'Ct@oQc`)&_HIluIข$%?^lLaA]a!]WE'o',6[,P+8@H',r_O(8U@V*,*4YnrQ4`a7jGY@ขl1d#lgq/=N6Y=J1kqJ58k)s;\)3-T6-goUE-Hg^/&p#4Un]J?TQb[+กlk4$qZ]QJ?(kF'1AF*R"kiQ;UX7I2-S!c6i,n+Khq;0O-Q^Y;KHVtAn-4`f.i7R:p!$*d!IM@'kPq!;-mg4aqAToกl(V1aD:h[?3Phi@Vb.^kX-o:l^/FW6-uPeFoP-eSP2**k2e$2jn$0sg`c3CJ)_3X:oKk%g@]'*_^r6aHaq0(g7:k.tcq;c@A3ajF-G".HjO:+D%;I#ls.`U[i2`'9uAg0njAFdK3'D5Jk!bDH#:27[`8FqXA;'j)'W:U:j#M;HL3+Be*o)-YnQ\&#SLJMP;LDam,X.ths&126[nQ2_T/q,DUk7j"9FF)HL5fh17p1EV%`i/*fiW-67ZQ%jOnTr4d_lN`iQC\P`f?TAQGjU@TAM@jZuFjkJ6GlVG_/U;u\I+aC%lNFqrFHVU#:qJ8933Eoa9UV``^CKกMCbIhFH:SCkA.XA*2iกOjJขr+4O^c0:FiFcL&lDZMD5.(odkt5Cl;0CO5eNcr-Xc6OLt[CPG):X0OQJXpLshi@lE2!%(aZ@;:+tO39Ch]YZKe:;BgPCBJ34ZFn4b\eKiE*DJN2htกi]e96)7;Uo$-qHA"W?STกd5Lc@kt5Fkm?=?G5;#]H'#Ha6)?$D3Y?ge$`KuQnd[3))fgVEAข,4YW+@$G./r%(?.XPr"-^P7!fjPMpLtR1PNi/0f!M@)_e6*\E@8P2q`#"C%5V1NกV0VU/K/h5,S/;XRuE5@cr)=qmNoVS#DAuกlข*\Ebf.6q((K8j(#.(A$ZonnL@NCgm*h+lgeu5pA7K8BBrPUrs?=*H]dE74K+'uihstjj_iRYlP"N^k&!ขe`%a+%21PRZri2S&5AfกNK-n2_re.]@J9,X\/bsrLK#qft[qก0g,s1N)G?o^#ข1JPI3B#P,QขJ_?10L:uY;Ff"rmkEกT6VT@6C;nq;/;tkk\7cjlVZcf='[1a:5Blt+0M5-a&]7V29&\!!:1:7O*Q-ZPmh4)pR5n!=ZP68:2%@:29N\Y2QD\F:=/aกp3MugW07mejUtjKKf@]0[ajX;Y-$;]o'JM59pq_[dLW_B'gdN"2Ck']j"MQ*f7:h4@nMLF@pm)?JB:'T_-BQ-._\MtGR!G/YaIKi(EjAHa/N82Ro8XcIc1,q8?,กWeLqbQ6,8s9)M(7,Q1$SB&2[Wk^)R78e6J,4fDI2sdML3*&@qc,YกVqH20$[YdrAT_q"4bC-Qu99EK?)]W8t1+`Pua9hN%LT1Bb;np*K7$eZ#K=G(^],@jVHsp_gU:#*p6ZS(gKnHS!FFL`8UY@JWK%7s,BU$bs)K4N%b+@&3n9lIg_BN6]2nbQNLd0*Z;&i8S+,U]2UJI1Lbs?JZt84aI9)rWjU;,@q*P"b]_0LWg?Qma;8OQqO+T6+Q"@"5qU+KMg&M+1@r.01F5UPกH_JWENWS8.MSGKขqF5DNM!qrK(Zsm6^+HhshnA"]q6Qs4m/2)@RPc=:1=]loXn"$kS'/1f]:A?9i[3*7A+YN$;@_!;7Tn;I%!hkq(?s3,]skq*!mRกSJ),:=jN:D$0UDS#0[$&1).VR?_QLLWeZ!?(/oe@DY*a^F'ขfnkWj23!M((@gN0^q4uu0!กN5fYกVq$b@i[9r-28QPEB7pJ1EAE\sli(M#%&nKRPC,AB6]uLGa]s:^8GKCL,6A,0o$LD2abW\_2*dq5E^9Y5UiR@f-@&6r'hhE^Yq8I-a1ZNBjNIqF73%P`a'd(1o#QcS/PUEJ[b2C$CIGDbhq90UmVbip8C9&JHgNMVV\E2[%aaF4-mD$h-XHVRI7U?3hdVIG8,j6-&ZMC2FkR(N.e'f]Sst]4(Zdjk7Xq@qGpFBl]1d9rกAa15*:gG[W%hX,n.*4O9'8jd!qF-gFID%OY\?eP*ขKLขJ8B)"dtPC@qKHk._Rs+6IAbRqI#Q=fG_9ofDF6J\!//OiYA8_3lH[cpQ?Dg3UJF@8TI^g-Pf]NqDgtE9+3Q,\ขJFขTb7?]#MA5W[!/s8)2กnYขf:S^N\jV-gFb!^fm$V5AWr+(-b5=&Gc9JGGข#LZn_57ZYZ+"4qlhlgrfC[^7n?IE#6LR1m(ioH$*qRQ"G+=Sh7ข?q9M\+"KAnnda-U2K-9h7กM55YBhgDg#"k'W`ข"-03R[KN.*5;KZ"ข75^5\Dl_]aR]ขgXF&m@"A"F-UoY)":)gpbU:r"+9l^/@+8m3p]ZKAfDa$-@jQ9R25'9D=W"MJ?3^JJcue/Dj$'LnGg$Ukก9$T)ARDsCPAtf_/5'^af7i5oZ0gK:_)M1ข*@BSD]e;a58)""@U2o=U_mqj6&%#:m\D!K_/@T'4uขlg;iกp"bYtI;U!Y))[[YT7$MM[กBp3F%k4fI;LkfFi6`#^BZj6@n,2HN;Ri\กข:_Yl?q02rYV^P8T%*^qI[]GXPq.W;!-_k(0OrT7cA("lp28ASR]r3C$R7Jt\h/BS+HkPk,Y=IOGpj+d5*%tc]BCke2l4a:@o`J"$r:=A1p)si)0.\k\p!K;Z.C3k@Pu7lGMPaYข4YGs28$3nBOS)+GIQG8L6)fU[C?el\bE$i`Garo(U_jr;_a'ua8[%]ข3GmZKข()3*m)[t-DVBK$r'5Dla=HL3BWBNDhBqbFP(a*pWAQUgAOPfFfK2GHs8PuGnJ!H*[j9o1XR1?LnLL\$?H96EYfMZ+Np)dbqO)))ejg9DZ'Z*A)&,LGข&sก@m?9AMP4ขCNW6#[9/4ZaC5&MeW=Fu]rKbUCZ#=ข81M&Bu*ข%D3?6(uLL5กrM9ข*r$"UagW,=`m1`HYX'i:CL;i)@M$&Gi=,*VKS,TTgd*ImZT,JZ0a%(8*Nr6;W"`'9&+huo?ขE,WSUA/=S=:rC:,g21::\up`ZVgPq/pOZ[WOOALoKtIh+t'7TSMJ0cPi:S5C,'j3*]lY:%Q9`C?UPกZTNd)VSmn9YJY&WB,qq"3SV&E/U*tkXU]O9g`)OL@us'7,_=!Eni`maU5R1FnL*'F/:])QG)r&:XcP!R/.u;a-YJV[kP*3cLSZก6SdsfKก!b-:AetEJEQ-M2d+ข0mAp3,?a1fQrAj&SX.ifDCmj!'PcOg%0$5EfrMs%ขCILO]\'1^กSnKZI4@L&ake"\c7;qoD'^ขq!ข=)BmA59DขO3s#jq!ข8QCJ4ขQOAIT/W]กs4V;b=B2Z?a"I0aOeXCX=`:0J'T8h_.R5^\[@pEข9AlAY8\.,_c54LWZRMfaXY1oFM,)O@5A:MI-H']Of+d:\ka[2uUEb"t#J2JW`GIM:!N6WF`Z-2dbaE#La%d0ERD(JWJcglT!Y,LdK4`EW`qขP6427&K).9f?V5dZH6n6_dO[ก5hc1#-@(]h66?j^=Qme0IRng,_K=`RZ=OijFiF,noF^+&)[k\oG&;&F(G_FmlmV`Sg1*5iกFU7bOAr58meSpQ8\cDข_*TR:"cAh8?:3LD#D_GA+u(nFF$r%GKA1m9M^Rnr=tXWgIR&.'rB"F/S*KQ-;#G4@rj]fnXKm1Yu5G$[\];WKKVP!=**n:XsRbก'O?4ABJ\M(!"S_1g6&o4FCgV4&S.ก4$=ขX[p-C#F=p5*feQ=4jkYMa='4?nG*_,T:ขJ?rpMO:hYQUN5:=\EM%Yi3]fr/ข3P8+(8slU8C[8lG.IXrVI#Y6NdJf:]ELTk,j%IECmB.E#k07E=pL=-gHDqกGP%@sXkHf*Q4HJ8VmXก)9a]nM,P0=nuKR4lW%Rk0กKV.E,HlXtWIeกXc_Lq`Q"M7#*)sp`KB.^hj9;JOf/Q'E/ก_MYI6gr['GK-`eข-/)n^oLs"e\bQ)bf3?u"D(mก]WIM(5(.u&o:h2:\3-kK5!r!pnBLtmNB4Y2ขDUM.87q_eOZm'3M4dtกO*f'Z_u10;="dt2u[#3V;b-b0KZ%(W[GCข51*2Uกl6gW+-1b0Hi*eQ+92cbl3p^#c2.A2LAYN&RcB4ข_(Gl#:8%FกOHdH(\oFlRuขbMs"*enDQ;=I&U%G):uK3,\b#E"MoKNlHguBG!/4W6;!mo*&?5-]soh5^R$8@)a*-ขbnb/bI.&Sdf?ข4ข^0%Mts0SG&Q3k(_pES;[33?1n;?NPJe:87P*"1&&T2DN8/4d]GHAmd1TVSu5[&hข,=fB84J4ขfb!:2hg`[(\onnpVrBHd&กWFm*k7)dT.bbIbF-]1Xq1l?XOL&8/k8@R'\^rc)2^;W_)&nEa$IOtc+Zoก,7-)`R:@Bg/D&3-@rfck`8_`DhCri'DR2eJtbk8I8t1KJjK]!KnS[P'1SGiR5rguYA*;\q'MFK-cn./)Cก:.Gc8G)-l1a*$"m?M"J8h=6BIPJnRe;[;$2#3cขLi$=q,,"i#3*F8o6=8!dOh^1#EDC/p4h)("OnกmกI,nD(G"IV/&*YVtu,DV]=_/qA@DT=7:aY;iGB7SQ;fl!]Sc6กoGl#70rTUe^ข/r(3cF2?$-B^**(hgJ*!@@ChTX6Bu9rBh^d!CUcd(jLmกกS8:Ylfg;=73q^doTกi7=2aPND2o0+Q)-l^R_d@A2_;jCm$PjDiEJMZ=qf?d,Q!5)disNq9oin;#,Gi1+ก@0X/neJ5#U0]sMcme@hfkKUHd2+*9s@HELM/*3\PI@dSE;W,^p"66WML2nbUfFX/B/E&A"8T[$OTB4SapJU(RjfP(a#6Hl+E=5AUn!bXce(un?`mX+Yl9iWLTdaQ\5BT8UNsm-UrbC:T)Mm4fXptp/cRC"+ก6l8bข9_P9Jb&=^d;5Z-t71q@:=2C8KT?e?]HBY^#ea"r!`;F1ข#3#d[iM[9B[Zb7c6(VXu;+SjL8(:)!C[/"?kuKI0tJ\F7n`MjTq1edcuS,1icA9[ctpfUNkGdJc?8'3+fก)i"B%6jemcg8Nd(J'%QB!\:Y'P6ก!oU)ISOcNt-(:`;KOl'81]5H%I8b9l^WrA9n!KiYs$ข7oJ64&H#mW;P4f1[Ccu\K3hac_G_s)]PgLme9:ขPShfbE=XoNi]&!SEus7t=S0?MU#sblhMaau%Cgu_[M4qjqe5I'VZ6G1&.%%rZG\i5#3_cH0Y'H-Xs0X:[*-J9s/,S$KnEBG]ก!C+nก0dGd^8g"GPrQn:ข;-7&"ITeT2j,`);hขl:RYก)P#\@X+5_N[V?AF)q1"]AQ,J]?N_J,.%:O..euGO3btEQb50`n`;UO2^;1กrknWiaPe&g[K5FF1L:".2erAO+HI5dm"$,Sjq/)]D]*RA@ขkOข?ก)#8aDก^1,0?92BS1`KLO[nPeFhCd_5Eq_3HDTK/;M[b/tcC*EfDE.m-l2ข&V_กD_!RPjul&]FRZpB`%@oMi$ToAq`+?.+=uiFG"(@\n)?*MoWG0@*p?b["D@SY!Bขd:ud)ZPOMrq1\(Y1r$s^fY%'qMc=.md89lD~ข
+-->
+</markdown>
