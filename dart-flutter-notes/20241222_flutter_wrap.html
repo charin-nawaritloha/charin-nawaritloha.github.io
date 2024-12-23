@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: วิธีการใช้ Wrap เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: วิธีการใช้ Wrap เบื้องต้น</h1>
+<p><img src="images/20241222/20241222_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap-class.html">Wrap</a> จะเป็น layout ที่ช่วยเรียง widgets ที่ต้องการแสดงในแนวนอนหรือแนวตั้ง เมื่อตัว widgets มีจำนวนเกิดกว่าขนาดของ Parent มันจะทำการตัดขึ้นแถวใหม่ให้อัตโนมัติ คล้ายกับการตัดคำขึ้นบรรทัดใหม่ใน Text ถือว่าเป็น widget ที่มีประโยชน์ และใช้งานบ่อยมาก ๆ และการใช้งานก็ง่าย หากต้องการให้มัน Scroll ได้ ก็สามารถหุ้มด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html">SingleChildScrollView</a></p>
+<h2>การสร้าง Wrap</h2>
+<p>ตัว constructor ประกาศไว้ดังนี้</p>
+<pre><code class="language-dart">const Wrap({
+  Key? key,
+  Axis direction = Axis.horizontal,
+  WrapAlignment alignment = WrapAlignment.start,
+  double spacing = 0.0,
+  WrapAlignment runAlignment = WrapAlignment.start,
+  double runSpacing = 0.0,
+  WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.start,
+  TextDirection? textDirection,
+  VerticalDirection verticalDirection = VerticalDirection.down,
+  Clip clipBehavior = Clip.none,
+  List&lt;Widget&gt; children = const &lt;Widget&gt;[],
+})
+</code></pre>
+<p>ค่าเริ่มต้นในการเรียง widgets คือ เรียงในแนวนอน เรียงชิดจุดเริ่มต้น(ปกติคือทางซ้าย หรือตามค่า <code>textDirection</code>)</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การใช้งานเบื้องต้น</h3>
+<p>เนื่องจากตัว Warp ต้องการ TextDirection ดังนั้นหากไม่ได้อยู่ใน Inherite Widget ที่มีค่า TextDirection จำเป็นต้องกำหนดค่าตรงนี้ด้วย การใช้งานแบบทั่วไปคือ การใส่ widgets ที่ต้องการจะเอามาเรียงใน <code>children</code> ตัวอย่าง จะเอากล่องขนาด 50x50 มาเรียงใน Warp ที่ใส่ไว้ในกล่องสีเขียว เพื่อให้เห็นพื้นที่ของตัว Warp</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  box(double size) =&gt; Container(
+      width: size, height: size, color: Colors.amber,
+      child: Center(child: Text('$size')));
+
+  var wrap = Container(
+      color: Colors.green,
+      child: Wrap(children: [
+        box(50), box(50), box(50), box(50), box(50), box(50), box(50)
+      ]));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: wrap,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241222/20241222_0100_warp.png" class="u-max-full-width" /><div><p>การจัดเรียง widgets ใน Warp</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>จะเกิดอะไรขึ้น ถ้า widgets ไม่ทราบขนาด</h3>
+<p>ในการเรียง widgets ใน Warp ตัว Warp จะส่งค่า constrains ไปให้ widgets ใน children ดังนั้นหากเป็น widgets ที่สร้างเต็มพื้นที่ ก็จะขยายจนเต็มพื้นที่ Parent ตัวอย่างจะเป็นการแก้ไข <code>box()</code> ไม่ระบุความกว้าง และเทสีแบบสุ่ม เพื่อให้เห็นการเรียง widgets ดังนี้</p>
+<pre><code class="language-dart">import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  bgColor() =&gt; Color(Random().nextInt(0xFFFFFF)).withOpacity(1.0);
+
+  box(double size) =&gt; Container(
+        // width: size,
+        height: size,
+        color: bgColor(),
+        // child: Center(child: Text('$size'))
+      );
+
+  // ....  
+</code></pre>
+<div class="image"><img src="images/20241222/20241222_0200_warp_no_width.png" class="u-max-full-width" /><div><p>widgets จะขยายจนเต็ม Parent และกลายเป็นเรียงแบบ Column</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การปรับแต่งหน้าตา Warp</h2>
+<p>คำสั่งที่สามารถกำหนดรูปแบบหน้าของ Warp มีดังนี้</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="1048761005"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ช่องว่างระหว่าง widgets</h3>
+<p>ใส่ค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap/spacing.html"><code>spacing</code></a> จะเป็นการกำหนดระยะช่องว่างระหว่าง widgets ตัวอย่างกำหนด <code>spacing: 10.0</code></p>
+<pre><code class="language-dart">import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  bgColor() =&gt; Colors.amber.withOpacity(0.5 + Random().nextDouble() * 0.5);
+
+  box(int index) =&gt; Container(
+      width: 25.0 + Random().nextInt(50),
+      height: 25.0 + Random().nextInt(50),
+      color: bgColor(),
+      child: Center(child: Text(index.toString())));
+
+  var wrap = Container(
+      color: Colors.green,
+      child: Wrap(
+          spacing: 10.0,
+          children: List.generate(30, (int index) =&gt; box(index))));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: wrap,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241222/20241222_0300_warp_spacing.png" class="u-max-full-width" /><div><p>เมื่อใช้ spacing เพื่อใส่ระยะช่องว่างระหว่าง widgets</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="2361842671"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h3>ช่องว่างระหว่างแถว</h3>
+<p>ใส่ค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap/runSpacing.html"><code>runSpacing</code></a> จะเป็นการกำหนดระยะช่องว่างระหว่างแถว ตัวอย่างกำหนด <code>runSpacing: 10.0</code></p>
+<pre><code class="language-dart">  var wrap = Container(
+      color: Colors.green,
+      child: Wrap(
+          runSpacing: 10.0,
+          children: List.generate(30, (int index) =&gt; box(index))));
+</code></pre>
+<div class="image"><img src="images/20241222/20241222_0400_warp_runSpacing.png" class="u-max-full-width" /><div><p>เมื่อใช้ <code>runSpacing</code> เพื่อใส่ระยะช่องว่างระหว่างแถว</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>รูปแบบการเรียง widgets ชิดซ้าย ชิดขวา ตรงกลาง หรือมีช่องว่าง</h3>
+<p>ใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap/alignment.html"><code>alignment</code></a> เพื่อระบุวิธีการจัดเรียง widget ในแถว ด้วยค่าใน <a target="_blank" href="https://api.flutter.dev/flutter/rendering/WrapAlignment.html">WrapAlignment</a> ทั้ง 6 แบบ</p>
+<div class="image"><img src="images/20241222/20241222_0500_warp_alignment.png" class="u-max-full-width" /><div><p>กำหนดค่า <code>alignment</code> ใช้ WrapAlignment ทั้ง 6 แบบ</p>
+</div></div>
+<p>สำหรับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap/runAlignment.html"><code>runAlignment</code></a> จะมีการทำงานคล้ายกันกับ <code>alignment</code> แต่ทำในส่วนของแถวแทน โดยจะมีผลก็ต่อเมื่อตัว Parent มีขนาดใหญ่กว่าตัว Warp</p>
+<pre><code class="language-dart">  var wrap = Container(
+      height: 500.0, // Increase the container size to allow runAlignment to take effect.
+      color: Colors.green,
+      child: Wrap(
+          runAlignment: WrapAlignment.spaceEvenly,
+          children: List.generate(30, (int index) =&gt; box(index))));
+</code></pre>
+<div class="image"><img src="images/20241222/20241222_0600_warp_runAlignment.png" class="u-max-full-width" /><div><p>กำหนดค่า <code>runAlignment</code></p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>รูปแบบการจัดเรียงของ widgets ในแต่ละแถว ชิดบน ล่าง หรือตรงกลาง</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Wrap/crossAxisAlignment.html"><code>crossAxisAlignment</code></a> เพื่อกำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/rendering/WrapCrossAlignment.html">WrapCrossAlignment</a> ตัว widgets ในแต่ละแถว ชิดบน ล่าง หรือตรงกลาง</p>
+<div class="image"><img src="images/20241222/20241222_0700_warp_crossAxisAlignment.png" class="u-max-full-width" /><div><p>กำหนดค่า <code>crossAxisAlignment</code> เพื่อให้ widgets ในแต่ละแถวเรียงชิดขอบบน ล่าง หรือตรงกลาง</p>
+</div></div>
+<h3>ข้อควรทราบในการกำหนดระยะห่างระหว่าง widgets</h3>
+<p>เนื่องจากคำสั่ง <code>spacing</code> <code>runSpacing</code> เป็นการกำหนดระยะห่างแบบตายตัว หากมีการกำหนดค่า <code>spacing</code> <code>runSpacing</code> แล้ว และยังไปกำหนดค่าใน <code>alignment</code> หรือ <code>runAlignment</code> เป็นค่า spaceXXXXX จะเกิด Exception error เนื่องจากมันทำงานซ้ำซ้อนกัน ดังนั้นสามารถเลือกใช้งานได้อย่างใดอย่างหนึ่งเท่านั้น</p>
+<p>ตัวอย่าง การกำหนดค่า <code>runSpacing</code> และ <code>runAlignment</code> ที่กำหนค่าช่องว่างเป็น <code>WrapAlignment.spaceEvenly</code> พร้อมกัน แอปจะไม่สามารถทำงานได้และเกิด Exception error</p>
+<pre><code class="language-dart">  var wrap = Container(
+      color: Colors.green,
+      child: Wrap(
+          runSpacing: 10.0, // Exception error
+          runAlignment: WrapAlignment.spaceEvenly, // Exception error
+          children: List.generate(30, (int index) =&gt; box(index))));
+</code></pre>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!"-DCHYXSR('!1Lmr4R,,.6iPZกM65X`m@M]+E]%V(S6h0PDY991,Km0cIg8/4ขM$3SX8B32rD\Y`3Y-1&/$,*IXFQ.-6urR!\!ขb?egK+JY?OcTV"bIcluCn3ptI$s?D\3'*(pn)NUrEV(lD#'"`&7u-X0GoV5KO'f]__!+-IIMPG#EV*a'IM#(_EAWWL?$[R:cHOR]n3Lp%AD=Ou`a:UYZกV."@BX%?ก1KOqXmj60-กmO,kK:BjCpC3O_:?;กFI[g;C5:V?)ก,กWNm?n12t;,07jI4WS,R..EV(0;*:FGW42gpq/Nbก@&)q7.K!)h4=(ขH?E"GMeEV'lNiakXPAjeIG[!39TVaUขNr0_rgNM?k*395,5-b8Tj*r6WmCJ=(.B01*TPu,M,!ttH'H8qehQZ9B$CG+lM(?ZP6iWRI53Md,[:?'+Eขp\)7-hDaNE7GNGYDE*t]$!:/_k2WJ/k@u"fRก9GqB"X04-#ข7d3XWl5i;;+cJ'[0Zr:tt+oQg@ete?K_;ElL?Km^dY*+=กF=opdO'IuhM"Wj6I=RW62uOQขD3*n5Y[,]OV-lkCk^]U:`mFeGn[I5LN9+ie#K5"dC?Y`^3g[3$f=$p"L!F)*&bqn,`8b]t`s[ts:M@qcPj0cn*6GlIklIn+C.k_]lEJ79gM(\C?b(!$H8j%'DYW&S%/tt6R="Zn;tLCPLg.`X_Z?l5N4n1sr@hขjKRNoXH3As%d@HขT_FrT:,alB)a"M%;@&@862k;(]+X0=goFGKmO)4DdGfhr-nAiEU[gu1l@#`P+4]n?nกne/?YC/'G3j]1e54#d2YD`DขW2BgjMq&?/+J^#PJ+ZBg6,2Sขขd";=?s@daWF48'3'FZWeQ^0B\/ข#ขIR9u!5ก%AHR^Tb%3rki61F[uQ+k2"iK!/8f\dbR4hSNIYbsHT=eb%HRJ]3Z(K1กoKrIMAI2:i@HJ_jP$mkJ#9-at2sr\ก*U-dY+o$5aE;lBขRibB(!Ghiq!Kgf1^ขs#rj3'CNL`Om9Jr1uU\gOM8s?"&^Y,&3R9/d=T:(%_กN==?]5$1?8JV6Zk"id3TD$Vaกm-iWO/W*\HdgF[K#KFขWVEh8usi1HFCAkE-O(L3+Sq8DGd=4$aBt!Qqbp0HKaO_RP7YoNr*agCfW.OH'u:J)n"?i._X](P&q.7f$X&N#Ltopq7k@7O$=f"PtGM-U;,`j[??`8?@.^2Xqagn+B/V/S"fP4PlJaVaqGeZNSkN//@HuFmขV6-H%C:3.q]#$ก;r"P@O^VmขZB1-64Ln6*`.^Q@O&9Jbg63[/Lp``X*]-T6ctDT8Iger`#ofXYems-FBnnQ8KUMขZ#LVmIpH#K_mp1n^M9XWf1Fn-Y.eoF=^[ขs**Z1CVJPVY2ai)1/Q2ขibt&,VRp3A1+[eSM\mRANs-h7JUc8,B%X97ME,?+\((uMYD1s)K.8G35CL`ข5%29tgdW3__BSSก(6l`j2!กกc?f:ALj`6dA!a'LF=Nก\;OE8'[7Oqlj9:nLI:g-C)C@X0qiOiHf]@DNZZ`G"_aO][Br[_Tกc[8UEn$4Do24TpH^XH/p5Ok54กP"W,\P3#9]l,ma"-isr3lQf-Zl)]l%!9$j57gft#ข!qW.Uข652qp_M8NJ;e,XBrE9&)c14!\_;FKaXg3aLYuS1"QF4ก5ef6IV5ka0Qu1o`Qd`PbY%rW\A`ข&8./9"-JO1NขD!2ir*+pก#I)sTBFWbg#%nmB]=J@QfQ%c[YckVY5ofdFrY?b*UU1กf/:Q(a?ขF.KMV_F#;VS*#aqLdc\O:cกsmt`.$_dh1aQg@Rt"s)=:&6=$G#Y-[HiK_7&eqX)5:8l0VTh#$m5N7GYPqW.U*tK#Tnข#aklfErfkUW\f8)m`5FIe/3U4Rl/L0#,!_u6!+YT95fi#oJ2,%(S3^lsYa"H"UQl0gQ=]S_Jก^/P80[lqbu@iA;:?PBjglV4,G["1'_6"j6PTAnTob:F]X4A!Gg&fFmdcU8#cko9O-!dNB"jYLSB,MVBKBt0p.OL/LR;Qpf?0i\P@T;2^_"huE_7lceDXEAdpi3Zk,[:p:A'rOpAขs]@8Q`"X,FQgI^ก?V7;OL@p1ONRb2]"6G(-K]9Y`.ก+HSO__?8Pul\Uh_XcLfj3kกกn%"G^fH2&*khZ"JhFK#\`"P]Bs^"r?JE4mUQR%42(3,dJaU'N381!$3ขpSV.u#RJCO5[7Kd^D$mTf.*'S3.jg7$,FpOSGjhVZ`pmGข0LK-'=-%Vp)Kl=aeap1b3q!;,(H@%.b.d'/Qpc1aGXa[ข55bDUF_buO)1CAh?#]:hm""ZOs\:Fd3I??o)XZYd.@U,Yc0l5WH$dIIAbE')\_E.38#3m?/E7d-DFj"ftS+r=k[CE5$j_oWW%t+^JSpYGch?VMa?G9_c3Cd#Mf6hW7lj4+4ก^\eEX%uGuFrE)lกM26uM)2H)$qP"W;!e1h#rHDaeI&;ก:\3HD/qt,[arB+kB`=-E?_!f?%^f@o-nT,:4i(#D"3q0IKpnDmbB\g=กj?.oOc[e2$03*3((:ก`f-('ก[#].%TjANg_rgNaG7j%[4K/b!h/E-tuKกKPZnF?'9ccJ/2XIFGiP4@.Ntt14!7LmRgh=R!%WqWcuGk9?_h`9fqu-QX2u8!#T9.12eDS@E%`WCBVlG1C2_D.rN(PC)%#&E&o"hhกa$S5(q3[#&Ik)2+$UV@]lG09ofI(:4mu/`k9UZh*LQขขiuBIZ(br^Cp[,u!ODb?Ot+B9=_K_6lgFs.'UJ1W^กD_rd7cF?dg2FE0L;h4*L5F0&[N1/d'H!C[HqGdVJqljlUX"VN/ZYtJ?Q;P**F(9:T!3`GR23HC[Y;*60nNP@GP.n--nYBLIU;We``Ke)4jT-(f)-hAF*FKb;h$#NAB*a1HXUUgQf$1g64Fi:;rYGeJIa7OMU-_n#[Rc:4nq*'T?eF\3gd.RUX`rA]d=p7TfM2r0,SALกhdsX@L_b('HUJStm(nIje4bQ=khOo&37M[\KS*Co2W5#9QNq*TTqebQ1nA`TOP7X]H3AQ9U26&as[rY6c.1D(1tt?*!Q:9h4@a[3RmcSW4W/($+t4^Ud_g*g-A)ft'A2?!]..AE\urCIbi3pBt/;VF$QDN=KrZa_:XDT;+0Z]HtJ3c*N:CaS_i%j8T;Y75c5~ข
+-->
+</markdown>
