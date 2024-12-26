@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การใช้งาน Stack เพื่อซ้อน widget เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การใช้งาน Stack เพื่อซ้อน widgetเบื้องต้น</h1>
+<p><img src="images/20241226/20241226_0000_cover.svg" class="u-max-full-width" /></p>
+<p><a target="_blank" href="https://api.flutter.dev/flutter/widgets/Stack-class.html">Stack</a> เป็น widget layout ที่มีประโยชน์มาก ๆ เพราะในการใช้งานจัด UI มันไม่ได้มีแค่การเอา widget ไปเรียงต่อกันไปเรื่อย ๆ แต่มันมีแบบเอามาซ้อนทับกันด้วย ตัว Stack จะช่วยในเรื่องการเอา widget ที่ต้องการมาเรียงซ้อน ๆ กันได้ตามต้องการ</p>
+<h2>การสร้าง Stack</h2>
+<p>constructor มีรายละเอียดดังนี้</p>
+<pre><code class="language-dart">const Stack({
+  Key? key,
+  AlignmentGeometry alignment = AlignmentDirectional.topStart,
+  TextDirection? textDirection,
+  StackFit fit = StackFit.loose,
+  Clip clipBehavior = Clip.hardEdge,
+  List&lt;Widget&gt; children = const &lt;Widget&gt;[],
+})
+</code></pre>
+<p>ตัว widgets ที่จะเอามาเรียงซ้อนกันให้กำหนดใน <code>children</code> ในการระบุตำแหน่งและขนาดของ widget ที่จะเอามาเรียงจะให้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Positioned-class.html">Positioned</a> เพื่อกำหนด left right top bottom width height ที่ต้องการ</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้งานทั่วไป</h2>
+<p>การวาด Stack ต้องเข้าใจว่าตัวมันจะแค่ช่วยเรียง widget แบบ layer ที่ใช้ในโปรแกรมแต่งภาพ widget ตัวแรกจะอยู่ล่างสุด ตัวสุดท้ายจะอยู่บนสุด ตัวอย่าง จะลองวาดกล่อง 3 ขนาด จะเห็นว่าตัว 150x150 จะถูกทับด้วยกล่อง 80x80 และ 60x60 ทุกกล่องจะอยู่ที่มุมบนซ้ายมือ</p>
+<pre><code class="language-dart">import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  bgColor() =&gt; Color(Random().nextInt(0xFFFFFF)).withOpacity(0.5);
+
+  box(double w, double h) =&gt; Container(
+      width: w,
+      height: h,
+      color: bgColor(),
+      child: Center(child: Text('$w x $h')));
+
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [box(150, 150), box(80, 80), box(60, 60)]));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: stack,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0100_stack1.png" class="u-max-full-width" /><div><p>ตัวอย่างการใช้ Stack</p>
+</div></div>
+<p>ลองเลื่อนกล่อง 60x60 มาอยู่ชิดซ้ายขอบล่างสุด โดยใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Positioned-class.html">Positioned</a> ดู</p>
+<pre><code class="language-dart">  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+</code></pre>
+<h2>การกำหนดรูปแบบการวาง widgets ด้วย alignment</h2>
+<p>ค่าเริ่มต้นในการวาง widgets คือ <a target="_blank" href="https://api.flutter.dev/flutter/painting/AlignmentDirectional/topStart-constant.html">AlignmentDirectional.topStart</a> ผู้ใช้งานสามารถกำหนดเป็นค่าอื่นได้ดังนี้</p>
+<ul>
+<li>topStart</li>
+<li>topCenter</li>
+<li>topEnd</li>
+<li>centerStart</li>
+<li>center</li>
+<li>centerEnd</li>
+<li>bottomStart</li>
+<li>bottomCenter</li>
+<li>bottomEnd</li>
+</ul>
+<p>หาก widgets ตัวไหนไม่ได้มีการใช้ Positioned ครอบเอาไว้ ก็จะใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Stack/alignment.html"><code>alignment</code></a> ในการวางตำแหน่ง ตัวอย่างลองวางไว้ตรงกลาง ตัวที่กำหนด Positioned ไว้แค่แกนเดียว (ในตัวอย่างคือ bottom) จึงมีผลทำให้มันเลื่อนมาอยู่ตรงกลางในแนวนอนด้วย</p>
+<pre><code class="language-dart">  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(alignment: AlignmentDirectional.center, children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0300_stack3.png" class="u-max-full-width" /><div><p>ตัวอย่างการใช้ alignment</p>
+</div></div>
+<p>นอกจากนี้ยังสามารถใช้งาน <a target="_blank" href="https://api.flutter.dev/flutter/painting/Alignment-class.html">Alignment</a> และ <a target="_blank" href="https://api.flutter.dev/flutter/painting/FractionalOffset-class.html">FractionalOffset</a> ก็ได้เช่นกัน ลองดูวิธีใช้ใน <a target="_blank" href="20241122_flutter_layout.html#:~:text=Align%20%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%95%E0%B8%B3%E0%B9%81%E0%B8%AB%E0%B8%99%E0%B9%88%E0%B8%87">Align ตัวจัดตำแหน่ง สามารถระบุขอบ หรือระยะ offset ก็ได้</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>กำหนดค่า StackFit เพื่อกำหนดค่า constraints ให้กับ widgets</h2>
+<p>ค่า <code>fit</code> จะเป็นการส่งค่า constraints ไปให้ตัว widgets ที่อยู่ข้างในว่าจะให้มีพฤติกรรมในการกำหนดขนาดของตัวมันอย่างไร ค่าเริ่มต้นจะเป็น <a target="_blank" href="https://api.flutter.dev/flutter/rendering/StackFit.html#loose">StackFit.loose</a> จะเป็นการไม่ระบุค่า minimum  width และ minimum height ตัวอย่าง <code>StackFit.loose</code></p>
+<pre><code class="language-dart">  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(fit: StackFit.loose, children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0400_fit1.png" class="u-max-full-width" /><div><p>กำหนด <code>fit: StackFit.loose</code></p>
+</div></div>
+<p>ถ้ากำหนดค่าเป็น <a target="_blank" href="https://api.flutter.dev/flutter/rendering/StackFit.html#expand">StackFit.expand</a> ตัว Stack จะส่งค่า constraints เป็นค่า max ของแต่ละด้านไปแทน บังคับให้ widgets มีขนาดขยายจนเต็มพื้นที่ Parent ตามที่กำหนด(ถ้าทำได้) ผลจากการใช้จะทำให้ตัว box() ที่ไม่ได้ครอบด้วย Positioned ขยายใหญ่จนเต็ม</p>
+<div class="image"><img src="images/20241226/20241226_0500_fit2.png" class="u-max-full-width" /><div><p>กำหนด <code>fit: StackFit.expand</code></p>
+</div></div>
+<p>อันสุดท้ายคือ <a target="_blank" href="https://api.flutter.dev/flutter/rendering/StackFit.html#passthrough">StackFit.passthrough</a> คือส่งค่า constraints จาก Parent ไปยัง widgets โดยตรง</p>
+<h2>เมื่อ widgets แสดงผลเกินพื้นที่ Stack</h2>
+<p>ค่าเริ่มต้นหากมี widgets แสดงผลเกินกว่าพื้นที่ Stack คือ <code>clipBehavior = Clip.hardEdge</code> คือ ตัดส่วนที่เกินทิ้ง โดยไม่มีการทำ anti-aliasing (ลดความหยักของขอบที่โดนตัด) ตัวอย่าง ลองกำหนดค่าให้ widget ทะลุตัว Stack ออกไป</p>
+<pre><code class="language-dart">  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [Positioned(top: 0, child: box(300, 60))]));
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0600_clip1.png" class="u-max-full-width" /><div><p>ตัวอย่างการ Clip.hardEdge</p>
+</div></div>
+<p>หากไม่ต้องการให้มีการตัดส่วนของ widgets ที่เกินออกไปให้ใช้ค่า <code>clipBehavior: Clip.none</code></p>
+<pre><code class="language-dart">  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(
+          clipBehavior: Clip.none,
+          children: [Positioned(top: 0, child: box(300, 60))]));
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0700_clip2.png" class="u-max-full-width" /><div><p>ตัวอย่างการ Clip.none</p>
+</div></div>
+<p>ค่าอื่น ๆ ของ <a target="_blank" href="https://api.flutter.dev/flutter/dart-ui/Clip.html#values">Clip</a></p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>ตัวอย่างการใช้ Stack</h2>
+<p>ผู้ใช้สามารถวาด widgets ให้ซ้อนกันได้ เพื่อใช้ในงานตกแต่งต่าง ๆ ได้</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  var bgColor = Colors.white;
+
+  var stack = SizedBox.square(
+      dimension: 200,
+      child: Stack(alignment: Alignment.center, children: [
+        Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(color: Colors.black45)))),
+        Positioned(
+            left: 24.0,
+            top: 0,
+            child: Container(
+                color: bgColor,
+                padding: EdgeInsets.only(left: 4, right: 4),
+                child: Text('Title here'))),
+        Positioned(
+            right: 24,
+            top: 3,
+            child: Container(
+              color: bgColor,
+              child: Icon(Icons.close, size: 16, color: Colors.red),
+            )),
+        FlutterLogo(size: 120)
+      ]));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      backgroundColor: bgColor,
+      body: stack,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241226/20241226_0800_clip3.png" class="u-max-full-width" /><div><p>ผลที่ได้จากตัวอย่าง</p>
+</div></div>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+# Flutter: การใช้งาน Stack เพื่อซ้อน widgetเบื้องต้น
+
+!![](0000)
+
+[Stack](https://api.flutter.dev/flutter/widgets/Stack-class.html) เป็น widget layout ที่มีประโยชน์มาก ๆ เพราะในการใช้งานจัด UI มันไม่ได้มีแค่การเอา widget ไปเรียงต่อกันไปเรื่อย ๆ แต่มันมีแบบเอามาซ้อนทับกันด้วย ตัว Stack จะช่วยในเรื่องการเอา widget ที่ต้องการมาเรียงซ้อน ๆ กันได้ตามต้องการ
+ 
+ 
+ 
+## การสร้าง Stack
+ 
+constructor มีรายละเอียดดังนี้
+ 
+```dart
+const Stack({
+  Key? key,
+  AlignmentGeometry alignment = AlignmentDirectional.topStart,
+  TextDirection? textDirection,
+  StackFit fit = StackFit.loose,
+  Clip clipBehavior = Clip.hardEdge,
+  List<Widget> children = const <Widget>[],
+})
+```
+
+ตัว widgets ที่จะเอามาเรียงซ้อนกันให้กำหนดใน `children` ในการระบุตำแหน่งและขนาดของ widget ที่จะเอามาเรียงจะให้ [Positioned](https://api.flutter.dev/flutter/widgets/Positioned-class.html) เพื่อกำหนด left right top bottom width height ที่ต้องการ
+
+## การใช้งานทั่วไป
+ 
+การวาด Stack ต้องเข้าใจว่าตัวมันจะแค่ช่วยเรียง widget แบบ layer ที่ใช้ในโปรแกรมแต่งภาพ widget ตัวแรกจะอยู่ล่างสุด ตัวสุดท้ายจะอยู่บนสุด ตัวอย่าง จะลองวาดกล่อง 3 ขนาด จะเห็นว่าตัว 150x150 จะถูกทับด้วยกล่อง 80x80 และ 60x60 ทุกกล่องจะอยู่ที่มุมบนซ้ายมือ
+
+```dart
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() {
+  bgColor() => Color(Random().nextInt(0xFFFFFF)).withOpacity(0.5);
+
+  box(double w, double h) => Container(
+      width: w,
+      height: h,
+      color: bgColor(),
+      child: Center(child: Text('$w x $h')));
+
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [box(150, 150), box(80, 80), box(60, 60)]));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: stack,
+    ),
+  ));
+}
+```
+
+!![ ตัวอย่างการใช้ Stack ](0100)
+  
+   
+ลองเลื่อนกล่อง 60x60 มาอยู่ชิดซ้ายขอบล่างสุด โดยใช้ [Positioned](https://api.flutter.dev/flutter/widgets/Positioned-class.html) ดู
+   
+```dart
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+```
+ 
+## การกำหนดรูปแบบการวาง widgets ด้วย alignment
+ 
+ค่าเริ่มต้นในการวาง widgets คือ [AlignmentDirectional.topStart](https://api.flutter.dev/flutter/painting/AlignmentDirectional/topStart-constant.html) ผู้ใช้งานสามารถกำหนดเป็นค่าอื่นได้ดังนี้
+ 
+- topStart
+- topCenter
+- topEnd
+- centerStart
+- center
+- centerEnd
+- bottomStart
+- bottomCenter
+- bottomEnd
+
+หาก widgets ตัวไหนไม่ได้มีการใช้ Positioned ครอบเอาไว้ ก็จะใช้ค่าจาก [`alignment`](https://api.flutter.dev/flutter/widgets/Stack/alignment.html) ในการวางตำแหน่ง ตัวอย่างลองวางไว้ตรงกลาง ตัวที่กำหนด Positioned ไว้แค่แกนเดียว (ในตัวอย่างคือ bottom) จึงมีผลทำให้มันเลื่อนมาอยู่ตรงกลางในแนวนอนด้วย
+ 
+```dart
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(alignment: AlignmentDirectional.center, children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+```
+
+!![ ตัวอย่างการใช้ alignment ](0300)
+
+นอกจากนี้ยังสามารถใช้งาน [Alignment](https://api.flutter.dev/flutter/painting/Alignment-class.html) และ [FractionalOffset](https://api.flutter.dev/flutter/painting/FractionalOffset-class.html) ก็ได้เช่นกัน ลองดูวิธีใช้ใน [Align ตัวจัดตำแหน่ง สามารถระบุขอบ หรือระยะ offset ก็ได้](20241122_flutter_layout.html#:~:text=Align%20%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%95%E0%B8%B3%E0%B9%81%E0%B8%AB%E0%B8%99%E0%B9%88%E0%B8%87)
+ 
+## กำหนดค่า StackFit เพื่อกำหนดค่า constraints ให้กับ widgets
+ 
+ค่า `fit` จะเป็นการส่งค่า constraints ไปให้ตัว widgets ที่อยู่ข้างในว่าจะให้มีพฤติกรรมในการกำหนดขนาดของตัวมันอย่างไร ค่าเริ่มต้นจะเป็น [StackFit.loose](https://api.flutter.dev/flutter/rendering/StackFit.html#loose) จะเป็นการไม่ระบุค่า minimum  width และ minimum height ตัวอย่าง `StackFit.loose`
+ 
+```dart
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(fit: StackFit.loose, children: [
+        box(150, 150),
+        box(80, 80),
+        Positioned(bottom: 0, child: box(60, 60))
+      ]));
+```
+
+!![ กำหนด `fit: StackFit.loose` ](0400)
+
+ถ้ากำหนดค่าเป็น [StackFit.expand](https://api.flutter.dev/flutter/rendering/StackFit.html#expand) ตัว Stack จะส่งค่า constraints เป็นค่า max ของแต่ละด้านไปแทน บังคับให้ widgets มีขนาดขยายจนเต็มพื้นที่ Parent ตามที่กำหนด(ถ้าทำได้) ผลจากการใช้จะทำให้ตัว box() ที่ไม่ได้ครอบด้วย Positioned ขยายใหญ่จนเต็ม
+
+!![ กำหนด `fit: StackFit.expand` ](0500)
+
+อันสุดท้ายคือ [StackFit.passthrough](https://api.flutter.dev/flutter/rendering/StackFit.html#passthrough) คือส่งค่า constraints จาก Parent ไปยัง widgets โดยตรง
+
+## เมื่อ widgets แสดงผลเกินพื้นที่ Stack 
+ค่าเริ่มต้นหากมี widgets แสดงผลเกินกว่าพื้นที่ Stack คือ `clipBehavior = Clip.hardEdge` คือ ตัดส่วนที่เกินทิ้ง โดยไม่มีการทำ anti-aliasing (ลดความหยักของขอบที่โดนตัด) ตัวอย่าง ลองกำหนดค่าให้ widget ทะลุตัว Stack ออกไป
+ 
+```dart
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(children: [Positioned(top: 0, child: box(300, 60))]));
+```
+
+!![ ตัวอย่างการ Clip.hardEdge](0600)
+
+หากไม่ต้องการให้มีการตัดส่วนของ widgets ที่เกินออกไปให้ใช้ค่า `clipBehavior: Clip.none`
+
+
+```dart
+  var stack = Container(
+      width: 200,
+      height: 200,
+      color: Colors.green,
+      child: Stack(
+          clipBehavior: Clip.none,
+          children: [Positioned(top: 0, child: box(300, 60))]));
+```
+
+ 
+!![ ตัวอย่างการ Clip.none ](0700)
+
+ค่าอื่น ๆ ของ [Clip](https://api.flutter.dev/flutter/dart-ui/Clip.html#values)
+
+## ตัวอย่างการใช้ Stack
+
+ผู้ใช้สามารถวาด widgets ให้ซ้อนกันได้ เพื่อใช้ในงานตกแต่งต่าง ๆ ได้
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  var bgColor = Colors.white;
+
+  var stack = SizedBox.square(
+      dimension: 200,
+      child: Stack(alignment: Alignment.center, children: [
+        Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(color: Colors.black45)))),
+        Positioned(
+            left: 24.0,
+            top: 0,
+            child: Container(
+                color: bgColor,
+                padding: EdgeInsets.only(left: 4, right: 4),
+                child: Text('Title here'))),
+        Positioned(
+            right: 24,
+            top: 3,
+            child: Container(
+              color: bgColor,
+              child: Icon(Icons.close, size: 16, color: Colors.red),
+            )),
+        FlutterLogo(size: 120)
+      ]));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      backgroundColor: bgColor,
+      body: stack,
+    ),
+  ));
+}
+```
+
+!![ ผลที่ได้จากตัวอย่าง ](0800)
+</markdown>
