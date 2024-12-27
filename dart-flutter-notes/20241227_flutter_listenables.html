@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: การใช้ Listenables และ ValueNotifier สำหรับควบคุม State ของแอป</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: การใช้ Listenables และ ValueNotifier สำหรับควบคุม State ของแอป</h1>
+<p><img src="images/20241227/20241227_0000_cover.svg" class="u-max-full-width" /></p>
+<p>ตัว Flutter framework มีวิธีในการช่วยให้ผู้พัฒนาแอป สามารถควบคุม State ของแอปได้ ทั้งจากการสร้าง <a target="_blank" href="20241019_flutter_stateful_widget.html">StatefulWidget</a> โดยตรง การใช้ <a target="_blank" href="20241113_flutter_inherited_widget.html">InheritedWidget</a> แต่ในกรณีที่ผู้พัฒนาต้องการสร้าง class เพื่อเอาไว้จัดการข้อมูลที่จะใช้งานในแอป โดยไม่ต้องเอาไปใส่ใน widget tree โดยตรง สามารถใช้งาน <a target="_blank" href="https://api.flutter.dev/flutter/foundation/Listenable-class.html">Listenable</a> class เพื่อเก็บค่า State ที่จะใช้ในแอป และแจ้งเตือนตัว widget ที่นำเอาข้อมูลไปใช้งานให้ปรับปรุง State เมื่อมีการเปลี่ยนแปลงได้ โดยตัว widget ที่จะเอาค่าของ <a target="_blank" href="https://api.flutter.dev/flutter/foundation/Listenable-class.html">Listenable</a> ไปใช้งานจะต้องครอบด้วย <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListenableBuilder-class.html">ListenableBuilder</a></p>
+<p>ในกรณีที่ข้อมูลที่จะใช้งานมีแค่เพียงค่าเดียว ไม่มีคำสั่งพิเศษใด ๆ แจ้งให้ปรับปรุง state เมื่อมีการเปลี่ยนแปลง value โดยตรง ก็สามารถใช้ <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html">ValueNotifier</a> เพื่อใช้งานได้เหมือนกัน ผู้พัฒนาสามารถเลือกใช้งานได้ตามความเหมาะสม</p>
+<p>ข้อมูลใน note ตัวนี้มาจาก <a target="_blank" href="https://docs.flutter.dev/get-started/fundamentals/state-management#using-listenables">Learn Flutter → State management → Using listenables</a></p>
+<h2>การสร้าง Listenables class</h2>
+<p>ให้นำข้อมูลที่จะใช้สำหรับ widgets ในแอปเอาไปไว้ใน class ที่ extends <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a> และทำการเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/notifyListeners.html"><code>notifyListeners()</code></a> เพื่อแจ้งตัว widgets ที่นำเอาค่าไปใช้งานให้ปรับปรุง state</p>
+<p>ตัวอย่าง สร้างตัวนับเลข เพิ่มขึ้นทีละ 1 ชื่อ <code>CounterNotifier</code> เมื่อต้องการเพิ่มจำนวน ให้เรียกคำสั่ง <code>increment()</code> ในตัวคำสั่งจะเรียก <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/notifyListeners.html"><code>notifyListeners()</code></a></p>
+<pre><code class="language-dart">class CounterNotifier extends ChangeNotifier {
+  int _count = 0;
+  int get count =&gt; _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การใช้ ListenableBuilder เพื่อรับการแจ้งเตือนจาก ChangeNotifier</h3>
+<p>เอา <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ListenableBuilder-class.html">ListenableBuilder</a> ไปครอบ widget ที่ต้องการให้สามารถรับการแจ้งเตือนจาก ChangeNotifier ได้ โดยมีรูปแบบดังนี้</p>
+<pre><code class="language-dart">const ListenableBuilder({
+  Key? key,
+  required Listenable listenable,
+  required TransitionBuilder builder,
+  Widget? child,
+})
+</code></pre>
+<p>โดยตัว builder จะเป็น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/TransitionBuilder.html">TransitionBuilder callback</a> ที่ใช้สร้าง widget ที่ต้องการ</p>
+<p>ตัวอย่าง เอา CounterNotifier มาใช้งาน โดยเมื่อปุ่ม +1 ถูกกด ก็จะไปเรียก <code>increment()</code></p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+class CounterNotifier extends ChangeNotifier {
+  int _count = 0;
+  int get count =&gt; _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+
+void main() {
+  var counterNotifier = CounterNotifier();
+
+  var widget = Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ListenableBuilder(
+          listenable: counterNotifier,
+          builder: (BuildContext context, Widget? child) =&gt; Text(
+            'Counter: ${counterNotifier.count}',
+            textScaler: TextScaler.linear(3),
+          ),
+        ),
+        OutlinedButton(
+            onPressed: () =&gt; counterNotifier.increment(),
+            child: Icon(Icons.plus_one))
+      ],
+    ),
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: widget,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241227/20241227_0100_app1.gif" class="u-max-full-width" /><div><p>เมื่อกดปุ่ม ตัวเลขจะเพิ่มขึ้น และปรับปรุงหน้าจอ</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>หากมี subtree ที่ไม่ต้อง update</h3>
+<p>ในกรณีที่ตัว widget ที่จะปรับปรุง state อาจอยู่บน subtree หรือมี widgets บางส่วนที่ไม่ได้มีการปรับปรุง หากต้องการเพิ่มประสิทธิภาพในการทำงานของแอป ลดการคำนวณสร้าง widget ที่ไม่จำเป็นทุกครั้ง สามารถกำหนดค่า <code>child</code> สำหรับ <code>builder</code> เพื่อจะได้ไม่ต้องสร้าง widget ใหม่ทุกครั้งได้</p>
+<pre><code class="language-dart">ListenableBuilder(
+  listenable: counterNotifier,
+  builder: (BuildContext context, Widget? child) {
+	return Column(children: [
+	  Text(
+		'Counter: ${counterNotifier.count}',
+		textScaler: TextScaler.linear(3),
+	  ),
+	  child! // pre build widget from [child:]
+	]);
+  },
+  child: Text('This is static Text'), // add pre build widget here
+),
+</code></pre>
+<div class="image"><img src="images/20241227/20241227_0200_child.png" class="u-max-full-width" /><div><p>การใช้ child เพื่อลดการสร้าง subtree ที่ไม่จำเป็น</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้ ValueNotifier</h2>
+<p>ในกรณีที่ข้อมูลที่ต้องการใช้งานเป็นข้อมูลแค่ชิ้นเดียว และต้องการแค่ปรับปรุง state เมื่อค่าเปลี่ยนแปลงโดยไม่มีคำสั่งพิเศษอื่น ๆ สามารถเลือกใช้ <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html">ValueNotifier</a> หลักการทำงานจะเหมือน ChangeNotifier แต่เรียบง่ายกว่า</p>
+<p>ตัวอย่าง เปลี่ยนจาก ChangeNotifier เป็น ValueNotifier เพื่อเก็บค่าตัวเลขที่ได้จากการกดปุ่ม โดยทุกครั้งที่กดปุ่มจะไปเพิ่ม <a target="_blank" href="https://api.flutter.dev/flutter/foundation/ValueNotifier/value.html"><code>.value</code></a> ของตัว ValueNotifier โดยตรงแทน ส่วนตัวสร้าง widget จะใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html">ValueListenableBuilder</a> แทน</p>
+<pre><code class="language-dart">import 'package:flutter/material.dart';
+
+void main() {
+  ValueNotifier&lt;int&gt; counterNotifier = ValueNotifier(0);
+
+  var widget = Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ValueListenableBuilder(
+          valueListenable: counterNotifier,
+          builder: (BuildContext context, int value, Widget? child) {
+            return Column(children: [
+              Text(
+                'Counter: $value',
+                textScaler: TextScaler.linear(3),
+              ),
+              child!
+            ]);
+          },
+          child: Text('This is static Text'),
+        ),
+        OutlinedButton(
+            onPressed: () =&gt; counterNotifier.value++,
+            child: Icon(Icons.plus_one))
+      ],
+    ),
+  );
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: widget,
+    ),
+  ));
+}
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>ข้อดีข้อเสีย</h2>
+<p><strong>ข้อดี</strong>ของการใช้ Listenables และ ValueNotifier คือ มันไม่ต้องไปผูกกับ widget tree โดยตรง ทำให้สะดวกในการที่จะเอาไปใส่ตรงจุดที่ต้องการจะปรับปรุง state ได้โดยตรง</p>
+<p>ส่วน <strong>ข้อเสีย</strong> เนื่องจากมันจะไปอยู่ตรงไหนของ widget tree และอยู่ได้ในทุกส่วนของแอป ทำให้ต้องวางแผนการใช้งานให้ดี ถ้าแอปใหญ่มากอาจมีปัญหาในการไล่จุดที่จะไปแก้ไขลำบาก อาจมีผลต่อการบำรุงรักษาแอปในภายหลัง</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!".7[ขAkJ$'n-o!reE4-5bo]aP1,cGFTY-!JY5Sก^i'$7#i^^]8IL`om-[cV@0eP%+efA*-'@4a15nhWTgjb:8%+oK^DZ[1'^*\OkH^m3?]%7UV;:7$1Mข"p4.#%cq.$Ip,W)M6QM+F,cI-2\r/.?NAA^pu1I"WJi2sG$9\?SidcW008cIk[](Cn7n^i.,&XK#ooG(#+^rl9sQL;)$LSZBh,%^!^\XdsO,qRkako!-กOk1ID%uQ'MiQ@GขEbSrj@A+*R/:EI^:8D9./b7Wfb:pM#=F/':2otkR97MJ-&9X(+%V#0pi!;Pn_1n"QqNRgD]Qf14^VqM^8dKm!F6(WWI"-ttYi-'bpHVq6I00=TUKs2ZO]bJDm1a^?#]FoY%2lกkขCZC:lSM`s?!k,@gVnlchlX!MKกN4F@-(%WR,:HgXYOข&D:gL)6;8I&WuT=54q0D`jกqกKY[:Z58?qn8L!@@;S;2Me\&U&u%Q47hFl"4ข;HW]b-tq,H)_E]IGC#('In"ToG^G0G6-TLS+'J&HN4(&,6eEHm;$k`bkt?/Hh#8:(ib-=`Xcs(F*9'RbA4).Tข^WP.6+E@S&lG*9"ilN@Gt9LpWTDPtP'#\uV;cXqH"!!6-JbbZlcND`%@UV_LI!4jFq+*lN&=e*4Z;(1rX07_Q2clkR%l&AmกI"pB)or4@36U1Aข(J0UG3hj-7F#JLกC:tg5?4'JVGQM3X%*n@fYi4m)/rBก#@a92:&*U8+LKoiNกs&L)ic(L20C%7VGae_ข?.U8EFeVN#:;8c((Jnp@((MT.\M=?,+pcdD^_-F2o#.W@f/WoJg6gI#)gtJTXeo_O'/Q9m/=0_t-%er.J_ab\b+I=m-P3\;r/46(3=8s(:MV\FCVK_lnp]dMFoKr&u*\CdQDeL#!กข,I)mNN-ot$#;]Ca5%[*8)i5b,ORe)b]SQG+l=iLQk5kก:%oF"17;pt1TGkP1k?tsJKK.!h3+_=t0,Il,6*Lhc6ou"1.+T?5j=E]B-FM0u(Bphiq!Zhl$Aก,?J[\D/1e@,p?Xlก&-`sHkb3[I`)mNh-FdcQn'/)skZa'eD!%qS.Y+R:Nb;`:AJa51QCUmOir#[@'VPhPW,cXpXBNJH8Gr#Nk-)/dขiWKZVE\Tข%P9XYMk%Y\=8T$oZ]n?U7R+.E[]O:^*]\$J(\Znh,Yi@5i+HIgPoNZJ\[ก_f]mrLqG-n^eNmiYWLi\i:11utnS:-9kO.L^^ZXGNN]Ph4"Q87jVS]jqUb7Lnu&&\P4Uoie*Y2G=&pSIU^rqh.BขElt_PqGPrT&fO?,eQl"rWugZQqImtO(QDrq^X1t_5A3G%GGT=c\oi0i2h.d5Tก\@p\4s5)W7U?001lR6Sh/-cW%sd'#CmbBOHข_3/0Hmn_@?;H8fI6l&*!1"i"1QXL45ข"]&@I]+I\k7_/Glcj7BB^@1.aRYQ^s_4hd0qกJ;)*RH(กd@nKN'i2-j+Gp;81_c9".7+9;^S?am$RoQ8q/a%I?5KU$DH*)+G.Gt3:mYcZ/2V_กSYui-:j+Tdh\5k,RF8UmOs-VTกpZLH]UAsHR&T):$ข,!iFmR1@mq[a%]$Wd(1,ic#la/$!!\!hBW_H%Pm&XgnCdoW@fAV#/XV::%FgjL)IX0q4MmSก0N%M*9#ARQg1Cก:`F=!6P^=?3W,qnd"$el(gN/Qb/d/:d4]Ac\.27o/'กM*4jiE\6_#*3XpbJXejJQ(Rj=:)G9fVW0Q%HL%pf[Fk0c)Ym]T*iNZ^C46Uo#&KAmg[bNXIaa5MI[\nJm=QMp8M*'_-ก['.;rZQ+?WY?If]omInVlC$\*j(^Xd6^CJCmlm\c$2*mW]1e.tTl=-Pmu=L^$jWPE/70`+GVR/M=*tMก8n@&R/7567toขOO/?IFSn457VWgbE/3:CN3*AR&K7[4h`S,$S&bE.R5oกl0YcH5ข-R.L\t3j9!VN287qIกX^XKCdgeD0Bo94'TKRkFJ)#P\SED2j%;F7p2_)1ข[KG2r6Zk3Kgp_D,!ข2=EL$u!1&.@8!l^/fPJe.$;ก3i1.k8AI)1gBcQ@8o?T#[C*6hก2-OMc21N"6RG1Y\A^`G#H)GGeO'bl,!LVr=hna%R:!qtAT`GfM4MLK+s*%obGBn]SDdY:^^E.-Ke,XOmOFj$AK[EtLa1_N':Q-5V[XHdCbFr97กRE&i!Z)l+%Z^+S@g0E=Z-.]\\9_4j\n0^*orhACM_7`_'n8!Ptb-eo9Hs7IZก+^J/A5PqIe*,SG,TipgT;j#o[+l]'a58pNIFN]$-[mfu&WIN&7N8c&^DR4Ep_[PO7Q6KonaH3X0"UkG89[$dขW_Kr)q.I%HHZq&OH+?EOV*I.7q]X_Q/eiJYMGP+_]F=I=tZdZ"กr;2g/^73j3U9hgA\;c=@fmhEg:.=m7U8ขSX6&`pl&]ra_3S('E*/f+mob9Fd^0a3T3E&2\rr0[767\nqWLGS$P@-TV=0&mBZd:*+ZJ=]+nT\F;@(9S`]Nbt54*&?3M$t+:MK,l]Hk;PWF*%m`1]Yt;%ก)6rI"8&O5#@ql)$JkMndC;9uกL!T*[o=n22`9-@\`3qemX(DE`k8M`hep5b]b?GN5L?&กnDcNDW&GWKกC/SJX_r3X?Hq^กqE?BfG7K#oEPcWImP#V"N:&2Rn$cU':[n',Y6`OnCeqe7ZX0'2eP+O!Ne$.@กp[e#Mj'u7;QJ.(M#MG4*((;QAข%.!'กA-1CouBo!mnMSpfLfT.$X["A6rc-/"HAT"sก[,h5Mnq$4cbfSY4G?)7oXW+!aTi:2ZLgV1i8G^QkuTU[-Ph8`$T@K)QQ(k1'Q[]/$6?+N@2Pk@SjT\=_TX?+OCLq_V$H=3RS:ข`_0S`hEd^LC_cKU(1dJJ&sjIrTZp"I\,0Q/Kiq"cQ,Q+or:I'+,hU'-N$Wc%SpP]ข4n),^ZU()Jr`d$C',pPjjTU#ข%%=dL8chgkX9$)X6%HMO`,Zi6fB_\V9!LifelWbRก9PD+a=m'+[+3^Tc*+[กM!Y)=rjGh^IThVcYc3ขX7FGom&8t](JH]eMGIHHao@XZ_W_pfVh_YGU[.A:FNm)Le1fC^(L,gb34e/W0RFh^41&p:MW[#tNBJp5%oข^PLsF^p%liQikoQ/Hon!5#;tQ.*W2`pข"OJC=Q;กY&Yr7p,::$#)e/7:Lกe`h"V]*Vtr^a(5GQ.oL,h6V6-NF,~ข
+-->
+</markdown>
