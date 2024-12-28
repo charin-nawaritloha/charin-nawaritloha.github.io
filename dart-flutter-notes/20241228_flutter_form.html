@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flutter: วิธีการใช้งาน Form เบื้องต้น</title>	
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Flutter: วิธีการใช้งาน Form เบื้องต้น</h1>
+<p><img src="images/20241228/20241228_0000_cover.svg" class="u-max-full-width" /></p>
+<p>Form widget เป็นตัวช่วยเรื่องจัดการแบบฟอร์มที่ให้ผู้ใช้งานกรอกข้อมูลต่าง ๆ เป็น optional ไม่จำเป็นต้องใช้ก็ได้เพราะปกติพวก input สามารถเข้าถึงได้จาก Controller ได้อยู่แล้ว ตัว Form จะมี FormState ที่สามารถเข้าถึงโดยการใช้ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GlobalKey-class.html">GlobalKey</a> และควบคุมการทำงานของตัวแบบฟอร์มได้</p>
+<h2>การสร้าง Form</h2>
+<p>constructor ของ Form มีดังนี้</p>
+<pre><code class="language-dart">const Form({
+  Key? key,
+  required Widget child,
+  bool? canPop,
+  PopInvokedWithResultCallback&lt;Object?&gt;? onPopInvokedWithResult,
+  VoidCallback? onChanged,
+  AutovalidateMode? autovalidateMode,
+})
+</code></pre>
+<p>ให้เอา Form ไปครอบส่วนที่เป็นส่วนของ input โดย input ต่าง ๆ ที่เป็น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField-class.html">FormField</a> ดังนี้</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/TextFormField-class.html">TextFormField</a> แทน <a target="_blank" href="https://api.flutter.dev/flutter/material/TextField-class.html">TextField</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/material/DropdownButtonFormField-class.html">DropdownButtonFormField</a> แทน <a target="_blank" href="https://api.flutter.dev/flutter/material/DropdownButton-class.html">DropdownButton</a></li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/cupertino/CupertinoTextFormFieldRow-class.html">CupertinoTextFormFieldRow</a> แทน <a target="_blank" href="https://api.flutter.dev/flutter/cupertino/CupertinoTextField-class.html">CupertinoTextField</a></li>
+</ul>
+<p>การติดต่อกับ Form แนะนำให้ใช้การสร้าง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/GlobalKey-class.html">GlobalKey</a> แล้วแนบไปกับ Form เพื่อเรียกใช้คำสั่งใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormState-class.html">FormState</a> เป็นวิธีที่สะดวกและรวดเร็ว อีกวิธีหากไม่ต้องการใช้ GlobalKey และตัว widget ที่เรียก FormState เพื่อใช้งาน อยู่ใน child ของ Form สามารถใช้ผ่าน <a target="_blank" href="20241117_fultter_buildcontext_class.html">BuildContext</a> ด้วยคำสั่ง <code>context.findAncestorStateOfType&lt;FormState&gt;</code> หรือ <code>Form.of(context)</code> แทนก็ได้</p>
+<p>ตัวอย่างการสร้าง Form โดยมีโครงสร้างดังนี้</p>
+<ul>
+<li>ตัวแบบฟอร์มจะมีช่องให้กรอก Name และ Email</li>
+<li>ในการเข้าถึงข้อความใน Name และ Email จำเป็นต้องสร้าง TextEditingController() เพื่อใช้สื่อสารระหว่างแอปและตัว input</li>
+<li>เมื่อเรียกคำสั่ง <code>validate()</code> จาก FormState ตัว framework จะไปเรียกตัว validator ใน FormField ทุกตัวให้ทำงาน</li>
+</ul>
+<pre><code class="language-dart">import 'dart:developer';
+import 'package:flutter/material.dart';
+
+void main() {
+  // access FormState
+  var formKey = GlobalKey&lt;FormState&gt;();
+
+  // require for access value of TextFormField
+  var textName = TextEditingController();
+  var textEmail = TextEditingController();
+
+  // validator callback for Name input
+  String? validatorName(String? value) {
+	return null; // value is valid
+  }
+
+  // validator callback for Email input
+  String? validatorEmail(String? value) {
+	return null; // value is valid
+  }
+
+  var form = Form(
+      key: formKey, // you can access FormState through key
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextFormField(
+              controller: textName, // you can access text value through controller
+              decoration: InputDecoration(label: Text('Name')),
+              validator: validatorName),
+          TextFormField(
+              controller: textEmail, // you can access text value through controller
+              decoration: InputDecoration(label: Text('Email')),
+              validator: validatorEmail),
+          OutlinedButton(
+              onPressed: () {
+				// test form validate
+			  }
+              child: Text(&quot;.validate()&quot;)),
+          OutlinedButton(
+              onPressed: () {
+				// validate and process you data here
+              },
+              child: Text(&quot;Submit&quot;)),
+        ],
+      ));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: form,
+    ),
+  ));
+}
+</code></pre>
+<div class="image"><img src="images/20241228/20241228_0100_form.png" class="u-max-full-width" /><div><p>ตัวอย่างสร้าง Form</p>
+</div></div>
+<h2>คำสั่ง validate</h2>
+<p>เมื่อต้องการตรวจสอบว่าข้อมูลที่กรอกมา ถูกต้องหรือไม่ ให้เรียกใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormState/validate.html"><code>.validate()</code></a> ปกติจะเรียกก่อนที่จะทำการบันทึกหรือประมวลผลข้อมูล</p>
+<p>เมื่อเรียกคำสั่งนี้ ตัว Form จะเข้าไปทำการเรียก callback ที่ถูกระบุไว้ใน <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField/validator.html">FormField.validator</a> ผู้พัฒนามีหน้าที่ต้องตรวจสอบข้อมูลว่าถูกต้องหรือไม่ ถ้าถูกต้อง✅ให้ส่งค่า <code>null</code> กลับมา แต่หากไม่ถูกต้อง❌ ให้ส่ง<strong>ข้อความ</strong>ที่แจ้งปัญหากลับมา เพื่อนำไปแสดงให้ผู้ใช้ทราบ จากตัวอย่าง ทำการเพิ่มคำสั่งตรวจสอบใน <code>validatorName()</code> และ <code>validatorEmail()</code></p>
+<pre><code class="language-dart">  // validator callback for Name input
+  String? validatorName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter Name';
+    } else {
+      return null;
+    }
+  }
+
+  // validator callback for Email input
+  String? validatorEmail(String? value) {
+    if (value == null || value.isEmpty || !value.contains('@')) {
+      return 'Please enter valid Email';
+    } else {
+      return null;
+    }
+  }
+  
+  
+  // ....
+  // add FormState.validate method to button
+          OutlinedButton(
+              onPressed: () =&gt; log('Form.validate() → ${formKey.currentState!.validate()}'),
+              child: Text(&quot;.validate()&quot;)),
+  // ....
+  
+</code></pre>
+<div class="image"><img src="images/20241228/20241228_0200_validate.png" class="u-max-full-width" /><div><p>ลองกดปุ่มเพื่อสั่ง validate จะเห็นว่าข้อความแจ้งปัญหาที่ส่งกลับมา จะมาแสดงที่ตัว input</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>เมื่อต้องการบันทึกข้อมูล</h2>
+<p>ในการประมวลผลที่ได้จาก input ผู้ใช้ต้องเรียกคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField/validator.html">FormField.validator</a> ก่อนเสมอ แล้วตรวจสอบว่าผลที่ได้เป็น <code>true</code> หรือไม่ จึงนำเอาผลที่ได้จาก input ไปใช้งานต่อไป</p>
+<p>หากเป็น TextFormField สามารถเข้าถึงข้อมูลข้อความที่กรอกได้จาก TextEditingController ที่ไปผูกติดเอาไว้ในแต่ละ widget โดยใช้คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/TextEditingController/text.html">TextEditingController.text</a> ตัวอย่าง ปุ่ม Submit ที่จะพิมพ์ข้อความที่กรอกออกทาง log</p>
+<pre><code class="language-dart">          OutlinedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  log('------------------------------------');
+                  log('Form validate() → true');
+                  log('Name: ${textName.text}');
+                  log('Email: ${textEmail.text}');
+                  log('------------------------------------');
+                } else {
+                  log('Form validate() → false');
+                }
+              },
+              child: Text(&quot;Submit&quot;)),
+</code></pre>
+<div class="image"><img src="images/20241228/20241228_0300_save.png" class="u-max-full-width" /><div><p>เมื่อกดปุ่ม Submit</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>ใช้คำสั่ง save เรียก onSaved เพื่อบันทึกข้อมูล</h2>
+<p>ใน Form ยังมีคำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormState/save.html">save</a> ที่จะทำหน้าที่ไปเรียก callback ที่ผูกกับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField/onSaved.html">FormField.onSaved</a> อีกที เหมาะกับการย้าย logic การเอาข้อมูลจาก input ไปบันทึกไว้ในที่ที่เตรียมไว้ ไปไว้ที่ตัว input แทน ถ้ามีการเพิ่ม input ใหม่ก็จะจัดการง่ายกว่า ไม่ต้องไปเพิ่มที่ปุ่ม Submit</p>
+<p>ข้อดีของวิธีนี้คือ หากไม่มีความจำเป็นต้องใช้งาน TextEditingController ก็สามารถละเว้นไม่ต้องสร้างเพื่อเอาไปผูกกับ TextFormField ก็ได้ เนื่องจาก callback ส่งเรียกจาก onSaved จะส่งตัวแปรที่เป็นค่า String ของตัว TextFormField มาให้ด้วย</p>
+<p>ตัวอย่าง จะเป็นการย้ายในส่วนของการพิมพ์ข้อมูล log เมื่อกดปุ่ม Submit ไปไว้ที่ตัว FormField แทน</p>
+<pre><code class="language-dart">  var form = Form(
+      key: formKey, // you can access FormState through key
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextFormField(
+              decoration: InputDecoration(label: Text('Name')),
+              validator: validatorName,
+              onSaved: (String? newValue) =&gt; log('Name: $newValue')),
+          TextFormField(
+              decoration: InputDecoration(label: Text('Email')),
+              validator: validatorEmail,
+              onSaved: (String? newValue) =&gt; log('Email: $newValue')),
+          OutlinedButton(
+              onPressed: () =&gt;
+                  log('Form.validate() → ${formKey.currentState!.validate()}'),
+              child: Text(&quot;.validate()&quot;)),
+          OutlinedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  log('------------------------------------');
+                  log('Form validate() → true');
+                  formKey.currentState!.save(); // call onSaved in all TextFormField
+                  log('------------------------------------');
+                } else {
+                  log('Form validate() → false');
+                }
+              },
+              child: Text(&quot;Submit&quot;)),
+        ],
+      ));
+</code></pre>
+<div class="image"><img src="images/20241228/20241228_0400_save2.png" class="u-max-full-width" /><div><p>ผลการทำงานจะเหมือนเดิม</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>การใช้งาน Form อื่น ๆ เพิ่มเติม</h2>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-1 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="7534278305"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ทำการ validate ทุกครั้งที่ค่าใน FormField เปลี่ยนแปลง</h3>
+<p>หากต้องการให้ validate ทันทีที่ข้อมูลเปลี่ยนแปลง เมื่อผู้ใช้แก้ไขข้อความใน FormField ให้กำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Form/autovalidateMode.html">Form.autovalidateMode</a> เป็น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutovalidateMode.html#always">AutovalidateMode.always</a> โดยการ validate จะทำทั้ง Form ไม่ใช่ทำเฉพาะตัวที่กำลังแก้ไขอยู่เท่านั้น</p>
+<pre><code class="language-dart">Form(
+  autovalidateMode: AutovalidateMode.always
+);	
+</code></pre>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3595033291"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>คำสั่ง reset เพื่อเริ่มต้นใหม่</h3>
+<p>เมื่อเรียกคำสั่ง reset จะทำให้ FormField ทุกอันใน Form ทำการเริ่มต้นใหม่โดยใช้ค่าจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField/initialValue.html">FormField.initialValue</a> และทำการเรียก callback ที่ผูกไว้กับ <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Form/onChanged.html">Form.onChanged</a></p>
+<p>ถ้ามีการกำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Form/autovalidateMode.html">Form.autovalidateMode</a> เป็น <a target="_blank" href="https://api.flutter.dev/flutter/widgets/AutovalidateMode.html#always">AutovalidateMode.always</a> หลังจากเปลี่ยนค่าแล้วจะทำการ validate อีกครั้ง</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h3-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="3403461607"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>การใช้คำสั่ง validateGranularly เพื่อเลือกตัว FormField ที่มีปัญหา</h3>
+<p>คำสั่ง <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormState/validateGranularly.html">.validateGranularly()</a> จะทำหน้าที่ตรวจสอบข้อมูลของ FormField ว่าถูกต้องหรือไม่ จะต่างจาก <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormState/validate.html"><code>.validate()</code></a> ตรงที่ผลที่ได้จะเป็น <a target="_blank" href="20240815_dart_set.html">Set</a> ของตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormFieldState-class.html">FormFieldState</a> ที่มีปัญหา เพื่อให้คนพัฒนาแอปสามารถทำการเรียกคำสั่งกับตัว FormFieldState ที่มีปัญหาได้</p>
+<p>ตัวอย่าง ถ้าเพิ่มปุ่ม เพื่อเรียกคำสั่ง validateGranularly เมื่อคลิกแล้ว จะพิมพ์ Set ของ input ที่มีปัญหาออกมา หากทุกตัวผ่านหมดจะส่งกลับมาเป็น <a target="_blank" href="20240815_dart_set.html">Set</a> ว่าง</p>
+<pre><code class="language-dart">          OutlinedButton(
+              onPressed: () {
+                var invalidFields = formKey.currentState!.validateGranularly();
+                log(invalidFields.toString());
+              },
+              child: Text(&quot;.validateGranularly()&quot;)),
+</code></pre>
+<p>ผลที่ได้ บรรทัดแรกคือไม่กรอกอะไรเลย ส่วนบรรทัดที่สองคือกรอกถูกทั้งสองช่อง</p>
+<blockquote>
+<p>[log] {_TextFormFieldState#5ad98, _TextFormFieldState#bb5ca}<br/>
+[log] {}<br/></p>
+</blockquote>
+<p>คำสั่งที่น่าสนใจ</p>
+<ul>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormFieldState/reset.html">FormFieldState.reset()</a> ล้างข้อความที่มีอยู่ทิ้ง เปลี่ยนเป็นค่าเริ่มต้น ตามที่ระบุไว้ใน initialValue</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormFieldState/value.html">FormFieldState.value</a> อ่านค่าข้อความปัจจุบันใน input</li>
+<li><a target="_blank" href="https://api.flutter.dev/flutter/widgets/State/widget.html">FormFieldState.widget</a> อ้างถึงตัว <a target="_blank" href="https://api.flutter.dev/flutter/widgets/FormField-class.html">FormField</a> ที่ผูกกับ State ตัวดังกล่าว</li>
+</ul>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="9125559558"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+<h3>ป้องกันการใช้คำสั่ง Pop เพื่อเปลี่ยนหน้า</h3>
+<p>หากต้องการไม่ให้เปลี่ยนหน้าด้วยคำสั่ง Pop ให้กำหนดค่า <a target="_blank" href="https://api.flutter.dev/flutter/widgets/Form/canPop.html">Form.canPop</a> เป็น <code>false</code></p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+# Flutter: วิธีการใช้งาน Form เบื้องต้น
+
+!![](0000)
+
+Form widget เป็นตัวช่วยเรื่องจัดการแบบฟอร์มที่ให้ผู้ใช้งานกรอกข้อมูลต่าง ๆ เป็น optional ไม่จำเป็นต้องใช้ก็ได้เพราะปกติพวก input สามารถเข้าถึงได้จาก Controller ได้อยู่แล้ว ตัว Form จะมี FormState ที่สามารถเข้าถึงโดยการใช้ [GlobalKey](https://api.flutter.dev/flutter/widgets/GlobalKey-class.html) และควบคุมการทำงานของตัวแบบฟอร์มได้
+
+## การสร้าง Form
+ 
+constructor ของ Form มีดังนี้
+ 
+```dart
+const Form({
+  Key? key,
+  required Widget child,
+  bool? canPop,
+  PopInvokedWithResultCallback<Object?>? onPopInvokedWithResult,
+  VoidCallback? onChanged,
+  AutovalidateMode? autovalidateMode,
+})
+```
+ 
+ให้เอา Form ไปครอบส่วนที่เป็นส่วนของ input โดย input ต่าง ๆ ที่เป็น [FormField](https://api.flutter.dev/flutter/widgets/FormField-class.html) ดังนี้
+ 
+- [TextFormField](https://api.flutter.dev/flutter/material/TextFormField-class.html) แทน [TextField](https://api.flutter.dev/flutter/material/TextField-class.html)
+- [DropdownButtonFormField](https://api.flutter.dev/flutter/material/DropdownButtonFormField-class.html) แทน [DropdownButton](https://api.flutter.dev/flutter/material/DropdownButton-class.html)
+- [CupertinoTextFormFieldRow](https://api.flutter.dev/flutter/cupertino/CupertinoTextFormFieldRow-class.html) แทน [CupertinoTextField](https://api.flutter.dev/flutter/cupertino/CupertinoTextField-class.html)
+
+การติดต่อกับ Form แนะนำให้ใช้การสร้าง [GlobalKey](https://api.flutter.dev/flutter/widgets/GlobalKey-class.html) แล้วแนบไปกับ Form เพื่อเรียกใช้คำสั่งใน [FormState](https://api.flutter.dev/flutter/widgets/FormState-class.html) เป็นวิธีที่สะดวกและรวดเร็ว อีกวิธีหากไม่ต้องการใช้ GlobalKey และตัว widget ที่เรียก FormState เพื่อใช้งาน อยู่ใน child ของ Form สามารถใช้ผ่าน [BuildContext](20241117_fultter_buildcontext_class.html) ด้วยคำสั่ง `context.findAncestorStateOfType<FormState>` หรือ `Form.of(context)` แทนก็ได้
+ 
+ตัวอย่างการสร้าง Form โดยมีโครงสร้างดังนี้
+
+- ตัวแบบฟอร์มจะมีช่องให้กรอก Name และ Email
+- ในการเข้าถึงข้อความใน Name และ Email จำเป็นต้องสร้าง TextEditingController() เพื่อใช้สื่อสารระหว่างแอปและตัว input
+- เมื่อเรียกคำสั่ง `validate()` จาก FormState ตัว framework จะไปเรียกตัว validator ใน FormField ทุกตัวให้ทำงาน
+ 
+```dart
+import 'dart:developer';
+import 'package:flutter/material.dart';
+
+void main() {
+  // access FormState
+  var formKey = GlobalKey<FormState>();
+
+  // require for access value of TextFormField
+  var textName = TextEditingController();
+  var textEmail = TextEditingController();
+
+  // validator callback for Name input
+  String? validatorName(String? value) {
+	return null; // value is valid
+  }
+
+  // validator callback for Email input
+  String? validatorEmail(String? value) {
+	return null; // value is valid
+  }
+
+  var form = Form(
+      key: formKey, // you can access FormState through key
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextFormField(
+              controller: textName, // you can access text value through controller
+              decoration: InputDecoration(label: Text('Name')),
+              validator: validatorName),
+          TextFormField(
+              controller: textEmail, // you can access text value through controller
+              decoration: InputDecoration(label: Text('Email')),
+              validator: validatorEmail),
+          OutlinedButton(
+              onPressed: () {
+				// test form validate
+			  }
+              child: Text(".validate()")),
+          OutlinedButton(
+              onPressed: () {
+				// validate and process you data here
+              },
+              child: Text("Submit")),
+        ],
+      ));
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: form,
+    ),
+  ));
+}
+```
+
+!![ ตัวอย่างสร้าง Form ](0100)
+
+
+## คำสั่ง validate 
+ 
+เมื่อต้องการตรวจสอบว่าข้อมูลที่กรอกมา ถูกต้องหรือไม่ ให้เรียกใช้คำสั่ง [`.validate()`](https://api.flutter.dev/flutter/widgets/FormState/validate.html) ปกติจะเรียกก่อนที่จะทำการบันทึกหรือประมวลผลข้อมูล
+
+เมื่อเรียกคำสั่งนี้ ตัว Form จะเข้าไปทำการเรียก callback ที่ถูกระบุไว้ใน [FormField.validator](https://api.flutter.dev/flutter/widgets/FormField/validator.html) ผู้พัฒนามีหน้าที่ต้องตรวจสอบข้อมูลว่าถูกต้องหรือไม่ ถ้าถูกต้อง✅ให้ส่งค่า `null` กลับมา แต่หากไม่ถูกต้อง❌ ให้ส่ง**ข้อความ**ที่แจ้งปัญหากลับมา เพื่อนำไปแสดงให้ผู้ใช้ทราบ จากตัวอย่าง ทำการเพิ่มคำสั่งตรวจสอบใน `validatorName()` และ `validatorEmail()`
+
+```dart
+  // validator callback for Name input
+  String? validatorName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter Name';
+    } else {
+      return null;
+    }
+  }
+
+  // validator callback for Email input
+  String? validatorEmail(String? value) {
+    if (value == null || value.isEmpty || !value.contains('@')) {
+      return 'Please enter valid Email';
+    } else {
+      return null;
+    }
+  }
+  
+  
+  // ....
+  // add FormState.validate method to button
+          OutlinedButton(
+              onPressed: () => log('Form.validate() → ${formKey.currentState!.validate()}'),
+              child: Text(".validate()")),
+  // ....
+  
+```
+
+!![ ลองกดปุ่มเพื่อสั่ง validate จะเห็นว่าข้อความแจ้งปัญหาที่ส่งกลับมา จะมาแสดงที่ตัว input ](0200)
+
+## เมื่อต้องการบันทึกข้อมูล
+ 
+ในการประมวลผลที่ได้จาก input ผู้ใช้ต้องเรียกคำสั่ง [FormField.validator](https://api.flutter.dev/flutter/widgets/FormField/validator.html) ก่อนเสมอ แล้วตรวจสอบว่าผลที่ได้เป็น `true` หรือไม่ จึงนำเอาผลที่ได้จาก input ไปใช้งานต่อไป
+
+หากเป็น TextFormField สามารถเข้าถึงข้อมูลข้อความที่กรอกได้จาก TextEditingController ที่ไปผูกติดเอาไว้ในแต่ละ widget โดยใช้คำสั่ง [TextEditingController.text](https://api.flutter.dev/flutter/widgets/TextEditingController/text.html) ตัวอย่าง ปุ่ม Submit ที่จะพิมพ์ข้อความที่กรอกออกทาง log
+
+```dart
+          OutlinedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  log('------------------------------------');
+                  log('Form validate() → true');
+                  log('Name: ${textName.text}');
+                  log('Email: ${textEmail.text}');
+                  log('------------------------------------');
+                } else {
+                  log('Form validate() → false');
+                }
+              },
+              child: Text("Submit")),
+```
+
+!![ เมื่อกดปุ่ม Submit ](0300)
+
+## ใช้คำสั่ง save เรียก onSaved เพื่อบันทึกข้อมูล
+
+ใน Form ยังมีคำสั่ง [save](https://api.flutter.dev/flutter/widgets/FormState/save.html) ที่จะทำหน้าที่ไปเรียก callback ที่ผูกกับ [FormField.onSaved](https://api.flutter.dev/flutter/widgets/FormField/onSaved.html) อีกที เหมาะกับการย้าย logic การเอาข้อมูลจาก input ไปบันทึกไว้ในที่ที่เตรียมไว้ ไปไว้ที่ตัว input แทน ถ้ามีการเพิ่ม input ใหม่ก็จะจัดการง่ายกว่า ไม่ต้องไปเพิ่มที่ปุ่ม Submit
+
+ข้อดีของวิธีนี้คือ หากไม่มีความจำเป็นต้องใช้งาน TextEditingController ก็สามารถละเว้นไม่ต้องสร้างเพื่อเอาไปผูกกับ TextFormField ก็ได้ เนื่องจาก callback ส่งเรียกจาก onSaved จะส่งตัวแปรที่เป็นค่า String ของตัว TextFormField มาให้ด้วย
+
+ตัวอย่าง จะเป็นการย้ายในส่วนของการพิมพ์ข้อมูล log เมื่อกดปุ่ม Submit ไปไว้ที่ตัว FormField แทน
+
+```dart
+  var form = Form(
+      key: formKey, // you can access FormState through key
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TextFormField(
+              decoration: InputDecoration(label: Text('Name')),
+              validator: validatorName,
+              onSaved: (String? newValue) => log('Name: $newValue')),
+          TextFormField(
+              decoration: InputDecoration(label: Text('Email')),
+              validator: validatorEmail,
+              onSaved: (String? newValue) => log('Email: $newValue')),
+          OutlinedButton(
+              onPressed: () =>
+                  log('Form.validate() → ${formKey.currentState!.validate()}'),
+              child: Text(".validate()")),
+          OutlinedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  log('------------------------------------');
+                  log('Form validate() → true');
+                  formKey.currentState!.save(); // call onSaved in all TextFormField
+                  log('------------------------------------');
+                } else {
+                  log('Form validate() → false');
+                }
+              },
+              child: Text("Submit")),
+        ],
+      ));
+```
+
+!![ ผลการทำงานจะเหมือนเดิม ](0400)
+
+## การใช้งาน Form อื่น ๆ เพิ่มเติม
+ 
+  
+### ทำการ validate ทุกครั้งที่ค่าใน FormField เปลี่ยนแปลง
+    
+หากต้องการให้ validate ทันทีที่ข้อมูลเปลี่ยนแปลง เมื่อผู้ใช้แก้ไขข้อความใน FormField ให้กำหนดค่า [Form.autovalidateMode](https://api.flutter.dev/flutter/widgets/Form/autovalidateMode.html) เป็น [AutovalidateMode.always](https://api.flutter.dev/flutter/widgets/AutovalidateMode.html#always) โดยการ validate จะทำทั้ง Form ไม่ใช่ทำเฉพาะตัวที่กำลังแก้ไขอยู่เท่านั้น
+ 
+```dart
+Form(
+  autovalidateMode: AutovalidateMode.always
+);	
+```
+ 
+### คำสั่ง reset เพื่อเริ่มต้นใหม่
+  
+เมื่อเรียกคำสั่ง reset จะทำให้ FormField ทุกอันใน Form ทำการเริ่มต้นใหม่โดยใช้ค่าจาก [FormField.initialValue](https://api.flutter.dev/flutter/widgets/FormField/initialValue.html) และทำการเรียก callback ที่ผูกไว้กับ [Form.onChanged](https://api.flutter.dev/flutter/widgets/Form/onChanged.html)
+
+ถ้ามีการกำหนดค่า [Form.autovalidateMode](https://api.flutter.dev/flutter/widgets/Form/autovalidateMode.html) เป็น [AutovalidateMode.always](https://api.flutter.dev/flutter/widgets/AutovalidateMode.html#always) หลังจากเปลี่ยนค่าแล้วจะทำการ validate อีกครั้ง
+ 
+ 
+### การใช้คำสั่ง validateGranularly เพื่อเลือกตัว FormField ที่มีปัญหา
+  
+คำสั่ง [.validateGranularly()](https://api.flutter.dev/flutter/widgets/FormState/validateGranularly.html) จะทำหน้าที่ตรวจสอบข้อมูลของ FormField ว่าถูกต้องหรือไม่ จะต่างจาก [`.validate()`](https://api.flutter.dev/flutter/widgets/FormState/validate.html) ตรงที่ผลที่ได้จะเป็น [Set](20240815_dart_set.html) ของตัว [FormFieldState](https://api.flutter.dev/flutter/widgets/FormFieldState-class.html) ที่มีปัญหา เพื่อให้คนพัฒนาแอปสามารถทำการเรียกคำสั่งกับตัว FormFieldState ที่มีปัญหาได้
+
+ตัวอย่าง ถ้าเพิ่มปุ่ม เพื่อเรียกคำสั่ง validateGranularly เมื่อคลิกแล้ว จะพิมพ์ Set ของ input ที่มีปัญหาออกมา หากทุกตัวผ่านหมดจะส่งกลับมาเป็น [Set](20240815_dart_set.html) ว่าง
+
+```dart
+          OutlinedButton(
+              onPressed: () {
+                var invalidFields = formKey.currentState!.validateGranularly();
+                log(invalidFields.toString());
+              },
+              child: Text(".validateGranularly()")),
+```
+
+ผลที่ได้ บรรทัดแรกคือไม่กรอกอะไรเลย ส่วนบรรทัดที่สองคือกรอกถูกทั้งสองช่อง
+
+> [log] {_TextFormFieldState#5ad98, _TextFormFieldState#bb5ca}<br/>
+> [log] {}<br/>
+
+คำสั่งที่น่าสนใจ
+
+- [FormFieldState.reset()](https://api.flutter.dev/flutter/widgets/FormFieldState/reset.html) ล้างข้อความที่มีอยู่ทิ้ง เปลี่ยนเป็นค่าเริ่มต้น ตามที่ระบุไว้ใน initialValue
+- [FormFieldState.value](https://api.flutter.dev/flutter/widgets/FormFieldState/value.html) อ่านค่าข้อความปัจจุบันใน input
+- [FormFieldState.widget](https://api.flutter.dev/flutter/widgets/State/widget.html) อ้างถึงตัว [FormField](https://api.flutter.dev/flutter/widgets/FormField-class.html) ที่ผูกกับ State ตัวดังกล่าว
+
+### ป้องกันการใช้คำสั่ง Pop เพื่อเปลี่ยนหน้า
+ 
+หากต้องการไม่ให้เปลี่ยนหน้าด้วยคำสั่ง Pop ให้กำหนดค่า [Form.canPop](https://api.flutter.dev/flutter/widgets/Form/canPop.html) เป็น `false`
+</markdown>
