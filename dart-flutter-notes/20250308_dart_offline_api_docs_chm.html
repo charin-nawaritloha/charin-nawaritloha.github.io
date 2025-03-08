@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dart: Dart API Documents แบบ Offline (chm format)</title>
+
+	<!--header-->
+<meta charset="utf-8">
+<meta name="author" content="Charin Nawaritloha">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- syntax highlight -->
+<link rel="stylesheet" href="highlight/styles/vs.css">
+<script src="highlight/highlight.js"></script>
+<script src="highlight/highlightjs-line-numbers.min.js"></script>	
+<script>hljs.highlightAll();hljs.initLineNumbersOnLoad();</script>
+
+<!-- web page css -->
+<link href='css/normalize.css' rel='stylesheet' type='text/css'>
+<link href='css/skeleton.css' rel='stylesheet' type='text/css'>
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='css/fonts.css' rel='stylesheet' type='text/css'>
+
+<!-- table of content generater -->
+<script src='toc_js/toc.js' type='text/javascript'></script>
+
+<!-- google ads -->
+<script data-ad-client="ca-pub-9963456691869043" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!--/header-->
+</head>
+
+
+<body>
+
+<div class="container">
+<!--navbar-->
+<div id="tocBox">
+	<img id="clickmenu" src="images/menu.svg" />
+	<div id="divtoc"></div>
+</div>
+<div id="navbar">
+	<div class="container">
+		<a href="index.html">หน้าหลัก</a>
+		<a href="p/portfolio.html" class="nowrap">ผลงาน</a>
+		<a href="p/profiles.html" class="nowrap">ผู้เขียน</a>
+	</div>
+</div>
+<div id="navbar_space"></div>
+<!--/navbar-->
+
+
+
+
+<div class="row">
+<div class="twelve columns">
+<!--content -->
+
+
+
+<h1>Dart: Dart API Documents แบบ Offline (chm format)</h1>
+<p><img src="images/20250308/20250308_0000_cover.png" class="u-max-full-width" /></p>
+<p><strong>อยากได้ต้องทำเอง</strong> ปัญหาที่พบเวลาเขียนโปรแกรมด้วย Dart นั้นคือต้องคอยเปิดเว็บ Dart API ไว้ดูข้อมูลต่าง ๆ เช่น Class method ฯลฯ ซึ่งถ้าเปิดนิดหน่อยก็ไม่น่ามีปัญหา แต่พอต้องเปิดดูตลอด (ก็ Class มันเยอะมาก) มันเริ่มมีปัญหาว่ากว่าจะเข้าถึงเอกสารที่ต้องการ มันนาน โอเคมันไม่ได้นานมาก แค่หลัก 1-2 วินาที แต่พอเยอะ ๆ เข้า มันเริ่มเห็นว่ามันไม่สะดวก และที่สำคัญคือ ไม่เห็นโครงสร้างของ API ชัดเจน อ่านไปมึนไป เลยกลับมาคิดว่าสมัยที่เขียน PHP ตอนนั้น internet ช้ากว่านี้มาก ๆ พวกเอกสาร API ต่าง ๆ ใช้เวลาโหลด offline มาเปิดที่เครื่องเอา ซึ่งสะดวกรวดเร็วมาก ๆ เลยคิดว่าทำแบบ offline ไว้ค้นข้อมูลน่าจะสะดวกกว่ามาก สมัยนั้นเป็นไฟล์แบบ <a target="_blank" href="https://en.wikipedia.org/wiki/Microsoft_Compiled_HTML_Help">Microsoft® HTML Help</a></p>
+<p>TL;DR หากใครต้องการดาวน์โหลดไปใช้งาน สามารถดาวน์โหลดได้ที่ <a target="_blank" href="https://github.com/charin-nawaritloha/dart-api-docs-offline-chm/tree/main">Github</a></p>
+<h2>Dart API Documents แบบ Offline</h2>
+<p>ผู้ใช้งานทั่วไปสามารถดาวน์โหลดตัว offline ที่เป็นไฟล์ html เก็บไว้ใน zip ได้ที่เว็บ <a target="_blank" href="https://dart.dev/get-dart/archive">Archive | Dart</a> สามารถเลือก version ที่ต้องการได้เลย</p>
+<div class="image"><img src="images/20250308/20250308_0100_archive_dart.png" class="u-max-full-width" /><div><p>ตำแหน่งสำหรับดาวน์โหลด offline API Documents</p>
+</div></div>
+<p>เมื่อดาวน์โหลดมาแล้ว พบว่าโครงสร้างไฟล์จะแยกเป็นโฟลเดอร์ตาม module เรียบร้อยดี ปัญหาที่พบคือ มันเป็นไฟล์ที่ออกแบบมาใช้กับเว็บเซิร์ฟเวอร์ ทำให้เวลาคลิกดูเอกสารหน้าหลัก จะไม่เปิดไฟล์ index.html โดยตรง วิธีแก้ไขคือ สร้างเว็บเซิร์ฟเวอร์บนเครื่องของเรา ซึ่งก็ไม่ยาก <strong>แต่ไม่สะดวก แถมค้นหาข้อมูลไม่ได้อีกต่างหาก</strong> วิธีนี้เลยพับไป</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5702321883"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<h2>ไฟล์ Microsoft® HTML Help โบราณแต่สะดวก</h2>
+<p>ไฟล์ Microsoft® HTML Help หรือไฟล์ chm ถูกปล่อยออกมาเมื่อปี ค.ศ.1997 เป็นรูปแบบชุดเอกสารที่ออกแบบมาเพื่อใช้แทนระบบ WinHelp เนื่องจาก WinHelp มีข้อจำกัดและสร้างยาก ส่วนตัวแม้ตัวโปรแกรม Microsoft® HTML Help Workshop ที่ใช้สำหรับ compile ตัวไฟล์ HTML ที่ต้องการเป็น chm จะมี GUI แล้ว แต่เอาเข้าจริง มันใช้งานยากพอสมควร learn curve ค่อนข้างสูง ส่วนตัวเคยใช้งานแล้วอ่านวิธีใช้ไม่ค่อยเข้าใจ จนใช้วิธี decompile ไฟล์ chm ที่มีออกมาดูเป็นตัวอย่างแทน</p>
+<div class="image"><img src="images/20250308/20250308_0200_file_chm.png" class="u-max-full-width" /><div><p>หน้าตา chm viwer ที่ใช้ดูเอกสาร Microsoft® HTML Help</p>
+</div></div>
+<p>ปัจจุบันในยุคที่มี internet ความเร็วสูง ทำให้บทบาทของไฟล์ chm น้อยลงมาก ๆ เรียกว่า Microsoft® ไม่สนใจพัฒนาต่อแล้ว เท่าที่มีข้อมูลคือ HTML Help 2.x แต่ไม่เคยออกสูสาธารณะ ทุกวันนี้โปรแกรมทั่วไปนิยมเปิด website เพื่อดูวิธีใช้โดยตรงกันมากกว่า</p>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="5405806399"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> 
+ 
+<h2>แนะนำวิธีใช้งาน</h2>
+<p>ไฟล์ chm จะรวบรวมไฟล์ HTML CSS และอื่น ๆ เข้าด้วยกันเป็นไฟล์เดียว วิธีใช้แค่ดับเบิ้ลคลิกเพื่อเปิดไฟล์แค่นั้นเลย ตัว sitemap หรือ Table of contents สามารถเลือกได้จากด้านซ้ายมือ โครงสร้างทั้งหมดจะสามารถตอบสนองได้ทันที จะหุบ จะกาง ได้รวดเร็วทันใจ แต่ตัวหนังสืออาจตัวเล็กไปหน่อย</p>
+<div class="image"><img src="images/20250308/20250308_0300_chm1.png" class="u-max-full-width" /><div><p>หน้าตาตัว chm สำหรับ Dart</p>
+</div></div>
+<p>เมื่อต้องการค้นหา หากรู้ชื่อ class method หรือสิ่งที่ต้องการ แนะนำว่าให้ค้นจาก Index ได้ เช่น จะหา String class ก็พิมพ์ string ก็จะมี String class มาให้เลือก</p>
+<div class="image"><img src="images/20250308/20250308_0400_chm2_index_search.png" class="u-max-full-width" /><div><p>ค้นหาสิ่งที่ต้องการจาก Index</p>
+</div></div>
+<p>สำหรับการค้นหาแบบ full text search สามารถใช้งานได้ แต่ผลที่ได้ออกมาไม่ค่อยประทับใจ ใช้ในกรณีที่นึกไม่ออกว่าจะค้นใน Index ว่าอะไร แต่นึกออกถึงคำที่อธิบายการใช้งาน หากข้อความที่ค้นมีช่องว่าง จะเป็นการค้นหาแบบแยกคำค้น แต่หากต้องการให้ค้นทั้งคำให้ใส่เครื่องหมายคำพูด เช่น &quot;tcp protocol&quot;</p>
+<div class="image"><img src="images/20250308/20250308_0500_chm3_full_text_search.png" class="u-max-full-width" /><div><p>ตัวอย่างการค้นหาจาก full text search</p>
+</div></div>
+<p>สามารถบันทึก bookmark หัวข้อที่จะกลับมาดูภายหลังด้วย Favorites</p>
+<div class="image"><img src="images/20250308/20250308_0600_chm4_bookmark.png" class="u-max-full-width" /><div><p>ตัวอย่างการ bookmark หัวข้อเพื่อกลับมาอ่านภายหลังได้</p>
+</div></div>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9963456691869043"
+     crossorigin="anonymous"></script>
+<!-- h2-3 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9963456691869043"
+     data-ad-slot="6575154506"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<h2>เบื้องหลังการแปลงข้อมูล</h2>
+<p>เนื่องจากตัว Dart API Documents สร้างบนพื้นฐานบนการใช้งานเว็บเบราเซอร์รุ่นใหม่ ๆ แล้วแต่ตัว chm นั้นยังยึดติดกับ Internet Explorer สมัยก่อนจะมาเป็น Edge ดังนั้นหากเอาไฟล์มารวมแล้วเปิดใน Viewer จะพบปัญหามากมาย จึงจำเป็นต้องตัดความสามารถต่าง ๆ ออกไปเยอะพอสมควร นอกจากนี้ยังต้องดัดแปลงแก้ไข CSS รวมถึงการรวมเอาข้อมูลจาก left sidebar ที่เป็นไฟล์แยก มารวมไว้กับไฟล์หลักโดยตรง (ของเดิมทำงานด้วย Javascript อ่านข้อมูลมาแสดงผล)</p>
+<p>เพื่องานนี้เลยใช้เวลาเขียนโปรแกรมด้วยภาษา Dart ไป 1 สัปดาห์ ผลที่ได้เป็นโปรแกรมขนาด 500 บรรทัด จริง ๆ เขียนเยอะกว่านี้ เพราะต้องทำงานและทดสอบมีแก้ไขปัญหาเยอะมากเนื่องจากใช้เวลาแกะ HTML โดยตรง (Reverse Engineering) เพื่อดึงส่วนที่ต้องการมาทำ TOC index และยังต้องแก้ไข links ให้เชื่อมโยงเอกสารได้ให้ถูกต้องด้วย</p>
+<div class="image"><img src="images/20250308/20250308_0700_converter.png" class="u-max-full-width" /><div><p>ตัวแปลงเขียนโดยภาษา Dart ใน Visual Studio Code</p>
+</div></div>
+<p>สำหรับ code ทั้งหมดไม่ได้เอาขึ้น Github เพราะว่าไม่อยากมาคอย support ตอบคำถามเกี่ยวกับโปรแกรมนี้ ไม่ได้เขียนให้คนอื่นอ่านเข้าใจง่าย ๆ ไม่ได้เขียนเอกสารชัดเจน มีแค่ note ภาษาไทยเขียนไว้เป็นข้อ ๆ เท่านั้น</p>
+<p>สำหรับการ update ก็หากยังเขียนโปรแกรมด้วยภาษา Dart ก็คง update ตาม <a target="_blank" href="https://dart.dev/get-dart/archive">official</a> เรื่อย ๆ อาจจะทำปีละ 1 - 2 ครั้ง เผื่อมีคนที่อยากใช้แบบ offline เหมือนกัน</p>
+
+
+
+
+<!--/content -->
+</div></div>
+
+<!--counter-->
+<div class="row" style="padding-top:3rem;">
+<div class="five columns">&nbsp;</div>
+<div class="two columns">
+	<div id="histats_counter"></div>
+	<!-- Histats.com  START -->
+	<script type="text/javascript">var _Hasync= _Hasync|| [];
+	_Hasync.push(['Histats.start', '1,4227101,4,227,112,50,00011010']);
+	_Hasync.push(['Histats.fasi', '1']);
+	_Hasync.push(['Histats.track_hits', '']);
+	(function() {
+	var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+	hs.src = ('//s10.histats.com/js15_as.js');
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+	})();</script>
+	<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4227101&101" alt="" border="0"></a></noscript>
+	<!-- Histats.com  END -->
+</div>
+<div class="five columns">&nbsp;</div>	
+</div>
+<!--/counter-->
+
+
+
+<!--footer-->
+<!--share button-->
+<script type="text/javascript">
+function share_fb()
+{
+	window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href), "_blank");
+}
+
+function share_twitter()
+{
+	window.open("https://twitter.com/intent/tweet?url=" + encodeURIComponent(window.location.href) + "&text="+ encodeURIComponent(document.title), "_blank");
+}
+</script>
+
+<div class="row" style="padding-top:3rem;">
+<center>
+	<!-- LikeBtn.com BEGIN -->
+	<span class="likebtn-wrapper" data-theme="custom" data-btn_size="38" data-f_size="14" data-icon_size="16" data-icon_l="hrt11" data-icon_d="thmb7-d" data-icon_l_c="#ff8888" data-icon_l_c_v="#ffffff" data-icon_d_c_v="#000000" data-label_c_v="#ffffff" data-bg_c_v="#2196f3" data-lang="th" data-ef_voting="push" data-show_dislike_label="true" data-i18n_like_tooltip="ฉันชอบบทความนี้" data-i18n_dislike_tooltip="ฉันไม่ชอบบทความนี้" data-i18n_unlike_tooltip="เปลี่ยนใจไม่ชอบแล้ว" data-i18n_undislike_tooltip="ยกเลิกว่าไม่ชอบ"></span>
+	<script>(function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","//w.likebtn.com/js/w/widget.js");</script>
+	<!-- LikeBtn.com END -->
+</center>
+<center style="padding-top:0.5rem;">	
+	<button style="background-color: #3578e5;color: white;" onclick="share_fb();">แชร์บน Facebook</button>
+	<button style="background-color: #1b95e0;color: white;" onclick="share_twitter();">แชร์บน Twitter</button>
+</center>
+</div>
+<!--/share button-->
+<!--/footer-->
+</div>
+</body>
+</html>
+<markdown style="display:none">
+<!--
+ก~+,^C)z!",Q+?Z-n(&Uuatn$%gZ,QX'A[qUrr.BqXH7=lA]gH5an6'E\\@$4$A-eTpETTb4gกa;;2BZlVKV5,64[D57ps6073:N@PRfU8;`ft4(kUOXKVaLg:(5JR$]ขu`i,XnW;!YJ.YjขMY5fX7`+t[oG=]Z?.HeGLUh09=:u9W2[p3ขqJLIH9%S2I-Je=KuL#hWDoข#I-L3uR@,THAa(mA:U;n"`gn[JA`K[kqAfKqZ?.lq\$P^$2I=GIR2M9d]30HCV16\:,C"/h9Aa=@DO0_TXnA6?=aH`jd[rJjYBl+U2VrsspHckgIn0gOj'e5`;'C@#H3.IIZaขpmBก\cXWFNltlgJHMข?D%%*H,]KfeB)I+["H$d]o+XXข5=L"'E#?C2Bndr1ejd[c"d3\ksuegSu=5.oB;Xl*'TlY:ก1pb0p$'cXrKWJ0du3@C5+jiกU.dP+ก7กTb_BnขL;L7Y``Kuo]:/"XD7lM1Kกa%82n]ขSsmNUN;TpV$#I$[6B&5B(r"L+T?dDLY?08$%_P\j3P-VGm,tNX'&APu87-$D)+dข;o5",M?Ncข[BnF),C%U;^Foqlm#Zg3r@EFBbCsก'`)k*u5HQ@Z_:@u$IB!3_@\@;*dQDe20@4`E:7_d&7e!EQ9LOEU'K$`3ia5FNr(A%U@@dC\XM5N4#l^LRE6?08q2Gj\^fn:aIaUal&K%e53&a:&^L^=/\%_?hCl1EuI+RaZk7*Q69!#m`^OHhmAL90`WdW]B4ED(kooCX+-+ZglDRuCEW,7[n:+9kDs%PlK/Yi&IEiu]"\lk#mT+)XR66CL+nlT=cSKAr]),#^_N7S^flV9nF=PiEbQVn"SAp`#eb,VSM:%hE_2=dp3ZN&@"q4c='U?&/!E=Rc/^cK=4\gn7)U*06!BN(,N&fZDQKoEOขgกjIEt_b)Fo7n`B%s.dกBp['p)l_)g6S6Cd0B)@M^q4KJ:.!ujiK5+M[Md"กqqJ)TD\pks)2oAfq]s"'AYFgN_FmkgWhu$eX5t\q\kQamP!TftlBdoZG-_"f4=O9iP`A,arTI!oLZjIQk',YKCX"[j_I:*dqL?lBBก1g@qPZqR+[S_KQDMก'^=t.d!bH6#tg^Ihr;5HEkgc8SAWR&Ve+IK@!_Zo=Qp$)eTr6(G4oTaU/%e%&J+QNj=plMf[A!GM8H]k4\,!fa#GeubK`:Y%gF+OkT#-&HBYPo.mกRH\!94.J"กETX[!qfVKJ[MSfh-;gขRpQZb=a`#3`]L)H?8P6-OกRP;6)u"q%ก[+qZD(2kC1ge^Z2hn[7-$PH8VR$I[_tcud@ข#Aa/+\mV/$:0_3P1#@*\9N(+Q90!3)36A=V'11^TSaVOJrd=JT.[kdGWdEWh:_"%-`pX*R`NXTaTn,1cW3g'U,B&%_0(0[dBkVpY@@NIขhXC-O!IR=oW(0b+eX"eU9r$B(AN67p%;VPr96JSsds$n^TB4Id6.k.s+r)e`pd6cdQYSMQ]LknขtT_;dPข6lWAT&.H8`h95keQXBrpi*+,1Zs.=aS@:^LJ$กG?hs1POOLt*Y0*c^GTV5t0/Cliu&\S/TE\kTu.C:oB&fa4$-*lu\]7:bg(l]\mmC7KW-b;L1b3Si@gXje84(sI%rE0+m7lR!h(U%BW#a?fa]:S3$11O."(V]#4K2TLZ(0NbC1%RGI=o,ข4CS-+URก#T*ml,to:8"^?9aR^kK(5&QDB0-WRp3gr^pCQ,Z"[K.KFMG.FneN4R2IsM4_?D,5j1PN9aKB,Pg85q$:"Ikp-66Sl"BMก^eDN*)pc/X_-9,lXbZ;/W%#ข%=.O_':_eX@8o,dn%'*^aOf[/.5]g_=H`+USdr"4?!Lmp1S@Z%1f1[kp::T'pOTQ1!AfcA;Z;V]_?e'aKX._#DXYm4_L]#a?qdA"nj$$ck@$)=Q2Ac3L",g+W35iข*FDPhcQ1^\R[$oLoY,/-!H`กB\ll-@$2sG-#i4L94N$))^-kdกT$/$eM983ขq_FHo8)d30#j,_U,WRขnj'rL_Ki@fm!A=oWh;fIDbV]กt.l)-B-ncWIYlh4#c_`%G5:="?`@+rกp$4#Mg_GnI`_@A)Vb&1!@Xh%K]s$8I@F/hl.U9&/#m$&g0ขTBT=^"PMdII=B2oJV_F)_,MMo[ledWBUL:TJoW*G*WKO(?MCขMMNขLV]klV^^B`_GgHq1"4-[Gก&pP38pS?@L"=['dLk7c'=d'ขrkItV9t?h\LU*N1R(Pd.#/roSj6g3pSr?4ขIY"hfก23H&iXC_F(Ba&$9e[(+90IhWGCU-K8g-Or0]*EขE)3R'S$Y%0Yq8=W8(Pj9:f-o/%r-ZQQ;f/F`&JcD1^"-7`4TE;/CrEtc?pZO/--a?3HW_.M2dT)-sfP)j9AขSJ9FV`g7lBHi!IZ0ml2_UY\*EJ_ScpKkbV@h7@!12\rY&+OYOGplAY9KH_g"+#I%l.qก$&:'กAZd*l`F*(uT(3qTYhpcV&19n5un=M!"ขJขJ,Wh\กOG;Qs,rf"Phข$BT'uLk"@?$//)I$gNn[\*ccOLiRh(O2f=ข/AKrU##()F["8u[+9XXC+qGBMMgqs4a.Q?eK9=aTP6d:_AD/lTJขAgW5#/K[Z9AM/$enQZE*lk9$BEH)@[ma,(c,mg"$C#)&+@dV9)ขFaU[MD4s@lZ?E_?CGN6:0MnSZks539*CXc!.dB"De0NInXP.Rmo4Mmn:?-H+POH1$D7%`goV+6G2Y]h.#%'@JVrh\A&Dj@i&^k+W/iEo*Gf=WPh@6Kข.e!Di#7)LUg.Ec8']YJR[3P'&7KKM^J^Sqrdc"$Fh6NZNnREk9fOCEM]Y'XXK2Z;=,%=LAข6F,R\Pmjb&&&Wqก:7V-M@!&R@\XKR+1u&*r?.6hD^_^trT4EjNh-?m,1=-`P?!c),P?q1nNEe-b6/rLqr:.odX?'r@'กN__Q*m)ขsPmu4@KG9QrF'6,32ig:nO!(e.HfUBh?TขGFUo23n\/-+1^d1ebDGข`1r8IeO5bAgM"Wu/R.fr9CZ#0&dH*F\ImkYDVHKm(cELHTJqP+@===ibdHfo)O6eSQ4VDEVmgU)"/LnouDlK5]?_[*!suกcqQ+a?A6N9#*q84K(oMPHt7oYgcFB8LUWh%Kd[i;$pi6F.=`_Ga%cEpNuK*S,กt9KBfujขF]0eK6QagS)oOsj@(+\qa^klKo(UM4oo248\o_)"el9HBi,iffS[+sE1(/;P7p'b+4[MtYS=-]=:H=9ข8NocE3WIJBCa^rPLS%PQ8eMV^f)itgEWp*1Us9"6oFjOH*,l)[)-GA*rgO#j\plbYjs+bN+p62FjI0'Vs_ขmSขuV)p#B?iThข)uNข(hn&Nl`#L.QUkO7s(1%b1F[1mC5R..4Z44@)bk=t1u$5Pp+nHHP?om'(3SOjWPV_r`Znq;Po1HT*t]bกWBTBKMr+;ก7]32#"]WEF+@n]*aO=D!4Gd&:P_bj0V)-C+P."+OEB$gก2=c2tNกrs3A[ก"(GcsW-dFX_"/*toD@fก0'-kWj'c0&UVN1WC&eSMr@b8)W*uL@oXe=R-r:9g_5ToCT^PS\DH"X2X6#e])mก;[8DT*%_;\GYZ\c#CW^Kj..U*b-M^KgV`9D=^5bก4HขmsN#o-D1c;OCerd9ipIC9neolWcR3,G9E-Gf,445,@o`Yk!&qdUnJ?$Y`LiLeRt3UDZD4l]NWK_)kq;Koj[uDH/e8n[r8I8ZIOteVH$c-eo03Dd/7UY0Q4kZ4EECD/7G*-nGQoขVLr5eRl2t;W%i*!s[l8s'M2=arOb,GW.Z1?AOo5_Fdq5IFpj"@=:.ALDEUS&rhก5-$'m@etkZก;mYc#U-Zhq""sขjaaX1Va"9aN`CS,Fj^,K#VsHGhe7Y/frrLtjmi&&~ข
+-->
+</markdown>
