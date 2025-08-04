@@ -10,6 +10,7 @@
 		.ui {
 			font-size: 2rem;
 			padding: 0px;
+			display: inline;
 		}
 
 		td.expense {
@@ -46,16 +47,16 @@
 		<div><input type="tel" class="ui" id="expense" style="text-align: right; width: 9rem;"> บาท</div>
 		<div>🛒คนซื้อ</div>
 		<div>
-			<input type="button" class="ui" value="🙋‍♂️" onclick="selectBuyer(this)"><input type="button" class="ui" value="🙋‍♀️" onclick="selectBuyer(this)"><input type="button" class="ui" value="🤝" onclick="selectBuyer(this)">
+			<div class="ui" value="🙋‍♂️" onclick="selectBuyer(this)">🙋‍♂️</div><div class="ui" value="🙋‍♀️" onclick="selectBuyer(this)">🙋‍♀️</div><div class="ui" value="🤝" onclick="selectBuyer(this)">🤝</div>
 			→ <input type="text" class="ui" id="buyer" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
 		<div>🤑คนจ่าย</div>
 		<div>
-			<input type="button" class="ui" value="🙋‍♂️" onclick="selectPayer(this)"><input type="button" class="ui" value="🙋‍♀️" onclick="selectPayer(this)"><input type="button" class="ui" value="🤝" onclick="selectPayer(this)">
+			<div class="ui" value="🙋‍♂️" onclick="selectPayer(this)">🙋‍♂️</div><div class="ui" value="🙋‍♀️" onclick="selectPayer(this)">🙋‍♀️</div><div class="ui" value="🤝" onclick="selectPayer(this)">🤝</div>
 			→ <input type="text" class="ui" id="payer" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
 		<div>
-			<input type="button" class="ui" value="💵" onclick="selectPayment(this)"><input type="button" class="ui" value="💳" onclick="selectPayment(this)">
+			<div class="ui" value="💵" onclick="selectPayment(this)">💵</div><div class="ui" value="💳" onclick="selectPayment(this)">💳</div>
 			→ <input type="text" class="ui" id="payment" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
 		<div><hr></div>
@@ -119,7 +120,7 @@
 				// e.addEventListener("click", selectCategory);
 				// rowDiv.appendChild(e);
 
-				e = document.createElement("button");				
+				e = document.createElement("div");
 				e.className = "ui"
 				var label = element.split(" ");
 				e.value = label[0];
@@ -143,20 +144,20 @@
 	function selectBuyer(button) {
 		//var button = event.target;
 		var text = document.getElementById("buyer");
-		text.value = button.value;
+		text.value = button.innerHTML;
 	}
 
 	function selectPayer(button) {
 		//var button = event.target;
 		var text = document.getElementById("payer");
-		text.value = button.value;
+		text.value = button.innerHTML;
 	}
 
 	
 	function selectPayment(button) {
 		//var button = event.target;
 		var text = document.getElementById("payment");
-		text.value = button.value;
+		text.value = button.innerHTML;
 	}
 
 	/// บันทึกข้อมูลในแบบฟอร์ม ลงใน localStorage
