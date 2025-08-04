@@ -13,6 +13,12 @@
 			display: inline;
 		}
 
+		div.inline {
+			display: inline-block;
+			border-right: 1px solid gray;
+			margin-top: 1px;
+		}
+
 		td.expense {
 			color: #E91E63;
 			font-weight: bold;
@@ -38,7 +44,7 @@
 	<input type="button" value="📑สลับดูข้อมูล" onclick="swapMode()" style="margin-bottom: 0.5rem;">
 	<div id="form">
 		<div>รายการค่าใช้จ่าย</div>
-		<div><input type="date" class="ui" id="timestamp"></div>
+		<div><input type="date" id="timestamp"></div>
 		<div id="buttonDiv"></div>
 		<div><input type="text" id="category"></div>
 		<div>รายละเอียด</div>
@@ -47,19 +53,26 @@
 		<div><input type="tel" class="ui" id="expense" style="text-align: right; width: 9rem;"> บาท</div>
 		<div>🛒คนซื้อ</div>
 		<div>
-			<div class="ui" value="🙋‍♂️" onclick="selectBuyer(this)">🙋‍♂️</div><div class="ui" value="🙋‍♀️" onclick="selectBuyer(this)">🙋‍♀️</div><div class="ui" value="🤝" onclick="selectBuyer(this)">🤝</div>
+			<div class="ui" value="🙋‍♂️" onclick="selectBuyer(this)">🙋‍♂️</div>
+			<div class="ui" value="🙋‍♀️" onclick="selectBuyer(this)">🙋‍♀️</div>
+			<div class="ui" value="🤝" onclick="selectBuyer(this)">🤝</div>
 			→ <input type="text" class="ui" id="buyer" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
 		<div>🤑คนจ่าย</div>
 		<div>
-			<div class="ui" value="🙋‍♂️" onclick="selectPayer(this)">🙋‍♂️</div><div class="ui" value="🙋‍♀️" onclick="selectPayer(this)">🙋‍♀️</div><div class="ui" value="🤝" onclick="selectPayer(this)">🤝</div>
+			<div class="ui" value="🙋‍♂️" onclick="selectPayer(this)">🙋‍♂️</div>
+			<div class="ui" value="🙋‍♀️" onclick="selectPayer(this)">🙋‍♀️</div>
+			<div class="ui" value="🤝" onclick="selectPayer(this)">🤝</div>
 			→ <input type="text" class="ui" id="payer" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
 		<div>
-			<div class="ui" value="💵" onclick="selectPayment(this)">💵</div><div class="ui" value="💳" onclick="selectPayment(this)">💳</div>
+			<div class="ui" value="💵" onclick="selectPayment(this)">💵</div>
+			<div class="ui" value="💳" onclick="selectPayment(this)">💳</div>
 			→ <input type="text" class="ui" id="payment" style="text-align: center; width: 2.5rem; border: none;">
 		</div>
-		<div><hr></div>
+		<div>
+			<hr>
+		</div>
 		<div>
 			<input type="button" value="💾บันทึก" onclick="saveExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
 			<input type="button" value="🗑️เริ่มใหม่" onclick="clearExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
@@ -107,6 +120,7 @@
 
 		buttons.forEach(element => {
 			if (element.length == 0) {
+				rowDiv.className = "inline";
 				topDiv.appendChild(rowDiv);
 				rowDiv = document.createElement("div");
 			}
@@ -132,6 +146,7 @@
 			}
 		});
 
+		rowDiv.className = "inline";
 		topDiv.appendChild(rowDiv);
 	}
 
@@ -153,7 +168,7 @@
 		text.value = button.innerHTML;
 	}
 
-	
+
 	function selectPayment(button) {
 		//var button = event.target;
 		var text = document.getElementById("payment");
