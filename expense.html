@@ -7,7 +7,7 @@
 	<meta name="author" content="Charin Nawaritloha">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		input.ui {
+		.ui {
 			font-size: 2rem;
 			padding: 0px;
 		}
@@ -110,14 +110,24 @@
 				rowDiv = document.createElement("div");
 			}
 			else {
-				e = document.createElement("input");
-				e.type = "button";
+				// e = document.createElement("input");
+				// e.type = "button";
+				// e.className = "ui"
+				// var label = element.split(" ");
+				// e.value = label[0];
+				// e.title = label[1];
+				// e.addEventListener("click", selectCategory);
+				// rowDiv.appendChild(e);
+
+				e = document.createElement("button");				
 				e.className = "ui"
 				var label = element.split(" ");
 				e.value = label[0];
 				e.title = label[1];
+				e.innerHTML = label[0];
 				e.addEventListener("click", selectCategory);
 				rowDiv.appendChild(e);
+
 			}
 		});
 
