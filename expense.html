@@ -35,7 +35,7 @@
 		table,
 		th,
 		td {
-			border: 1px solid gray;
+			border: 1px solid rgb(219, 219, 219);
 			border-collapse: collapse;
 			vertical-align: top;
 		}
@@ -47,7 +47,9 @@
 </head>
 
 <body>
-	<input type="button" value="📑สลับดูข้อมูล" onclick="swapMode()" style="margin-bottom: 0.5rem;">
+	<div style="float: right;">
+		<input type="button" value="📑สลับดูข้อมูล" onclick="swapMode()" style="font-size: 1.5rem;">
+	</div>
 	<div id="form">
 		<div>รายการค่าใช้จ่าย</div>
 		<div><input type="date" id="timestamp"></div>
@@ -83,12 +85,15 @@
 			<input type="button" value="💾บันทึก" onclick="saveExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
 			<input type="button" value="🗑️เริ่มใหม่" onclick="clearExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
 		</div>
+		<div style="height: 30px;">&nbsp;</div>
 	</div>
 	<div id="data" style="display: none;">
 		<input type="button" value="💾Copy" onclick="copytable('dataTable')">
 		<input type="button" value="🗑️Clear" onclick="clearData()">
 		<div id="dataTable"></div>
+		<div style="height: 30px;">&nbsp;</div>
 	</div>
+	
 
 
 
@@ -253,7 +258,7 @@
 			document.getElementById("form").style.display = "none";
 			document.getElementById("data").style.display = "block";
 
-			var output = "<table><tr><th>วันที่</th><th>หมวดหมู่</th><th>รายการ</th><th>จำนวน</th><th>ซื้อ</th><th>จ่าย</th><th></th></tr>"
+			var output = "<table><tr><th>วันที่</th><th>หมวดหมู่</th><th>รายการ</th><th>จำนวน</th><th>ซื้อ</th><th>จ่าย</th><th></th><th></th></tr>"
 
 			for (var i = localStorage.length - 1; i > -1; --i) {
 				var key = "i" + i;
