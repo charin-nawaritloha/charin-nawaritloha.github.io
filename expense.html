@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Expense</title>
+	<meta charset="utf-8">
+	<meta name="author" content="Charin Nawaritloha">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		.ui {
+			font-size: 2rem;
+			padding: 0px;
+			display: inline;
+		}
+
+		div.ui {
+			padding: 0 2px;
+		}
+
+		div.inline {
+			display: inline-block;
+			border-right: 1px solid gray;
+			margin-top: 1px;
+			padding-left: 2px;
+			padding-right: 2px;
+		}
+
+		td.expense {
+			color: #E91E63;
+			font-weight: bold;
+			text-align: right;
+		}
+
+
+		table,
+		th,
+		td {
+			border: 1px solid rgb(219, 219, 219);
+			border-collapse: collapse;
+			vertical-align: top;
+		}
+
+		div.bin {
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div style="float: right;">
+		<input type="button" value="📑สลับดูข้อมูล" onclick="swapMode()">
+	</div>
+	<div id="form">
+		<div>รายการค่าใช้จ่าย</div>
+		<div><input type="date" id="timestamp"></div>
+		<div id="buttonDiv"></div>
+		<div><input type="text" id="category"></div>
+		<div>รายละเอียด</div>
+		<div><input type="text" id="detail" style="width: 95%;"></div>
+		<div>จำนวนเงิน</div>
+		<div><input type="tel" class="ui" id="expense" style="text-align: right; width: 9rem;"> บาท</div>
+		<div>🛒คนซื้อ</div>
+		<div>
+			<div class="ui" value="🙋‍♂️" onclick="selectBuyer(this)">🙋‍♂️</div>
+			<div class="ui" value="🙋‍♀️" onclick="selectBuyer(this)">🙋‍♀️</div>
+			<div class="ui" value="🤝" onclick="selectBuyer(this)">🤝</div>
+			→ <input type="text" class="ui" id="buyer" style="text-align: center; width: 2.5rem; border: none;">
+		</div>
+		<div>🤑คนจ่าย</div>
+		<div>
+			<div class="ui" value="🙋‍♂️" onclick="selectPayer(this)">🙋‍♂️</div>
+			<div class="ui" value="🙋‍♀️" onclick="selectPayer(this)">🙋‍♀️</div>
+			<div class="ui" value="🤝" onclick="selectPayer(this)">🤝</div>
+			→ <input type="text" class="ui" id="payer" style="text-align: center; width: 2.5rem; border: none;">
+		</div>
+		<div>
+			<div class="ui" value="💵" onclick="selectPayment(this)">💵</div>
+			<div class="ui" value="💳" onclick="selectPayment(this)">💳</div>
+			→ <input type="text" class="ui" id="payment" style="text-align: center; width: 2.5rem; border: none;">
+		</div>
+		<div>
+			<hr>
+		</div>
+		<div>
+			<input type="button" value="💾บันทึก" onclick="saveExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
+			<input type="button" value="🗑️เริ่มใหม่" onclick="clearExpense()" style="font-size: 1.5rem; margin-top: 1rem;">
+		</div>
+		<div style="height: 30px;">&nbsp;</div>
+	</div>
+	<div id="data" style="display: none;">
+		<input type="button" value="💾Copy" onclick="copytable('dataTable')">
+		<input type="button" value="🗑️Clear" onclick="clearData()">
+		<div id="dataTable"></div>
+		<div style="height: 30px;">&nbsp;</div>
+	</div>
+	
+
+
+
+</body>
+
+</html>
+<script>
+	var mode = 0;
+
+	/// สร้างปุ่มสำหรับ category
+	function createButtons() {
+		var buttons = [
+			"🍜 อาหารสำเร็จ",
+			"🍰 ขนม/เครื่องดื่ม",
+			"🍉 ผลไม้",
+			"🐶 สุนัข",
+			"",
+			"🍄 อาหารสด/ผัก/ไข่/เนื้อสัตว์",
+			"⛽ ค่าเดินทาง/เชื้อเพลิง",
+			"🛍️ Shopping",
+			"",
+			"🏠 ที่อยู่อาศัย",
+			"📺 บันเทิง",
+			"💊 สุขภาพ",
+			"✈️ ท่องเที่ยว",
+			"",
+			"💳 ภาษี/หนี้สิน/บัตรเครดิต",
+			"📶 มือถือ/อินเทอร์เน็ต",
+			"🛠️ งาน",
+			"❓ อื่นๆ",
+		];
+		var topDiv = document.getElementById("buttonDiv");
+		var e;
+		var rowDiv = document.createElement("div");
+
+		buttons.forEach(element => {
+			if (element.length == 0) {
+				rowDiv.className = "inline";
+				topDiv.appendChild(rowDiv);
+				rowDiv = document.createElement("div");
+			}
+			else {
+				// e = document.createElement("input");
+				// e.type = "button";
+				// e.className = "ui"
+				// var label = element.split(" ");
+				// e.value = label[0];
+				// e.title = label[1];
+				// e.addEventListener("click", selectCategory);
+				// rowDiv.appendChild(e);
+
+				e = document.createElement("div");
+				e.className = "ui"
+				var label = element.split(" ");
+				e.value = label[0];
+				e.title = label[1];
+				e.innerHTML = label[0];
+				e.addEventListener("click", selectCategory);
+				rowDiv.appendChild(e);
+
+			}
+		});
+
+		rowDiv.className = "inline";
+		topDiv.appendChild(rowDiv);
+	}
+
+	function selectCategory(event) {
+		var button = event.target;
+		var text = document.getElementById("category");
+		text.value = button.value + button.title;
+	}
+
+	function selectBuyer(button) {
+		//var button = event.target;
+		var text = document.getElementById("buyer");
+		text.value = button.innerHTML;
+	}
+
+	function selectPayer(button) {
+		//var button = event.target;
+		var text = document.getElementById("payer");
+		text.value = button.innerHTML;
+	}
+
+
+	function selectPayment(button) {
+		//var button = event.target;
+		var text = document.getElementById("payment");
+		text.value = button.innerHTML;
+	}
+
+	/// บันทึกข้อมูลในแบบฟอร์ม ลงใน localStorage
+	function saveExpense() {
+		var category = document.getElementById("category");
+		var detail = document.getElementById("detail");
+		var expense = document.getElementById("expense");
+		var buyer = document.getElementById("buyer");
+		var payer = document.getElementById("payer");
+		var payment = document.getElementById("payment");
+
+		var expenseValue = Number.parseFloat(expense.value);
+
+		if (Number.isNaN(expenseValue) || expenseValue < 1) {
+			alert("โปรดระบุจำนวนเงิน");
+			expense.focus();
+			return;
+		}
+
+		if (category.value.length == 0) {
+			alert("โปรดระบุประเภทค่าใช้จ่าย");
+			category.focus();
+			return;
+		}
+
+		if (buyer.value.length == 0) {
+			buyer.value = "🙋‍♂️";
+		}
+
+		if (payer.value.length == 0) {
+			payer.value = "🙋‍♂️";
+		}
+
+		if (payment.value.length == 0) {
+			payment.value = "💵";
+		}
+
+		var inputDate = document.getElementById("timestamp").valueAsDate;
+		var today = new Date(inputDate);
+
+
+		var dataText = JSON.stringify({
+			timestamp: String(today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate()),
+			category: category.value,
+			detail: detail.value,
+			expense: expense.value,
+			buyer: buyer.value,
+			payer: payer.value,
+			payment: payment.value
+		});
+
+		var key = "i" + localStorage.length;
+
+		localStorage.setItem(key, dataText);
+
+		alert("บันทึกรายการเรียบร้อยแล้ว");
+
+		category.value = "";
+		detail.value = "";
+		expense.value = "";
+		buyer.value = "";
+		payer.value = "";
+		payment.value = "";
+	}
+
+	/// สลับหน้าระหว่างแบบฟอร์มที่ใช้กรอก กับหน้าแสดงตารางข้อมูลที่บันทึกเอาไว้
+	function swapMode() {
+		if (mode == 0) {
+			mode = 1;
+			var div = document.getElementById("dataTable");
+
+			document.getElementById("form").style.display = "none";
+			document.getElementById("data").style.display = "block";
+
+			var output = "<table><tr><th>วันที่</th><th>หมวดหมู่</th><th>รายการ</th><th>จำนวน</th><th>ซื้อ</th><th>จ่าย</th><th></th><th></th></tr>"
+
+			for (var i = localStorage.length - 1; i > -1; --i) {
+				var key = "i" + i;
+				var dataText = localStorage.getItem(key);
+				var obj = JSON.parse(dataText);
+				var row = [];
+				row.push("<tr>");
+				row.push("<td>" + obj.timestamp + "</td>");
+				row.push("<td>" + obj.category + "</td>");
+				row.push("<td>" + obj.detail + "</td>");
+				row.push("<td class=\"expense\">" + obj.expense + "</td>");
+				row.push("<td>" + obj.buyer + "</td>");
+				row.push("<td>" + obj.payer + "</td>");
+				row.push("<td>" + obj.payment + "</td>");
+				//row.push("<td><input type=\"button\" value=\"❌\" onclick=\"removeItem('" + key + "', '" + obj.timestamp + ' ' + obj.category + "')\"></td></tr>");
+				row.push("<td><div class=\"bin\" onclick=\"removeItem('" + key + "', '" + obj.timestamp + ' ' + obj.category + "')\">⛔</div></td></tr>");
+				output = output + row.join("");
+			}
+
+			div.innerHTML = output + "</table>";
+		}
+		else {
+			mode = 0;
+			var div = document.getElementById("dataTable");
+			div.innerHTML = "";
+			document.getElementById("form").style.display = "block";
+			document.getElementById("data").style.display = "none";
+		}
+	}
+
+	/// ล้างรายการค่าใช้จ่ายที่บันทึกไว้ทั้งหมดทิ้ง
+	function clearData() {
+		if (confirm("ต้องการลบข้อมูลทั้งหมดหรือไม่")) {
+			localStorage.clear();
+			mode = 0;
+			swapMode();
+		}
+	}
+
+	/// คัดลอกตารางข้อมูลรายจ่ายทั้งหมดลงใน clipboard ของระบบ
+	function copytable(el) {
+		var urlField = document.getElementById(el);
+		var range = document.createRange();
+		range.selectNode(urlField);
+		window.getSelection().addRange(range);
+		document.execCommand('copy');
+		alert("ทำการคัดลอกข้อมูลในตารางลงใน clipboard เรียบร้อยแล้ว");
+	}
+
+	/// ลบรายการที่บันทึกเอาไว้ออกจากรายการข้อมูล
+	function removeItem(key, title) {
+		if (confirm("ต้องการลบข้อมูล " + title + " ใช่ไหม")) {
+			var dataText = JSON.stringify({
+				timestamp: "",
+				category: "",
+				detail: "",
+				expense: 0.0,
+				buyer: "",
+				payer: "",
+				payment: ""
+			});
+			localStorage.setItem(key, dataText);
+			mode = 0;
+			swapMode();
+		}
+	}
+
+	/// ล้างข้อมูลในแบบฟอร์ม เพื่อเริ่มต้นกรอกใหม่
+	function clearExpense() {
+		document.getElementById("timestamp").valueAsDate = new Date();
+		document.getElementById("category").value = "";
+		document.getElementById("detail").value = "";
+		document.getElementById("expense").value = "";
+		document.getElementById("buyer").value = "";
+		document.getElementById("payer").value = "";
+		document.getElementById("payment").value = "";
+	}
+
+	// init here
+	createButtons();
+	clearExpense();	
+</script>
+
