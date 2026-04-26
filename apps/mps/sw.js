@@ -1,5 +1,5 @@
 const cacheName = "offline-cache-v1";
-const cacheUrls = ["index.html","dexie_min.js","bg.png", "favicon.png"];
+const cacheUrls = ["index.html","dexie_min.js","bg.png","favicon.png","icon-192.png"];
 
 // Installing the Service Worker
 self.addEventListener("install", async (event) => {
