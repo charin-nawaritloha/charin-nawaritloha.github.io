@@ -1,195 +1,306 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ระบบคำนวณอัตราส่วนผสมอาหาร (PWA)</title>
-  <link rel="stylesheet" href="app.css" />
-  <link rel="manifest" href="manifest.json" />
- </head>
- <body>
-  <nav class="main-nav">
-   <button onclick="switchView('view-home')">🏠</button>
-   <button onclick="switchView('view-ingredients')">🥩</button>
-   <button onclick="switchView('view-add-menu')">🪄</button>
-   <button onclick="switchView('view-edit-menu')">✏️</button>
-   <button onclick="switchView('view-calc')">🧑‍🍳</button>
-   <button onclick="switchView('view-backup')">💾</button>
-  </nav>
-  <div id="view-home" class="app-view active" style="background-image: url('bg/home.png');">
-   <h2>หน้าหลัก</h2>
-   <div class="menu-grid">
-    <button onclick="switchView('view-ingredients')">🥩จัดการวัตถุดิบ</button>
-    <button onclick="switchView('view-add-menu')">🪄เพิ่มเมนูใหม่</button>
-    <button onclick="switchView('view-edit-menu')">✏️แก้ไขเมนูอาหาร</button>
-    <button onclick="switchView('view-calc')">🧑‍🍳เลือกเมนูเพื่อคำนวณ</button>
-    <button onclick="switchView('view-backup')">💾นำเข้า/ส่งออกข้อมูล</button>
-    <center style="padding-top: 1em; font-size: 0.6em">
-     <div>Copyright &copy;2026 Charin Nawaritloha</div>
-     <div>แปลงจากคำสั่งเป็น Code ด้วย Google Gemini Flash 3.5</div>
-     <div>แก้ไข Code เพิ่มเติม ด้วย Visual Studio Code 1.125</div>
-     <div>ภาพประกอบจาก <a href="https://www.pngbie.com/" target="_blank">pngbie.com</a></div>
-    </center>
-   </div>
-  </div>
-  <div id="view-ingredients" class="app-view" style="background-image: url('bg/carrot.png');">
-   <h2>จัดการวัตถุดิบ</h2>
-   <form
-    id="ingredient-form"
-    onsubmit="saveIngredient(event)"
-    onreset="resetIngredient(event)"
-   >
-    <input type="hidden" id="ing-id" value="" />
-    <div class="form-group">
-     <label>ชื่อวัตถุดิบ: </label>
-     <input type="text" id="ing-name" style="flex-grow: 1" required />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบคำนวณอัตราส่วนผสมอาหาร (PWA)</title>
+    <link rel="stylesheet" href="app.css" />
+    <link rel="manifest" href="manifest.json" />
+  </head>
+  <body>
+    <datalist id="ingredient-list"></datalist
+    ><!--สำหรับเก็บรายชื่อวัตถุดิบ เพื่อใช้แสดงในตอนสร้างเมนู-->
+    <datalist id="unit-list">
+      <option value="กิโลกรัม"></option>
+      <option value="กรัม"></option>
+      <option value="ช้อนโต๊ะ"></option>
+      <option value="ช้อนชา"></option>
+      <option value="ถ้วย"></option>
+      <option value="ลิตร"></option>
+      <option value="มิลลิลิตร"></option>
+    </datalist>
+    <nav class="main-nav">
+      <button onclick="switchView('view-home')">🏠</button>
+      <button onclick="switchView('view-ingredients')">🥩</button>
+      <button onclick="switchView('view-add-menu')">🪄</button>
+      <button onclick="switchView('view-edit-menu')">✏️</button>
+      <button onclick="switchView('view-calc')">🧑‍🍳</button>
+      <button onclick="switchView('view-backup')">💾</button>
+    </nav>
+    <div
+      id="view-home"
+      class="app-view active"
+      style="background-image: url(&quot;bg/home.png&quot;)"
+    >
+      <h2>หน้าหลัก</h2>
+      <div class="menu-grid">
+        <button onclick="switchView('view-ingredients')">
+          🥩จัดการวัตถุดิบ
+        </button>
+        <button onclick="switchView('view-add-menu')">🪄เพิ่มเมนูใหม่</button>
+        <button onclick="switchView('view-edit-menu')">✏️แก้ไขเมนูอาหาร</button>
+        <button onclick="switchView('view-calc')">🧑‍🍳เลือกเมนูเพื่อคำนวณ</button>
+        <button onclick="switchView('view-backup')">
+          💾นำเข้า/ส่งออกข้อมูล
+        </button>
+        <center style="padding-top: 1em; font-size: 0.6em">
+          <div>Copyright &copy;2026 Charin Nawaritloha</div>
+          <div>แปลงจากคำสั่งเป็น Code ด้วย Google Gemini Flash 3.5</div>
+          <div>แก้ไข Code เพิ่มเติม ด้วย Visual Studio Code 1.125</div>
+          <div>
+            ภาพประกอบจาก
+            <a href="https://www.pngbie.com/" target="_blank">pngbie.com</a>
+          </div>
+        </center>
+      </div>
     </div>
-    <div>ข้อมูลน้ำหนักเมื่อเทียบกับปริมาตร</div>
-    <div class="form-group">
-     <label style="width: 5em; text-align: right">ปริมาตร:</label>
-     <input type="number" id="ing-vol" step="any" />
-     <select id="ing-vol-unit">
-      <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
-      <option value="ช้อนชา">ช้อนชา</option>
-      <option value="ถ้วย">ถ้วย</option>
-      <option value="ลิตร">ลิตร</option>
-      <option value="มิลลิลิตร">มิลลิลิตร</option>
-     </select>
+    <div
+      id="view-ingredients"
+      class="app-view"
+      style="background-image: url(&quot;bg/carrot.png&quot;)"
+    >
+      <h2>จัดการวัตถุดิบ</h2>
+      <form
+        id="ingredient-form"
+        onsubmit="saveIngredient(event)"
+        onreset="resetIngredient(event)"
+      >
+        <input type="hidden" id="ing-id" value="" />
+        <div class="form-group">
+          <label>ชื่อวัตถุดิบ: </label>
+          <input type="text" id="ing-name" style="flex-grow: 1" required />
+        </div>
+        <div>ข้อมูลน้ำหนักเมื่อเทียบกับปริมาตร</div>
+        <div class="form-group">
+          <label style="width: 5em; text-align: right">ปริมาตร:</label>
+          <input type="number" id="ing-vol" step="any" />
+          <select id="ing-vol-unit">
+            <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
+            <option value="ช้อนชา">ช้อนชา</option>
+            <option value="ถ้วย">ถ้วย</option>
+            <option value="ลิตร">ลิตร</option>
+            <option value="มิลลิลิตร">มิลลิลิตร</option>
+          </select>
+        </div>
+        <div style="padding-left: 7em">↕</div>
+        <div class="form-group">
+          <label style="width: 5em; text-align: right">น้ำหนัก:</label>
+          <input type="number" id="ing-weight" step="any" />
+          <span class="unit-label">กรัม</span>
+        </div>
+        <button type="submit" class="submit-button" id="ing-submit">
+          เพิ่มวัตถุดิบ
+        </button>
+        <button type="reset">ยกเลิก</button>
+      </form>
+      <div class="scroll-container">
+        <table id="ing-table">
+          <thead>
+            <tr>
+              <th>ชื่อวัตถุดิบ</th>
+              <th>การแปลงหน่วย</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="ing-list"></tbody>
+        </table>
+      </div>
     </div>
-    <div style="padding-left: 7em">↕</div>
-    <div class="form-group">
-     <label style="width: 5em; text-align: right">น้ำหนัก:</label>
-     <input type="number" id="ing-weight" step="any" />
-     <span class="unit-label">กรัม</span>
+    <div
+      id="view-add-menu"
+      class="app-view"
+      style="background-image: url(&quot;bg/pot.png&quot;)"
+    >
+      <h2>เพิ่มเมนูอาหารใหม่</h2>
+      <div class="form-group">
+        <label for="menu-name">เมนู: </label>
+        <input type="text" id="menu-name" style="flex-grow: 1" required />
+      </div>
+      <div class="form-group">
+        <label for="menu-link">ลิงก์วิธีทำ: </label>
+        <input type="text" id="menu-link" style="flex-grow: 1" />
+      </div>
+      <div class="form-group">
+        <label for="menu-note">หมายเหตุ: </label>
+        <input type="text" id="menu-note" style="flex-grow: 1" />
+      </div>
+      <h3>ส่วนผสม</h3>
+      <div id="menu-ing-inputs" class="scroll-container"></div>
+      <button type="button" onclick="addIngredientRow('menu-ing-inputs')">
+        + เพิ่มวัตถุดิบในเมนู
+      </button>
+      <button type="button" onclick="saveMenu()" class="submit-button">
+        บันทึกเมนูอาหาร
+      </button>
     </div>
-    <button type="submit" class="submit-button" id="ing-submit">เพิ่มวัตถุดิบ</button>
-    <button type="reset">ยกเลิก</button>
-   </form>
-   <div class="scroll-container">
-    <table id="ing-table">
-     <thead>
-      <tr>
-       <th>ชื่อวัตถุดิบ</th>
-       <th>การแปลงหน่วย</th>
-       <th>จัดการ</th>
-      </tr>
-     </thead>
-     <tbody id="ing-list"></tbody>
-    </table>
-   </div>
-  </div>
-  <div id="view-add-menu" class="app-view" style="background-image: url('bg/pot.png');">
-   <h2>เพิ่มเมนูอาหารใหม่</h2>
-   <div class="form-group">
-    <label>เมนู: </label>
-    <input type="text" id="menu-name" style="flex-grow: 1" required />
-   </div>
-   <h3>ส่วนผสม</h3>
-   <div id="menu-ing-inputs" class="scroll-container"></div>
-   <button type="button" onclick="addIngredientRow('menu-ing-inputs')">+ เพิ่มวัตถุดิบในเมนู</button>
-   <button type="button" onclick="saveMenu()" class="submit-button">บันทึกเมนูอาหาร</button>
-  </div>
-  <div id="view-edit-menu" class="app-view" style="background-image: url('bg/pot.png');">
-   <h2>แก้ไขเมนูอาหาร</h2>
-   <div class="form-group">
-    <label>เมนู: </label>
-    <select
-     id="edit-menu-select"
-     style="flex-grow: 1"
-     onchange="loadMenuToEdit()"
-    ></select>
-   </div>
-   <div id="edit-menu-container" style="display: none">
-    <div class="form-group">
-     <label>ชื่อเมนู: </label>
-     <input type="text" id="edit-menu-name" style="flex-grow: 1" required />
+    <div
+      id="view-edit-menu"
+      class="app-view"
+      style="background-image: url(&quot;bg/pot.png&quot;)"
+    >
+      <h2>แก้ไขเมนูอาหาร</h2>
+      <div class="form-group">
+        <label>เมนู: </label>
+        <select
+          id="edit-menu-select"
+          style="flex-grow: 1"
+          onchange="loadMenuToEdit()"
+        ></select>
+      </div>
+      <div id="edit-menu-container" style="display: none">
+        <div class="form-group">
+          <label for="edit-menu-name">ชื่อเมนู: </label>
+          <input
+            type="text"
+            id="edit-menu-name"
+            style="flex-grow: 1"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="edit-menu-link">ลิงก์วิธีทำ: </label>
+          <input type="text" id="edit-menu-link" style="flex-grow: 1" />
+        </div>
+        <div class="form-group">
+          <label for="edit-menu-note">หมายเหตุ: </label>
+          <input type="text" id="edit-menu-note" style="flex-grow: 1" />
+        </div>
+        <h3>ส่วนผสม</h3>
+        <div id="edit-menu-ing-inputs" class="scroll-container"></div>
+        <button
+          type="button"
+          onclick="addIngredientRow('edit-menu-ing-inputs')"
+        >
+          + เพิ่มวัตถุดิบ
+        </button>
+        <div style="margin-top: 15px; display: flex; gap: 8px">
+          <button type="button" onclick="updateMenu()" class="submit-button">
+            บันทึกการแก้ไข
+          </button>
+          <button type="button" onclick="deleteMenu()" class="delete-button">
+            ลบเมนูอาหารนี้
+          </button>
+        </div>
+      </div>
     </div>
-    <h3>ส่วนผสม</h3>
-    <div id="edit-menu-ing-inputs" class="scroll-container"></div>
-    <button type="button" onclick="addIngredientRow('edit-menu-ing-inputs')">+ เพิ่มวัตถุดิบ</button>
-    <div style="margin-top: 15px; display: flex; gap: 8px">
-     <button type="button" onclick="updateMenu()" class="submit-button">บันทึกการแก้ไข</button>
-     <button type="button" onclick="deleteMenu()" class="delete-button">ลบเมนูอาหารนี้</button>
+    <div
+      id="view-calc"
+      class="app-view"
+      style="background-image: url(&quot;bg/home.png&quot;)"
+    >
+      <h2>คำนวณอัตราส่วนอาหาร</h2>
+      <div class="form-group">
+        <label>เมนู: </label>
+        <select
+          id="calc-menu-select"
+          style="flex-grow: 1"
+          onchange="loadMenuToCalculate()"
+        ></select>
+      </div>
+      <div id="calc-menu-link"></div>
+      <div id="calc-menu-note"></div>
+      <div style="background-color: rgba(253, 247, 215, 0.8)">
+        <span style="font-size: 0.8em"
+          ><strong>คำแนะนำ:</strong> ให้เปลี่ยนหน่วย ชั่ง-ตวง
+          ของแต่ละวัตถุดิบที่ต้องการใช้ก่อน
+          จากนั้นถึงเปลี่ยนตัวเลขเพื่อคำนวณอัตราส่วนใหม่
+          การเปลี่ยนหน่วยภายหลังอาจทำให้แอปโหลดต้องค่าเริ่มต้นใหม่</span
+        >
+      </div>
+      <div class="scroll-container form-group">
+        <table
+          id="calc-table"
+          style="background-color: rgba(255, 255, 255, 0.5)"
+        >
+          <thead>
+            <tr style="vertical-align: top">
+              <th style="width: 100%">วัตถุดิบ</th>
+              <th style="width: 5em">
+                จำนวน<br />
+                <span style="white-space: nowrap"
+                  >&#215;<input
+                    type="number"
+                    value="1"
+                    id="ingr-ratio"
+                    style="width: 3em"
+                    oninput="setCalculateRatio(event)"
+                    onfocus="this.select()"
+                /></span>
+              </th>
+              <th>
+                หน่วย
+                <select
+                  id="select-all-unit"
+                  onchange="handleAllUnitChange(event)"
+                >
+                  <option value="" selected="">↔️หน่วย</option>
+                  <option value="กิโลกรัม">กิโลกรัม</option>
+                  <option value="กรัม">กรัม</option>
+                  <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
+                  <option value="ช้อนชา">ช้อนชา</option>
+                  <option value="ถ้วย">ถ้วย</option>
+                  <option value="ลิตร">ลิตร</option>
+                  <option value="มิลลิลิตร">มิลลิลิตร</option>
+                </select>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="calc-list"></tbody>
+        </table>
+      </div>
     </div>
-   </div>
-  </div>
-  <div id="view-calc" class="app-view" style="background-image: url('bg/home.png');">
-   <h2>คำนวณอัตราส่วนอาหาร</h2>
-   <div class="form-group">
-    <label>เมนู: </label>
-    <select
-     id="calc-menu-select"
-     style="flex-grow: 1"
-     onchange="loadMenuToCalculate()"
-    ></select>    
-   </div>
-   <div style="background-color: rgba(253, 247, 215, 0.8);"><span style="font-size: 0.75em;"><strong>คำแนะนำ:</strong> ให้เปลี่ยนหน่วย ชั่ง-ตวง ของแต่ละวัตถุดิบที่ต้องการใช้ก่อน จากนั้นถึงเปลี่ยนตัวเลขเพื่อคำนวณอัตราส่วนใหม่ การเปลี่ยนหน่วยภายหลังอาจทำให้แอปโหลดต้องค่าเริ่มต้นใหม่</span></div>
-   <div class="scroll-container form-group">
-    <table id="calc-table" style="background-color: rgba(255, 255, 255, 0.5);">
-     <thead>
-      <tr style="vertical-align: top;">
-       <th style="width: 100%">วัตถุดิบ</th>
-       <th style="width: 4.5em">จำนวน</th>
-       <th>หน่วย 
-        <select id="select-all-unit" onchange="handleAllUnitChange(event)">
-         <option value="" selected="">↔️หน่วย</option>
-         <option value="กิโลกรัม">กิโลกรัม</option>
-         <option value="กรัม">กรัม</option>
-         <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
-         <option value="ช้อนชา">ช้อนชา</option>
-         <option value="ถ้วย">ถ้วย</option>
-         <option value="ลิตร">ลิตร</option>
-         <option value="มิลลิลิตร">มิลลิลิตร</option>
-        </select></th>
-      </tr>
-     </thead>
-     <tbody id="calc-list"></tbody>
-    </table>
-   </div>
-  </div>
-  <div id="view-backup" class="app-view">
-   <h2>สำรองและคืนข้อมูลทั้งหมด</h2>
-   <div class="backup-section">
-    <h3>ไฟล์ JSON (Local)</h3>
-    <button onclick="exportToJSON()">ดาวน์โหลดไฟล์สำรองข้อมูล (JSON)</button>
-    <div class="form-group ing-column" style="margin-top: 15px">
-     <label>อ่านไฟล์เพื่อคืนค่าข้อมูล:</label>
-     <input type="file" id="jsonFile" accept=".json" />
-     <blockquote style="font-size: 0.8em;">
-      * เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว
-      แอปจะทำการอ่าน และนำเข้าและแทนที่ข้อมูลปัจจุบันให้อัตโนมัติ
-     </blockquote>
+    <div id="view-backup" class="app-view">
+      <h2>สำรองและคืนข้อมูลทั้งหมด</h2>
+      <div class="backup-section">
+        <h3>ไฟล์ JSON (Local)</h3>
+        <button onclick="exportToJSON()">
+          ดาวน์โหลดไฟล์สำรองข้อมูล (JSON)
+        </button>
+        <div class="form-group ing-column" style="margin-top: 15px">
+          <label>อ่านไฟล์เพื่อคืนค่าข้อมูล:</label>
+          <input type="file" id="jsonFile" accept=".json" />
+          <blockquote style="font-size: 0.8em">
+            * เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว
+            แอปจะทำการอ่าน และนำเข้าและแทนที่ข้อมูลปัจจุบันให้อัตโนมัติ
+          </blockquote>
+        </div>
+        <div class="form-group ing-column" style="margin-top: 15px">
+          <label>วางข้อมูล JSON เพื่อคืนค่า:</label>
+          <textarea
+            id="restore-textarea"
+            rows="6"
+            placeholder="วางโค้ด JSON ที่นี่..."
+          ></textarea>
+        </div>
+        <button onclick="importFromJSON()" class="submit-button">
+          นำเข้าและแทนที่ข้อมูลปัจจุบัน
+        </button>
+      </div>
     </div>
-    <div class="form-group ing-column" style="margin-top: 15px">
-     <label>วางข้อมูล JSON เพื่อคืนค่า:</label>
-     <textarea
-      id="restore-textarea"
-      rows="6"
-      placeholder="วางโค้ด JSON ที่นี่..."
-     ></textarea>
-    </div>
-    <button onclick="importFromJSON()" class="submit-button">
-     นำเข้าและแทนที่ข้อมูลปัจจุบัน
-    </button>
-   </div>
-  </div>
-  <script src="app.js"></script>
-  <script>
-   /// to make web can run in offline mode
-   /// from: https://dev.to/naimur/building-offline-ready-webpage-with-service-worker-and-cache-storage-3dbk
-   async function registerServiceWorker() {
-    if ("serviceWorker" in navigator) {
-     try {
-      const registration = await navigator.serviceWorker.register("sw.js");
-      console.log("Service Worker registered with scope:", registration.scope);
-     } catch (error) {        
-      console.error("Service Worker registration failed:", error);
-      alert("ไม่สามารถลงทะเบียนเพื่อทำงานแบบ Offline ได้");
-     }
-    }
-   }
+    <script src="app.js"></script>
+    <script>
+      /// to make web can run in offline mode
+      /// from: https://dev.to/naimur/building-offline-ready-webpage-with-service-worker-and-cache-storage-3dbk
+      async function registerServiceWorker() {
+        if ("serviceWorker" in navigator) {
+          try {
+            const registration =
+              await navigator.serviceWorker.register("sw.js");
+            console.log(
+              "Service Worker registered with scope:",
+              registration.scope,
+            );
+          } catch (error) {
+            console.error("Service Worker registration failed:", error);
+            alert("ไม่สามารถลงทะเบียนเพื่อทำงานแบบ Offline ได้");
+          }
+        }
+        else {
+            alert("⚠️ไม่สามารถเชื่อมต่อกับ Service Worker");
+        }
+      }
 
-   registerServiceWorker();
-  </script>
- </body>
+      registerServiceWorker();
+    </script>
+  </body>
 </html>

@@ -33,7 +33,7 @@ body {
     padding: 8px; /* จำกัดการจัด Layout สูงสุดไม่เกิน 8px */
     border-radius: 4px;
     box-sizing: border-box;
-    min-height: 500px;
+    min-height: 800px;
     background-color: #fff;
     background-position: center;
     background-size: auto;
@@ -135,4 +135,30 @@ input[type="button" i], button {
 
 thead {
   background-color: aliceblue;
+}
+
+/* input text ใส่ชื่อวัตถุดิบ */
+.row-ing-name {
+    width: 9em;
+}
+
+/* input text ใส่ชื่อหน่วยวัด */
+.row-ing-unit {
+    width: 6em;
+}
+
+/* แสดง link ของคู่มือวิธีทำอาหาร */
+#calc-menu-link {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;     
+    padding-left: 0.2em;
+}
+
+/* แสดง note ของเมนูที่เลือก */
+#calc-menu-note {
+    text-shadow: 1px 1px rgb(211 211 211);
+    color: #e78a00;
 }
