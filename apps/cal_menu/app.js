@@ -26,12 +26,18 @@ function switchView(viewId) {
     document.getElementById(viewId).classList.add("active");
 
     if (viewId === "view-ingredients") {        
-        renderIngredients();
+        renderIngredients();        
+        return;
+    }
+
+    if (viewId === "view-add-menu") {        
+        document.getElementById("menu-ing-text").style.display = "none";
         return;
     }
 
     if (viewId === "view-edit-menu") {
         updateMenuDropdown("edit-menu-select");
+        document.getElementById("edit-menu-ing-text").style.display = "none";
         loadMenuToEdit();
         return;
     }
@@ -275,6 +281,9 @@ function saveMenu() {
  * ฟังก์ชันดึงข้อมูลเมนูอาหารเดิมขึ้นมาแสดงในส่วนฟอร์มแก้ไขเมนู
  */
 function loadMenuToEdit() {
+    // ทำการซ่อนส่วนของการนำเข้าวัตถุดิบจำนวนมากทุกครั้งที่เปลี่ยนเมนู
+    document.getElementById("edit-menu-ing-text").style.display = "none";
+
     const menuId = document.getElementById("edit-menu-select").value;
     const container = document.getElementById("edit-menu-container");    
     if (!menuId) {
@@ -862,4 +871,83 @@ function addIngredientIfAbsent(ingredientName) {
 
     // เรียงลำดับรายการตามชื่อวัตถุดิบทันทีหลังจากเพิ่มหรือแก้ไข (ข้อ 2 และ 7)
     sortByName(appData.ingredients);
+}
+
+
+// เมื่อกดปุ่ม [+ เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬] ให้แสดง div และล้างข้อมูล
+function openImportFromText(formId) {
+    const div = document.getElementById(formId);
+    div.style.display = "block";    
+    div.querySelector('textarea').value = "";        
+}
+
+// เมื่อกดปุ่ม [+ เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬] ให้แสดง div และล้างข้อมูล
+function closeImportFromText(formId) {
+    const div = document.getElementById(formId);
+    div.style.display = "none";    
+}
+
+// นำเข้าข้อมูล text และสร้างรายการวัตถุดิบ
+function importFromText(formId, menuIngInputsId) {
+    const div = document.getElementById(formId);
+    const textValue = div.querySelector('textarea').value;
+    const importData = convert(textValue);
+
+    // ซ่อน div ของเพิ่มวัตถุดิบด้วย text
+    div.style.display = "none";
+
+    if(importData.length == 0) {
+        alert("ไม่พบรายการที่สามารถนำเข้าข้อมูลได้");
+        return;
+    }
+
+    // สำหรับเพิ่มรายการวัตถุดิบ
+    const data = {name:"", displayVal:0, displayUnit:""};
+    for(let i=0; i<importData.length; ++i) {
+        let row = importData[i];
+        data.name = row[0];
+        data.displayVal = row[1];
+        data.displayUnit = row[2];
+        addIngredientRow(menuIngInputsId, data);
+    }
+
+    alert("ทำการเพิ่มรายการวัตถุดิบจำนวน " + importData.length + " รายการ เรียบร้อยแล้ว");    
+}
+
+
+/// ใช้แปลงข้อมูลส่วนผสมจาก Text เป็น array
+/*
+textInput = `
+เนื้อวัว,1,กิโลกรัม
+ไข่ไก่,4,ฟอง
+`;
+
+return [
+    ["เนื้อวัว", 1, "กิโลกรัม"],
+    ["ไข่ไก่", 4, "ฟอง"]
+];
+*/
+function convert(textInput) {
+    return textInput
+        .trim()
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => line !== "")
+        .map(line => line.split(/[,\t]/).map(v => v.trim()))
+        .filter(cols => cols.length === 3) // ต้องมี 3 คอลัมน์เท่านั้น
+        .map(([col1, col2, col3]) => {
+            const num = Number(col2);
+
+            // ต้องเป็น String, Number, String
+            if (
+                col1 === "" ||
+                col3 === "" ||
+                !Number.isFinite(num)
+            ) {
+                return null;
+            }
+
+            return [col1, num, col3];
+        })
+        .filter(row => row !== null);
 }

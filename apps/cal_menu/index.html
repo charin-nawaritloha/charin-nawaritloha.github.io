@@ -27,12 +27,13 @@
       <button onclick="switchView('view-calc')">🧑‍🍳</button>
       <button onclick="switchView('view-backup')">💾</button>
     </nav>
+    <div style="font-size: 0.6em; color:goldenrod">Version 1.2 (2026/06/22)</div>    
     <div
       id="view-home"
       class="app-view active"
       style="background-image: url(&quot;bg/home.png&quot;)"
-    >
-      <h2>หน้าหลัก</h2>
+    >        
+      <h2>ระบบคำนวณอัตราส่วนผสมอาหาร</h2>
       <div class="menu-grid">
         <button onclick="switchView('view-ingredients')">
           🥩จัดการวัตถุดิบ
@@ -126,9 +127,38 @@
       </div>
       <h3>ส่วนผสม</h3>
       <div id="menu-ing-inputs" class="scroll-container"></div>
-      <button type="button" onclick="addIngredientRow('menu-ing-inputs')">
-        + เพิ่มวัตถุดิบในเมนู
-      </button>
+      <div class="form-group">
+          <button
+            type="button"
+            onclick="addIngredientRow('menu-ing-inputs')"
+          >
+            + เพิ่มวัตถุดิบในเมนู🥩
+          </button>
+          <button
+            type="button"
+            onclick="openImportFromText('menu-ing-text')"
+            style="margin-left: 4px;"
+          >
+            + เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬
+          </button>
+        </div>      
+        <div id="menu-ing-text" style="background-color: rgba(253, 247, 215, 0.8); padding: 1em 4px; display: none;">
+          <div style="display: flex; flex-direction: row;">
+            <div style="font-size: 2em;">💡</div>
+            <div style="font-size: 1em;">
+              รูปแบบข้อมูล <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a> ใช้เครื่องหมาย <span style="color: blueviolet;">,</span> หรือ <span style="color: blueviolet;">[Tab]</span>
+              อย่างใดอย่างหนึ่ง เพื่อแบ่งข้อมูล เช่น
+              <span style="white-space: nowrap; color: brown; font-weight: bold;"><br>เนื้อวัว,1,กิโลกรัม<br>ไข่ไก่,4,ฟอง<br></span>
+              รายการละ 1 บรรทัด
+            </div>
+          </div>
+          <div>
+            <textarea placeholder="วางข้อมูลวัตถุดิบแบบ CSV ที่นี่..." style="height: 5em; width: 98%;"></textarea>
+          </div>
+          <div>
+            <button type="button" onclick="importFromText('menu-ing-text', 'menu-ing-inputs')" class="submit-button">นำเข้าวัตถุดิบ</button> <button type="button" onclick="closeImportFromText('menu-ing-text')">ยกเลิก</button>
+          </div>
+        </div>      
       <button type="button" onclick="saveMenu()" class="submit-button">
         บันทึกเมนูอาหาร
       </button>
@@ -167,12 +197,39 @@
         </div>
         <h3>ส่วนผสม</h3>
         <div id="edit-menu-ing-inputs" class="scroll-container"></div>
-        <button
-          type="button"
-          onclick="addIngredientRow('edit-menu-ing-inputs')"
-        >
-          + เพิ่มวัตถุดิบ
-        </button>
+        <div class="form-group">
+          <button
+            type="button"
+            onclick="addIngredientRow('edit-menu-ing-inputs')"
+          >
+            + เพิ่มวัตถุดิบ🥩
+          </button>
+          <button
+            type="button"
+            onclick="openImportFromText('edit-menu-ing-text')"
+            style="margin-left: 4px;"
+          >
+            + เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬
+          </button>
+        </div>
+        <div id="edit-menu-ing-text" style="background-color: rgba(253, 247, 215, 0.8); padding: 1em 4px; display: none;">
+          <div style="display: flex; flex-direction: row;">
+            <div style="font-size: 2em;">💡</div>
+            <div style="font-size: 1em;">
+              รูปแบบข้อมูล <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a> ใช้เครื่องหมาย <span style="color: blueviolet;">,</span> หรือ <span style="color: blueviolet;">[Tab]</span>
+              อย่างใดอย่างหนึ่ง เพื่อแบ่งข้อมูล เช่น
+              <span style="white-space: nowrap; color: brown; font-weight: bold;"><br>เนื้อวัว,1,กิโลกรัม<br>ไข่ไก่,4,ฟอง<br></span>
+              รายการละ 1 บรรทัด
+            </div>
+          </div>
+          <div>
+            <textarea placeholder="วางข้อมูลวัตถุดิบแบบ CSV ที่นี่..." style="height: 5em; width: 98%;"></textarea>
+          </div>
+          <div>
+            <button type="button" onclick="importFromText('edit-menu-ing-text', 'edit-menu-ing-inputs')" class="submit-button">นำเข้าวัตถุดิบ</button> <button type="button" onclick="closeImportFromText('edit-menu-ing-text')">ยกเลิก</button>
+          </div>
+        </div>
+
         <div style="margin-top: 15px; display: flex; gap: 8px">
           <button type="button" onclick="updateMenu()" class="submit-button">
             บันทึกการแก้ไข

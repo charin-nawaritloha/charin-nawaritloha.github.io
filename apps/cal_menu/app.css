@@ -5,7 +5,7 @@ body {
     padding: 8px; /* จำกัดการจัด Layout สูงสุดไม่เกิน 8px */
     box-sizing: border-box;
     background-color: #f5f5f5;
-    max-width: 450px; /* limit width of app */
+    max-width: 470px; /* limit width of app */
     margin: 0 auto; /* center elements */
 }
 

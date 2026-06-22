@@ -1,4 +1,4 @@
-const cacheName = "recipe-calculator-v1.1";
+const cacheName = "recipe-calculator-v1.2";
 const cacheUrls = [
   'index.html',
   'app.css',
