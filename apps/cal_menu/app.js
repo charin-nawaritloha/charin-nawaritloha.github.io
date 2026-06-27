@@ -70,7 +70,7 @@ function saveIngredient(event) {
   const weight =
     parseFloat(document.getElementById("ing-weight").value) || null;
 
-  const { saltPercent, sugarPercent } = calcNutritionPercent();
+  const {saltValues, sugarValues,  saltPercent, sugarPercent } = calcNutritionPercent();
 
   const ingData = {
     id: id || Date.now().toString(),
@@ -78,6 +78,8 @@ function saveIngredient(event) {
     vol,
     unit,
     weight,
+    saltValues,
+    sugarValues,
     saltPercent,
     sugarPercent,
   };
@@ -87,6 +89,7 @@ function saveIngredient(event) {
     const index = appData.ingredients.findIndex((item) => item.id === id);
     if (index !== -1) {
       if (appData.ingredients[index].name === ingData.name) {
+        // ใช้ชื่อเดิม ไม่ต้องตรวจชื่อซ้ำ
         appData.ingredients[index] = ingData;
       } else {
         // ตรวจสอบว่าชื่อที่เปลี่ยนไปซ้ำกับรายการอื่นหรือไม่
@@ -100,6 +103,8 @@ function saveIngredient(event) {
           );
           return;
         }
+        // ตรวจแล้วชื่อไม่ซ้ำ
+        appData.ingredients[index] = ingData;
       }
     } else {
       alert(
@@ -144,10 +149,13 @@ function editIngredient(id) {
   document.getElementById("ing-vol-unit").value = item.unit;
   document.getElementById("ing-weight").value = item.weight || "";
 
-  document.getElementById("ing-list-salt-min").value = item.saltPercent ?? "";
-  document.getElementById("ing-list-salt-max").value = item.saltPercent ?? "";
-  document.getElementById("ing-list-sugar-min").value = item.sugarPercent ?? "";
-  document.getElementById("ing-list-sugar-max").value = item.sugarPercent ?? "";
+  const saltValues = item.saltValues ?? ["", ""];
+  const sugarValues = item.sugarValues ?? ["", ""];
+
+  document.getElementById("ing-list-salt-min").value = saltValues[0];
+  document.getElementById("ing-list-salt-max").value = saltValues[1];
+  document.getElementById("ing-list-sugar-min").value = sugarValues[0];
+  document.getElementById("ing-list-sugar-max").value = sugarValues[1];
 
   document
     .getElementById("ingredient-form")
@@ -1366,7 +1374,12 @@ function calcNutritionPercent() {
   const saltPercent = salt.min !== null ? (salt.min + salt.max) / 2 : null;
   const sugarPercent = sugar.min !== null ? (sugar.min + sugar.max) / 2 : null;
 
-  return { saltPercent, sugarPercent };
+  return {
+    saltValues: [salt.min, salt.max],
+    sugarValues: [sugar.min, sugar.max],
+    saltPercent,
+    sugarPercent,
+  };
 }
 
 window.onload = function () {
