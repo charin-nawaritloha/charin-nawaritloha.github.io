@@ -1,0 +1,23 @@
+{
+  "name": "ถนัดตวง",
+  "short_name": "ถนัดตวง",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "แอปที่ใช้สำหรับบันทึกเมนูอาหารและวัตถุดิบ สามารถปรับอัตราส่วนผสมของวัตถุดิบเพิ่มลดตามอัตราส่วนที่ต้องการได้ หากใส่ข้อมูลเกลือและน้ำตาลในวัตถุดิบ จะสามารถคำนวณความเข้มข้นของเกลือและน้ำตาลต่อน้ำหนักของเมนูได้",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "application/json": [".json"]        
+      }
+    }
+  ]
+}

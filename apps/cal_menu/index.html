@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <title>ถนัดตวง</title>
+  <meta name="application-name" content="ถนัดตวง" />
+  <meta name="author" content="Charin Nawaritloha" />
+  <meta name="description" content="แอปสำหรับสร้างเมนูจากวัตถุดิบ สามารถปรับอัตราส่วน แปลงหน่วย" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="app.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Noto+Sans+Thai+Looped:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <datalist id="ingredient-list"></datalist><!--สำหรับเก็บรายชื่อวัตถุดิบ เพื่อใช้แสดงในตอนสร้างเมนู-->
+  <datalist id="unit-list">
+    <option value="กิโลกรัม"></option>
+    <option value="กรัม"></option>
+    <option value="ช้อนโต๊ะ"></option>
+    <option value="ช้อนชา"></option>
+    <option value="ถ้วย"></option>
+    <option value="ลิตร"></option>
+    <option value="มิลลิลิตร"></option>
+  </datalist>
+  <nav class="main-nav">
+    <button onclick="switchView('view-home')">🏠</button>
+    <button onclick="switchView('view-ingredients')">🥩</button>
+    <button onclick="switchView('view-edit-menu')">✏️</button>
+    <button onclick="switchView('view-calc')">🧑‍🍳</button>
+    <button onclick="switchView('view-backup')">💾</button>
+  </nav>
+  <div style="font-size: 0.6em; color: goldenrod">Version 1.3 (2026/06/27)</div>
+  <div id="view-home" class="app-view active" style="
+        background-image: url(&quot;bg/icon.png&quot;);
+        background-color: #fef3e2;
+      ">
+    <h2>ถนัดตวง</h2>
+    <div class="menu-grid">
+      <button onclick="switchView('view-ingredients')">
+        🥩จัดการวัตถุดิบ
+      </button>
+      <button onclick="switchView('view-edit-menu')">✏️แก้ไขเมนูอาหาร</button>
+      <button onclick="switchView('view-calc')">🧑‍🍳เลือกเมนูเพื่อคำนวณ</button>
+      <button onclick="switchView('view-backup')">
+        💾นำเข้า/ส่งออกข้อมูล
+      </button>
+      <center style="padding-top: 1em; font-size: 0.6em">
+        <div>Copyright &copy;2026 Charin Nawaritloha</div>
+        <div>แปลงจากคำสั่งเป็น Code ด้วย Google Gemini Flash 3.5</div>
+        <div>
+          แก้ไข Code เพิ่มเติม ด้วย Visual Studio Code 1.125 และ Claude.ai
+        </div>
+        <div>
+          ภาพประกอบจาก
+          <a href="https://www.pngbie.com/" target="_blank">pngbie.com</a>
+        </div>
+      </center>
+    </div>
+  </div>
+  <div id="view-ingredients" class="app-view" style="background-image: url(&quot;bg/carrot.png&quot;)">
+    <h2>จัดการวัตถุดิบ</h2>
+    <form id="ingredient-form" onsubmit="saveIngredient(event)" onreset="resetIngredient(event)">
+      <input type="hidden" id="ing-id" value="" />
+      <div class="form-group">
+        <label>ชื่อวัตถุดิบ: </label>
+        <input type="text" id="ing-name" style="flex-grow: 1" required />
+      </div>
+      <div style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px">
+        ข้อมูลน้ำหนักเมื่อเทียบกับปริมาตร
+      </div>
+      <div class="form-group">
+        <label style="width: 5em; text-align: right">ปริมาตร:</label>
+        <input type="number" id="ing-vol" step="any" />
+        <select id="ing-vol-unit">
+          <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
+          <option value="ช้อนชา">ช้อนชา</option>
+          <option value="ถ้วย">ถ้วย</option>
+          <option value="ลิตร">ลิตร</option>
+          <option value="มิลลิลิตร">มิลลิลิตร</option>
+        </select>
+      </div>
+      <div style="padding-left: 7em">↕</div>
+      <div class="form-group">
+        <label style="width: 5em; text-align: right">น้ำหนัก:</label>
+        <input type="number" id="ing-weight" step="any" />
+        <span class="unit-label">กรัม</span>
+      </div>
+
+      <div style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px">
+        ข้อมูลเกลือและน้ำตาลจากฉลาก
+      </div>
+
+      <div class="form-group">
+        <label style="width: 9em; text-align: right">แหล่งข้อมูล:</label>
+        <div>ส่วนประกอบสำคัญโดยประมาณ</div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label style="width: 9em; text-align: right">เกลือ:</label>
+          <input type="number" id="ing-list-salt-min" step="any" />
+          <span style="align-self: center">ถึง</span>
+          <input type="number" id="ing-list-salt-max" step="any" />
+          <span class="unit-label">%</span>
+        </div>
+        <div class="form-group">
+          <label style="width: 9em; text-align: right">น้ำตาล:</label>
+          <input type="number" id="ing-list-sugar-min" step="any" />
+          <span style="align-self: center">ถึง</span>
+          <input type="number" id="ing-list-sugar-max" step="any" />
+          <span class="unit-label">%</span>
+        </div>
+        <blockquote style="font-size: 0.8em">
+          * กรณีฉลากระบุค่าเดียว ให้กรอกช่องไหนก็ได้เพียงช่องเดียว<br>
+          * เพื่อใช้สื่อถึงรสชาติ ไม่ใช่ปริมาณโซเดียม
+        </blockquote>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="submit-button" id="ing-submit">
+          เพิ่มวัตถุดิบ
+        </button>
+        <button type="reset" style="margin-left: 0.5em;">ยกเลิก</button>
+      </div>
+    </form>
+    <div class="scroll-container">
+      <table id="ing-table">
+        <thead>
+          <tr>
+            <th>ชื่อวัตถุดิบ</th>
+            <th>การแปลงหน่วย</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="ing-list"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="view-edit-menu" class="app-view" style="background-image: url(&quot;bg/pot.png&quot;)">
+    <h2>แก้ไขเมนูอาหาร</h2>
+    <div class="form-group">
+      <label>เมนู: </label>
+      <select id="edit-menu-select" style="flex-grow: 1" onchange="loadMenuToEdit()"></select>
+      <button type="button" onclick="addNewMenu()">+ เมนูใหม่</button>
+    </div>
+    <div id="edit-menu-container" style="display: none">
+      <div class="form-group">
+        <label for="edit-menu-name">ชื่อเมนู: </label>
+        <input type="text" id="edit-menu-name" style="flex-grow: 1" required />
+      </div>
+      <div class="form-group">
+        <label for="edit-menu-link">ลิงก์วิธีทำ: </label>
+        <input type="text" id="edit-menu-link" style="flex-grow: 1" />
+      </div>
+      <div class="form-group">
+        <label for="edit-menu-note">หมายเหตุ: </label>
+        <input type="text" id="edit-menu-note" style="flex-grow: 1" />
+      </div>
+      <!-- ส่วนแสดงผลการคำนวณเกลือและน้ำตาล -->
+      <div style="background-color: rgba(253, 247, 215, 0.8)">
+        <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(1)" style="margin: 0.5em;" />
+          <ul id="salt-sugar-cal-note1">
+            <li>
+              โปรแกรมจะคำนวณปริมาณเกลือและน้ำตาลเป็น % ของน้ำหนักวัตถุดิบทั้งหมด
+            </li>
+            <li>
+              หากวัตถุดิบไหนไม่ต้องการนำมาคำนวณน้ำหนักรวมด้วย ให้นำเครื่องหมาย ✅ ออกไป
+            </li>
+            <li>
+              หากวัตถุดิบตัวใดที่ไม่สามารถแปลงหน่วยเป็นน้ำหนักได้ จะข้ามรายการดังกล่าวไป
+            </li>
+            <li>อัตราส่วน (เกลือ : น้ำตาล) ในอาหาร🍖
+              <ul>
+                <li>สูตรกลมกล่อม คือ 1 : 1 ถึง 1 : 1.5</li>
+                <li>สูตรหวานนำ คือ 1 : 2</li>
+                <li>ไม่ว่าสูตรนั้นจะใส่น้ำตาลมากแค่ไหน ห้ามเพิ่มปริมาณเกลือเกินเกณฑ์ 1% ถึง 1.5% ของน้ำหนักเนื้อสัตว์ เพราะปริมาณโซเดียมในเนื้อที่สูงเกินไป จะทำให้เนื้อสูญเสียน้ำจากการออสโมซิส (Osmosis) ส่งผลให้เนื้อแห้งกระด้างเมื่อนำไปปรุงสุก</li>
+                <li>หากใช้อัตราส่วนน้ำตาลสูงกว่า 1 : 2 (เช่น น้ำตาลมากกว่า 20 กรัมต่อเนื้อ 1 กิโลกรัม) น้ำตาลจะไปดึงน้ำออกจากเซลล์เนื้อสัตว์แทนเกลือ ทำให้เนื้อเหนียว และเมื่อนำไปย่างหรือทอด น้ำตาลที่ผิวจะเกิดปฏิกิริยาไหม้เกรียม (Caramelization และ Maillard Reaction) ก่อนที่ข้างในเนื้อจะสุก</li>
+              </ul>
+            </li>
+            <li>เครื่องดืม🧋
+              <ul>
+                <li>ค่าโดยประมาณ เกลือ 0.3% ถึง 0.5% เป็นรสชาติเค็มที่เหมาะสมในการตัดรสเปรี้ยวและช่วยขับความหวานให้เด่นชัดขึ้น (Flavor Enhancement)</li>
+                <li>ค่าโดยประมาณ น้ำตาล 5% → "รู้สึกหวาน🤔" 10% → "หวาน☺️" 15% → "หวานมาก🤯"</li>
+                <li>หากอุณหภูมิที่เย็นจัด หรือการมีความซ่า (Carbonation) ความเปรี้ยว (Acidity) ของกรดในเครื่องดื่ม จะมีฤทธิ์บดบังรสหวาน (Taste Masking Effects) ทำให้ร่างกายรับรู้รสหวานได้น้อยลงกว่าความเป็นจริง</li>
+              </ul>
+            </li>
+          </ul>
+        </span>
+      </div>
+      <div id="edit-menu-salt-sugar-section">
+        <h4 style="margin: 0 0 0.5em 0;">การคำนวณเกลือและน้ำตาล</h4>
+        <ul id="edit-menu-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em;">
+          <li>เกลือ: - %</li>
+          <li>น้ำตาล: - %</li>
+          <li>วัตถุดิบที่ใช้คำนวณ: 0 รายการ</li>
+        </ul>
+      </div>
+      <h3>ส่วนผสม</h3>
+      <div id="edit-menu-ing-inputs" class="scroll-container"></div>
+      <div class="form-group">
+        <button type="button" onclick="addIngredientRow('edit-menu-ing-inputs')">
+          + เพิ่มวัตถุดิบ🥩
+        </button>
+        <button type="button" onclick="openImportFromText('edit-menu-ing-text')" style="margin-left: 4px">
+          + เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬
+        </button>
+      </div>
+      <div id="edit-menu-ing-text" style="
+            background-color: rgba(253, 247, 215, 0.8);
+            padding: 1em 4px;
+            display: none;
+          ">
+        <div style="display: flex; flex-direction: row">
+          <div style="font-size: 2em">💡</div>
+          <div style="font-size: 0.85em">
+            รูปแบบข้อมูล
+            <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a>
+            ใช้เครื่องหมาย <span style="color: blueviolet">,</span> หรือ
+            <span style="color: blueviolet">[Tab]</span>
+            อย่างใดอย่างหนึ่ง เพื่อแบ่งข้อมูล เช่น
+            <span style="white-space: nowrap; color: brown; font-weight: bold"><br />เนื้อวัว,1,กิโลกรัม<br />ไข่ไก่,4,ฟอง<br /></span>
+            รายการละ 1 บรรทัด
+          </div>
+        </div>
+        <div>
+          <textarea placeholder="วางข้อมูลวัตถุดิบแบบ CSV ที่นี่..." style="height: 5em; width: 98%"></textarea>
+        </div>
+        <div>
+          <button type="button" onclick="
+                importFromText('edit-menu-ing-text', 'edit-menu-ing-inputs')
+              " class="submit-button">
+            นำเข้าวัตถุดิบ
+          </button>
+          <button type="button" onclick="closeImportFromText('edit-menu-ing-text')">
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 15px; display: flex; gap: 8px">
+        <button type="button" onclick="updateMenu()" class="submit-button">
+          📥 บันทึกการแก้ไข
+        </button>
+        <button type="button" onclick="deleteMenu()" class="delete-button">
+          🗑️ ลบเมนูอาหารนี้
+        </button>
+        <button type="button" onclick="duplicateMenu()" class="submit-button" style="margin-left: 2em;">
+          📚 สำเนาเมนู 
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="view-calc" class="app-view" style="background-image: url(&quot;bg/home.png&quot;)">
+    <h2>คำนวณอัตราส่วนอาหาร</h2>
+    <div class="form-group">
+      <label for="calc-menu-select">เมนู: </label>
+      <select id="calc-menu-select" style="flex-grow: 1" onchange="loadMenuToCalculate()"></select>
+    </div>
+    <div id="calc-menu-link"></div>
+    <div id="calc-menu-note"></div>
+    <div id="calc-menu-instruction" style="display: none">
+      <div style="background-color: rgba(253, 247, 215, 0.8); padding: 0.5em; margin-bottom: 0.5em;">
+        <span style="font-size: 0.8em"><strong>คำแนะนำ:</strong> ให้เปลี่ยนหน่วย ชั่ง-ตวง
+          ของแต่ละวัตถุดิบที่ต้องการใช้ก่อน
+          จากนั้นถึงเปลี่ยนตัวเลขเพื่อคำนวณอัตราส่วนใหม่
+          การเปลี่ยนหน่วยภายหลังอาจทำให้แอปโหลดต้องค่าเริ่มต้นใหม่</span>
+      </div>
+      <div class="form-group">
+        <label for="calc-view">มุมมอง: </label>
+        <select id="calc-view" style="flex-grow: 1" onchange="changeViewToCalculate()">
+          <option>ปกติ</option>
+          <option>เกลือและน้ำตาล</option>
+        </select>
+      </div>
+      <div id="calc-salt-sugar">
+        <div style="background-color: rgba(253, 247, 215, 0.8)">
+          <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(2)" style="margin: 0.5em;" />
+            <ul id="salt-sugar-cal-note2">
+              <li>
+                โปรแกรมจะคำนวณปริมาณเกลือและน้ำตาลเป็น % ของน้ำหนักวัตถุดิบทั้งหมด
+              </li>
+              <li>
+                หากวัตถุดิบไหนไม่ต้องการนำมาคำนวณน้ำหนักรวมด้วย ให้นำเครื่องหมาย ✅ ออกไป
+              </li>
+              <li>
+                หากวัตถุดิบตัวใดที่ไม่สามารถแปลงหน่วยเป็นน้ำหนักได้ จะข้ามรายการดังกล่าวไป
+              </li>
+              <li>อัตราส่วน (เกลือ : น้ำตาล) ในอาหาร🍖
+                <ul>
+                  <li>สูตรกลมกล่อม คือ 1 : 1 ถึง 1 : 1.5</li>
+                  <li>สูตรหวานนำ คือ 1 : 2</li>
+                  <li>ไม่ว่าสูตรนั้นจะใส่น้ำตาลมากแค่ไหน ห้ามเพิ่มปริมาณเกลือเกินเกณฑ์ 1% - 1.5% ของน้ำหนักเนื้อสัตว์ เพราะปริมาณโซเดียมในเนื้อที่สูงเกินไป จะทำให้เนื้อสูญเสียน้ำจากการออสโมซิส (Osmosis) ส่งผลให้เนื้อแห้งกระด้างเมื่อนำไปปรุงสุก</li>
+                  <li>หากใช้อัตราส่วนน้ำตาลสูงกว่า 1 : 2 (เช่น น้ำตาลมากกว่า 20 กรัมต่อเนื้อ 1 กิโลกรัม) น้ำตาลจะไปดึงน้ำออกจากเซลล์เนื้อสัตว์แทนเกลือ ทำให้เนื้อเหนียว และเมื่อนำไปย่างหรือทอด น้ำตาลที่ผิวจะเกิดปฏิกิริยาไหม้เกรียม (Caramelization และ Maillard Reaction) ก่อนที่ข้างในเนื้อจะสุก</li>
+                </ul>
+              </li>
+              <li>เครื่องดืม🧋
+                <ul>
+                  <li>ค่าโดยประมาณ เกลือ 0.3% ถึง 0.5% เป็นรสชาติเค็มที่เหมาะสมในการตัดรสเปรี้ยวและช่วยขับความหวานให้เด่นชัดขึ้น (Flavor Enhancement)</li>
+                  <li>ค่าโดยประมาณ น้ำตาล 5% → "รู้สึกหวาน🤔" 10% → "หวาน☺️" 15% → "หวานมาก🤯"</li>
+                  <li>หากอุณหภูมิที่เย็นจัด หรือการมีความซ่า (Carbonation) ความเปรี้ยว (Acidity) ของกรดในเครื่องดื่ม จะมีฤทธิ์บดบังรสหวาน (Taste Masking Effects) ทำให้ร่างกายรับรู้รสหวานได้น้อยลงกว่าความเป็นจริง</li>
+                </ul>
+              </li>
+            </ul>
+          </span>
+        </div>
+        <div>
+          <ul id="calc-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em;">
+            <li>วัตถุดิบที่ใช้คำนวณ: xx รายการ หนักรวม xx [หน่วยน้ำหนัก]</li>
+            <li>เกลือ: xx %, น้ำหนักรวม xx [หน่วยน้ำหนัก]</li>
+            <li>น้ำตาล: xx %, น้ำหนักรวม xx [หน่วยน้ำหนัก]</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-container form-group">
+      <table id="calc-table" style="background-color: rgba(255, 255, 255, 0.5)">
+        <thead>
+          <tr style="vertical-align: top">
+            <th>
+              <input type="checkbox" id="toggle-cal-include" onclick="toggleCalInclude()" class="cal-include" />
+            </th>
+            <th style="width: 100%">วัตถุดิบ</th>
+            <th style="width: 5em">
+              จำนวน<br />
+              <span style="white-space: nowrap">&#215;<input type="number" value="1" id="ingr-ratio" style="width: 3em" oninput="setCalculateRatio(event)" onfocus="this.select()" /></span>
+            </th>
+            <th>
+              หน่วย
+              <select id="select-all-unit" onchange="handleAllUnitChange(event)">
+                <option value="" selected="">↔️หน่วย</option>
+                <option value="กิโลกรัม">กิโลกรัม</option>
+                <option value="กรัม">กรัม</option>
+                <option value="ช้อนโต๊ะ">ช้อนโต๊ะ</option>
+                <option value="ช้อนชา">ช้อนชา</option>
+                <option value="ถ้วย">ถ้วย</option>
+                <option value="ลิตร">ลิตร</option>
+                <option value="มิลลิลิตร">มิลลิลิตร</option>
+              </select>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="calc-list"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="view-backup" class="app-view">
+    <h2>สำรองและคืนข้อมูลทั้งหมด</h2>
+    <div class="backup-section">
+      <h3>ไฟล์ JSON (Local)</h3>
+      <div class="form-group"><select id="export-data-type">
+          <option value="">-- ข้อมูลทั้งหมด --</option>
+        </select>
+        <button onclick="exportToJSON()">
+          ดาวน์โหลดไฟล์สำรองข้อมูล (JSON)
+        </button>
+      </div>
+      <div class="form-group ing-column" style="margin-top: 15px">
+        <h3>อ่านไฟล์เพื่อคืนค่าข้อมูล:</h3>
+        <div class="ing-row" style="padding-left: 1em;">
+          <label for="import-from-file">วิธีนำเข้า</label>
+          <select id="import-from-file">
+            <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
+            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด (โปรดสำรองข้อมูลเดิมก่อนทำ)</option>
+          </select>
+        </div>
+        <input type="file" id="jsonFile" accept=".json" style="margin: 1em;" />
+        <blockquote style="font-size: 0.8em">
+          * เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว แอปจะทำการอ่าน และนำเข้าให้อัตโนมัติ
+        </blockquote>
+      </div>
+      <h3>วางข้อมูล JSON เพื่อคืนค่า:</h3>
+      <div class="form-group ing-column" style="margin-top: 15px">
+        <textarea id="restore-textarea" rows="6" placeholder="วางโค้ด JSON ที่นี่..."></textarea>
+        <div class="ing-row" style="margin-top: 3px;">
+          <label for="import-from-textarea">วิธีนำเข้า</label>
+          <select id="import-from-textarea">
+            <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
+            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด (โปรดสำรองข้อมูลเดิมก่อนทำ)</option>
+          </select>
+          <button onclick="importFromJSON()" class="submit-button" style="margin-top: 3px;">นำเข้าข้อมูล</button>
+        </div>
+      </div>
+    </div>
+    <div style="background-image: url('bg/food1.png'); width: 100%; height: 450px;"></div>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    /// to make web can run in offline mode
+    /// from: https://dev.to/naimur/building-offline-ready-webpage-with-service-worker-and-cache-storage-3dbk
+    async function registerServiceWorker() {
+      if ("serviceWorker" in navigator) {
+        try {
+          const registration =
+            await navigator.serviceWorker.register("sw.js");
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope,
+          );
+        } catch (error) {
+          console.error("Service Worker registration failed:", error);
+          alert("ไม่สามารถลงทะเบียนเพื่อทำงานแบบ Offline ได้");
+        }
+      } else {
+        alert("⚠️ไม่สามารถเชื่อมต่อกับ Service Worker");
+      }
+    }
+
+    registerServiceWorker();
+  </script>
+</body>
+
+</html>
