@@ -1,3 +1,15 @@
+/// สำหรับใช้ตรวจสอบ version ของ App ว่า version ตรงกับ version.js บนเซิร์ฟเวอร์หรือไม่
+/// เมื่อมีการ update version ใหม่ ให้แก้ไข
+/// 1. เลข version แก้ 3 จุด version.json app.js และ sw.js
+/// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
+/// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
+const CURRENT_APP_VERSION = "1.3.1"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_DATE = "2026/06/28";
+const VERSION_CHECK_STORAGE_KEY = "lastVersionCheckTime";
+const CHECK_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000; // 1 สัปดาห์ ปรับเลขได้ตามต้องการ
+const topPage = document.querySelector("#show-version");
+
+
 /**
  * การประกาศโครงสร้างตัวแปรหลักสำหรับเก็บข้อมูลของระบบ
  */
@@ -15,10 +27,89 @@ const VOL_TO_ML = {
   ถ้วย: 240, // 1 US legal cup = 240 ml
 };
 
+// ดึง version.json จาก network ตรง ไม่ผ่าน cache
+async function fetchRemoteAppVersion() {
+  let data = {version: "", release:"", size:"", info:""}; // โครงสร้างใน version.json
+  const response = await fetch('version.json', { cache: 'no-store' });
+
+  if (!response.ok) {
+    throw new Error("ไม่สามารถดึงไฟล์ version.json ได้");
+  }
+  
+  const result = await response.json();
+  data.version = result.version;
+  data.release = result.release;
+  data.size = result.size;
+  data.info = result.info;  
+  return data;
+}
+
+// เปรียบเทียบ version แบบ semantic (major.minor.patch)
+function isNewerVersion(remote, current) {
+  const remoteParts = remote.split('.').map(Number);
+  const currentParts = current.split('.').map(Number);
+  for (let i = 0; i < Math.max(remoteParts.length, currentParts.length); i++) {
+    const r = remoteParts[i] || 0;
+    const c = currentParts[i] || 0;
+    if (r > c) return true;
+    if (r < c) return false;
+  }
+  return false;
+}
+
+// ฟังก์ชันหลักสำหรับตรวจสอบ version
+async function checkForAppUpdate(isManualCheck = false) {
+  try {
+    const remoteVersion = await fetchRemoteAppVersion();
+    localStorage.setItem(VERSION_CHECK_STORAGE_KEY, Date.now().toString());
+
+    if (isNewerVersion(remoteVersion.version, CURRENT_APP_VERSION)) {
+      showUpdateAppDialog(remoteVersion);
+    } else if (isManualCheck) {
+      alert("ระบบเป็นเวอร์ชันล่าสุดอยู่แล้ว👍 (v" + CURRENT_APP_VERSION + ")");
+    }
+  } catch (error) {
+    console.error("ตรวจสอบ version ล้มเหลว:", error);
+    if (isManualCheck) {
+      alert("🥲 ขออภัย ไม่สามารถตรวจสอบเวอร์ชันได้ในขณะนี้");
+    }
+  }
+}
+
+// แสดง dialog ถามผู้ใช้ว่าต้องการอัปเดตหรือไม่
+function showUpdateAppDialog(newVersion) {
+  const confirmed = confirm(
+    `❓ พบเวอร์ชันใหม่ ต้องการอัปเดตหรือไม่\n 🔸Version: ${newVersion.version}\n 🔸วันที่: ${newVersion.release}\n 🔸ขนาดแอป: ${newVersion.size}\n 🔸Note: ${newVersion.info}`,
+  );
+
+  if (confirmed) performUpdateApp();
+}
+
+// สั่งให้ browser โหลด service worker ใหม่ แล้ว reload หน้า
+async function performUpdateApp() {
+  const registration = await navigator.serviceWorker.getRegistration();
+  if (registration) {
+    await registration.update();
+  }
+  alert("⚠️ ทำการลงทะเบียน Version ใหม่แล้ว หากแอปไม่เปลี่ยนแปลงแนะนำให้ปิดแอป(ปัดแอปออกจาก App Switcher) แล้วเปิดแอปใหม่");
+  window.location.reload();
+}
+
+// ตรวจสอบอัตโนมัติเมื่อแอปเปิดขึ้นมา ถ้าครบรอบเวลาที่กำหนด
+function checkForUpdateOnSchedule() {
+  const lastCheck = parseInt(localStorage.getItem(VERSION_CHECK_STORAGE_KEY) || "0", 10);
+  const now = Date.now();
+  if (now - lastCheck >= CHECK_INTERVAL_MS) {
+    checkForAppUpdate(false);
+  }
+}
+
 /**
  * ฟังก์ชันสลับการแสดงผลของหน้าจอแอปพลิเคชัน
  */
 function switchView(viewId) {
+  topPage.scrollTo(0,0,{ behavior: "smooth" });
+
   const views = document.querySelectorAll(".app-view");
   for (let i = 0; i < views.length; i++) {
     views[i].classList.remove("active");
@@ -54,7 +145,6 @@ function switchView(viewId) {
  * ฟังก์ชันจัดเรียงอาร์เรย์ตามชื่อ โดยรองรับภาษาไทยและภาษาอังกฤษตามหลักพจนานุกรม (ข้อ 7)
  */
 function sortByName(array) {
-  // console.log(array);
   return array.sort((a, b) => a.name.localeCompare(b.name, "th"));
 }
 
@@ -94,24 +184,16 @@ function saveIngredient(event) {
       } else {
         // ตรวจสอบว่าชื่อที่เปลี่ยนไปซ้ำกับรายการอื่นหรือไม่
         // ตรวจสอบชื่อเฉพาะรายการที่เป็น id อื่น ๆ
-        const matchSameName = appData.ingredients.filter((item) =>
-          item.id === id ? false : item.name === name,
-        );
+        const matchSameName = appData.ingredients.filter((item) => (item.id === id ? false : item.name === name));
         if (matchSameName.length > 0) {
-          alert(
-            `❌ เกิดความผิดพลาด ชื่อวัตถุดิบที่เปลี่ยน [${name}] ซ้ำกับรายการอื่น\n`,
-          );
+          alert(`❌ ไม่สามารถบันทึกได้เนื่องจากชื่อวัตถุดิบ [${name}] ซ้ำกับรายการอื่น`);
           return;
         }
         // ตรวจแล้วชื่อไม่ซ้ำ
         appData.ingredients[index] = ingData;
       }
     } else {
-      alert(
-        "❌ เกิดความผิดพลาด ไม่พบ id ของรายการวัตถุดิบที่บันทึก\n" +
-          "id: " +
-          id,
-      );
+      alert("❌ เกิดความผิดพลาด ไม่พบ id ของรายการวัตถุดิบที่บันทึก\nid: " + id);
       return;
     }
   } else {
@@ -120,9 +202,7 @@ function saveIngredient(event) {
       (item) => item.name === name,
     );
     if (matchSameName.length > 0) {
-      alert(
-        `❌ เกิดความผิดพลาด ชื่อวัตถุดิบที่ระบุ [${name}] ซ้ำกับรายการอื่น\n`,
-      );
+      alert(`❌ ไม่สามารถบันทึกได้เนื่องจากชื่อวัตถุดิบ [${name}] ซ้ำกับรายการอื่น`);
       return;
     }
 
@@ -157,9 +237,7 @@ function editIngredient(id) {
   document.getElementById("ing-list-sugar-min").value = sugarValues[0];
   document.getElementById("ing-list-sugar-max").value = sugarValues[1];
 
-  document
-    .getElementById("ingredient-form")
-    .scrollIntoView({ behavior: "smooth" });
+  topPage.scrollIntoView({ behavior: "smooth" });
 
   document.getElementById("ing-submit").innerText = "บันทึกการแก้ไข";
 }
@@ -168,12 +246,7 @@ function editIngredient(id) {
  * ฟังก์ชันลบข้อมูลวัตถุดิบออกจากระบบ (ข้อ 1)
  */
 function deleteIngredient(id) {
-  if (
-    !confirm(
-      "คุณต้องการลบวัตถุดิบนี้ใช่หรือไม่? การลบจะไม่ส่งผลต่อเมนูอาหารที่เคยบันทึกไว้แล้ว",
-    )
-  )
-    return;
+  if (!confirm("❓ คุณต้องการลบวัตถุดิบนี้ใช่หรือไม่? การลบจะไม่ส่งผลต่อเมนูอาหารที่เคยบันทึกไว้แล้ว")) return;
   appData.ingredients = appData.ingredients.filter((ing) => ing.id !== id);
   saveToStorage();
   renderIngredients();
@@ -216,7 +289,7 @@ function renderIngredients() {
 }
 
 /**
- * ฟังก์ชันเพิ่มแถวเลือกวัตถุดิบแบบ Dynamic พร้อมปุ่มเลื่อนลำดับ ขึ้น/ลง (ข้อ 5)
+ * ฟังก์ชันเพิ่มแถวเลือกวัตถุดิบแบบ Dynamic พร้อมปุ่มเลื่อนลำดับ ขึ้น/ลง
  */
 function addIngredientRow(containerId, data = null) {
   const targetId = containerId || "menu-ing-inputs";
@@ -251,7 +324,7 @@ function addIngredientRow(containerId, data = null) {
 }
 
 /**
- * ฟังก์ชันสำหรับขยับย้ายแถวสลับลำดับวัตถุดิบ ขึ้น หรือ ลง (ข้อ 5)
+ * ฟังก์ชันสำหรับขยับย้ายแถวสลับลำดับวัตถุดิบ ขึ้น หรือ ลง
  */
 function moveRow(button, direction) {
   const row = button.parentElement;
@@ -329,14 +402,8 @@ function recalculateSaltSugarInEditMenu() {
     usedCount++;
 
     const meta = appData.ingredients.find((m) => m.name === ingName);
-    const saltPercent =
-      meta && meta.saltPercent !== null && meta.saltPercent !== undefined
-        ? meta.saltPercent
-        : 0;
-    const sugarPercent =
-      meta && meta.sugarPercent !== null && meta.sugarPercent !== undefined
-        ? meta.sugarPercent
-        : 0;
+    const saltPercent = (meta && (meta.saltPercent !== null) && (meta.saltPercent !== undefined)) ? meta.saltPercent : 0;
+    const sugarPercent = (meta && (meta.sugarPercent !== null) && (meta.sugarPercent !== undefined)) ? meta.sugarPercent : 0;
 
     saltWeight += (grams * saltPercent) / 100;
     sugarWeight += (grams * sugarPercent) / 100;
@@ -491,7 +558,9 @@ function updateMenu() {
   saveToStorage();
   alert("✅ แก้ไขข้อมูลเมนูเรียบร้อยแล้ว");
   document.getElementById("edit-menu-select").value = "";
+  updateMenuDropdown("edit-menu-select");
   loadMenuToEdit();
+  topPage.scrollIntoView({ behavior: "smooth" });
 }
 
 /// สำเนาเมนู โดยจะต่อชื่อเมนูใหม่ด้วย (Copy ##)
@@ -530,7 +599,7 @@ function duplicateMenu() {
 }
 
 /**
- * ฟังก์ชันลบเมนูอาหารออกจากระบบ (ข้อ 3)
+ * ฟังก์ชันลบเมนูอาหารออกจากระบบ
  */
 function deleteMenu() {
   const menuId = document.getElementById("edit-menu-select").value;
@@ -820,47 +889,37 @@ function loadMenuToCalculate() {
     let unitOptions = "";
     if (canConvert) {
       unitOptions = `
-                <option value="กิโลกรัม" ${ing.displayUnit === "กิโลกรัม" ? "selected" : ""}>กิโลกรัม</option>
-                <option value="กรัม" ${ing.displayUnit === "กรัม" ? "selected" : ""}>กรัม</option>
-                <option value="ช้อนโต๊ะ" ${ing.displayUnit === "ช้อนโต๊ะ" ? "selected" : ""}>ช้อนโต๊ะ</option>
-                <option value="ช้อนชา" ${ing.displayUnit === "ช้อนชา" ? "selected" : ""}>ช้อนชา</option>
-                <option value="ถ้วย" ${ing.displayUnit === "ถ้วย" ? "selected" : ""}>ถ้วย</option>
-                <option value="ลิตร" ${ing.displayUnit === "ลิตร" ? "selected" : ""}>ลิตร</option>
-                <option value="มิลลิลิตร" ${ing.displayUnit === "มิลลิลิตร" ? "selected" : ""}>มิลลิลิตร</option>
-            `;
+        <option value="กิโลกรัม" ${ing.displayUnit === "กิโลกรัม" ? "selected" : ""}>กิโลกรัม</option>
+        <option value="กรัม" ${ing.displayUnit === "กรัม" ? "selected" : ""}>กรัม</option>
+        <option value="ช้อนโต๊ะ" ${ing.displayUnit === "ช้อนโต๊ะ" ? "selected" : ""}>ช้อนโต๊ะ</option>
+        <option value="ช้อนชา" ${ing.displayUnit === "ช้อนชา" ? "selected" : ""}>ช้อนชา</option>
+        <option value="ถ้วย" ${ing.displayUnit === "ถ้วย" ? "selected" : ""}>ถ้วย</option>
+        <option value="ลิตร" ${ing.displayUnit === "ลิตร" ? "selected" : ""}>ลิตร</option>
+        <option value="มิลลิลิตร" ${ing.displayUnit === "มิลลิลิตร" ? "selected" : ""}>มิลลิลิตร</option>`;
     } else {
       if (ing.calcType === "weight") {
         unitOptions = `
-                    <option value="กิโลกรัม" ${ing.displayUnit === "กิโลกรัม" ? "selected" : ""}>กิโลกรัม</option>
-                    <option value="กรัม" ${ing.displayUnit === "กรัม" ? "selected" : ""}>กรัม</option>
-                `;
+          <option value="กิโลกรัม" ${ing.displayUnit === "กิโลกรัม" ? "selected" : ""}>กิโลกรัม</option>
+          <option value="กรัม" ${ing.displayUnit === "กรัม" ? "selected" : ""}>กรัม</option>`;
       } else if (ing.calcType === "volume") {
         unitOptions = `
-                <option value="ช้อนโต๊ะ" ${ing.displayUnit === "ช้อนโต๊ะ" ? "selected" : ""}>ช้อนโต๊ะ</option>
-                <option value="ช้อนชา" ${ing.displayUnit === "ช้อนชา" ? "selected" : ""}>ช้อนชา</option>
-                <option value="ถ้วย" ${ing.displayUnit === "ถ้วย" ? "selected" : ""}>ถ้วย</option>
-                <option value="ลิตร" ${ing.displayUnit === "ลิตร" ? "selected" : ""}>ลิตร</option>
-                <option value="มิลลิลิตร" ${ing.displayUnit === "มิลลิลิตร" ? "selected" : ""}>มิลลิลิตร</option>
-            `;
+          <option value="ช้อนโต๊ะ" ${ing.displayUnit === "ช้อนโต๊ะ" ? "selected" : ""}>ช้อนโต๊ะ</option>
+          <option value="ช้อนชา" ${ing.displayUnit === "ช้อนชา" ? "selected" : ""}>ช้อนชา</option>
+          <option value="ถ้วย" ${ing.displayUnit === "ถ้วย" ? "selected" : ""}>ถ้วย</option>
+          <option value="ลิตร" ${ing.displayUnit === "ลิตร" ? "selected" : ""}>ลิตร</option>
+          <option value="มิลลิลิตร" ${ing.displayUnit === "มิลลิลิตร" ? "selected" : ""}>มิลลิลิตร</option>`;
       } else {
-        unitOptions = `
-                    <option value="${ing.displayUnit}" selected>${ing.displayUnit}</option>
-                `;
+        unitOptions = `<option value="${ing.displayUnit}" selected>${ing.displayUnit}</option>`;
       }
     }
 
     tbody.innerHTML += `
-            <tr>
-                <td><input type="checkbox" class="cal-include" checked onchange="calculateSaltSugar()"></td>
-                <td>${ing.name}</td>
-                <td><input type="number" class="calc-val-input" value="${ing.displayVal}" step="any" oninput="recalculateRatio(${i})" onfocus="this.select()"></td>
-                <td>
-                    <select class="calc-unit-select" onchange="handleUnitChange(${i})">
-                        ${unitOptions}
-                    </select>
-                </td>
-            </tr>
-        `;
+      <tr>
+        <td><input type="checkbox" class="cal-include" checked onchange="calculateSaltSugar()"></td>
+        <td>${ing.name}</td>
+        <td><input type="number" class="calc-val-input" value="${ing.displayVal}" step="any" oninput="recalculateRatio(${i})" onfocus="this.select()"></td>
+        <td><select class="calc-unit-select" onchange="handleUnitChange(${i})">${unitOptions}</select></td>
+      </tr>`;
   }
 }
 
@@ -869,9 +928,7 @@ function loadMenuToCalculate() {
  */
 function maybeUpdateSaltSugar() {
   const view = document.getElementById("calc-view");
-  if (view && view.value === "เกลือและน้ำตาล") {
-    calculateSaltSugar();
-  }
+  if (view && (view.value === "เกลือและน้ำตาล")) calculateSaltSugar();
 }
 
 /**
@@ -902,8 +959,7 @@ function changeViewToCalculate() {
  */
 function toggleSaltSugarCalNote(no) {
   const note = document.getElementById("salt-sugar-cal-note" + no.toString());
-  if (note)
-    note.style.display = note.style.display === "none" ? "block" : "none";
+  if (note) note.style.display = note.style.display === "none" ? "block" : "none";
 }
 
 /**
@@ -1236,7 +1292,7 @@ function formatNumber(num) {
   return new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 0,
     maximumFractionDigits: maxDecimals,
-    useGrouping: false, // กำหนดเป็น true หากต้องการให้มีเครื่องหมายจุลภาค (,) แยกหลักพัน
+    useGrouping: false, /* กำหนดเป็น true หากต้องการให้มีเครื่องหมายจุลภาค (,) แยกหลักพัน */
   }).format(num);
 }
 
@@ -1249,7 +1305,7 @@ function addIngredientIfAbsent(ingredientName) {
   // หา id ที่ไม่ซ้ำกับรายการที่มีอยู่
   let genId = "";
   do {
-    let genId = Date.now().toString();
+    genId = Date.now().toString() + Math.floor(Math.random() * 1000).toString();
   } while (appData.ingredients.findIndex((item) => item.id === genId) >= 0);
 
   const id = genId;
@@ -1382,9 +1438,25 @@ function calcNutritionPercent() {
   };
 }
 
+/// แสดงข้อความเตือน หากผู้ใช้เลือกแทนที่ข้อมูลเดิมทั้งหมดในการ restore ข้อมูล
+function showWarning(event) {
+  if (event.target.value === "replace") {
+    if (appData.ingredients.length > 0 || appData.menus.length > 0) {
+      alert("⚠️ โปรดสำรองข้อมูลในแอปก่อนคืนค่าข้อมูล เนื่องจากข้อมูลปัจจุบันจะถูกลบทิ้ง และแทนที่ด้วยข้อมูลจากไฟล์/ข้อมูล JSON");
+    }
+  }
+}
+
+
+
 window.onload = function () {
   loadFromStorage();
+  checkForUpdateOnSchedule();
 
+  // แสดงเลข version ปัจจุบัน
+  document.getElementById('show-version').innerText = `Version ${CURRENT_APP_VERSION} (${CURRENT_APP_DATE})`;
+
+  // ลงทะเบียนเหตุการณ์ เมื่อผู้ใช้เลือกไฟล์ json เพื่อทำการ restore data
   document
     .getElementById("jsonFile")
     .addEventListener("change", async (event) => {

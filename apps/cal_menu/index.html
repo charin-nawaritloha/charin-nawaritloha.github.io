@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Noto+Sans+Thai+Looped:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body>  
   <datalist id="ingredient-list"></datalist><!--สำหรับเก็บรายชื่อวัตถุดิบ เพื่อใช้แสดงในตอนสร้างเมนู-->
   <datalist id="unit-list">
     <option value="กิโลกรัม"></option>
@@ -26,7 +26,7 @@
     <option value="ถ้วย"></option>
     <option value="ลิตร"></option>
     <option value="มิลลิลิตร"></option>
-  </datalist>
+  </datalist>  
   <nav class="main-nav">
     <button onclick="switchView('view-home')">🏠</button>
     <button onclick="switchView('view-ingredients')">🥩</button>
@@ -34,7 +34,7 @@
     <button onclick="switchView('view-calc')">🧑‍🍳</button>
     <button onclick="switchView('view-backup')">💾</button>
   </nav>
-  <div style="font-size: 0.6em; color: goldenrod">Version 1.3 (2026/06/27)</div>
+  <div id="show-version" style="font-size: 0.6em; color: goldenrod">Version X.X.X (XXXX/XX/XX)</div>
   <div id="view-home" class="app-view active" style="
         background-image: url(&quot;bg/icon.png&quot;);
         background-color: #fef3e2;
@@ -49,6 +49,7 @@
       <button onclick="switchView('view-backup')">
         💾นำเข้า/ส่งออกข้อมูล
       </button>
+      <button onclick="checkForAppUpdate(true)">✨ตรวจสอบเวอร์ชันใหม่</button>
       <center style="padding-top: 1em; font-size: 0.6em">
         <div>Copyright &copy;2026 Charin Nawaritloha</div>
         <div>แปลงจากคำสั่งเป็น Code ด้วย Google Gemini Flash 3.5</div>
@@ -242,15 +243,15 @@
       </div>
 
       <div style="margin-top: 15px; display: flex; gap: 8px">
-        <button type="button" onclick="updateMenu()" class="submit-button">
-          📥 บันทึกการแก้ไข
-        </button>
-        <button type="button" onclick="deleteMenu()" class="delete-button">
-          🗑️ ลบเมนูอาหารนี้
-        </button>
-        <button type="button" onclick="duplicateMenu()" class="submit-button" style="margin-left: 2em;">
-          📚 สำเนาเมนู 
-        </button>
+        <div>
+          <button type="button" onclick="updateMenu()" class="submit-button">📥บันทึกการแก้ไข</button>
+        </div>
+        <div>
+          <button type="button" onclick="duplicateMenu()" class="submit-button">📚สำเนาเมนู</button>
+        </div>
+        <div style="flex-grow: 1; text-align: right;">
+          <button type="button" onclick="deleteMenu()" class="delete-button">ลบเมนู</button>
+        </div>
       </div>
     </div>
   </div>
@@ -272,7 +273,7 @@
       <div class="form-group">
         <label for="calc-view">มุมมอง: </label>
         <select id="calc-view" style="flex-grow: 1" onchange="changeViewToCalculate()">
-          <option>ปกติ</option>
+          <option>เฉพาะวัตถุดิบ</option>
           <option>เกลือและน้ำตาล</option>
         </select>
       </div>
@@ -362,9 +363,9 @@
         <h3>อ่านไฟล์เพื่อคืนค่าข้อมูล:</h3>
         <div class="ing-row" style="padding-left: 1em;">
           <label for="import-from-file">วิธีนำเข้า</label>
-          <select id="import-from-file">
+          <select id="import-from-file" onchange="showWarning(event)">
             <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
-            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด (โปรดสำรองข้อมูลเดิมก่อนทำ)</option>
+            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด</option>
           </select>
         </div>
         <input type="file" id="jsonFile" accept=".json" style="margin: 1em;" />
@@ -377,9 +378,9 @@
         <textarea id="restore-textarea" rows="6" placeholder="วางโค้ด JSON ที่นี่..."></textarea>
         <div class="ing-row" style="margin-top: 3px;">
           <label for="import-from-textarea">วิธีนำเข้า</label>
-          <select id="import-from-textarea">
+          <select id="import-from-textarea" onchange="showWarning(event)">
             <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
-            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด (โปรดสำรองข้อมูลเดิมก่อนทำ)</option>
+            <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด</option>
           </select>
           <button onclick="importFromJSON()" class="submit-button" style="margin-top: 3px;">นำเข้าข้อมูล</button>
         </div>
