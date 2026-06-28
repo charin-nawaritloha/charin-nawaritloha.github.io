@@ -3,10 +3,11 @@
 /// 1. เลข version แก้ 3 จุด version.json app.js และ sw.js
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
-const CURRENT_APP_VERSION = "1.3.1"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_VERSION = "1.3.2"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
 const CURRENT_APP_DATE = "2026/06/28";
-const VERSION_CHECK_STORAGE_KEY = "lastVersionCheckTime";
-const CHECK_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000; // 1 สัปดาห์ ปรับเลขได้ตามต้องการ
+const APP_STORAGE_KEY = "recipe-cal-data";
+const VERSION_CHECK_STORAGE_KEY = "recipe-cal-schedule";
+const CHECK_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000; // ตรวจสอบ version.json ทุก 4 สัปดาห์ 
 const topPage = document.querySelector("#show-version");
 
 
@@ -1238,11 +1239,11 @@ function importFromFile(jsonStr) {
 }
 
 function saveToStorage() {
-  localStorage.setItem("pwa_app_data", JSON.stringify(appData));
+  localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appData));
 }
 
 function loadFromStorage() {
-  const stored = localStorage.getItem("pwa_app_data");
+  const stored = localStorage.getItem(APP_STORAGE_KEY);
   if (stored) {
     appData = JSON.parse(stored);
     sortByName(appData.ingredients);
