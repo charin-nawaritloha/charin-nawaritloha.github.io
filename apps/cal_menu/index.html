@@ -2,18 +2,18 @@
 <html lang="th">
 
 <head>
-  <title>ถนัดตวง</title>
+  <meta charset="UTF-8" />
   <meta name="application-name" content="ถนัดตวง" />
   <meta name="author" content="Charin Nawaritloha" />
-  <meta name="description" content="แอปสำหรับสร้างเมนูจากวัตถุดิบ สามารถปรับอัตราส่วน แปลงหน่วย" />
+  <meta name="description" content="แอปสำหรับสร้างเมนูจากวัตถุดิบ สามารถปรับอัตราส่วน แปลงหน่วย คำนวณความเข้มข้นของเกลือและน้ำตาล" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta charset="UTF-8" />
   <link rel="stylesheet" href="app.css" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Noto+Sans+Thai+Looped:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>ถนัดตวง</title>
 </head>
 
 <body>  
@@ -27,9 +27,34 @@
     <option value="ลิตร"></option>
     <option value="มิลลิลิตร"></option>
   </datalist>  
+  <ul id="salt-sugar-cal-note0" style="display: none;">
+    <li>โปรแกรมจะคำนวณปริมาณเกลือและน้ำตาลเป็น % ของน้ำหนักวัตถุดิบทั้งหมด</li>
+    <li>หากวัตถุดิบไหนไม่ต้องการนำมาคำนวณน้ำหนักรวมด้วย ให้นำเครื่องหมาย ✅ ออกไป</li>
+    <li>หากวัตถุดิบตัวใดที่ไม่สามารถแปลงหน่วยเป็นน้ำหนักได้ จะข้ามรายการดังกล่าวไป</li>
+    <li>อัตราส่วน <strong>เกลือ : น้ำตาล</strong> ในอาหาร🍖
+      <ul>        
+        <li>สูตรกลมกล่อม คือ <span class="no-wrap">1 : 1 ถึง 1 : 1.5</span></li>
+        <li>สูตรหวานนำ คือ <span class="no-wrap">1 : 2</span></li>
+        <li>ไม่ว่าสูตรนั้นจะใส่น้ำตาลมากแค่ไหน ห้ามเพิ่มปริมาณเกลือเกินเกณฑ์ <span class="no-wrap">1% ถึง 1.5%</span> ของน้ำหนักเนื้อสัตว์ เพราะปริมาณโซเดียมในเนื้อที่สูงเกินไป จะทำให้เนื้อสูญเสียน้ำจากการออสโมซิส (Osmosis) ส่งผลให้เนื้อแห้งกระด้างเมื่อนำไปปรุงสุก</li>
+        <li>หากใช้อัตราส่วนน้ำตาลสูงกว่า <span class="no-wrap">1 : 2</span> (เช่น น้ำตาลมากกว่า 20 กรัมต่อเนื้อ 1 กิโลกรัม) น้ำตาลจะไปดึงน้ำออกจากเซลล์เนื้อสัตว์แทนเกลือ ทำให้เนื้อเหนียว และเมื่อนำไปย่างหรือทอด น้ำตาลที่ผิวจะเกิดปฏิกิริยาไหม้เกรียม (Caramelization และ Maillard Reaction) ก่อนที่ข้างในเนื้อจะสุก</li>
+      </ul>
+    </li>
+    <li>เครื่องดืม🧋
+      <ul>
+        <li>ค่าโดยประมาณ เกลือ 0.3% ถึง 0.5% เป็นรสชาติเค็มที่เหมาะสมในการตัดรสเปรี้ยวและช่วยขับความหวานให้เด่นชัดขึ้น (Flavor Enhancement)</li>
+        <li>ค่าโดยประมาณ น้ำตาล
+          <span class="no-wrap">5% → "รู้สึกหวาน🤔"</span>
+          <span class="no-wrap">10% → "หวาน☺️"</span>
+          <span class="no-wrap">15% → "หวานมาก🤯"</span>
+          <span class="no-wrap">20% → "หวานตัดขา🦵"</span>
+        </li>
+        <li>หากอุณหภูมิที่เย็นจัด หรือการมีความซ่า (Carbonation) ความเปรี้ยว (Acidity) ของกรดในเครื่องดื่ม จะมีฤทธิ์บดบังรสหวาน (Taste Masking Effects) ทำให้ร่างกายรับรู้รสหวานได้น้อยลงกว่าความเป็นจริง</li>
+      </ul>
+    </li>
+  </ul>
   <nav class="main-nav">
     <button onclick="switchView('view-home')">🏠</button>
-    <button onclick="switchView('view-ingredients')">🥩</button>
+    <button onclick="switchView('view-ingredients')">🍖</button>
     <button onclick="switchView('view-edit-menu')">✏️</button>
     <button onclick="switchView('view-calc')">🧑‍🍳</button>
     <button onclick="switchView('view-backup')">💾</button>
@@ -42,7 +67,7 @@
     <h2>ถนัดตวง</h2>
     <div class="menu-grid">
       <button onclick="switchView('view-ingredients')">
-        🥩จัดการวัตถุดิบ
+        🍖จัดการวัตถุดิบ
       </button>
       <button onclick="switchView('view-edit-menu')">✏️แก้ไขเมนูอาหาร</button>
       <button onclick="switchView('view-calc')">🧑‍🍳เลือกเมนูเพื่อคำนวณ</button>
@@ -53,13 +78,8 @@
       <center style="padding-top: 1em; font-size: 0.6em">
         <div>Copyright &copy;2026 Charin Nawaritloha</div>
         <div>แปลงจากคำสั่งเป็น Code ด้วย Google Gemini Flash 3.5</div>
-        <div>
-          แก้ไข Code เพิ่มเติม ด้วย Visual Studio Code 1.125 และ Claude.ai
-        </div>
-        <div>
-          ภาพประกอบจาก
-          <a href="https://www.pngbie.com/" target="_blank">pngbie.com</a>
-        </div>
+        <div>แก้ไข Code เพิ่มเติม ด้วย Visual Studio Code 1.125 และ Claude.ai</div>
+        <div>ภาพประกอบจาก <a href="https://www.pngbie.com/" target="_blank">pngbie.com</a></div>
       </center>
     </div>
   </div>
@@ -71,9 +91,7 @@
         <label>ชื่อวัตถุดิบ: </label>
         <input type="text" id="ing-name" style="flex-grow: 1" required />
       </div>
-      <div style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px">
-        ข้อมูลน้ำหนักเมื่อเทียบกับปริมาตร
-      </div>
+      <div style="margin-top: 8px; border-top: 1px dashed #ccc; padding-top: 8px">ข้อมูลน้ำหนักเมื่อเทียบกับปริมาตร</div>
       <div class="form-group">
         <label style="width: 5em; text-align: right">ปริมาตร:</label>
         <input type="number" id="ing-vol" step="any" />
@@ -164,57 +182,37 @@
       <!-- ส่วนแสดงผลการคำนวณเกลือและน้ำตาล -->
       <div style="background-color: rgba(253, 247, 215, 0.8)">
         <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(1)" style="margin: 0.5em;" />
-          <ul id="salt-sugar-cal-note1">
-            <li>
-              โปรแกรมจะคำนวณปริมาณเกลือและน้ำตาลเป็น % ของน้ำหนักวัตถุดิบทั้งหมด
-            </li>
-            <li>
-              หากวัตถุดิบไหนไม่ต้องการนำมาคำนวณน้ำหนักรวมด้วย ให้นำเครื่องหมาย ✅ ออกไป
-            </li>
-            <li>
-              หากวัตถุดิบตัวใดที่ไม่สามารถแปลงหน่วยเป็นน้ำหนักได้ จะข้ามรายการดังกล่าวไป
-            </li>
-            <li>อัตราส่วน (เกลือ : น้ำตาล) ในอาหาร🍖
-              <ul>
-                <li>สูตรกลมกล่อม คือ 1 : 1 ถึง 1 : 1.5</li>
-                <li>สูตรหวานนำ คือ 1 : 2</li>
-                <li>ไม่ว่าสูตรนั้นจะใส่น้ำตาลมากแค่ไหน ห้ามเพิ่มปริมาณเกลือเกินเกณฑ์ 1% ถึง 1.5% ของน้ำหนักเนื้อสัตว์ เพราะปริมาณโซเดียมในเนื้อที่สูงเกินไป จะทำให้เนื้อสูญเสียน้ำจากการออสโมซิส (Osmosis) ส่งผลให้เนื้อแห้งกระด้างเมื่อนำไปปรุงสุก</li>
-                <li>หากใช้อัตราส่วนน้ำตาลสูงกว่า 1 : 2 (เช่น น้ำตาลมากกว่า 20 กรัมต่อเนื้อ 1 กิโลกรัม) น้ำตาลจะไปดึงน้ำออกจากเซลล์เนื้อสัตว์แทนเกลือ ทำให้เนื้อเหนียว และเมื่อนำไปย่างหรือทอด น้ำตาลที่ผิวจะเกิดปฏิกิริยาไหม้เกรียม (Caramelization และ Maillard Reaction) ก่อนที่ข้างในเนื้อจะสุก</li>
-              </ul>
-            </li>
-            <li>เครื่องดืม🧋
-              <ul>
-                <li>ค่าโดยประมาณ เกลือ 0.3% ถึง 0.5% เป็นรสชาติเค็มที่เหมาะสมในการตัดรสเปรี้ยวและช่วยขับความหวานให้เด่นชัดขึ้น (Flavor Enhancement)</li>
-                <li>ค่าโดยประมาณ น้ำตาล 5% → "รู้สึกหวาน🤔" 10% → "หวาน☺️" 15% → "หวานมาก🤯"</li>
-                <li>หากอุณหภูมิที่เย็นจัด หรือการมีความซ่า (Carbonation) ความเปรี้ยว (Acidity) ของกรดในเครื่องดื่ม จะมีฤทธิ์บดบังรสหวาน (Taste Masking Effects) ทำให้ร่างกายรับรู้รสหวานได้น้อยลงกว่าความเป็นจริง</li>
-              </ul>
-            </li>
-          </ul>
+          <ul id="salt-sugar-cal-note1"></ul>
         </span>
       </div>
       <div id="edit-menu-salt-sugar-section">
         <h4 style="margin: 0 0 0.5em 0;">การคำนวณเกลือและน้ำตาล</h4>
-        <ul id="edit-menu-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em;">
-          <li>เกลือ: - %</li>
-          <li>น้ำตาล: - %</li>
-          <li>วัตถุดิบที่ใช้คำนวณ: 0 รายการ</li>
+        <ul id="edit-menu-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em; line-height: 1.5em;">
+          <!-- แสดง <li> ผลคำนวณความเข้มข้นเกลือและน้ำตาล -->
         </ul>
       </div>
       <h3>ส่วนผสม</h3>
+      <div class="form-group">
+        <span>รูปแบบการแสดงผล</span>
+        <select onchange="changeIngredientView(event);" id="menu-ing-view-select">
+          <option value="" selected>เต็มรูปแบบ</option>
+          <option value="small">กระทัดรัด</option>
+        </select>
+      </div>
       <div id="edit-menu-ing-inputs" class="scroll-container"></div>
       <div class="form-group">
         <button type="button" onclick="addIngredientRow('edit-menu-ing-inputs')">
-          + เพิ่มวัตถุดิบ🥩
+          + เพิ่มวัตถุดิบ🍖
         </button>
         <button type="button" onclick="openImportFromText('edit-menu-ing-text')" style="margin-left: 4px">
-          + เพิ่มวัตถุดิบจำนวนมาก🥩🍆🥬
+          + เพิ่มวัตถุดิบจำนวนมาก🍖🍆🥬
         </button>
       </div>
       <div id="edit-menu-ing-text" style="
             background-color: rgba(253, 247, 215, 0.8);
             padding: 1em 4px;
             display: none;
-          ">
+          " class="form-group">
         <div style="display: flex; flex-direction: row">
           <div style="font-size: 2em">💡</div>
           <div style="font-size: 0.85em">
@@ -223,6 +221,7 @@
             ใช้เครื่องหมาย <span style="color: blueviolet">,</span> หรือ
             <span style="color: blueviolet">[Tab]</span>
             อย่างใดอย่างหนึ่ง เพื่อแบ่งข้อมูล เช่น
+            
             <span style="white-space: nowrap; color: brown; font-weight: bold"><br />เนื้อวัว,1,กิโลกรัม<br />ไข่ไก่,4,ฟอง<br /></span>
             รายการละ 1 บรรทัด
           </div>
@@ -231,9 +230,9 @@
           <textarea placeholder="วางข้อมูลวัตถุดิบแบบ CSV ที่นี่..." style="height: 5em; width: 98%"></textarea>
         </div>
         <div>
-          <button type="button" onclick="
-                importFromText('edit-menu-ing-text', 'edit-menu-ing-inputs')
-              " class="submit-button">
+          <button type="button"
+            onclick="importFromText('edit-menu-ing-text', 'edit-menu-ing-inputs')"
+            class="submit-button">
             นำเข้าวัตถุดิบ
           </button>
           <button type="button" onclick="closeImportFromText('edit-menu-ing-text')">
@@ -250,7 +249,7 @@
           <button type="button" onclick="duplicateMenu()" class="submit-button">📚สำเนาเมนู</button>
         </div>
         <div style="flex-grow: 1; text-align: right;">
-          <button type="button" onclick="deleteMenu()" class="delete-button">ลบเมนู</button>
+          <button type="button" onclick="deleteMenu()" class="delete-button">☢️ลบเมนู</button>
         </div>
       </div>
     </div>
@@ -273,46 +272,19 @@
       <div class="form-group">
         <label for="calc-view">มุมมอง: </label>
         <select id="calc-view" style="flex-grow: 1" onchange="changeViewToCalculate()">
-          <option>เฉพาะวัตถุดิบ</option>
-          <option>เกลือและน้ำตาล</option>
+          <option value="" selected>เฉพาะวัตถุดิบ</option>
+          <option value="เกลือและน้ำตาล">เกลือและน้ำตาล</option>
         </select>
       </div>
       <div id="calc-salt-sugar">
         <div style="background-color: rgba(253, 247, 215, 0.8)">
           <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(2)" style="margin: 0.5em;" />
-            <ul id="salt-sugar-cal-note2">
-              <li>
-                โปรแกรมจะคำนวณปริมาณเกลือและน้ำตาลเป็น % ของน้ำหนักวัตถุดิบทั้งหมด
-              </li>
-              <li>
-                หากวัตถุดิบไหนไม่ต้องการนำมาคำนวณน้ำหนักรวมด้วย ให้นำเครื่องหมาย ✅ ออกไป
-              </li>
-              <li>
-                หากวัตถุดิบตัวใดที่ไม่สามารถแปลงหน่วยเป็นน้ำหนักได้ จะข้ามรายการดังกล่าวไป
-              </li>
-              <li>อัตราส่วน (เกลือ : น้ำตาล) ในอาหาร🍖
-                <ul>
-                  <li>สูตรกลมกล่อม คือ 1 : 1 ถึง 1 : 1.5</li>
-                  <li>สูตรหวานนำ คือ 1 : 2</li>
-                  <li>ไม่ว่าสูตรนั้นจะใส่น้ำตาลมากแค่ไหน ห้ามเพิ่มปริมาณเกลือเกินเกณฑ์ 1% - 1.5% ของน้ำหนักเนื้อสัตว์ เพราะปริมาณโซเดียมในเนื้อที่สูงเกินไป จะทำให้เนื้อสูญเสียน้ำจากการออสโมซิส (Osmosis) ส่งผลให้เนื้อแห้งกระด้างเมื่อนำไปปรุงสุก</li>
-                  <li>หากใช้อัตราส่วนน้ำตาลสูงกว่า 1 : 2 (เช่น น้ำตาลมากกว่า 20 กรัมต่อเนื้อ 1 กิโลกรัม) น้ำตาลจะไปดึงน้ำออกจากเซลล์เนื้อสัตว์แทนเกลือ ทำให้เนื้อเหนียว และเมื่อนำไปย่างหรือทอด น้ำตาลที่ผิวจะเกิดปฏิกิริยาไหม้เกรียม (Caramelization และ Maillard Reaction) ก่อนที่ข้างในเนื้อจะสุก</li>
-                </ul>
-              </li>
-              <li>เครื่องดืม🧋
-                <ul>
-                  <li>ค่าโดยประมาณ เกลือ 0.3% ถึง 0.5% เป็นรสชาติเค็มที่เหมาะสมในการตัดรสเปรี้ยวและช่วยขับความหวานให้เด่นชัดขึ้น (Flavor Enhancement)</li>
-                  <li>ค่าโดยประมาณ น้ำตาล 5% → "รู้สึกหวาน🤔" 10% → "หวาน☺️" 15% → "หวานมาก🤯"</li>
-                  <li>หากอุณหภูมิที่เย็นจัด หรือการมีความซ่า (Carbonation) ความเปรี้ยว (Acidity) ของกรดในเครื่องดื่ม จะมีฤทธิ์บดบังรสหวาน (Taste Masking Effects) ทำให้ร่างกายรับรู้รสหวานได้น้อยลงกว่าความเป็นจริง</li>
-                </ul>
-              </li>
-            </ul>
+            <ul id="salt-sugar-cal-note2"></ul>
           </span>
         </div>
-        <div>
-          <ul id="calc-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em;">
-            <li>วัตถุดิบที่ใช้คำนวณ: xx รายการ หนักรวม xx [หน่วยน้ำหนัก]</li>
-            <li>เกลือ: xx %, น้ำหนักรวม xx [หน่วยน้ำหนัก]</li>
-            <li>น้ำตาล: xx %, น้ำหนักรวม xx [หน่วยน้ำหนัก]</li>
+        <div id="calc-salt-sugar-result-section">
+          <ul id="calc-salt-sugar-result" style="margin: 0; padding-left: 1.5em; font-size: 0.9em; line-height: 1.5em;">
+            <!-- แสดง <li> ผลคำนวณความเข้มข้นเกลือและน้ำตาล -->
           </ul>
         </div>
       </div>
@@ -351,17 +323,21 @@
   <div id="view-backup" class="app-view">
     <h2>สำรองและคืนข้อมูลทั้งหมด</h2>
     <div class="backup-section">
-      <h3>ไฟล์ JSON (Local)</h3>
-      <div class="form-group"><select id="export-data-type">
-          <option value="">-- ข้อมูลทั้งหมด --</option>
-        </select>
-        <button onclick="exportToJSON()">
-          ดาวน์โหลดไฟล์สำรองข้อมูล (JSON)
-        </button>
+      <h3>ดาวน์โหลดไฟล์ไฟล์สำรองข้อมูล</h3>
+      <div style="padding: 0em 1em;">
+        <div style="padding-bottom: 1em;">คุณสามารถสำเนาข้อมูลในแอปเพื่อสำรองข้อมูลได้ โดยสามารถเลือกสำรองข้อมูลทั้งหมด หรือเลือกเฉพาะเมนูที่ต้องการ ไฟล์ที่ดาวน์โหลดจะเป็นไฟล์ประเภท JSON ที่สามารถนำมาใช้คืนข้อมูลหรือแจกจ่ายให้เพื่อนคุณได้</div>
+        <div class="form-group"><select id="export-data-type">
+            <option value="">-- ข้อมูลทั้งหมด --</option>
+          </select>
+          <button onclick="exportToJSON()" class="submit-button">
+            📑ดาวน์โหลดไฟล์
+          </button>
+        </div>
       </div>
       <div class="form-group ing-column" style="margin-top: 15px">
         <h3>อ่านไฟล์เพื่อคืนค่าข้อมูล:</h3>
-        <div class="ing-row" style="padding-left: 1em;">
+        <div class="ing-row" style="padding: 0em 1em;">
+          <div style="padding-bottom: 1em;">เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว แอปจะทำการอ่าน และนำเข้าให้อัตโนมัติ</div>
           <label for="import-from-file">วิธีนำเข้า</label>
           <select id="import-from-file" onchange="showWarning(event)">
             <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
@@ -369,9 +345,6 @@
           </select>
         </div>
         <input type="file" id="jsonFile" accept=".json" style="margin: 1em;" />
-        <blockquote style="font-size: 0.8em">
-          * เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว แอปจะทำการอ่าน และนำเข้าให้อัตโนมัติ
-        </blockquote>
       </div>
       <h3>วางข้อมูล JSON เพื่อคืนค่า:</h3>
       <div class="form-group ing-column" style="margin-top: 15px">
@@ -382,8 +355,13 @@
             <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
             <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด</option>
           </select>
-          <button onclick="importFromJSON()" class="submit-button" style="margin-top: 3px;">นำเข้าข้อมูล</button>
+          <button onclick="importFromJSON()" class="submit-button" style="margin-top: 3px;">📥นำเข้าข้อมูล</button>
         </div>
+      </div>
+      <h3>ลบข้อมูลวัตถุดิบและเมนูทั้งหมด:</h3>
+      <div style="padding: 0em 1em;">
+        <div style="padding-bottom: 1em;">หากคุณพบว่าข้อมูลในแอปมีปัญหา และต้องการลบข้อมูลวัตถุดิบและเมนูทั้งหมด ให้กดปุ่มด้านล่าง อย่าลืมสำรองข้อมูลให้เรียบร้อยก่อนลงมือ เพราะเมื่อทำการลบแล้วจะไม่สามารถคืนข้อมูลกลับมาได้</div>
+        <div><button onclick="resetAppData()" class="delete-button" style="margin-top: 3px;">☢️ลบข้อมูลทั้งหมด</button></div>
       </div>
     </div>
     <div style="background-image: url('bg/food1.png'); width: 100%; height: 450px;"></div>

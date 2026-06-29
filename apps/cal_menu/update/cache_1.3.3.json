@@ -1,0 +1,16 @@
+{
+  "files": [
+    "index.html",
+    "app.css",
+    "app.js",
+    "manifest.json",
+    "icon.png",
+    "favicon.ico",
+    "bg/carrot.png",
+    "bg/home.png",
+    "bg/food1.png",
+    "bg/pot.png",
+    "bg/icon.png",
+    "bg/body.png"
+  ]
+}

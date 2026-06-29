@@ -1,10 +1,11 @@
 /// สำหรับใช้ตรวจสอบ version ของ App ว่า version ตรงกับ version.js บนเซิร์ฟเวอร์หรือไม่
 /// เมื่อมีการ update version ใหม่ ให้แก้ไข
-/// 1. เลข version แก้ 3 จุด version.json app.js และ sw.js
+/// 1. เลข version แก้ 2 จุด version.json app.js
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
-const CURRENT_APP_VERSION = "1.3.2"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
-const CURRENT_APP_DATE = "2026/06/28";
+/// 4. เพิ่มไฟล์ cache_X.X.X.json ให้ตรงกับเลข version
+const CURRENT_APP_VERSION = "1.3.3"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_DATE = "2026/06/29";
 const APP_STORAGE_KEY = "recipe-cal-data";
 const VERSION_CHECK_STORAGE_KEY = "recipe-cal-schedule";
 const CHECK_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000; // ตรวจสอบ version.json ทุก 4 สัปดาห์ 
@@ -31,7 +32,7 @@ const VOL_TO_ML = {
 // ดึง version.json จาก network ตรง ไม่ผ่าน cache
 async function fetchRemoteAppVersion() {
   let data = {version: "", release:"", size:"", info:""}; // โครงสร้างใน version.json
-  const response = await fetch('version.json', { cache: 'no-store' });
+  const response = await fetch('update/version.json', { cache: 'no-store' });
 
   if (!response.ok) {
     throw new Error("ไม่สามารถดึงไฟล์ version.json ได้");
@@ -43,6 +44,26 @@ async function fetchRemoteAppVersion() {
   data.size = result.size;
   data.info = result.info;  
   return data;
+}
+
+
+// ดึง version ปัจจุบันที่ sw.js ใช้งานอยู่ ผ่าน message
+function getActiveVersionFromSW() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.serviceWorker.controller) {
+      resolve(null); // ยังไม่มี sw ควบคุมอยู่ (ติดตั้งครั้งแรก)
+      return;
+    }
+    const channel = new MessageChannel();
+    channel.port1.onmessage = (event) => {
+      resolve(event.data.version || null);
+    };
+    navigator.serviceWorker.controller.postMessage(
+      { type: "GET_ACTIVE_VERSION" },
+      [channel.port2]
+    );
+    setTimeout(() => resolve(null), 3000); // กันรอค้างถ้า sw ไม่ตอบ
+  });
 }
 
 // เปรียบเทียบ version แบบ semantic (major.minor.patch)
@@ -83,17 +104,69 @@ function showUpdateAppDialog(newVersion) {
     `❓ พบเวอร์ชันใหม่ ต้องการอัปเดตหรือไม่\n 🔸Version: ${newVersion.version}\n 🔸วันที่: ${newVersion.release}\n 🔸ขนาดแอป: ${newVersion.size}\n 🔸Note: ${newVersion.info}`,
   );
 
-  if (confirmed) performUpdateApp();
+  if (confirmed) performUpdateApp(newVersion.version);
 }
 
 // สั่งให้ browser โหลด service worker ใหม่ แล้ว reload หน้า
-async function performUpdateApp() {
+// async function performUpdateApp() {
+//   const registration = await navigator.serviceWorker.getRegistration();
+//   if (registration) {
+//     await registration.update();
+//   }
+//   alert("⚠️ ทำการลงทะเบียน Version ใหม่แล้ว หากแอปไม่เปลี่ยนแปลงแนะนำให้ปิดแอป(ปัดแอปออกจาก App Switcher) แล้วเปิดแอปใหม่");
+//   window.location.reload();
+// }
+
+
+// สั่งให้ sw.js โหลด cache ของ version ใหม่ แล้วรอ activate เสร็จก่อน reload
+async function performUpdateApp(targetVersion) {
   const registration = await navigator.serviceWorker.getRegistration();
-  if (registration) {
-    await registration.update();
+  if (!registration) {
+    window.location.reload();
+    return;
   }
-  alert("⚠️ ทำการลงทะเบียน Version ใหม่แล้ว หากแอปไม่เปลี่ยนแปลงแนะนำให้ปิดแอป(ปัดแอปออกจาก App Switcher) แล้วเปิดแอปใหม่");
-  window.location.reload();
+
+  const swToCommand = registration.waiting || registration.installing || registration.active;
+  if (!swToCommand) {
+    window.location.reload();
+    return;
+  }
+
+  // ฟัง message ตอบกลับจาก sw.js ว่าโหลด cache เสร็จแล้ว
+  const updateDonePromise = new Promise((resolve) => {
+    function handler(event) {
+      if (event.data && event.data.type === "CACHE_UPDATE_DONE") {
+        navigator.serviceWorker.removeEventListener("message", handler);
+        resolve(event.data.success);
+      }
+    }
+    navigator.serviceWorker.addEventListener("message", handler);
+  });
+
+  swToCommand.postMessage({ type: "UPDATE_TO_VERSION", version: targetVersion });
+
+  const success = await updateDonePromise;
+  if (!success) {
+    alert("❌ การอัปเดตล้มเหลว กรุณาลองใหม่อีกครั้ง");
+    return;
+  }
+
+  // รอ controllerchange ก่อน reload เพื่อมั่นใจว่า sw ตัวใหม่ activate แล้วจริง
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+
+  // ถ้า sw ที่สั่งไปคือตัว waiting ต้องสั่ง skipWaiting ต่อให้มัน activate
+  if (registration.waiting) {
+    registration.waiting.postMessage({ type: "SKIP_WAITING" });
+  } else {
+    // ถ้าเป็น active อยู่แล้ว (อัปเดต cache แบบไม่เปลี่ยนตัว sw) ไม่มี controllerchange เกิดขึ้น ต้อง reload เอง
+    alert("⚠️ ทำการลงทะเบียน Version ใหม่แล้ว หากแอปไม่เปลี่ยนแปลงแนะนำให้ปิดแอป(ปัดแอปออกจาก App Switcher) แล้วเปิดแอปใหม่");
+    window.location.reload();
+  }
 }
 
 // ตรวจสอบอัตโนมัติเมื่อแอปเปิดขึ้นมา ถ้าครบรอบเวลาที่กำหนด
@@ -124,14 +197,23 @@ function switchView(viewId) {
 
   if (viewId === "view-edit-menu") {
     updateMenuDropdown("edit-menu-select");
-    document.getElementById("edit-menu-ing-text").style.display = "none";
-    document.getElementById("salt-sugar-cal-note1").style.display = "none";
+    document.getElementById("edit-menu-ing-text").style.display = "none";    
+    const saltSugarNote = document.getElementById("salt-sugar-cal-note1");   
+    if(saltSugarNote.childNodes.length == 0) {
+      saltSugarNote.innerHTML = document.getElementById("salt-sugar-cal-note0").innerHTML;
+    }
+    saltSugarNote.style.display = "none";
     loadMenuToEdit();
     return;
   }
 
   if (viewId === "view-calc") {
     updateMenuDropdown("calc-menu-select");
+    const saltSugarNote = document.getElementById("salt-sugar-cal-note2");
+    if(saltSugarNote.childNodes.length == 0) {
+      saltSugarNote.innerHTML = document.getElementById("salt-sugar-cal-note0").innerHTML;
+    }
+    saltSugarNote.style.display = "none";
     loadMenuToCalculate();
     return;
   }
@@ -473,6 +555,9 @@ function addNewMenu() {
 function loadMenuToEdit() {
   // ทำการซ่อนส่วนของการนำเข้าวัตถุดิบจำนวนมากทุกครั้งที่เปลี่ยนเมนู
   document.getElementById("edit-menu-ing-text").style.display = "none";
+
+  // เริ่มต้นตัวเลือกมุมมอง เป็น เต็มรูปแบบ
+  document.getElementById("menu-ing-view-select").value = "";
 
   const menuId = document.getElementById("edit-menu-select").value;
   const container = document.getElementById("edit-menu-container");
@@ -874,7 +959,7 @@ function loadMenuToCalculate() {
     note.length > 0 ? "⚠️ " + note : "";
   // ปิดในส่วนตัวเลือกในการคำนวณ
   calcOption.style.display = "none";
-  document.getElementById("calc-view").value = "ปกติ";
+  document.getElementById("calc-view").value = "";
   document.getElementById("calc-salt-sugar").style.display = "none";
   document.getElementById("calc-table").classList.remove("show-cal-include");
 
@@ -1449,6 +1534,61 @@ function showWarning(event) {
 }
 
 
+/** ล้างข้อมูลวัตถุดิบและเมนูทั้งหมด เพื่อเริ่มต้นใหม่ */
+function resetAppData() {
+  if(!confirm("❓ คุณต้องการลบข้อมูลวัตถุดิบและเมนูทั้งหมดหรือไม่\nโปรดสำรองข้อมูล📥ก่อนทำการลบ")) return;
+  
+  const confirmReset = prompt("โปรดพิมพ์คำว่า YES เพื่อยืนยันการลบข้อมูล\n⚠️คำเตือน: เมื่อยืนยันแล้วจะไม่สามารถยกเลิกการลบข้อมูลได้");
+
+  if(confirmReset && confirmReset==="YES") {
+    appData = { ingredients: [], menus: []};
+    saveToStorage();
+    alert("✅ ลบข้อมูลวัตถุดิบและเมนูทั้งหมดเรียบร้อยแล้ว");
+    switchView('view-home');
+  }
+  else {
+    alert("✅ ยกเลิกการลบข้อมูล😌");
+  }
+}
+
+
+/**
+ * ในหน้า แก้ไขเมนูอาหาร หากผู้ใช้เลือก รูปแบบการแสดงผล เป็นแบบ เต็มรูปแบบ หรือ กระทัดรัด
+ */ 
+function changeIngredientView(event) {
+  const isCompact = event.target.value === "small";
+  const rows = document.querySelectorAll(".form-group.ing-row");
+
+  rows.forEach((row) => {
+    const buttons = row.querySelectorAll('button[type="button"]');
+    const firstTwoButtons = Array.from(buttons).slice(0, 2);
+    const deleteButton = row.querySelector("button.delete-button");
+    const nameInput = row.querySelector('input[type="text"].row-ing-name');
+    const valInput = row.querySelector('input[type="number"].row-ing-val');
+    const unitInput = row.querySelector('input[type="text"].row-ing-unit');
+
+    firstTwoButtons.forEach((btn) => {
+      btn.style.display = isCompact ? "none" : "";
+    });
+
+    if (deleteButton) {
+      deleteButton.style.display = isCompact ? "none" : "";
+    }
+
+    if (nameInput) {
+      nameInput.style.width = isCompact ? "7em" : "";
+    }
+
+    if (valInput) {
+      valInput.style.width = isCompact ? "3.5em" : "";
+    }
+
+    if (unitInput) {
+      unitInput.style.width = isCompact ? "5em" : "";
+    }
+  });
+}
+
 
 window.onload = function () {
   loadFromStorage();
@@ -1467,5 +1607,6 @@ window.onload = function () {
 
       const text = await file.text();
       importFromFile(text);
+      event.target.files = new DataTransfer().files;
     });
 };
