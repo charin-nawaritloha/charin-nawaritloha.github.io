@@ -18,6 +18,7 @@
 
 <body>  
   <datalist id="ingredient-list"></datalist><!--สำหรับเก็บรายชื่อวัตถุดิบ เพื่อใช้แสดงในตอนสร้างเมนู-->
+  <datalist id="menus-list"></datalist><!--สำหรับเก็บรายชื่อเมนู เพื่อใช้แสดงในตอนสร้างเมนู-->
   <datalist id="unit-list">
     <option value="กิโลกรัม"></option>
     <option value="กรัม"></option>
@@ -164,6 +165,8 @@
     <div class="form-group">
       <label>เมนู: </label>
       <select id="edit-menu-select" style="flex-grow: 1" onchange="loadMenuToEdit()"></select>
+      <input type="text" id="edit-menu-search-input" list="menus-list" placeholder="🔍พิมพ์ชื่อเมนู..." enterkeyhint="search" style="flex-grow: 1; display: none" />
+      <button type="button" id="edit-menu-search-btn" onclick="toggleMenuSearch('edit')">🔍</button>
       <button type="button" onclick="addNewMenu()">+ เมนูใหม่</button>
     </div>
     <div id="edit-menu-container" style="display: none">
@@ -180,7 +183,7 @@
         <input type="text" id="edit-menu-note" style="flex-grow: 1" />
       </div>
       <!-- ส่วนแสดงผลการคำนวณเกลือและน้ำตาล -->
-      <div style="background-color: rgba(253, 247, 215, 0.8)">
+      <div class="note">
         <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(1)" style="margin: 0.5em;" />
           <ul id="salt-sugar-cal-note1"></ul>
         </span>
@@ -198,8 +201,9 @@
           <option value="" selected>เต็มรูปแบบ</option>
           <option value="small">กระทัดรัด</option>
         </select>
-      </div>
+      </div>      
       <div id="edit-menu-ing-inputs" class="scroll-container"></div>
+      <div class="note" style="font-size: 0.9em; padding: 1em;">หากต้องการแทรกข้อความลงในวัตถุดิบ ให้ใช้เครื่องหมายขีด - นำหน้าชื่อวัตถุดิบ แอปจะมองว่าเป็นข้อความ เช่น <br><strong class="no-wrap">-ส่วนของน้ำจิ้ม</strong><br><strong class="no-wrap">-เครื่องโรยหน้า</strong></div>
       <div class="form-group">
         <button type="button" onclick="addIngredientRow('edit-menu-ing-inputs')">
           + เพิ่มวัตถุดิบ🍖
@@ -208,11 +212,10 @@
           + เพิ่มวัตถุดิบจำนวนมาก🍖🍆🥬
         </button>
       </div>
-      <div id="edit-menu-ing-text" style="
-            background-color: rgba(253, 247, 215, 0.8);
+      <div id="edit-menu-ing-text" style="            
             padding: 1em 4px;
             display: none;
-          " class="form-group">
+          " class="form-group note">
         <div style="display: flex; flex-direction: row">
           <div style="font-size: 2em">💡</div>
           <div style="font-size: 0.85em">
@@ -229,7 +232,7 @@
         <div>
           <textarea placeholder="วางข้อมูลวัตถุดิบแบบ CSV ที่นี่..." style="height: 5em; width: 98%"></textarea>
         </div>
-        <div>
+        <div class="form-group">
           <button type="button"
             onclick="importFromText('edit-menu-ing-text', 'edit-menu-ing-inputs')"
             class="submit-button">
@@ -241,7 +244,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 15px; display: flex; gap: 8px">
+      <div class="form-group" style="margin-top: 15px;">
         <div>
           <button type="button" onclick="updateMenu()" class="submit-button">📥บันทึกการแก้ไข</button>
         </div>
@@ -259,11 +262,13 @@
     <div class="form-group">
       <label for="calc-menu-select">เมนู: </label>
       <select id="calc-menu-select" style="flex-grow: 1" onchange="loadMenuToCalculate()"></select>
+      <input type="text" id="calc-menu-search-input" list="menus-list" placeholder="🔍พิมพ์ชื่อเมนู..." enterkeyhint="search" style="flex-grow: 1; display: none" />
+      <button type="button" id="calc-menu-search-btn" onclick="toggleMenuSearch('calc')">🔍</button>
     </div>
     <div id="calc-menu-link"></div>
     <div id="calc-menu-note"></div>
     <div id="calc-menu-instruction" style="display: none">
-      <div style="background-color: rgba(253, 247, 215, 0.8); padding: 0.5em; margin-bottom: 0.5em;">
+      <div class="note" style="padding: 0.5em; margin-bottom: 0.5em;">
         <span style="font-size: 0.8em"><strong>คำแนะนำ:</strong> ให้เปลี่ยนหน่วย ชั่ง-ตวง
           ของแต่ละวัตถุดิบที่ต้องการใช้ก่อน
           จากนั้นถึงเปลี่ยนตัวเลขเพื่อคำนวณอัตราส่วนใหม่
@@ -277,7 +282,7 @@
         </select>
       </div>
       <div id="calc-salt-sugar">
-        <div style="background-color: rgba(253, 247, 215, 0.8)">
+        <div class="note">
           <span style="font-size: 0.8em"><input type="button" value="คำแนะนำเกี่ยวกับเกลือและน้ำตาล:" onclick="toggleSaltSugarCalNote(2)" style="margin: 0.5em;" />
             <ul id="salt-sugar-cal-note2"></ul>
           </span>
@@ -326,10 +331,10 @@
       <h3>ดาวน์โหลดไฟล์ไฟล์สำรองข้อมูล</h3>
       <div style="padding: 0em 1em;">
         <div style="padding-bottom: 1em;">คุณสามารถสำเนาข้อมูลในแอปเพื่อสำรองข้อมูลได้ โดยสามารถเลือกสำรองข้อมูลทั้งหมด หรือเลือกเฉพาะเมนูที่ต้องการ ไฟล์ที่ดาวน์โหลดจะเป็นไฟล์ประเภท JSON ที่สามารถนำมาใช้คืนข้อมูลหรือแจกจ่ายให้เพื่อนคุณได้</div>
-        <div class="form-group"><select id="export-data-type">
+        <div class="form-group ing-column"><select id="export-data-type">
             <option value="">-- ข้อมูลทั้งหมด --</option>
           </select>
-          <button onclick="exportToJSON()" class="submit-button">
+          <button onclick="exportToJSON()" class="submit-button" style="margin-top: 5px;">
             📑ดาวน์โหลดไฟล์
           </button>
         </div>

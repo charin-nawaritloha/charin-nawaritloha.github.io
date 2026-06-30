@@ -4,8 +4,8 @@
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
 /// 4. เพิ่มไฟล์ cache_X.X.X.json ให้ตรงกับเลข version
-const CURRENT_APP_VERSION = "1.3.3"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
-const CURRENT_APP_DATE = "2026/06/29";
+const CURRENT_APP_VERSION = "1.3.4"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_DATE = "2026/06/30";
 const APP_STORAGE_KEY = "recipe-cal-data";
 const VERSION_CHECK_STORAGE_KEY = "recipe-cal-schedule";
 const CHECK_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000; // ตรวจสอบ version.json ทุก 4 สัปดาห์ 
@@ -197,7 +197,14 @@ function switchView(viewId) {
 
   if (viewId === "view-edit-menu") {
     updateMenuDropdown("edit-menu-select");
-    document.getElementById("edit-menu-ing-text").style.display = "none";    
+
+    // ซ่อนส่วน CSV
+    document.getElementById("edit-menu-ing-text").style.display = "none";
+
+    // แสดงตัวเลือกเมนู และซ่อนกล่องค้นหา
+    document.getElementById("edit-menu-select").style.display = "";
+    document.getElementById("edit-menu-search-input").style.display = "none";
+
     const saltSugarNote = document.getElementById("salt-sugar-cal-note1");   
     if(saltSugarNote.childNodes.length == 0) {
       saltSugarNote.innerHTML = document.getElementById("salt-sugar-cal-note0").innerHTML;
@@ -209,6 +216,11 @@ function switchView(viewId) {
 
   if (viewId === "view-calc") {
     updateMenuDropdown("calc-menu-select");
+
+    // แสดงตัวเลือกเมนู และซ่อนกล่องค้นหา
+    document.getElementById("calc-menu-select").style.display = "";
+    document.getElementById("calc-menu-search-input").style.display = "none";
+
     const saltSugarNote = document.getElementById("salt-sugar-cal-note2");
     if(saltSugarNote.childNodes.length == 0) {
       saltSugarNote.innerHTML = document.getElementById("salt-sugar-cal-note0").innerHTML;
@@ -549,17 +561,97 @@ function addNewMenu() {
   loadMenuToEdit();
 }
 
+
+/**
+ * สลับโหมดระหว่าง select กับ input สำหรับค้นหาเมนู
+ * และเมื่ออยู่ในโหมดค้นหาแล้ว ใช้ปุ่มเดียวกันเพื่อสั่งค้นหา
+ */
+function toggleMenuSearch(mode) {
+  const select = document.getElementById(`${mode}-menu-select`);
+  const input = document.getElementById(`${mode}-menu-search-input`);
+
+  const isSearchMode = input.style.display !== "none";
+
+  if (!isSearchMode) {
+    // สลับจาก select เป็น input
+    select.style.display = "none";
+    input.style.display = "";
+    input.value = "";
+    input.focus();
+    return;
+  }
+
+  // อยู่ในโหมดค้นหา ทำการค้นหาเมนูจากชื่อที่ป้อน
+  const menuName = input.value.trim();
+  if (!menuName) {
+    alert("⚠️ กรุณาป้อนชื่อเมนูที่ต้องการค้นหา");
+    input.focus();
+    return;
+  }
+
+  if(mode==='edit') 
+    loadMenuToEdit(menuName);
+  else {
+    // ทำการเลือกค่าใน <select> ที่ตรงกับคำค้นหา เพื่อรองรับการทำงานแบบเก่า    
+    const options = select.options;
+    let found = false;
+
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].text === menuName) {
+        options[i].selected = true;
+        found = true;
+        break;
+      }
+    }
+    
+    if (!found) {
+      alert("❌ ไม่พบเมนูที่ระบุ");
+      input.focus();
+      return;
+    }
+
+    select.style.display = "";
+    input.style.display = "none";
+    loadMenuToCalculate();
+  }
+}
+
 /**
  * ฟังก์ชันดึงข้อมูลเมนูอาหารเดิมขึ้นมาแสดงในส่วนฟอร์มแก้ไขเมนู
+ * @param {string} [searchMenuName] - ชื่อเมนูที่ได้จากโหมดค้นหา (ถ้ามี)
  */
-function loadMenuToEdit() {
+function loadMenuToEdit(searchMenuName) {
+  const select = document.getElementById("edit-menu-select");
+  const input = document.getElementById("edit-menu-search-input");
+
+  let menuId;
+
+  if (searchMenuName !== undefined) {
+    // กรณีเรียกจากโหมดค้นหา ให้หาเมนูจากชื่อแบบตรงตัว
+    const found = appData.menus.find((m) => m.name === searchMenuName);
+
+    if (!found) {
+      alert("❌ ไม่พบเมนูที่ระบุ");
+      input.focus();
+      return;
+    }
+
+    // พบเมนู สลับกลับมาเป็น select ตามเดิม
+    select.value = found.id;
+    select.style.display = "";
+    input.style.display = "none";
+
+    menuId = found.id;
+  } else {
+    menuId = select.value;
+  }
+
   // ทำการซ่อนส่วนของการนำเข้าวัตถุดิบจำนวนมากทุกครั้งที่เปลี่ยนเมนู
   document.getElementById("edit-menu-ing-text").style.display = "none";
 
   // เริ่มต้นตัวเลือกมุมมอง เป็น เต็มรูปแบบ
   document.getElementById("menu-ing-view-select").value = "";
 
-  const menuId = document.getElementById("edit-menu-select").value;
   const container = document.getElementById("edit-menu-container");
   const inputContainer = document.getElementById("edit-menu-ing-inputs"); // ส่วนผสม
   const linkWeb = document.getElementById("edit-menu-link");
@@ -969,6 +1061,14 @@ function loadMenuToCalculate() {
 
   for (let i = 0; i < menu.ingredients.length; i++) {
     const ing = menu.ingredients[i];
+
+    // รายการที่เป็นข้อความ ไม่ใช่ชื่อวัตถุดิบ จะขึ้นต้นด้วย -
+    if(ing.name.startsWith("-")) {      
+      const sectionText = ing.name.substring(1).trim();
+      tbody.innerHTML += `<tr><td colspan="4" class="note">${sectionText}</th></tr>`;
+      continue;
+    }
+
     const meta = appData.ingredients.find((item) => item.name === ing.name);
     const canConvert = meta && meta.vol && meta.weight;
 
@@ -1297,6 +1397,8 @@ function processImportedData(parsed, mode) {
   } else {
     mergeImportedData(parsed);
   }
+
+  switchView('view-home');
 }
 
 /**
@@ -1339,16 +1441,24 @@ function loadFromStorage() {
  * ฟังก์ชันปรับปรุงและจัดเรียงข้อมูลในกล่องตัวเลือกเมนูอาหารตามตัวอักษรไทย-อังกฤษ
  */
 function updateMenuDropdown(id) {
-  const select = document.getElementById(id);
-  select.innerHTML = '<option value="">-- เลือกเมนูอาหาร --</option>';
+  let optionHtmls = [];
 
+  optionHtmls.push('<option value="">-- เลือกเมนูอาหาร --</option>');
   // ทำการคัดลอกอาเรย์แล้วจัดเรียงตามหลักภาษาไทย/อังกฤษก่อนแสดงผลในตัวเลือก
   const sortedMenus = [...appData.menus];
   sortByName(sortedMenus);
 
   for (let i = 0; i < sortedMenus.length; i++) {
-    select.innerHTML += `<option value="${sortedMenus[i].id}">${sortedMenus[i].name}</option>`;
+    optionHtmls.push(`<option value="${sortedMenus[i].id}">${sortedMenus[i].name}</option>`);
   }
+  document.getElementById(id).innerHTML = optionHtmls.join("");
+
+  // update ข้อมูลใน menus-list
+  optionHtmls = [];  
+  for (let i = 0; i < sortedMenus.length; i++) {
+    optionHtmls.push(`<option value="${sortedMenus[i].name}">${sortedMenus[i].name}</option>`);    
+  }
+  document.getElementById("menus-list").innerHTML = optionHtmls.join("");
 }
 
 /// เมื่อผู้ใช้กดปุ่ม ยกเลิก ในหน้า จัดการวัตถุดิบ
@@ -1384,6 +1494,9 @@ function formatNumber(num) {
 
 /// สำหรับใช้ตรวจสอบ รายการวัตถุดิบที่ระบุในเมนู มีอยู่ใน appData.ingredients หรือไม่ ถ้าไม่มีให้เพิ่มเข้าไป
 function addIngredientIfAbsent(ingredientName) {
+  // ถ้าขึ้นต้นด้วย - ให้ข้ามไป
+  if(ingredientName.startsWith("-")) return;
+
   // ตรวจสอบว่ามีชื่อวัตถุดิบหรือยัง ถ้ามีแล้วไม่ต้องทำอะไร
   if (appData.ingredients.findIndex((ing) => ing.name === ingredientName) > -1)
     return;
@@ -1589,10 +1702,29 @@ function changeIngredientView(event) {
   });
 }
 
+/**
+ * ผูก event ดักจับปุ่ม Enter บน input ค้นหาเมนู
+ * เพื่อให้กด Enter มีผลเหมือนคลิกปุ่ม "ค้นหา"
+ * รองรับทั้ง desktop และ iOS
+ */
+function bindEditMenuSearchEnterKey() {
+  ['edit','calc'].forEach((mode) => {
+    const input = document.getElementById(mode + "-menu-search-input");
+    
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        toggleMenuSearch(mode);
+      }
+    });
+  });
+}
+
 
 window.onload = function () {
   loadFromStorage();
   checkForUpdateOnSchedule();
+  bindEditMenuSearchEnterKey();
 
   // แสดงเลข version ปัจจุบัน
   document.getElementById('show-version').innerText = `Version ${CURRENT_APP_VERSION} (${CURRENT_APP_DATE})`;
@@ -1608,5 +1740,6 @@ window.onload = function () {
       const text = await file.text();
       importFromFile(text);
       event.target.files = new DataTransfer().files;
+      switchView('view-home');
     });
 };
