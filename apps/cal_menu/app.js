@@ -4,7 +4,7 @@
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
 /// 4. เพิ่มไฟล์ cache_X.X.X.json ให้ตรงกับเลข version
-const CURRENT_APP_VERSION = "1.4.0"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_VERSION = "1.4.1";
 const CURRENT_APP_DATE = "2026/07/01";
 const APP_STORAGE_KEY = "Thanat-Tuang-data";
 const VERSION_CHECK_STORAGE_KEY = "Thanat-Tuang-schedule";

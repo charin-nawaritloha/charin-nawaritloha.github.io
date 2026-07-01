@@ -1,0 +1,18 @@
+{
+  "files": [
+    "index.html",
+    "app.css",
+    "app.js",
+    "gdrive-sync.js",
+    "manifest.json",
+    "icon.png",
+    "favicon.ico",
+    "bg/carrot.png",
+    "bg/home.png",
+    "bg/food1.png",
+    "bg/pot.png",
+    "bg/icon.png",
+    "bg/gdrive.svg",
+    "bg/body.png"
+  ]
+}

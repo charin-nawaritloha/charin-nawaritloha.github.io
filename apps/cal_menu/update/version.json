@@ -1,6 +1,6 @@
 {
-  "version": "1.4.0",
+  "version": "1.4.1",
   "release": "2026/07/01",
-  "size": "453 KB",
-  "info": "เพิ่มรองรับการสำรองข้อมูลด้วย Google Drive"
+  "size": "464 KB",
+  "info": "แก้ไขปัญหา Google Drive ทำงานบน PWA ไม่ได้"
 }
