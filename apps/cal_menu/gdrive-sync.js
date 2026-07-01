@@ -214,6 +214,7 @@ async function loadFromGoogleDrive() {
     alert("✅ อ่านข้อมูลจาก Google Drive เรียบร้อยแล้ว");
   } catch (error) {
     console.error(error);
+    alert(error);
     alert("❌ อ่านข้อมูลจาก Google Drive ไม่สำเร็จ");
   }
 }
