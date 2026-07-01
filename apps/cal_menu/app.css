@@ -240,5 +240,13 @@ thead {
 }
 
 .note {
-  background-color: rgba(253, 247, 215, 0.7)
+  background-color: rgba(253, 247, 215, 0.7);
+  font-size: 0.8em;
+  padding: 1em;
+  margin-bottom: 4px;
+}
+
+.warning-text {
+    color:#c10000;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 }

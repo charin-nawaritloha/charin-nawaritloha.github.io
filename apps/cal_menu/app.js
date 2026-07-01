@@ -4,12 +4,11 @@
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
 /// 4. เพิ่มไฟล์ cache_X.X.X.json ให้ตรงกับเลข version
-const CURRENT_APP_VERSION = "1.3.4"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
-const CURRENT_APP_DATE = "2026/06/30";
-const APP_STORAGE_KEY = "recipe-cal-data";
-const VERSION_CHECK_STORAGE_KEY = "recipe-cal-schedule";
+const CURRENT_APP_VERSION = "1.4.0"; // ต้องตรงกับ cacheName ใน sw.js และ version.json
+const CURRENT_APP_DATE = "2026/07/01";
+const APP_STORAGE_KEY = "Thanat-Tuang-data";
+const VERSION_CHECK_STORAGE_KEY = "Thanat-Tuang-schedule";
 const CHECK_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000; // ตรวจสอบ version.json ทุก 4 สัปดาห์ 
-const topPage = document.querySelector("#show-version");
 
 
 /**
@@ -182,7 +181,7 @@ function checkForUpdateOnSchedule() {
  * ฟังก์ชันสลับการแสดงผลของหน้าจอแอปพลิเคชัน
  */
 function switchView(viewId) {
-  topPage.scrollTo(0,0,{ behavior: "smooth" });
+  window.scrollTo({top: 0, behavior: 'smooth'});
 
   const views = document.querySelectorAll(".app-view");
   for (let i = 0; i < views.length; i++) {
@@ -332,7 +331,7 @@ function editIngredient(id) {
   document.getElementById("ing-list-sugar-min").value = sugarValues[0];
   document.getElementById("ing-list-sugar-max").value = sugarValues[1];
 
-  topPage.scrollIntoView({ behavior: "smooth" });
+  window.scrollTo({top: 0,  behavior: 'smooth'});
 
   document.getElementById("ing-submit").innerText = "บันทึกการแก้ไข";
 }
@@ -738,7 +737,7 @@ function updateMenu() {
   document.getElementById("edit-menu-select").value = "";
   updateMenuDropdown("edit-menu-select");
   loadMenuToEdit();
-  topPage.scrollIntoView({ behavior: "smooth" });
+  window.scrollTo({top: 0,  behavior: 'smooth'});
 }
 
 /// สำเนาเมนู โดยจะต่อชื่อเมนูใหม่ด้วย (Copy ##)
@@ -1064,8 +1063,8 @@ function loadMenuToCalculate() {
 
     // รายการที่เป็นข้อความ ไม่ใช่ชื่อวัตถุดิบ จะขึ้นต้นด้วย -
     if(ing.name.startsWith("-")) {      
-      const sectionText = ing.name.substring(1).trim();
-      tbody.innerHTML += `<tr><td colspan="4" class="note">${sectionText}</th></tr>`;
+      const sectionText = ing.name.substring(1);
+      tbody.innerHTML += `<tr><td colspan="4" class="note" style="font-size:1em;">${sectionText}</th></tr>`;
       continue;
     }
 
@@ -1101,8 +1100,8 @@ function loadMenuToCalculate() {
 
     tbody.innerHTML += `
       <tr>
-        <td><input type="checkbox" class="cal-include" checked onchange="calculateSaltSugar()"></td>
-        <td>${ing.name}</td>
+        <td><input id="chk-${i}" type="checkbox" class="cal-include" checked onchange="calculateSaltSugar()"></td>
+        <td><label for="chk-${i}" style="font-weight: normal;">${ing.name}</label></td>
         <td><input type="number" class="calc-val-input" value="${ing.displayVal}" step="any" oninput="recalculateRatio(${i})" onfocus="this.select()"></td>
         <td><select class="calc-unit-select" onchange="handleUnitChange(${i})">${unitOptions}</select></td>
       </tr>`;
@@ -1215,7 +1214,9 @@ function calculateSaltSugar() {
 
   rows.forEach((row, i) => {
     const checkbox = row.querySelector(".cal-include");
-    if (!checkbox || !checkbox.checked) {
+    // ข้ามแถวที่เป็นข้อความ หรือแถวที่ไม่ได้ checked
+    if (!checkbox) return;
+    if (!checkbox.checked) {
       ++noUsedCount;
       return;
     }
@@ -1426,6 +1427,15 @@ function importFromFile(jsonStr) {
 }
 
 function saveToStorage() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const hh = String(today.getHours()).padStart(2, "0");
+  const min = String(today.getMinutes()).padStart(2, "0");
+  const dateStr = `${yyyy}${mm}${dd} ${hh}${min}`;
+
+  appData.lastSave = dateStr;
   localStorage.setItem(APP_STORAGE_KEY, JSON.stringify(appData));
 }
 
@@ -1719,7 +1729,6 @@ function bindEditMenuSearchEnterKey() {
     });
   });
 }
-
 
 window.onload = function () {
   loadFromStorage();

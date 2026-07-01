@@ -9,10 +9,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="app.css" />
   <link rel="manifest" href="manifest.json" />
+  <!-- สำหรับ Google Fonts: Sarabun -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <!-- สำหรับ Google Drive API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js"></script>  
   <title>ถนัดตวง</title>
 </head>
 
@@ -328,9 +332,24 @@
   <div id="view-backup" class="app-view">
     <h2>สำรองและคืนข้อมูลทั้งหมด</h2>
     <div class="backup-section">
+      <h3>สำรองข้อมูลบน Google Drive</h3>
+      <div class="form-group ing-column" style="padding: 1em;
+          gap: 10px;
+          background-image: url(bg/gdrive.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;">
+        <div class="note">
+          คุณสามารถสำเนาข้อมูลในแอปเพื่อสำรองข้อมูลบน Google Drive ของคุณได้ โดยแอปจะสร้างไฟล์ชื่อ <span class="no-wrap" style="font-weight: 600;color: #002bff;">app-data-ถนัดตวง.json</span> ในโฟลเดอร์หลัก<br />
+          <span class="warning-text">คำเตือน: การบันทึกและคืนค่าข้อมูล จะเป็นการบันทึกทับของเดิมทั้งหมด ดังนั้นโปรดตรวจสอบและสำรองข้อมูลเดิมก่อนทุกครั้ง</span>
+        </div>
+        <!-- คำสั่งจัดการอยู่ใน gdrive-sync.js -->
+        <button id="save-to-gdrive">📥บันทึกลง Google Drive</button>
+        <button id="load-from-gdrive">📤อ่านข้อมูลจาก Google Drive</button>
+      </div>
       <h3>ดาวน์โหลดไฟล์ไฟล์สำรองข้อมูล</h3>
       <div style="padding: 0em 1em;">
-        <div style="padding-bottom: 1em;">คุณสามารถสำเนาข้อมูลในแอปเพื่อสำรองข้อมูลได้ โดยสามารถเลือกสำรองข้อมูลทั้งหมด หรือเลือกเฉพาะเมนูที่ต้องการ ไฟล์ที่ดาวน์โหลดจะเป็นไฟล์ประเภท JSON ที่สามารถนำมาใช้คืนข้อมูลหรือแจกจ่ายให้เพื่อนคุณได้</div>
+        <div class="note">คุณสามารถสำเนาข้อมูลในแอปเพื่อสำรองข้อมูลได้ โดยสามารถเลือกสำรองข้อมูลทั้งหมด หรือเลือกเฉพาะเมนูที่ต้องการ ไฟล์ที่ดาวน์โหลดจะเป็นไฟล์ประเภท JSON ที่สามารถนำมาใช้คืนข้อมูลหรือแจกจ่ายให้เพื่อนคุณได้</div>
         <div class="form-group ing-column"><select id="export-data-type">
             <option value="">-- ข้อมูลทั้งหมด --</option>
           </select>
@@ -342,7 +361,7 @@
       <div class="form-group ing-column" style="margin-top: 15px">
         <h3>อ่านไฟล์เพื่อคืนค่าข้อมูล:</h3>
         <div class="ing-row" style="padding: 0em 1em;">
-          <div style="padding-bottom: 1em;">เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว แอปจะทำการอ่าน และนำเข้าให้อัตโนมัติ</div>
+          <div class="note">เลือกไฟล์ JSON ที่เคยดาวน์โหลดไฟล์สำรองข้อมูล เมื่อเลือกไฟล์แล้ว แอปจะทำการอ่าน และนำเข้าให้อัตโนมัติ</div>
           <label for="import-from-file">วิธีนำเข้า</label>
           <select id="import-from-file" onchange="showWarning(event)">
             <option value="merge" selected>เพิ่มเป็นข้อมูลใหม่</option>
@@ -365,13 +384,14 @@
       </div>
       <h3>ลบข้อมูลวัตถุดิบและเมนูทั้งหมด:</h3>
       <div style="padding: 0em 1em;">
-        <div style="padding-bottom: 1em;">หากคุณพบว่าข้อมูลในแอปมีปัญหา และต้องการลบข้อมูลวัตถุดิบและเมนูทั้งหมด ให้กดปุ่มด้านล่าง อย่าลืมสำรองข้อมูลให้เรียบร้อยก่อนลงมือ เพราะเมื่อทำการลบแล้วจะไม่สามารถคืนข้อมูลกลับมาได้</div>
+        <div class="note">หากคุณพบว่าข้อมูลในแอปมีปัญหา และต้องการลบข้อมูลวัตถุดิบและเมนูทั้งหมด ให้กดปุ่มด้านล่าง อย่าลืมสำรองข้อมูลให้เรียบร้อยก่อนลงมือ เพราะเมื่อทำการลบแล้วจะไม่สามารถคืนข้อมูลกลับมาได้</div>
         <div><button onclick="resetAppData()" class="delete-button" style="margin-top: 3px;">☢️ลบข้อมูลทั้งหมด</button></div>
       </div>
     </div>
     <div style="background-image: url('bg/food1.png'); width: 100%; height: 450px;"></div>
   </div>
   <script src="app.js"></script>
+  <script src="gdrive-sync.js"></script>
   <script>
     /// to make web can run in offline mode
     /// from: https://dev.to/naimur/building-offline-ready-webpage-with-service-worker-and-cache-storage-3dbk
