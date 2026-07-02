@@ -4,8 +4,8 @@
 /// 2. วันที่ออกแอป แก้ 2 จุด version.json app.js
 /// 3. ขนาดไฟล์ที่ update แก้ 1 จุด ใน version.json
 /// 4. เพิ่มไฟล์ cache_X.X.X.json ให้ตรงกับเลข version
-const CURRENT_APP_VERSION = "1.4.1";
-const CURRENT_APP_DATE = "2026/07/01";
+const CURRENT_APP_VERSION = "1.4.2";
+const CURRENT_APP_DATE = "2026/07/02";
 const APP_STORAGE_KEY = "Thanat-Tuang-data";
 const VERSION_CHECK_STORAGE_KEY = "Thanat-Tuang-schedule";
 const CHECK_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000; // ตรวจสอบ version.json ทุก 4 สัปดาห์ 
@@ -27,6 +27,12 @@ const VOL_TO_ML = {
   ช้อนโต๊ะ: 15,
   ถ้วย: 240, // 1 US legal cup = 240 ml
 };
+
+/** 
+ * สำหรับเก็บผลที่ได้จากการแก้ไขข้อมูล ขั้นตอนการปรุง:
+ */ 
+let menuInstruction = "";
+
 
 // ดึง version.json จาก network ตรง ไม่ผ่าน cache
 async function fetchRemoteAppVersion() {
@@ -197,6 +203,9 @@ function switchView(viewId) {
   if (viewId === "view-edit-menu") {
     updateMenuDropdown("edit-menu-select");
 
+    // ทำการซ่อนส่วนของการแก้ไขรายละเอียดเมนู
+    document.getElementById("edit-menu-detail").style.display = "none";
+
     // ซ่อนส่วน CSV
     document.getElementById("edit-menu-ing-text").style.display = "none";
 
@@ -219,6 +228,9 @@ function switchView(viewId) {
     // แสดงตัวเลือกเมนู และซ่อนกล่องค้นหา
     document.getElementById("calc-menu-select").style.display = "";
     document.getElementById("calc-menu-search-input").style.display = "none";
+
+    // ซ่อนคำแนะนำ
+    document.getElementById("edit-menu-ing-help").style.display = "none";
 
     const saltSugarNote = document.getElementById("salt-sugar-cal-note2");
     if(saltSugarNote.childNodes.length == 0) {
@@ -415,6 +427,9 @@ function addIngredientRow(containerId, data = null) {
         <button type="button" onclick="this.parentElement.remove(); recalculateSaltSugarInEditMenu();" class="delete-button">ลบ</button>
     `;
   container.appendChild(div);
+
+  // แสดงคำแนะนำ
+  document.getElementById('edit-menu-ing-help').style.display = 'block';
 }
 
 /**
@@ -645,6 +660,9 @@ function loadMenuToEdit(searchMenuName) {
     menuId = select.value;
   }
 
+  // ทำการซ่อนส่วนของการแก้ไขรายละเอียดเมนู
+  document.getElementById("edit-menu-detail").style.display = "none";
+
   // ทำการซ่อนส่วนของการนำเข้าวัตถุดิบจำนวนมากทุกครั้งที่เปลี่ยนเมนู
   document.getElementById("edit-menu-ing-text").style.display = "none";
 
@@ -655,6 +673,7 @@ function loadMenuToEdit(searchMenuName) {
   const inputContainer = document.getElementById("edit-menu-ing-inputs"); // ส่วนผสม
   const linkWeb = document.getElementById("edit-menu-link");
   const note = document.getElementById("edit-menu-note");
+  
 
   if (!menuId) {
     document.getElementById("edit-menu-name").value = "";
@@ -662,8 +681,11 @@ function loadMenuToEdit(searchMenuName) {
     note.value = "";
     inputContainer.innerText = "";
     container.style.display = "none";
-    document.getElementById("edit-menu-salt-sugar-section").style.display =
-      "none";
+    menuInstruction = "";
+    document.getElementById("edit-menu-salt-sugar-section").style.display = "none";
+    // ซ่อนคำแนะนำ
+    document.getElementById('edit-menu-ing-help').style.display = 'none';
+
     return;
   }
 
@@ -675,6 +697,7 @@ function loadMenuToEdit(searchMenuName) {
   inputContainer.innerText = ""; // ล้างข้อมูล ส่วนผสม
   linkWeb.value = menu.linkWeb ?? "";
   note.value = menu.note ?? "";
+  menuInstruction = menu.instruction ?? "";
 
   // แสดงส่วนแสดงผลเกลือและน้ำตาล
   document.getElementById("edit-menu-salt-sugar-section").style.display =
@@ -689,7 +712,7 @@ function loadMenuToEdit(searchMenuName) {
 }
 
 /**
- * ฟังก์ชันอัปเดตบันทึกข้อมูลเมนูที่ผ่านการแก้ไขลงในระบบแทนที่ข้อมูลเดิม (บันทึกตามลำดับปุ่มขึ้นลงด้วย ข้อ 5)
+ * ฟังก์ชันอัปเดตบันทึกข้อมูลเมนูที่ผ่านการแก้ไขลงในระบบแทนที่ข้อมูลเดิม
  */
 function updateMenu() {
   const menuId = document.getElementById("edit-menu-select").value;
@@ -709,8 +732,8 @@ function updateMenu() {
   }
 
   const linkWeb = document.getElementById("edit-menu-link").value.trim();
-  const note = document.getElementById("edit-menu-note").value.trim();
-  const updatedMenu = { id: menuId, name, linkWeb, note, ingredients: [] };
+  const note = document.getElementById("edit-menu-note").value.trim();  
+  const updatedMenu = { id: menuId, name, linkWeb, note, instruction: getHTMLEditorData(), ingredients: [] };
   const rows = document.querySelectorAll("#edit-menu-ing-inputs .ing-row");
 
   for (let i = 0; i < rows.length; i++) {
@@ -760,6 +783,7 @@ function duplicateMenu() {
     name: newName,
     linkWeb: menu.linkWeb ?? "",
     note: menu.note ?? "",
+    instruction: menu.instruction ?? "",
     ingredients: [...menu.ingredients]
   };
 
@@ -1028,10 +1052,11 @@ function handleAllUnitChange(event) {
 function loadMenuToCalculate() {
   const menuId = document.getElementById("calc-menu-select").value;
   const menu = appData.menus.find((m) => m.id === menuId);
-  const linkWeb = String(menu?.linkWeb ?? "");
+  const linkWeb = String(menu?.linkWeb ?? "");  
   const note = String(menu?.note ?? "");
+  const instruction = String(menu?.instruction ?? "");
   const tbody = document.getElementById("calc-list");
-  const calcOption = document.getElementById("calc-menu-instruction");
+  const calcOption = document.getElementById("calc-menu-info");
   // ตัวเปลี่ยนหน่วยรวม เริ่มต้นใหม่
   document.getElementById("select-all-unit").value = "";
   document.getElementById("ingr-ratio").value = "1";
@@ -1048,6 +1073,21 @@ function loadMenuToCalculate() {
   // แสดง note ถ้ามี
   document.getElementById("calc-menu-note").innerText =
     note.length > 0 ? "⚠️ " + note : "";
+
+  // แสดงวิธีปรุง ถ้ามี
+  const div = document.getElementById("calc-menu-instruction");
+  if(instruction.length > 0) {
+    div.style.display = "block";
+    div.querySelector("button").innerText = "แสดงวิธีปรุงอาหาร:";
+    const divdiv = div.querySelector("div");
+    divdiv.style.display = "none";
+    divdiv.innerHTML = instruction;
+  }
+  else {
+    div.style.display = "none";
+  }
+
+
   // ปิดในส่วนตัวเลือกในการคำนวณ
   calcOption.style.display = "none";
   document.getElementById("calc-view").value = "";
@@ -1107,6 +1147,24 @@ function loadMenuToCalculate() {
       </tr>`;
   }
 }
+
+/**
+ * สลับเปิดปิด วิธีปรุงอาหารในหน้าคำนวณ
+ * @param {*} event onclick event object
+ */
+function toggleMenuInstruction(event) {
+  const button = event.target;
+  const div = button.nextElementSibling;
+  if(button.innerText.startsWith("แสดง")) {
+    div.style.display = "block";
+    button.innerText = "ซ่อนวิธีปรุงอาหาร:";
+  }
+  else {
+    div.style.display = "none";
+    button.innerText = "แสดงวิธีปรุงอาหาร:";
+  }
+}
+
 
 /**
  * ฟังก์ชันสำเร็จรูปสำหรับเรียกคำนวณเกลือ/น้ำตาลใหม่ เฉพาะเมื่อมุมมองปัจจุบันคือ "เกลือและน้ำตาล"
@@ -1575,6 +1633,9 @@ function importFromText(formId, menuIngInputsId) {
 
   // เรียกคำนวณเกลือและน้ำตาลหลังจากนำเข้า
   recalculateSaltSugarInEditMenu();
+
+  // แสดงคำแนะนำ
+  document.getElementById('edit-menu-ing-help').style.display = 'block';
 }
 
 /// ใช้แปลงข้อมูลส่วนผสมจาก Text เป็น array
@@ -1730,25 +1791,144 @@ function bindEditMenuSearchEnterKey() {
   });
 }
 
+
+function initHTMLEditor() {  
+  window.pell.init({
+    element: document.getElementById("edit-menu-instruction"),
+    onChange: html => menuInstruction = html,
+    defaultParagraphSeparator: "p",
+    styleWithCSS: false,
+    actions: ["bold", "italic", "underline", "paragraph", "quote", "olist", "ulist", "line"],
+  });
+}
+
+function setHTMLEditorData(html) {
+  if(!setHTMLEditorData.editor) {
+    setHTMLEditorData.editor = document.querySelector("#edit-menu-instruction .pell-content");
+  }
+  setHTMLEditorData.editor.innerHTML = html;
+}
+
+/**
+ * 
+ * @returns html code ที่ทำการ sanitize เรียบร้อยแล้ว
+ */
+function getHTMLEditorData() {
+  if(menuInstruction.length == 0) {
+    return "";
+  }
+
+  const parser = new DOMParser();
+  // แปลง string เป็น HTML Document
+  const doc = parser.parseFromString(menuInstruction, "text/html");
+
+  // 1. ลบแท็กอันตรายทั้งหมดออกเพื่อความปลอดภัย
+  doc.querySelectorAll("applet,embed,frame,frameset,iframe,link,meta,noscript,object,script,style").forEach((node) => node.remove());
+
+  // 2. ตรวจสอบทุก Elements ใน Document
+  const allElements = doc.querySelectorAll("*");
+  const deniedAttributes = ["class", "formaction", "id", "src"];
+
+  allElements.forEach((element) => {
+    // ดึงรายชื่อ attribute ทั้งหมดของ element นั้นๆ
+    const attributeNames = element.getAttributeNames();
+
+    attributeNames.forEach((attr) => {
+      // ถ้ารายชื่อ attribute ไม่ได้อยู่ในกลุ่มที่ยอมรับ ให้ลบทิ้ง
+      if (deniedAttributes.includes(attr) || attr.startsWith("on")) {
+        element.removeAttribute(attr);
+        return;
+      }
+      // style with url
+      if (attr == "style" && (element.getAttribute(attr).toLowerCase().indexOf("url") > -1)) {
+        element.removeAttribute(attr);
+        return;
+      }
+      // href
+      if (attr == "href" && element.getAttribute(attr).trim().toLowerCase().startsWith("javascript:")) {
+        element.removeAttribute(attr);
+        return;
+      }
+    });
+  });
+
+  // คืนค่ากลับเป็น HTML string (ดึงเฉพาะส่วนที่อยู่ใน body)
+  return doc.body.innerHTML;
+}
+
+
+/**
+ * เพื่อแสดง form ที่ใช้แก้ไขรายละเอียดของเมนู (ชื่อ ลิงก์ วิธีทำ)
+ */
+function showEditMenuDetail() {
+  // เก็บค่าเดิมไว้ก่อน หากยกเลิกจะคืนค่าเดิมให้
+  showEditMenuDetail.menuName = document.getElementById("edit-menu-name").value;
+  showEditMenuDetail.linkWeb = document.getElementById("edit-menu-link").value;
+  showEditMenuDetail.note = document.getElementById("edit-menu-note").value;
+  showEditMenuDetail.menuInstruction = menuInstruction + "";
+
+  const editMenu = document.getElementById('edit-menu-detail');
+  if (editMenu) {
+    editMenu.style.display = 'block';
+    setHTMLEditorData(menuInstruction);
+  }
+}
+
+
+/**
+ * บันทึกหรือยกเลิกการแก้ไขรายละเอียดของเมนู และซ่อน form
+ */
+function saveEditMenuDetail(isSaved) {
+  const editMenu = document.getElementById('edit-menu-detail');
+
+  if(!isSaved) {
+    // คืนค่าเดิม
+    document.getElementById("edit-menu-name").value = showEditMenuDetail.menuName;
+    document.getElementById("edit-menu-link").value = showEditMenuDetail.linkWeb;
+    document.getElementById("edit-menu-note").value = showEditMenuDetail.note;    
+    menuInstruction = showEditMenuDetail.menuInstruction + "";
+    editMenu.style.display = 'none';
+    return;
+  }
+
+  // ถ้ายืนยัน ให้ตรวจสอบว่าชื่อซ้ำหรือไม่
+  const menuId = document.getElementById("edit-menu-select").value;
+  const name = document.getElementById("edit-menu-name").value.trim();
+  const index = appData.menus.findIndex((m) => m.id === menuId);
+  if (index === -1) return;
+
+  const isDuplicate = appData.menus.some((m) =>
+    menuId === m.id ? false : m.name === name,
+  );
+
+  if (isDuplicate) {
+    alert("❌ ชื่อเมนูที่แก้ไขใหม่ มีอยู่แล้วในระบบ กรุณาระบุชื่ออื่น");
+    return;
+  }
+
+  //ถ้าชื่อไม่ซ้ำ ให้ปิดหน้าต่างแก้ไข
+  editMenu.style.display = 'none';
+}
+
+
 window.onload = function () {
   loadFromStorage();
   checkForUpdateOnSchedule();
   bindEditMenuSearchEnterKey();
+  initHTMLEditor();
 
   // แสดงเลข version ปัจจุบัน
-  document.getElementById('show-version').innerText = `Version ${CURRENT_APP_VERSION} (${CURRENT_APP_DATE})`;
+  document.getElementById("show-version").innerText = `Version ${CURRENT_APP_VERSION} (${CURRENT_APP_DATE})`;
 
   // ลงทะเบียนเหตุการณ์ เมื่อผู้ใช้เลือกไฟล์ json เพื่อทำการ restore data
-  document
-    .getElementById("jsonFile")
-    .addEventListener("change", async (event) => {
-      const file = event.target.files[0];
+  document.getElementById("jsonFile").addEventListener("change", async (event) => {
+    const file = event.target.files[0];
 
-      if (!file) return;
+    if (!file) return;
 
-      const text = await file.text();
-      importFromFile(text);
-      event.target.files = new DataTransfer().files;
-      switchView('view-home');
-    });
+    const text = await file.text();
+    importFromFile(text);
+    event.target.files = new DataTransfer().files;
+    switchView("view-home");
+  });
 };

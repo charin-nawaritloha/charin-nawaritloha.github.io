@@ -60,9 +60,11 @@ function checkAndParseTokenFromUrl() {
 }
 
 /**
- * ขอสิทธิ์เข้าถึงโดยใช้วิธีการเปลี่ยนหน้า (Redirect) เพื่อหลีกเลี่ยงข้อจำกัดของ iOS PWA
+ * ตรวจสอบว่าลงชื่อเข้า Google Account หรือยัง
+ * @param {String} mode save หรือ load file
+ * @returns 
  */
-function requestGoogleDriveAccess() {
+function requestGoogleDriveAccess(mode) {
   return new Promise((resolve, reject) => {
     // 1. ตรวจสอบก่อนว่ามี Token ในหน่วยความจำอยู่แล้วหรือไม่
     if (gdriveAccessToken) {
@@ -76,7 +78,15 @@ function requestGoogleDriveAccess() {
       return;
     }
 
+    // ถ้ากลับมาจาก redirect แล้วผ่านมาถึงจุดนี้ แสดงว่าการลงชื่อล้มเหลว
+    if(localStorage.getItem(APP_STORAGE_KEY + "-google-" + mode)) {
+      localStorage.removeItem(APP_STORAGE_KEY + "-google-" + mode);
+      reject();
+      return;
+    }
+
     // 3. หากยังไม่มี Token ให้ทำการสร้าง URL สำหรับ Redirect ไปยังหน้าล็อกอินของ Google
+    localStorage.setItem(APP_STORAGE_KEY + "-google-" + mode, Date.now());
     const authUrl =
       `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${encodeURIComponent(GDRIVE_CLIENT_ID)}` +
@@ -115,7 +125,7 @@ async function findAppFileOnDrive() {
  */
 async function saveToGoogleDrive() {
   try {
-    await requestGoogleDriveAccess();
+    await requestGoogleDriveAccess('save');
 
     const fileId = await findAppFileOnDrive();
     const fileContent = JSON.stringify(appData);
@@ -157,7 +167,7 @@ async function saveToGoogleDrive() {
  */
 async function loadFromGoogleDrive() {
   try {
-    await requestGoogleDriveAccess();
+    await requestGoogleDriveAccess('load');
 
     const fileId = await findAppFileOnDrive();
     if (!fileId) {
@@ -190,5 +200,32 @@ window.addEventListener("load", () => {
 
   const loadBtn = document.getElementById("load-from-gdrive");
   if (loadBtn) loadBtn.addEventListener("click", loadFromGoogleDrive);
-});
 
+
+  // ตรวจสอบว่าถูก redirect มาจาก google authen หรือไม่ ถ้าเกิน 15 นาทีจะยกเลิกการทำงาน
+  const gdriveLoad = localStorage.getItem(APP_STORAGE_KEY + "-google-load");
+  const gdriveSave = localStorage.getItem(APP_STORAGE_KEY + "-google-save");
+
+  if(gdriveLoad) {
+    if((Date.now() - gdriveLoad) > 15 * 60 * 1000) {
+      // timeout ลบ key ทิ้ง
+      localStorage.removeItem(APP_STORAGE_KEY + "-google-load");
+      return;
+    }
+    else {
+      loadFromGoogleDrive();
+    }
+  }
+
+  if(gdriveSave) {
+    if((Date.now() - gdriveSave) > 15 * 60 * 1000) {
+      // timeout ลบ key ทิ้ง
+      localStorage.removeItem(APP_STORAGE_KEY + "-google-save");
+      return;
+    }
+    else {
+      saveToGoogleDrive();
+    }
+  }
+
+});

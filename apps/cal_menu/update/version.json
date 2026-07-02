@@ -1,6 +1,6 @@
 {
-  "version": "1.4.1",
-  "release": "2026/07/01",
-  "size": "464 KB",
+  "version": "1.4.2",
+  "release": "2026/07/02",
+  "size": "479 KB",
   "info": "แก้ไขปัญหา Google Drive ทำงานบน PWA ไม่ได้"
 }
